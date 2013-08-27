@@ -291,6 +291,18 @@ public class TimeUtils {
 			return Integer.valueOf(str[0])+"秒";
 		}
 	}
+	public static long getTimeMillis(String strTime){
+		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date currentTime = null;
+		long time=-1;
+		try {
+			currentTime = dfs.parse(strTime);
+			time=currentTime.getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return time;
+	}
 }
 
 
