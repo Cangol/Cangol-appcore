@@ -2,16 +2,23 @@ package com.cangol.mobile.logging;
 
 
 public class Log {
-	// set the LEVEL with VERBOSE value for inner debug version
-    //	public static final int LEVEL = android.util.android.util.Log.VERBOSE;
+	private  static int LEVEL = android.util.Log.VERBOSE;
 
-	// set the LEVEL with WARN value to disable debug message for release
-	// version
-	 public static final int LEVEL = android.util.Log.VERBOSE;
-
-	 public static boolean FORMAT=false;
+	private  static boolean FORMAT=false;
+	
+	public static void setLogLevelFormat(int level,boolean format) {
+		LEVEL = level;
+		FORMAT=format;
+	}
+	public static int getLevel() {
+		return LEVEL;
+	}
+	public static boolean isFormat() {
+		return FORMAT;
+	}
 	// VERBOSE log
-    public static void v(String msg) {
+
+	public static void v(String msg) {
 			formatLog(android.util.Log.VERBOSE, null, msg, null);
 	}
 	public static void v(String tag, String msg) {
@@ -23,6 +30,7 @@ public class Log {
 	}
 
 	// INFO log
+	
 	public static void i(String msg) {
 		formatLog(android.util.Log.INFO, null, msg, null);
 	}
@@ -33,7 +41,9 @@ public class Log {
 	public static void i(String tag, String msg, Throwable t) {
 		formatLog(android.util.Log.INFO, tag, msg, t);
 	}
+	
 	// DEBUG log
+	
 	public static void d(String msg) {
 		formatLog(android.util.Log.DEBUG, null, msg, null);
 	}
@@ -70,6 +80,7 @@ public class Log {
 	public static void e(String tag, String msg, Throwable t) {
 		formatLog(android.util.Log.ERROR, tag, msg, t);
 	}
+	
 	public static void formatLog(int logLevel,String tag,String msg,Throwable error){
 		if (LEVEL > logLevel) return;
 		StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
