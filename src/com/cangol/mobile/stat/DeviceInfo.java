@@ -1,5 +1,8 @@
 package com.cangol.mobile.stat;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -12,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -33,7 +37,43 @@ public class DeviceInfo {
 	public static String getDevice() {
 		return android.os.Build.MODEL;
 	}
+	
+	public static String getMobileInfo() {
+		StringBuffer sb = new StringBuffer();
+		try {
 
+			Field[] fields = Build.class.getDeclaredFields();
+			for (Field field : fields) {
+				field.setAccessible(true);
+				String name = field.getName();
+				String value = field.get(null).toString();
+				sb.append(name + "=" + value);
+				sb.append("\n");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+	
+	public static String getCPUInfo() {
+		try
+		{
+			byte[] bs = new byte[1024];
+			RandomAccessFile reader = new RandomAccessFile("/proc/cpuinfo", "r");
+			reader.read(bs);
+			String ret = new String(bs);
+			int index = ret.indexOf(0);
+			if(index != -1) {
+				return ret.substring(0, index);
+			} else {
+				return ret;
+			}
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		return "";
+	}
 	public static String getResolution(Context context) {
 		WindowManager wm = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);

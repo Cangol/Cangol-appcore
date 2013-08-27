@@ -120,9 +120,9 @@ public class TimeUtils {
 	}
 	/**
 	 * 得到当前日期加上某一个整数的日期，整数代表天数
-	 * 输入参数：currentdate : String 格式 yyyy-MM-dd
-	 * 			add_day		:  int
-	 * 返回格式：yyyy-MM-dd
+	 * @param currentdate String 格式 yyyy-MM-dd
+	 * @param add_day int
+	 * @return yyyy-MM-dd
 	 */
 	public static String addDay(String currentdate,int add_day){
 		GregorianCalendar gc=null;
@@ -145,6 +145,7 @@ public class TimeUtils {
 	}
 	/**
 	 * 得到当前月份的第一天日期
+	 * @param period
 	 */
 	public static String getStartDateInPeriod(String period) {
 		StringBuffer str = new StringBuffer(period);
@@ -171,7 +172,8 @@ public class TimeUtils {
 	}
     /**
      * 将YYYYMMDD形式改成YYYY-MM-DD
-     * 
+     * @param str1
+	 * @return
      */
 	public static String convertStr(String str1){
 		if(str1==null||str1.equals("")){
@@ -186,7 +188,8 @@ public class TimeUtils {
 	}
 	 /**
      * 将YYYY-MM-DD形式改成YYYYMMDD
-     * 
+      * @param str1
+	 * @return
      */
 	public static String convert(String str1){
 		if(str1==null||str1.equals("")){
@@ -200,13 +203,18 @@ public class TimeUtils {
 			return result;
 		}
 	}
-	public static String countTime(String cTime) {
-		if(null==cTime||"".equals(cTime))return "";
+	/**
+	 * 计算距今的时间
+	 * @param time
+	 * @return
+	 */
+	public static String countTime(String time) {
+		if(null==time||"".equals(time))return "";
 		Date commentTime = null;
 		Date currentTime = null;
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
-				commentTime = dfs.parse(cTime);
+				commentTime = dfs.parse(time);
 				currentTime = Calendar.getInstance().getTime();
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -254,7 +262,7 @@ public class TimeUtils {
 		return "";
 	}
 	/**
-	 * 
+	 * 转化为中文时间格式
 	 * @param time HH:mm:ss
 	 * @return
 	 */

@@ -13,7 +13,93 @@ import java.util.regex.Pattern;
 
 public class StringUtils {
 	public static final int INDEX_NOT_FOUND = -1;
+	/**
+	 * bytes to String
+	 * @param value
+	 * @return
+	 */
+	public static String bytes2String(byte[] value) {
+		return (value == null) ? "" : new String(value);
+	}
 	
+	/**
+	 * byte to hex
+	 * @param b
+	 * @return
+	 */
+	public static String byte2hex(byte[] b) {
+		String hs = "";
+		String stmp = "";
+		for (int n = 0; n < b.length; n++) {
+			stmp = Integer.toHexString(b[n] & 0XFF);
+			if (stmp.length() == 1)
+				hs = hs + "0" + stmp;
+			else
+				hs = hs + stmp;
+		}
+		return hs.toUpperCase();
+	}
+	/**
+	 * 反转
+	 * @param value
+	 * @return
+	 */
+	public static String reverse(String value) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = value.length() - 1; i >= 0; --i) {
+			sb.append(value.charAt(i));
+		}
+		return sb.toString();
+	}
+	/**
+	 * format speed   /s
+	 * @param value
+	 * @return
+	 */
+	public static String formatSpeed(int value) {
+		return formatSize(value) + "/s";
+	}
+	/**
+	 * format size  
+	 * @param value
+	 * @return
+	 */
+	public static String formatSize(long value) {
+
+		double k = (double) value / 1024;
+		if (k == 0) {
+			return String.format("%dB", value);
+		}
+
+		double m = k / 1024;
+		if (m < 1) {
+			return String.format("%.1fK", k);
+		}
+
+		double g = m / 1024;
+		if (g < 1) {
+			return String.format("%.1fM", m);
+		}
+
+		return String.format("%.1fG", g);
+	}
+	/**
+	 * format time
+	 * @param second
+	 * @return
+	 */
+	public static String formatTime(int second) {
+
+		int hh = second / 3600;
+		int mm = second % 3600 / 60;
+		int ss = second % 60;
+
+		if (0 != hh) {
+			return String.format("%02d:%02d:%02d", hh, mm, ss);
+		} else {
+			return String.format("%02d:%02d", mm, ss);
+		}
+	}
 	/**
 	 * check account valid(email or phone)
 	 * @param str
@@ -215,9 +301,20 @@ public class StringUtils {
 	public static String trimAllWhitespace(String str) {
 		return str.replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "").toString();
 	}
+	/**
+	 * strip
+	 * @param str
+	 * @return
+	 */
 	public static String strip(String str) {
 	        return strip(str, null);
 	}
+	/**
+	 * strip Start 
+	 * @param str
+	 * @param stripChars
+	 * @return
+	 */
 	public static String stripStart(String str, String stripChars) {
         int strLen;
         if (str == null || (strLen = str.length()) == 0) {
