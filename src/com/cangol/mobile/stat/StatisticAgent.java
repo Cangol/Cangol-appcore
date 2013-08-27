@@ -17,6 +17,8 @@ package com.cangol.mobile.stat;
 
 import java.util.HashMap;
 
+import com.cangol.mobile.utils.DeviceInfo;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -63,12 +65,12 @@ public  class StatisticAgent {
 		send(context, params);
 	}
 	/**
-	 * 启动游模块
+	 * 启动
 	 * @param context
 	 * @param action
 	 * @param model
 	 */
 	public static void launcher(Context context, String action, String model){
-		send(context,"launcher","Game");
+		send(context,action,model);
 	}
 }

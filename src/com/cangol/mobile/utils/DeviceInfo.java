@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cangol.mobile.stat;
+package com.cangol.mobile.utils;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
