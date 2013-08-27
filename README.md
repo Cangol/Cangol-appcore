@@ -1,7 +1,8 @@
 Cangol-appcore
 ==============
 
-Cangol-appcore
+Android app core module
+	include http	json log security soap stat utils
 
 License
 -----------
