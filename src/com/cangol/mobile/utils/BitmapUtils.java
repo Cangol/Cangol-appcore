@@ -29,66 +29,33 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.R;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Typeface;
-import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 
 public class BitmapUtils {
 	/**
-	 * 添加水印
+	 * 添加水印文字
 	 * @param src
-	 * @param watermark
 	 * @param left
 	 * @param top
+	 * @param content
+	 * @param alpha
 	 * @return
 	 */
-	public static Bitmap addBitmap(Bitmap src,Bitmap watermark,float left,float top){
-		int w = src.getWidth();
-		int h = src.getHeight();
-		Bitmap dst = Bitmap.createBitmap( w, h, Config.ARGB_8888);
-		Canvas canvas = new Canvas(dst);
-		canvas.drawBitmap(BitmapUtils.setAlpha(src, 50),0,0,null);
-		canvas.drawBitmap(BitmapUtils.scale(watermark,src.getWidth(),(int)(src.getHeight()/3.0f)), left, top, null);
-		canvas.save(Canvas.ALL_SAVE_FLAG);
-		canvas.restore();
-		return dst;	
-	}
-	public static Bitmap addProgress(Bitmap src,Bitmap pro,int progress){
-		int w = pro.getWidth();
-		int h = pro.getHeight();
-		Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
-		Canvas canvas = new Canvas(dst);
-		canvas.drawBitmap(src,0,0,null);
-		canvas.drawBitmap(pro, 0, pro.getHeight()*(100-progress)/100.0f, null);
-		canvas.save(Canvas.ALL_SAVE_FLAG);
-		canvas.restore();
-		return dst;	
-	}
-	public static Bitmap setAlpha(Bitmap sourceImg, int number) {
-		int[] argb = new int[sourceImg.getWidth() * sourceImg.getHeight()];
-		sourceImg.getPixels(argb, 0, sourceImg.getWidth(), 0, 0, sourceImg
-				.getWidth(), sourceImg.getHeight());
-		number = number * 255 / 100;
-		for (int i = 0; i < argb.length; i++) {
-			argb[i] = (number << 24) | (argb[i] & 0x00FFFFFF);
-		}
-		sourceImg = Bitmap.createBitmap(argb, sourceImg.getWidth(), sourceImg
-				.getHeight(), Config.ARGB_8888);
-
-		return sourceImg;
-	}
-	
 	public static Bitmap addWatermark(Bitmap src,float left,float top,String content,int alpha){
 		int w = src.getWidth();
 		int h = src.getHeight();
@@ -106,6 +73,15 @@ public class BitmapUtils {
 		canvas.restore();
 		return dst;
 	}
+	/**
+	 * 添加水印图片
+	 * @param src
+	 * @param left
+	 * @param top
+	 * @param img
+	 * @param alpha
+	 * @return
+	 */
 	public static Bitmap addWatermark(Bitmap src,float left,float top,Bitmap img,int alpha){
 		int w = src.getWidth();
 		int h = src.getHeight();
@@ -119,6 +95,50 @@ public class BitmapUtils {
 		canvas.restore();
 		return dst;
 	}
+	/**
+	 * 在src上按progress绘制pro
+	 * @param src
+	 * @param pro
+	 * @param progress
+	 * @return
+	 */
+	public static Bitmap addProgress(Bitmap src,Bitmap pro,int progress){
+		int w = pro.getWidth();
+		int h = pro.getHeight();
+		Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+		Canvas canvas = new Canvas(dst);
+		canvas.drawBitmap(src,0,0,null);
+		canvas.drawBitmap(pro, 0, pro.getHeight()*(100-progress)/100.0f, null);
+		canvas.save(Canvas.ALL_SAVE_FLAG);
+		canvas.restore();
+		return dst;	
+	}
+	/**
+	 * 设置图片透明度
+	 * @param sourceImg
+	 * @param number
+	 * @return
+	 */
+	public static Bitmap setAlpha(Bitmap sourceImg, int number) {
+		int[] argb = new int[sourceImg.getWidth() * sourceImg.getHeight()];
+		sourceImg.getPixels(argb, 0, sourceImg.getWidth(), 0, 0, sourceImg
+				.getWidth(), sourceImg.getHeight());
+		number = number * 255 / 100;
+		for (int i = 0; i < argb.length; i++) {
+			argb[i] = (number << 24) | (argb[i] & 0x00FFFFFF);
+		}
+		sourceImg = Bitmap.createBitmap(argb, sourceImg.getWidth(), sourceImg
+				.getHeight(), Config.ARGB_8888);
+
+		return sourceImg;
+	}
+	/**
+	 * 缩放图片
+	 * @param bitmap
+	 * @param scaleWidth
+	 * @param scaleHeight
+	 * @return
+	 */
 	public static Bitmap scale(Bitmap bitmap,float scaleWidth, float scaleHeight){
 		int width = bitmap.getWidth();  
         int height = bitmap.getHeight();  
@@ -126,6 +146,13 @@ public class BitmapUtils {
         matrix.postScale(scaleWidth, scaleHeight); 
       	return Bitmap.createBitmap(bitmap, 0, 0, width,height, matrix, true);  
 	}
+	/**
+	 * 缩放图片
+	 * @param bitmap
+	 * @param newWidth
+	 * @param newHeight
+	 * @return
+	 */
 	public static Bitmap scale(Bitmap bitmap,int newWidth, int newHeight){
 		int width = bitmap.getWidth();  
         int height = bitmap.getHeight();  
@@ -135,7 +162,12 @@ public class BitmapUtils {
         matrix.postScale(scaleWidth, scaleHeight); 
       	return Bitmap.createBitmap(bitmap, 0, 0, width,height, matrix, true);  
 	}
-
+	/**
+	 * 转为图片
+	 * @param bitmap
+	 * @param roundPx
+	 * @return
+	 */
 	public static Bitmap roundedCornerBitmap(Bitmap bitmap, float roundPx) {
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
 				.getHeight(), Config.ARGB_8888);
@@ -155,7 +187,11 @@ public class BitmapUtils {
 		canvas.drawBitmap(bitmap, rect, rect, paint);
 		return output;
 	}
-
+	/**
+	 * 原图添加倒影
+	 * @param bitmap
+	 * @return
+	 */
 	public static Bitmap createReflectionImageWithOrigin(Bitmap bitmap) {
 		final int reflectionGap = 4;
 		int width = bitmap.getWidth();
@@ -187,7 +223,12 @@ public class BitmapUtils {
 		canvas.drawRect(0, height, width, bitmapWithReflection.getHeight()+ reflectionGap, paint);
 		return bitmapWithReflection;
 	}
-	 public static Bitmap createReflectedImage(Bitmap originalImage) {    
+	/**
+	 * 创建倒影
+	 * @param originalImage
+	 * @return
+	 */
+	public static Bitmap createReflectedImage(Bitmap originalImage) {    
 	        final int reflectionGap = 4;  //倒影和原图片间的距离  
 	        int width = originalImage.getWidth();     
 	        int height = originalImage.getHeight();  
@@ -222,7 +263,12 @@ public class BitmapUtils {
 	        canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);    
 	        return bitmapWithReflection;     
 	    }  
-	public static Bitmap Bytes2Bimap(byte[] b){  
+	 /**
+	  * Bytes to Bitmap
+	  * @param b
+	  * @return
+	  */
+	public static Bitmap Bytes2Bitmap(byte[] b){  
         if(b.length!=0){  
             return BitmapFactory.decodeByteArray(b, 0, b.length);  
         }  
@@ -230,23 +276,23 @@ public class BitmapUtils {
             return null;  
         }  
 	} 
+	/**
+	 * Bitmap to Bytes
+	 * @param bm
+	 * @return
+	 */
 	public static byte[] Bitmap2Bytes(Bitmap bm){  
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();    
 	    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);    
 	    return baos.toByteArray();  
 	 } 
-	public static String byte2hex(byte[] b) { 
-		StringBuffer sb = new StringBuffer(b.length * 2);
-		String tmp = "";
-		for (int n = 0; n < b.length; n++) {
-			tmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
-			if (tmp.length() == 1) {
-				sb.append("0");
-			}
-			sb.append(tmp);
-		}
-		return sb.toString().toUpperCase(); 
-	}
+	/**
+	 * 缩放图片文件
+	 * @param filepath
+	 * @param maxWidth
+	 * @param maxHeight
+	 * @return
+	 */
 	public static Bitmap scaleFile(String filepath,int maxWidth, int maxHeight){
 		BitmapFactory.Options options = new BitmapFactory.Options();  
         options.inJustDecodeBounds = true;  
@@ -257,6 +303,13 @@ public class BitmapUtils {
         bitmap=BitmapFactory.decodeFile(filepath,options);  
         return bitmap;
 	}
+	/**
+	 * 重置图片文件大小
+	 * @param filepath
+	 * @param maxWidth
+	 * @param maxHeight
+	 * @return
+	 */
 	public static Bitmap resizeBitmap(String filepath,int maxWidth, int maxHeight){
 		BitmapFactory.Options options = new BitmapFactory.Options();  
         options.inJustDecodeBounds = true;  
@@ -285,6 +338,13 @@ public class BitmapUtils {
         bitmap=BitmapFactory.decodeFile(filepath,options); 
         return bitmap;
 	}
+	/**
+	 * 重置图片大小
+	 * @param bitmap
+	 * @param maxWidth
+	 * @param maxHeight
+	 * @return
+	 */
 	public static Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
 	        int originWidth  = bitmap.getWidth();
 	        int originHeight = bitmap.getHeight();
@@ -312,7 +372,12 @@ public class BitmapUtils {
 	        }
 	        return bitmap;
 	 }
-	public static void bitmapToFile(Bitmap bm,String path){
+	/**
+	 * bitmap To File
+	 * @param bm
+	 * @param path
+	 */
+	public static void bitmap2File(Bitmap bm,String path){
 		File file=new File(path);
         try {
         	file.createNewFile();
@@ -327,6 +392,13 @@ public class BitmapUtils {
             e.printStackTrace();
         }
 	}
+	/**
+	 * 计算
+	 * @param options
+	 * @param minSideLength
+	 * @param maxNumOfPixels
+	 * @return
+	 */
 	public static int computeSampleSize(BitmapFactory.Options options,
 	        int minSideLength, int maxNumOfPixels) {
 	    int initialSize = computeInitialSampleSize(options, minSideLength,maxNumOfPixels);
@@ -367,5 +439,56 @@ public class BitmapUtils {
 	    } else {
 	        return upperBound;
 	    }
+	}
+	
+	/**
+	 * @Title: createAlbumIcon 
+	 * @Description: 根据数字，创建一张带有数字的图片
+	 * @param @param number
+	 * @param @param bitmap
+	 * @param @param context
+	 * @param @return    设定文件 
+	 * @return Bitmap    返回类型 
+	 * @throws
+	 */
+	public static Bitmap createAlbumIcon(int number, int textSize,Bitmap bitmap, Context context) {
+		if (number == 0) {
+			return bitmap;
+		}
+		int len = getNumberLength(number);
+		int x = len*(textSize);		
+		int y = textSize;
+		
+    	int width = bitmap.getWidth();
+    	int height = bitmap.getHeight();
+    	Bitmap contactIcon=Bitmap.createBitmap(width, height, Config.ARGB_8888);
+    	Canvas canvas=new Canvas(contactIcon);
+    	
+    	Paint iconPaint=new Paint();
+    	iconPaint.setDither(true);	
+    	iconPaint.setFilterBitmap(true);
+    	Rect src1=new Rect(0, 0, width, height);
+    	Rect dst1=new Rect(0, 0, width, height);
+    	canvas.drawBitmap(bitmap, src1, dst1, iconPaint);
+    	Paint bgPaint=new Paint();
+    	bgPaint.setColor(Color.RED);
+    	canvas.drawRect(width - x/2-6, 0, width + x/2+6, y, bgPaint);
+    	Paint countPaint=new Paint(Paint.ANTI_ALIAS_FLAG|Paint.DEV_KERN_TEXT_FLAG);
+    	countPaint.setColor(Color.WHITE);
+    	countPaint.setTextSize(textSize);
+    	countPaint.setTypeface(Typeface.DEFAULT_BOLD);
+    	canvas.drawText(String.valueOf(number), width - x/2 - 5, y-2 , countPaint);
+    	return contactIcon;
+	}
+	/**
+	 * 统计数字位数
+	 */
+	private static int getNumberLength(int number) {
+		int count = 0;
+		while (number != 0) {
+			number = number / 10;
+			count++;
+		}
+		return count;
 	}
 }
