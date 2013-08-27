@@ -1,193 +1,129 @@
 package com.cangol.mobile.logging;
 
+
 public class Log {
 	// set the LEVEL with VERBOSE value for inner debug version
-    //	public static final int LEVEL = android.util.Log.VERBOSE;
+    //	public static final int LEVEL = android.util.android.util.Log.VERBOSE;
 
 	// set the LEVEL with WARN value to disable debug message for release
 	// version
 	 public static final int LEVEL = android.util.Log.VERBOSE;
 
-	// verbose log
-
-	static public void v(String msgFormat) {
-		if (LEVEL <= android.util.Log.VERBOSE) {
-			StackTraceElement ste = new Throwable().getStackTrace()[1];
-			String fileName = ste.getFileName();
-			String traceInfo = ste.getClassName() + "::";
-			traceInfo += ste.getMethodName();
-			traceInfo += "@" + ste.getLineNumber() + ">>>";
-
-			android.util.Log.v(fileName, traceInfo + msgFormat);
-		}
+	 public static boolean FORMAT=false;
+	// VERBOSE log
+    public static void v(String msg) {
+			formatLog(android.util.Log.VERBOSE, null, msg, null);
+	}
+	public static void v(String tag, String msg) {
+		formatLog(android.util.Log.VERBOSE, tag, msg, null);
 	}
 
-	static public void v(String tag, String msgFormat) {
-
-		if (LEVEL <= android.util.Log.VERBOSE) {
-			StackTraceElement ste = new Throwable().getStackTrace()[1];
-			String traceInfo = ste.getClassName() + "::";
-			traceInfo += ste.getMethodName();
-			traceInfo += "@" + ste.getLineNumber() + ">>>";
-
-			android.util.Log.v(tag, traceInfo + msgFormat);
-		}
+	public static void v(String tag, String msg, Throwable t) {
+		formatLog(android.util.Log.VERBOSE, tag, msg, t);
 	}
 
-	static public void v(String tag, String msgFormat, Throwable t) {
-		if (LEVEL <= android.util.Log.VERBOSE) {
-			android.util.Log.v(tag, msgFormat, t);
-		}
+	// INFO log
+	public static void i(String msg) {
+		formatLog(android.util.Log.INFO, null, msg, null);
+	}
+	public static void i(String tag, String msg) {
+		formatLog(android.util.Log.INFO, tag, msg, null);
 	}
 
-	// debug log
-
-	static public void d(String msgFormat) {
-		if (LEVEL <= android.util.Log.DEBUG) {
-			StackTraceElement ste = new Throwable().getStackTrace()[1];
-			String fileName = ste.getFileName();
-			String traceInfo = ste.getClassName() + "::";
-			traceInfo += ste.getMethodName();
-			traceInfo += "@" + ste.getLineNumber() + ">>>";
-
-			android.util.Log.v(fileName, traceInfo + msgFormat);
-		}
+	public static void i(String tag, String msg, Throwable t) {
+		formatLog(android.util.Log.INFO, tag, msg, t);
+	}
+	// DEBUG log
+	public static void d(String msg) {
+		formatLog(android.util.Log.DEBUG, null, msg, null);
+	}
+	public static void d(String tag, String msg) {
+		formatLog(android.util.Log.DEBUG, tag, msg, null);
 	}
 
-	static public void d(String tag, String msgFormat) {
-		if (LEVEL <= android.util.Log.DEBUG) {
-			StackTraceElement ste = new Throwable().getStackTrace()[1];
-			String traceInfo = ste.getClassName() + "::";
-			traceInfo += ste.getMethodName();
-			traceInfo += "@" + ste.getLineNumber() + ">>>";
-			android.util.Log.d(tag, traceInfo + msgFormat);
-		}
+	public static void d(String tag, String msg, Throwable t) {
+		formatLog(android.util.Log.DEBUG, tag, msg, t);
+	}
+	// WARN log
+	public static void w(String msg) {
+		formatLog(android.util.Log.WARN, null, msg, null);
+	}
+	
+	public static void w(String tag, String msg) {
+		formatLog(android.util.Log.WARN, tag, msg, null);
 	}
 
-	static public void d(String tag, String msgFormat, Throwable t) {
-		if (LEVEL <= android.util.Log.DEBUG) {
-			android.util.Log.d(tag, msgFormat, t);
-		}
+	public static void w(String tag, String msg, Throwable t) {
+		formatLog(android.util.Log.WARN, tag, msg, t);
 	}
 
-	// info log
-
-	static public void i(String tag, String msgFormat) {
-		if (LEVEL <= android.util.Log.INFO) {
-			android.util.Log.i(tag, msgFormat);
-		}
+	// ERROR log
+	
+	public static void e(String msg) {
+		formatLog(android.util.Log.ERROR, null, msg, null);
+	}
+	
+	public static void e(String tag, String msg) {
+		formatLog(android.util.Log.ERROR, tag, msg, null);
 	}
 
-	static public void i(String tag, String msgFormat, Throwable t) {
-		if (LEVEL <= android.util.Log.INFO) {
-			android.util.Log.i(tag, msgFormat, t);
+	public static void e(String tag, String msg, Throwable t) {
+		formatLog(android.util.Log.ERROR, tag, msg, t);
+	}
+	public static void formatLog(int logLevel,String tag,String msg,Throwable error){
+		if (LEVEL > logLevel) return;
+		StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
+		String classname = stackTrace.getClassName();
+		String filename = stackTrace.getFileName();
+		String methodname = stackTrace.getMethodName();
+		int linenumber = stackTrace.getLineNumber();
+		String output = null;;
+		if(FORMAT){
+			output = String.format("%s.%s(%s:%d)-->%s", classname, methodname,filename, linenumber, msg);
+		}else{
+			output=msg;
+		}
+		if(null==tag){
+			tag= (filename != null && filename.contains(".java"))?filename.replace(".java", ""):"";
+		}
+		switch (logLevel) {
+		case android.util.Log.VERBOSE:
+			if (error == null) {
+				android.util.Log.v(tag, output);
+			} else {
+				android.util.Log.v(tag, output, error);
+			}
+			break;
+		case android.util.Log.DEBUG:
+			if ( error == null) {
+				android.util.Log.d(tag, output);
+			} else {
+				android.util.Log.d(tag, output,  error);
+			}
+			break;
+		case android.util.Log.INFO:
+			if ( error == null) {
+				android.util.Log.i(tag, output);
+			} else {
+				android.util.Log.i(tag, output,  error);
+			}
+			break;
+		case android.util.Log.WARN:
+			if ( error == null) {
+				android.util.Log.w(tag, output);
+			} else {
+				android.util.Log.w(tag, output,  error);
+			}
+			break;
+		case android.util.Log.ERROR:
+			if ( error == null) {
+				android.util.Log.e(tag, output);
+			} else {
+				android.util.Log.e(tag, output,  error);
+			}
+			break;
+		default:
+			break;
 		}
 	}
-
-	// Warning log
-	static public void w(String tag, String msgFormat) {
-		if (LEVEL <= android.util.Log.WARN) {
-			StackTraceElement ste = new Throwable().getStackTrace()[1];
-			String traceInfo = ste.getFileName();
-			traceInfo += "@" + ste.getLineNumber() + ">>>";
-			android.util.Log.w(tag, traceInfo + msgFormat);
-		}
-	}
-
-	static public void w(String tag, String msgFormat, Throwable t) {
-		if (LEVEL <= android.util.Log.WARN) {
-			android.util.Log.w(tag, msgFormat, t);
-		}
-	}
-
-	// Error log
-	static public void e(String tag, String msgFormat) {
-		if (LEVEL <= android.util.Log.ERROR) {
-			StackTraceElement ste = new Throwable().getStackTrace()[1];
-			String traceInfo = ste.getFileName();
-			traceInfo += "@" + ste.getLineNumber() + ">>>";
-			android.util.Log.e(tag, traceInfo + msgFormat);
-		}
-	}
-
-	static public void e(String tag, String msgFormat, Throwable t) {
-		if (LEVEL <= android.util.Log.ERROR) {
-			android.util.Log.d(tag, msgFormat, t);
-		}
-	}
-
-	// verbose log
-
-	static public void v(String tag, String msgFormat, Object... args) {
-
-		if (LEVEL <= android.util.Log.VERBOSE) {
-			android.util.Log.v(tag, String.format(msgFormat, args));
-		}
-	}
-
-	static public void v(String tag, Throwable t, String msgFormat,
-			Object... args) {
-		if (LEVEL <= android.util.Log.VERBOSE) {
-			android.util.Log.v(tag, String.format(msgFormat, args), t);
-		}
-	}
-
-	// debug log
-
-	static public void d(String tag, String msgFormat, Object... args) {
-		if (LEVEL <= android.util.Log.DEBUG) {
-			android.util.Log.d(tag, String.format(msgFormat, args));
-		}
-	}
-
-	static public void d(String tag, Throwable t, String msgFormat,
-			Object... args) {
-		if (LEVEL <= android.util.Log.DEBUG) {
-			android.util.Log.d(tag, String.format(msgFormat, args), t);
-		}
-	}
-
-	// info log
-
-	static public void i(String tag, String msgFormat, Object... args) {
-		if (LEVEL <= android.util.Log.INFO) {
-			android.util.Log.i(tag, String.format(msgFormat, args));
-		}
-	}
-
-	static public void i(String tag, Throwable t, String msgFormat,
-			Object... args) {
-		if (LEVEL <= android.util.Log.INFO) {
-			android.util.Log.i(tag, String.format(msgFormat, args), t);
-		}
-	}
-
-	// Warning log
-	static public void w(String tag, String msgFormat, Object... args) {
-		if (LEVEL <= android.util.Log.WARN) {
-			android.util.Log.w(tag, String.format(msgFormat, args));
-		}
-	}
-
-	static public void w(String tag, Throwable t, String msgFormat,
-			Object... args) {
-		if (LEVEL <= android.util.Log.WARN) {
-			android.util.Log.w(tag, String.format(msgFormat, args), t);
-		}
-	}
-
-	// Error log
-	static public void e(String tag, String msgFormat, Object... args) {
-		if (LEVEL <= android.util.Log.ERROR) {
-			android.util.Log.e(tag, String.format(msgFormat, args));
-		}
-	}
-
-	static public void e(String tag, Throwable t, String msgFormat,
-			Object... args) {
-		if (LEVEL <= android.util.Log.ERROR) {
-			android.util.Log.e(tag, String.format(msgFormat, args), t);
-		}
-	}
-
 }
