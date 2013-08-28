@@ -31,7 +31,7 @@ import org.json.JSONObject;
  * @date: 2012-6-5
  */
 public class JsonUtils {
-	private final static boolean debug=false;
+	private final static boolean DEBUG=false;
 	public final static  String TAG = "JsonUtils";
 	/**
 	 * 转换Object到JSONObject
@@ -46,7 +46,7 @@ public class JsonUtils {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
-			if (!field.getType().isAssignableFrom(List.class)){
+			if (!List.class.isAssignableFrom(field.getType())){
 				//非集合类型
 				if (isBaseClass(field.getType())) {
 					json.put(field.getName(), field.get(obj));
