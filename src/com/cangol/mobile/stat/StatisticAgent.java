@@ -30,7 +30,7 @@ import android.os.HandlerThread;
  */
 public  class StatisticAgent {
 	private static StatisticAgent agent;
-	private static String url="http://www.stat.com";
+	private static String url="http://stat.cangol.mobi";
 	private HashMap<String,String> params=new HashMap<String,String>();
 	private final Handler mHandler;
 	private StatisticPost statisticPost;
@@ -43,7 +43,18 @@ public  class StatisticAgent {
 	    initCommonParam();
 	}
 	private void  initCommonParam(){
+		params.put("appversion",DeviceInfo.getAppVersion(context));
+		params.put("os",DeviceInfo.getOS());
+		params.put("osversion",DeviceInfo.getOSVersion());
 		params.put("deviceid",DeviceInfo.getDeviceId(context));
+		params.put("device",DeviceInfo.getDevice());
+		params.put("carrier",DeviceInfo.getCarrier(context));
+		params.put("resolution",DeviceInfo.getResolution(context));
+		params.put("cpu",DeviceInfo.getCPUInfo());
+		params.put("country",DeviceInfo.getCountry());
+		params.put("language",DeviceInfo.getLanguage());
+		params.put("ip",DeviceInfo.getIpStr(context));
+		params.put("network",DeviceInfo.getNetworkType(context));
 		//....
 	}
 	public static void init(Context context){
@@ -56,21 +67,45 @@ public  class StatisticAgent {
 		params.putAll(agent.params);
 		agent.statisticPost.send(context,url, params);
 	}
-	public static void send(Context context, String action, String model){
+	public static void send(Context context, String action, HashMap<String,String> map){
 		HashMap<String,String> params=new HashMap<String,String>();
 		params.put("action", action);
-		params.put("model", model);
-		//....
+		if(map!=null)params.putAll(map);
 		params.putAll(agent.params);
 		send(context, params);
 	}
-	/**
-	 * 启动
-	 * @param context
-	 * @param action
-	 * @param model
-	 */
-	public static void launcher(Context context, String action, String model){
-		send(context,action,model);
+	public static void install(Context context){
+		send(context,"install",null);
+	}
+	public static void start(Context context){
+		send(context,"launcher",null);
+	}
+	public static void exit(Context context){
+		send(context,"exit",null);
+	}
+	public static void launcher(Context context, String module){
+		HashMap<String,String> params=new HashMap<String,String>();
+		params.put("module", module);
+		send(context,"launcher",params);
+	}
+	public static void show(Context context, String module, String view){
+		HashMap<String,String> params=new HashMap<String,String>();
+		params.put("module", module);
+		params.put("view", view);
+		send(context,"show",params);
+	}
+	public static void event(Context context, String module, String view, String opt){
+		HashMap<String,String> params=new HashMap<String,String>();
+		params.put("module", module);
+		params.put("view", view);
+		params.put("opt", opt);
+		send(context,"event",params);
+	}
+	public static void click(Context context, String module, String view, String button){
+		HashMap<String,String> params=new HashMap<String,String>();
+		params.put("module", module);
+		params.put("view", view);
+		params.put("button", button);
+		send(context,"click",params);
 	}
 }
