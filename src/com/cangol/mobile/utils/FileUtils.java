@@ -20,7 +20,6 @@ package com.cangol.mobile.utils;
  * @version $Revision: 1.0 $
  * @author xuewu.wei
  * @date: 2010-12-10
- * @time: 上午11:00:10
  */
 
 import java.io.BufferedReader;
@@ -144,7 +143,6 @@ public class FileUtils {
 				InputStream inStream = new FileInputStream(oldPath); // 读入原文件
 				FileOutputStream fs = new FileOutputStream(newPath);
 				byte[] buffer = new byte[1444];
-				int length;
 				while ((byteread = inStream.read(buffer)) != -1) {
 					bytesum += byteread; // 字节数 文件大小
 					System.out.println(bytesum);

@@ -80,7 +80,7 @@ public class AppUtils {
 	    for (int i = 0; i < paklist.size(); i++) {  
 	        PackageInfo pak = (PackageInfo) paklist.get(i);  
 	        //not system app
-	        if ((pak.applicationInfo.flags & pak.applicationInfo.FLAG_SYSTEM) <= 0) {  
+	        if ((pak.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {  
 	            apps.add(pak);  
 	        }  
 	    }  
