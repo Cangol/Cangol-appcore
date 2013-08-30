@@ -68,38 +68,22 @@ public class HttpResult<T> implements Serializable{
 	public void setList(List<T> list) {
 		this.list = list;
 	}
-	//	public static <T> HttpResult<T> parserObject(Class<T> c,JSONObject json) {
-//		HttpResult<T> result = new HttpResult<T>();
-//		try {
-//			result.setSource(json.toString());
-//			result.setSuccess(json.getInt(SUCCESS) == 1 ? true : false);
-//			if(result.isSuccess()&&c!=null) {
-//				Object resultObject=json.get(RESULT);
-//				if(resultObject instanceof JSONObject){	
-//					result.setObject(JsonUtils.parserToObjectByAnnotation(c, json.getJSONObject(RESULT)));
-//				}else{
-//					result.setList(JsonUtils.parserToList(c, json.getJSONArray(RESULT),true));
-//				}
-//			}else{
-//				String error = json.getString(ERROR);
-//				result.setError(error);
-//			}
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return result;
-//	}
 	public static <T> HttpResult<T> parserObject(Class<T> c,JSONObject json) {
 		HttpResult<T> result = new HttpResult<T>();
 		try {
 			result.setSource(json.toString());
-			result.setObject(JsonUtils.parserToObjectByAnnotation(c, json));
+			result.setSuccess(json.getInt(SUCCESS) == 1 ? true : false);
+			if(result.isSuccess()&&c!=null) {
+				Object resultObject=json.get(RESULT);
+				if(resultObject instanceof JSONObject){	
+					result.setObject(JsonUtils.parserToObjectByAnnotation(c, json.getJSONObject(RESULT)));
+				}else{
+					result.setList(JsonUtils.parserToList(c, json.getJSONArray(RESULT),true));
+				}
+			}else{
+				String error = json.getString(ERROR);
+				result.setError(error);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -111,5 +95,6 @@ public class HttpResult<T> implements Serializable{
 		}
 		return result;
 	}
+
 
 }
