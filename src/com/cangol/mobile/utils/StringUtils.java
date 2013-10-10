@@ -138,6 +138,11 @@ public class StringUtils {
 		Matcher m = p.matcher(str);
 		return m.matches();
 	}
+	/**
+	 * check ZipCode
+	 * @param str
+	 * @return
+	 */
 	public static boolean checkZipCode(String str) {
 		Pattern p = Pattern.compile("^\\d{5}$");
 		Matcher m = p.matcher(str);

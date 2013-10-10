@@ -29,7 +29,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -45,6 +44,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 public class BitmapUtils {
 	/**
@@ -263,29 +264,7 @@ public class BitmapUtils {
 	        canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);    
 	        return bitmapWithReflection;     
 	    }  
-	 /**
-	  * Bytes to Bitmap
-	  * @param b
-	  * @return
-	  */
-	public static Bitmap Bytes2Bitmap(byte[] b){  
-        if(b.length!=0){  
-            return BitmapFactory.decodeByteArray(b, 0, b.length);  
-        }  
-        else {  
-            return null;  
-        }  
-	} 
-	/**
-	 * Bitmap to Bytes
-	 * @param bm
-	 * @return
-	 */
-	public static byte[] Bitmap2Bytes(Bitmap bm){  
-	    ByteArrayOutputStream baos = new ByteArrayOutputStream();    
-	    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);    
-	    return baos.toByteArray();  
-	 } 
+ 
 	/**
 	 * 缩放图片文件
 	 * @param filepath
@@ -372,26 +351,7 @@ public class BitmapUtils {
 	        }
 	        return bitmap;
 	 }
-	/**
-	 * bitmap To File
-	 * @param bm
-	 * @param path
-	 */
-	public static void bitmap2File(Bitmap bm,String path){
-		File file=new File(path);
-        try {
-        	file.createNewFile();
-            FileOutputStream out=new FileOutputStream(file);
-            if(bm.compress(Bitmap.CompressFormat.JPEG, 100, out)){
-                out.flush();
-                out.close();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-	}
+
 	/**
 	 * 计算
 	 * @param options
@@ -491,4 +451,80 @@ public class BitmapUtils {
 		}
 		return count;
 	}
+	
+	/**
+	 * bitmap To File
+	 * @param bm
+	 * @param path
+	 */
+	public static void bitmap2File(Bitmap bm,String path){
+		File file=new File(path);
+        try {
+        	file.createNewFile();
+            FileOutputStream out=new FileOutputStream(file);
+            if(bm.compress(Bitmap.CompressFormat.JPEG, 100, out)){
+                out.flush();
+                out.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+
+	/**
+	 * Bitmap to Bytes
+	 * 
+	 * @param bm
+	 * @return
+	 */
+	public static byte[] bitmap2Bytes(Bitmap bitmap) {
+		if (null == bitmap)
+			return null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		return baos.toByteArray();
+	}
+
+	/**
+	 * bitmap to Drawable
+	 * 
+	 * @param bitmap
+	 * @return
+	 */
+	public static Drawable bitmap2Drawable(Bitmap bitmap) {
+		if (null != bitmap) {
+			return new BitmapDrawable(bitmap);
+		}
+		return null;
+	}
+
+	/**
+	 * drawable to Bitmap
+	 * 
+	 * @param drawble
+	 * @return
+	 */
+	public static Bitmap drawable2Bitmap(Drawable drawble) {
+		if (null != drawble) {
+			return ((BitmapDrawable) drawble).getBitmap();
+		}
+		return null;
+	}
+
+	/**
+	 * Bytes to Bitmap
+	 * 
+	 * @param b
+	 * @return
+	 */
+	public static Bitmap bytes2Bitmap(byte[] b) {
+		if (b.length != 0) {
+			return BitmapFactory.decodeByteArray(b, 0, b.length);
+		} else {
+			return null;
+		}
+	}
+
 }

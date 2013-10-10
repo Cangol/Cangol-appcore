@@ -15,22 +15,14 @@
  */
 package com.cangol.mobile.json;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
-
-
 
 /**
  * @Description: Customer VO annotation
@@ -40,7 +32,7 @@ import android.util.Log;
  */
 public class JsonUtils {
 	private final static boolean DEBUG=false;
-	private final static  String TAG = "JsonUtils";
+	public final static  String TAG = "JsonUtils";
 	/**
 	 * 转换Object到JSONObject
 	 * @param obj
@@ -54,7 +46,7 @@ public class JsonUtils {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
-			if (!List.class.isAssignableFrom(field.getType())) {
+			if (!List.class.isAssignableFrom(field.getType())){
 				//非集合类型
 				if (isBaseClass(field.getType())) {
 					json.put(field.getName(), field.get(obj));
@@ -64,7 +56,7 @@ public class JsonUtils {
 			}else{
 				//集合类型
 				if(field.getGenericType() instanceof ParameterizedType){
-					List<?> list=(List<?>) field.get(obj);
+					List list=(List) field.get(obj);
 					JSONArray jsonArray=new JSONArray();
 					if(list!=null){
 						for (int i = 0; i < list.size(); i++) {	
@@ -77,7 +69,7 @@ public class JsonUtils {
 					}
 					json.put(field.getName(), jsonArray);
 				}else{
-					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
+					throw new IllegalStateException(field.getName()+ " require have generic");
 				}
 			}
 			
@@ -112,7 +104,7 @@ public class JsonUtils {
 				ElementList elementList = field.getAnnotation(ElementList.class);
 				filedName="".equals(elementList.value())?field.getName():elementList.value();
 				if(field.getGenericType() instanceof ParameterizedType){
-					List<?> list=(List<?>) field.get(obj);
+					List list=(List) field.get(obj);
 					JSONArray jsonArray=new JSONArray();
 					if(list!=null){
 						for (int i = 0; i < list.size(); i++) {	
@@ -125,12 +117,9 @@ public class JsonUtils {
 					}
 					json.put(filedName, jsonArray);
 				}else{
-					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
+					throw new IllegalStateException(field.getName()+ " require have generic");
 				}
-			}else{
-				if(DEBUG)Log.i(TAG,"Field:" + field.getName()+ " no Annotation");
 			}
-			
 		}
 		return json;
 	}
@@ -164,27 +153,6 @@ public class JsonUtils {
 		JSONObject jsonObject=new JSONObject(json);
 		return parserToObject(c,jsonObject);
 	}
-	public static <T> T parserToObjectByUrl(Class<T> c,String urlStr) throws Exception{
-		if(null==urlStr||"".equals(urlStr)){
-			throw new IllegalArgumentException("urlStr=null");
-		}
-		URL url = new URL(urlStr);
-		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		String json=formatJson(inputStreamTOString(urlConnection.getInputStream()));
-		JSONObject jsonObject=new JSONObject(json);
-		return parserToObject(c,jsonObject);
-	}
-	public static String inputStreamTOString(InputStream in) throws Exception{  
-		int BUFFER_SIZE = 4096;
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();  
-        byte[] data = new byte[BUFFER_SIZE];  
-        int count = -1;  
-        while((count = in.read(data,0,BUFFER_SIZE)) != -1)  
-            outStream.write(data, 0, count);  
-          
-        data = null;  
-        return new String(outStream.toByteArray(),"ISO-8859-1");  
-    } 
 	
 	public static <T> T parserToObjectByAnnotation(Class<T> c,JSONObject jsonObject) throws Exception{
 		T t  = c.newInstance();
@@ -201,15 +169,12 @@ public class JsonUtils {
 				filedName="".equals(elementList.value())?field.getName():elementList.value();
 				if(field.getGenericType() instanceof ParameterizedType){
 					ParameterizedType pt = (ParameterizedType) field.getGenericType();  
-					Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
-					List<?> list=parserToList(genericClazz, getJSONArray(jsonObject, filedName),true);
+					Class genericClazz = (Class)pt.getActualTypeArguments()[0];
+					List list=parserToList(genericClazz, getJSONArray(jsonObject, filedName),true);
 					field.set(t,list);
 				}else{
-					
-					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
+					throw new IllegalStateException(field.getName()+ " require have generic");
 				}
-			}else{
-				if(DEBUG)Log.i(TAG,"Field:" + field.getName()+ " no Annotation");
 			}
 		}
 		return t;
@@ -230,20 +195,19 @@ public class JsonUtils {
 				filedName=field.getName();
 				if(field.getGenericType() instanceof ParameterizedType){
 					ParameterizedType pt = (ParameterizedType) field.getGenericType();  
-					Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
-					List<?> list=parserToList(genericClazz, getJSONArray(jsonObject, filedName),false);
+					Class genericClazz = (Class)pt.getActualTypeArguments()[0];
+					List list=parserToList(genericClazz, getJSONArray(jsonObject, filedName),false);
 					field.set(t,list);
 				}else{
-					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
+					throw new IllegalStateException(field.getName()+ " require have generic");
 				}
 			}
 		}
 		return t;
 	}
-	@SuppressWarnings("unchecked")
-	public  static <T> ArrayList<T> parserToList(Class<T> c,JSONArray jsonArray,boolean useAnnotation) throws Exception{
+	public  static <T> List<T> parserToList(Class<T> c,JSONArray jsonArray,boolean useAnnotation) throws Exception{
 		if(jsonArray==null)return  null;
-		ArrayList<T> list=new ArrayList<T>();
+		List<T> list=new ArrayList<T>();
 		T t=null;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			if(jsonArray.get(i) instanceof JSONObject){
@@ -274,7 +238,7 @@ public class JsonUtils {
 		}else if(field.getType()==Boolean.class||field.getType()==boolean.class){
 			field.set(t, getBoolean(jsonObject, filedName, false));
 		}else if(field.getType()==Float.class||field.getType()==float.class){
-			field.set(t, getFloat(jsonObject, filedName, 0.0f));
+			field.set(t, (float)getDouble(jsonObject, filedName, 0.0d));
 		}else{	
 			Object obj=null;
 			if(useAnnotation){
@@ -290,8 +254,8 @@ public class JsonUtils {
 			json = json.replaceFirst("\"\"", "\"");
 		}
 		return json;
-	}	
-	private static boolean isBaseClass(Class<?> clz){  
+	}
+	private static boolean isBaseClass(Class clz){  
 	    return isWrapClass(clz)||clz.isPrimitive()||clz==String.class;
 	} 
 	
@@ -303,59 +267,50 @@ public class JsonUtils {
 	        return false;  
 	    }  
 	} 
-	public static int getInt(JSONObject obj, String key, int defaultValue) {
+	private static int getInt(JSONObject obj, String key, int defaultValue) {
 		try {
 			return obj.getInt(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
-	public static long getLong(JSONObject obj, String key, long defaultValue) {
+	private static long getLong(JSONObject obj, String key, long defaultValue) {
 		try {
 			return obj.getLong(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
-	public static boolean getBoolean(JSONObject obj, String key, boolean defaultValue) {
+	private static boolean getBoolean(JSONObject obj, String key, boolean defaultValue) {
 		try {
 			return obj.getBoolean(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
-	public static float getFloat(JSONObject obj, String key, float defaultValue) {
-		String floatStr=null;
+	private static double getDouble(JSONObject obj, String key, double defaultValue) {
 		try {
-			floatStr=""+obj.get(key);
-			return Float.valueOf(floatStr);
-		} catch (JSONException e) {
-			return defaultValue;
-		}
-	}
-	public static double getDouble(JSONObject obj, String key, double defaultValue) {
-		try {
-			return obj.getDouble(key);
+			return obj.getInt(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
 	
-	public static String getString(JSONObject obj, String key, String defaultValue) {
+	private static String getString(JSONObject obj, String key, String defaultValue) {
 		try {
 			return obj.getString(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
-	public static JSONObject getJSONObject(JSONObject obj, String key) {
+	private static JSONObject getJSONObject(JSONObject obj, String key) {
 		try {
 			return obj.getJSONObject(key);
 		} catch (JSONException e) {
 			return null;
 		}
 	}
-	public static JSONArray getJSONArray(JSONObject obj, String key) {
+	private static JSONArray getJSONArray(JSONObject obj, String key) {
 		try {
 			return obj.getJSONArray(key);
 		} catch (JSONException e) {
@@ -363,3 +318,4 @@ public class JsonUtils {
 		}
 	}
 }
+
