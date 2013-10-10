@@ -18,9 +18,9 @@
 
 package com.cangol.mobile.http;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -28,7 +28,10 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
 /**
  * Used to intercept and handle the responses from requests made using 
@@ -72,13 +75,13 @@ public class AsyncHttpResponseHandler {
     protected static final int FINISH_MESSAGE = 3;
 
     private Handler handler;
-
+    
     /**
      * Creates a new AsyncHttpResponseHandler
      */
     public AsyncHttpResponseHandler() {
-        // Set up a handler to post events back to the correct thread if possible
-        if(Looper.myLooper() != null) {
+    	// Set up a handler to post events back to the correct thread if possible
+    	if(Looper.myLooper() != null) {
             handler = new Handler(){
                 public void handleMessage(Message msg){
                     AsyncHttpResponseHandler.this.handleMessage(msg);
@@ -86,7 +89,28 @@ public class AsyncHttpResponseHandler {
             };
         }
     }
+    /**
+     * Creates a new AsyncHttpResponseHandler with context
+     */
+    public AsyncHttpResponseHandler(Context context) {
+        // Set up a handler to post events back to the correct thread if possible
+        if(Looper.myLooper() != null) {
+            handler = new InternalHandler(context);
+        }
+    }
+    final static class InternalHandler extends Handler {
+		private final WeakReference<Context> mContext;
+		public InternalHandler(Context context) {
+			mContext = new WeakReference<Context>(context);
+		}
 
+		public void handleMessage(Message msg) {
+			Context context = mContext.get();
+		   if (context != null) {
+			   handleMessage(msg);
+		   }
+       }
+	}
 
     //
     // Callbacks to be overridden, typically anonymously
@@ -173,11 +197,9 @@ public class AsyncHttpResponseHandler {
     }
 
 
-
-    // Methods which emulate android's Handler and Message methods
+	// Methods which emulate android's Handler and Message methods
     protected void handleMessage(Message msg) {
         Object[] response;
-
         switch(msg.what) {
             case SUCCESS_MESSAGE:
                 response = (Object[])msg.obj;

@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.content.Context;
 import android.os.Message;
 
 /**
@@ -38,7 +39,14 @@ import android.os.Message;
  * parent class.
  */
 public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
-    protected static final int SUCCESS_JSON_MESSAGE = 100;
+	public JsonHttpResponseHandler() {
+		super();
+	}
+    public JsonHttpResponseHandler(Context context) {
+		super(context);
+	}
+
+	protected static final int SUCCESS_JSON_MESSAGE = 100;
 
     //
     // Callbacks to be overridden, typically anonymously
@@ -153,13 +161,13 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
                 } else if(jsonResponse instanceof JSONArray) {
                     onFailure(e, (JSONArray)jsonResponse);
                 } else {
-                    onFailure(e, responseBody);
+                    onFailure(e, responseBody);//父类方法
                 }
             }else {
-                onFailure(e, "");
+                onFailure(e, "");//父类方法
             }
         }catch(JSONException ex) {
-            onFailure(e, responseBody);
+            onFailure(e, responseBody);//父类方法
         }
     }
 }

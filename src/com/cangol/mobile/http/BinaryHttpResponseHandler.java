@@ -18,7 +18,8 @@
 
 package com.cangol.mobile.http;
 
-import android.os.Message;
+import java.io.IOException;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,7 +28,9 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
+import android.content.Context;
+import android.os.Message;
+import android.util.Log;
 
 /**
  * Used to intercept and handle the responses from requests made using
@@ -56,23 +59,36 @@ import java.io.IOException;
 public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     // Allow images by default
     private static String[] mAllowedContentTypes = new String[] {
-        "image/jpeg",
-        "image/png"
+        "application/zip", 
+        "application/x-zip-compressed", 
+        "application/octet-stream"
     };
-
     /**
      * Creates a new BinaryHttpResponseHandler
      */
     public BinaryHttpResponseHandler() {
         super();
     }
-
+    /**
+     * Creates a new BinaryHttpResponseHandler with context
+     */
+    public BinaryHttpResponseHandler(Context context) {
+		super(context);
+	}
     /**
      * Creates a new BinaryHttpResponseHandler, and overrides the default allowed
      * content types with passed String array (hopefully) of content types.
      */
     public BinaryHttpResponseHandler(String[] allowedContentTypes) {
         this();
+        mAllowedContentTypes = allowedContentTypes;
+    }
+    /**
+     * Creates a new BinaryHttpResponseHandler, and overrides the default allowed
+     * content types with passed String array (hopefully) of content types.
+     */
+    public BinaryHttpResponseHandler(Context context,String[] allowedContentTypes) {
+        this(context);
         mAllowedContentTypes = allowedContentTypes;
     }
 
@@ -116,10 +132,6 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
         sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, responseBody}));
     }
 
-    protected void sendFailureMessage(Throwable e, byte[] responseBody) {
-        sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
-    }
-
     //
     // Pre-processing of messages (in original calling thread, typically the UI thread)
     //
@@ -131,7 +143,14 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     protected void handleFailureMessage(Throwable e, byte[] responseBody) {
         onFailure(e, responseBody);
     }
-
+    protected void handleFailureMessage(Throwable e,String responseBody) {
+    	byte[] response = null;
+    	if(responseBody!=null) {
+    		onFailure(e, responseBody.getBytes());	
+    	}else{
+    		onFailure(e, response);	
+    	}
+    }
     // Methods which emulate android's Handler and Message methods
     protected void handleMessage(Message msg) {
         Object[] response;
@@ -142,7 +161,11 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
                 break;
             case FAILURE_MESSAGE:
                 response = (Object[])msg.obj;
-                handleFailureMessage((Throwable)response[0], (byte[])response[1]);
+                if(response[1] instanceof byte[]){
+                	handleFailureMessage((Throwable)response[0], (byte[])response[1]);
+                }else{
+                	handleFailureMessage((Throwable)response[0],(String)response[1]);
+                }
                 break;
             default:
                 super.handleMessage(msg);
@@ -152,6 +175,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
 
     // Interface to AsyncHttpRequest
     void sendResponseMessage(HttpResponse response) {
+    	Log.d(">>", "sendResponseMessage=");
         StatusLine status = response.getStatusLine();
         Header[] contentTypeHeaders = response.getHeaders("Content-Type");
         byte[] responseBody = null;
@@ -182,7 +206,6 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
         } catch(IOException e) {
             sendFailureMessage(e, (byte[]) null);
         }
-
         if(status.getStatusCode() >= 300) {
             sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
         } else {

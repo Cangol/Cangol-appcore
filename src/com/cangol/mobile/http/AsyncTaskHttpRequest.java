@@ -1,18 +1,19 @@
-/** 
- * Copyright (c) 2013 Cangol
- * 
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+    Android AsynTask Http Client
+    Copyright (c) 2012 xuewu.wei Cangol <wxw404@gmail.com>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 
 package com.cangol.mobile.http;
 
@@ -27,8 +28,11 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class AsyncTaskHttpRequest extends AsyncTask<Object, Object, Object>{
     private final AbstractHttpClient client;
     private final HttpContext context;
@@ -46,13 +50,13 @@ class AsyncTaskHttpRequest extends AsyncTask<Object, Object, Object>{
             this.isBinaryRequest = true;
         }
     }
-
 	@Override
 	protected Object doInBackground(Object... params) {
 		try {
             if(responseHandler != null){
                 responseHandler.sendStartMessage();
             }
+            
             makeRequestWithRetries();
 
             if(responseHandler != null) {
@@ -72,9 +76,9 @@ class AsyncTaskHttpRequest extends AsyncTask<Object, Object, Object>{
 	}
 
     private void makeRequest() throws IOException {
-        if(!Thread.currentThread().isInterrupted()) {
+        if(!this.isCancelled()&&!Thread.currentThread().isInterrupted()) {
             HttpResponse response = client.execute(request, context);
-            if(!Thread.currentThread().isInterrupted()) {
+            if(!this.isCancelled()&&!Thread.currentThread().isInterrupted()) {
                 if(responseHandler != null) {
                     responseHandler.sendResponseMessage(response);
                 }

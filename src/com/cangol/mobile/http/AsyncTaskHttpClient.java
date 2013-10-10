@@ -1,18 +1,19 @@
-/** 
- * Copyright (c) 2013 Cangol
- * 
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+    Android AsynTask Http Client
+    Copyright (c) 2012 xuewu.wei Cangol <wxw404@gmail.com>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 
 package com.cangol.mobile.http;
 
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.http.Header;
@@ -51,6 +51,8 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 
 /**
  * The AsyncHttpClient can be used to make asynchronous GET, POST, PUT and 
@@ -72,13 +74,12 @@ import android.content.Context;
  * </pre>
  */
 public class AsyncTaskHttpClient {
-
+	private final static String TAG="AsyncTaskHttpClient";
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext;
     private ThreadPoolExecutor threadPool;
     private final Map<Context, List<WeakReference<AsyncTaskHttpRequest>>> requestMap;
     private final Map<String, String> clientHeaderMap;
-
 
     /**
      * Creates a new AsyncHttpClient.
@@ -86,10 +87,9 @@ public class AsyncTaskHttpClient {
     public AsyncTaskHttpClient() {
        
     	httpContext = new SyncBasicHttpContext(new BasicHttpContext());
-		httpClient = HttpClientFactory.getThreadSafeClient();
+		httpClient = HttpClientFactory.getDefaultHttpClient();
 
         threadPool = (ThreadPoolExecutor)Executors.newCachedThreadPool();
-
         requestMap = new WeakHashMap<Context, List<WeakReference<AsyncTaskHttpRequest>>>();
         clientHeaderMap = new HashMap<String, String>();
     }
@@ -210,6 +210,7 @@ public class AsyncTaskHttpClient {
             	AsyncTaskHttpRequest request = requestRef.get();
                 if(request != null) {
                     request.cancel(mayInterruptIfRunning);
+                    Log.d("cancelRequests", ""+request);
                 }
             }
         }
@@ -310,7 +311,8 @@ public class AsyncTaskHttpClient {
      * @param responseHandler the response handler instance that should handle the response.
      */
     public void post(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        post(context, url, paramsToEntity(params), null, responseHandler);
+    	Log.d(TAG, url+(url.indexOf("?")!=-1?"&":"?")+params.toString());
+    	post(context, url, paramsToEntity(params), null, responseHandler);
     }
 
     /**
@@ -475,9 +477,13 @@ public class AsyncTaskHttpClient {
         if(contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }
+        Log.d(TAG, ""+uriRequest.getURI().toString());
         AsyncTaskHttpRequest request=new AsyncTaskHttpRequest(client, httpContext, uriRequest, responseHandler);
-        request.execute();
-
+		if(Build.VERSION.SDK_INT>=11){
+			request.executeOnExecutor(threadPool);
+		}else{
+			request.execute();
+		}
         if(context != null) {
             // Add request to request map
             List<WeakReference<AsyncTaskHttpRequest>> requestList = requestMap.get(context);
