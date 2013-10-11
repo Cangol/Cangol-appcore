@@ -9,5 +9,5 @@ public interface AppService {
 
 	String getName();
 	
-	
+	void destory();	
 }

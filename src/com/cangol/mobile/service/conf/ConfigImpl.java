@@ -2,14 +2,14 @@ package com.cangol.mobile.service.conf;
 
 import android.content.Context;
 
+import com.cangol.mobile.service.Service;
 import com.cangol.mobile.utils.StorageUtils;
-
+@Service("config")
 public class ConfigImpl implements Config {
 	private Context mContext = null;
 	@Override
 	public String getAppDir() {
-		
-		return null;
+		return StorageUtils.getExternalStorageDir(mContext, "app_ext");
 	}
 
 	@Override
@@ -19,26 +19,22 @@ public class ConfigImpl implements Config {
 
 	@Override
 	public String getImageDir() {
-		// TODO Auto-generated method stub
-		return null;
+		return getAppDir()+"/image/";
 	}
 
 	@Override
 	public String getTempDir() {
-		// TODO Auto-generated method stub
-		return null;
+		return getAppDir()+"/temp/";
 	}
 
 	@Override
 	public String getDownloadDir() {
-		// TODO Auto-generated method stub
-		return null;
+		return getAppDir()+"/download/";
 	}
 
 	@Override
 	public String getDatabaseName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "app_db";
 	}
 
 	@Override
@@ -49,6 +45,11 @@ public class ConfigImpl implements Config {
 	@Override
 	public String getName() {
 		return "config";
+	}
+
+	@Override
+	public void destory() {
+		
 	}
 
 

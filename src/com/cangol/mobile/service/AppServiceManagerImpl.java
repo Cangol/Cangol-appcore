@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.cangol.mobile.utils.ClassUtils;
 
 public class AppServiceManagerImpl extends AppServiceManager {
-	
+	private final static String  TAG=" AppServiceManager";
 	private Map<String, AppService> runServiceMap = new Hashtable<String, AppService>();
 	private Map<String,Class<? extends AppService>> serviceMap = new Hashtable<String,Class<? extends AppService>>();
 	private Context context;
@@ -21,14 +22,15 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		initServiceMap();
 	}
 	private void initServiceMap() {	
-		
-		List<Class> classList=ClassUtils.getAllClassByInterface(AppService.class);
+		List<Class> classList=ClassUtils.getAllClassByInterface(AppService.class,context);
 		for(Class<? extends AppService> clazz:classList){
 			try {
 				if(useAnnotation){
-					if(clazz.getClass().isAnnotationPresent(Service.class)){
-						Service service = clazz.getClass().getAnnotation(Service.class);
+					if(clazz.isAnnotationPresent(Service.class)){
+						Service service = clazz.getAnnotation(Service.class);
 						serviceMap.put(service.value(), clazz);
+					}else{
+						Log.d(TAG, clazz+" no Service Annotation");
 					}
 				}else{
 					Method method=clazz.getMethod("getName");
@@ -49,7 +51,6 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			}
 		}
 	}
-
 	@Override
 	public AppService getAppService(String name) {
 		AppService appService=null;
@@ -70,6 +71,25 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			}
 		}
 		return appService;
+	}
+	@Override
+	public void destoryService(String name) {
+		AppService appService=null;
+		if(runServiceMap.containsKey(name)){
+			appService= runServiceMap.get(name);
+			appService.destory();
+		}else{
+			Log.d(TAG, name+" Service is not running");
+		}
+	}
+	@Override
+	public void destoryAllService() {
+		AppService appService=null;
+		for(String name:runServiceMap.keySet()){
+			appService= runServiceMap.get(name);
+			appService.destory();
+		}
+		
 	}
 
 }

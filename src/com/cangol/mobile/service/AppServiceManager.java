@@ -11,4 +11,8 @@ public abstract class AppServiceManager {
 	public static final String STAT_SERVICE = "stat";
 	
 	public abstract AppService getAppService(String name);
+	
+	public abstract void destoryService(String name);
+	
+	public abstract void destoryAllService();
 }
