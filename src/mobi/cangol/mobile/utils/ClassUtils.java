@@ -22,23 +22,24 @@ import dalvik.system.DexFile;
 import android.content.Context;
 import android.util.Log;
 
-@SuppressWarnings("all")
 public class ClassUtils {
 	
 	/**
 	 * 获取接口的所有实现类
+	 * @param <T>
 	 * @param c
 	 * @param context
 	 * @return
 	 */
-	public static List<Class> getAllClassByInterface(Class c,Context context) {
-		List<Class> returnClassList = new ArrayList<Class>(); 
+	@SuppressWarnings("unchecked")
+	public static <T> List<Class<? extends T>> getAllClassByInterface(Class<T> c,Context context) {
+		List<Class<? extends T>> returnClassList = new ArrayList<Class<? extends T>>(); 
 		if (c.isInterface()) {
 			String packageName = c.getPackage().getName(); 
-			List<Class> allClass = getAllClassByPackage(packageName,context); 
+			List<Class<?>> allClass = getAllClassByPackage(packageName,context); 
 			for (int i = 0; i < allClass.size(); i++) {
 				if (c.isAssignableFrom(allClass.get(i))&&!allClass.get(i).isInterface()) { 
-					returnClassList.add(allClass.get(i));
+					returnClassList.add((Class<? extends T>) allClass.get(i));
 				}
 			}
 		}
@@ -47,18 +48,19 @@ public class ClassUtils {
 	
 	/**
 	 * 获取包内所有类
+	 * @param <T>
 	 * @param packageName
 	 * @param context
 	 * @return
 	 */
-	public  static List<Class> getAllClassByPackage(String packageName,Context context){
-		List<Class> classList = new ArrayList<Class>(); 
+	public  static  List<Class<?>> getAllClassByPackage(String packageName,Context context){
+		List<Class<?>> classList = new ArrayList<Class<?>>(); 
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
 	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
 	            String s = iter.nextElement();
 	            if(s.startsWith(packageName)){
-	            	Class<?> clazz=context.getClassLoader().loadClass(s);
+	            	Class<?> clazz=(Class<?>) context.getClassLoader().loadClass(s);
 	            	classList.add(clazz);
 	            }
 	        }

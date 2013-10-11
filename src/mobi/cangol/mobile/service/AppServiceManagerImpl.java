@@ -22,7 +22,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		initServiceMap();
 	}
 	private void initServiceMap() {	
-		List<Class> classList=ClassUtils.getAllClassByInterface(AppService.class,context);
+		List<Class<? extends AppService>> classList=ClassUtils.getAllClassByInterface(AppService.class,context);
 		for(Class<? extends AppService> clazz:classList){
 			try {
 				if(useAnnotation){
