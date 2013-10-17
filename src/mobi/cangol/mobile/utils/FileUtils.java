@@ -405,25 +405,26 @@ public class FileUtils {
 		}
 	}
 	/**
-	 * 遍历文件
+	 * 按后缀遍历目录
 	 * @param f
 	 * @param fileList
-	 * @param extension 文件后缀
+	 * @param suffix
 	 * @return
 	 */
-	public static List<File> tree(File f,List<File> fileList,String extension){
+	public static List<File> searchBySuffix(File f,List<File> fileList,String suffix){
 		if(null==fileList)fileList=new ArrayList<File>();
-		File[] childs = f.listFiles();   
-		if(childs!=null)for (int i = 0; i < childs.length; i++) {   
-			if (childs[i].isDirectory()) {  
-				tree(childs[i],fileList,extension);
-			} else {
-				if(childs[i].getName().contains(extension)){
-					//匹配上
-					fileList.add(childs[i]);
-				} 
-			}
-		}  
+		if(f.isDirectory()){ 
+			File[] childs = f.listFiles();   
+			if(childs!=null)for (int i = 0; i < childs.length; i++) {   
+				if (childs[i].isDirectory()) {  
+					searchBySuffix(childs[i],fileList,suffix);
+				} else {
+					if(childs[i].getName().endsWith(suffix)){
+						fileList.add(childs[i]);
+					}
+				}
+			}  
+		}
 		return fileList;
 	}
 	/**

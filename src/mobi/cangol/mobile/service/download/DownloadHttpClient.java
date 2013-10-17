@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.HttpClientParams;
@@ -32,7 +33,6 @@ public class DownloadHttpClient {
     private ThreadPoolExecutor threadPool;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
     private final static int DEFAULT_RETRYTIMES=5;
-    private final static long DEFAULT_SLEEPTIMES=5000L;
     private final static int DEFAULT_SOCKET_TIMEOUT = 20 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
     public DownloadHttpClient() {
@@ -51,14 +51,19 @@ public class DownloadHttpClient {
 
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
     }
-    
-    public void send(Context context,String url,DownloadResponseHandler responseHandler,long from,String saveFile) {
+    public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
+    	httpClient.setHttpRequestRetryHandler(retryHandler);
+    }
+    public void setThreadool(ThreadPoolExecutor threadPool) {
+        this.threadPool = threadPool;
+    }
+    public Future<?> send(Context context,String url,DownloadResponseHandler responseHandler,long from,String saveFile) {
         HttpUriRequest request = new HttpGet(url);
         if(DEBUG)Log.d(TAG, "url:"+request.getURI().toString());
-        sendRequest(httpClient,httpContext,request,null,responseHandler,context,from,saveFile);
+        return sendRequest(httpClient,httpContext,request,null,responseHandler,context,from,saveFile);
     }
 
-    protected void sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType,DownloadResponseHandler responseHandler, Context context,long from,String saveFile) {
+    protected Future<?> sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType,DownloadResponseHandler responseHandler, Context context,long from,String saveFile) {
         if(contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }
@@ -73,6 +78,7 @@ public class DownloadHttpClient {
             }
             requestList.add(new WeakReference<Future<?>>(request));
         }
+        return request;
     }
     
     public void cancelRequests(Context context, boolean mayInterruptIfRunning) {

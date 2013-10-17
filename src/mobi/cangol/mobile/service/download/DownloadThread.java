@@ -52,7 +52,7 @@ public class DownloadThread extends Thread{
             HttpResponse response = client.execute(request, context);
             if(!Thread.currentThread().isInterrupted()) {
                 if(responseHandler != null) {
-                    responseHandler.sendResponseMessage(response,from,saveFile);
+                    responseHandler.sendResponseMessage(response,saveFile);
                 }
             } else{
             	if(DEBUG)Log.d(TAG, "Thread.isInterrupted");

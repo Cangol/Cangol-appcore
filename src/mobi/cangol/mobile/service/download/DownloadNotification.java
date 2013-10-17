@@ -19,10 +19,12 @@ public class DownloadNotification {
 	private String title;
 	private String savePath;
 	private Context context;
-	public DownloadNotification(Context context,String title,String savePath){
+	private Download.DownloadType downloadType;
+	public DownloadNotification(Context context,String title,String savePath,Download.DownloadType downloadType){
 		this.context=context;
 		this.title=title;
 		this.savePath=savePath;
+		this.downloadType=downloadType;
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancelAll();
 		
@@ -61,7 +63,7 @@ public class DownloadNotification {
 		notificationManager.cancel(noid);
 	}
 
-	public void completeNotification(Download.DownloadType downloadType) {
+	public void finishNotification() {
 		PendingIntent pendingIntent =null;
 		if(Download.DownloadType.APK==downloadType){
 			Uri uri = Uri.fromFile(new File(savePath));
