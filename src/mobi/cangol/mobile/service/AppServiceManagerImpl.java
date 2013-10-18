@@ -61,6 +61,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 				if(serviceMap.containsKey(name)){
 					appService=serviceMap.get(name).newInstance();
 					appService.setContext(context);
+					appService.init();
 				}else{
 					throw new IllegalStateException("hasn't appService'name is "+name);
 				}

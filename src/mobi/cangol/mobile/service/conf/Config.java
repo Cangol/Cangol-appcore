@@ -16,4 +16,5 @@ public interface Config extends AppService{
 	
 	String getDatabaseName();
 	
+	String getSharedName();
 }

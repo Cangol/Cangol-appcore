@@ -2,35 +2,63 @@ package mobi.cangol.mobile.service.upgrade;
 
 import java.io.File;
 
+import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.download.Download;
 import mobi.cangol.mobile.service.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.download.DownloadNotification;
 import mobi.cangol.mobile.service.download.DownloadResponseHandler;
-
 import android.content.Context;
-
-import mobi.cangol.mobile.service.Service;
 @Service("upgrade")
 public class UpgradeImpl implements Upgrade{
 	private Context mContext = null;
 	private DownloadHttpClient mDownloadHttpClient;
 	private DownloadNotification mDownloadNotification;
 	@Override
+	public void init() {
+		
+	}
+
+	@Override
+	public void setContext(Context ctx) {
+		mContext=ctx;
+	}
+
+	@Override
+	public String getName() {
+		return "upgrade";
+	}
+
+	@Override
+	public void destory() {
+		
+		if(mDownloadHttpClient!=null){
+			mDownloadHttpClient.cancelRequests(mContext, true);
+			mDownloadHttpClient=null;
+		}
+		
+		if(mDownloadNotification!=null){
+			mDownloadNotification.cancelNotification();
+			mDownloadNotification=null;
+		}
+	}
+	
+	@Override
 	public boolean isUpgrade(String version) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
-	public void getUpgrade(String version) {
-		// TODO Auto-generated method stub
+	public String getUpgrade(String version) {
 		
+		return null;
 	}
 	@Override
-	public void downloadUpgradeApk(String url,String savePath) {
+	public void downloadUpgrade(String url,String savePath) {
 		mDownloadNotification=new DownloadNotification(mContext,"",savePath,Download.DownloadType.APK);
+		mDownloadNotification.initNotification();
 		if(mDownloadHttpClient==null)
-		mDownloadHttpClient=new DownloadHttpClient();
+			mDownloadHttpClient=new DownloadHttpClient();
 		File saveFile=new File(savePath);
 		if(saveFile.exists())saveFile.delete();
 		mDownloadHttpClient.send(mContext, url, new DownloadResponseHandler(){
@@ -66,30 +94,6 @@ public class UpgradeImpl implements Upgrade{
 			
 		}, saveFile.length(), savePath);
 		
-	}
-
-	@Override
-	public void setContext(Context ctx) {
-		mContext=ctx;
-	}
-
-	@Override
-	public String getName() {
-		return "config";
-	}
-
-	@Override
-	public void destory() {
-		
-		if(mDownloadHttpClient!=null){
-			mDownloadHttpClient.cancelRequests(mContext, true);
-			mDownloadHttpClient=null;
-		}
-		
-		if(mDownloadNotification!=null){
-			mDownloadNotification.cancelNotification();
-			mDownloadNotification=null;
-		}
 	}
 
 }

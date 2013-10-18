@@ -5,6 +5,8 @@ import android.content.Context;
 
 public interface AppService {
 	
+	void init();	
+	
 	void setContext(Context context);
 
 	String getName();

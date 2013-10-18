@@ -1,12 +1,30 @@
 package mobi.cangol.mobile.service.conf;
 
-import android.content.Context;
-
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.utils.StorageUtils;
+import android.content.Context;
 @Service("config")
 public class ConfigImpl implements Config {
 	private Context mContext = null;
+	@Override
+	public void init() {
+		
+	}
+	@Override
+	public void setContext(Context ctx) {
+		mContext=ctx;
+	}
+
+	@Override
+	public String getName() {
+		return "config";
+	}
+
+	@Override
+	public void destory() {
+		
+	}
+	
 	@Override
 	public String getAppDir() {
 		return StorageUtils.getExternalStorageDir(mContext, "app_ext");
@@ -38,18 +56,8 @@ public class ConfigImpl implements Config {
 	}
 
 	@Override
-	public void setContext(Context ctx) {
-		mContext=ctx;
-	}
-
-	@Override
-	public String getName() {
-		return "config";
-	}
-
-	@Override
-	public void destory() {
-		
+	public String getSharedName() {
+		return "app_shared";
 	}
 
 

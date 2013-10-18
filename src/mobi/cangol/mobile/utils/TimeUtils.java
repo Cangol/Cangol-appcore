@@ -219,6 +219,16 @@ public class TimeUtils {
 		}
 	}
 	/**
+	 *  将long形式改成YYYYMMDD
+	 * @param time
+	 * @return
+	 */
+	public static String convert(long time){
+		Date date = new Date(time);
+		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return formatter.format(date);
+	}
+	/**
 	 * 计算距今的时间
 	 * @param time
 	 * @return

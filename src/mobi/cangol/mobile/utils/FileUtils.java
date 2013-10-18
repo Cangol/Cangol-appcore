@@ -411,7 +411,7 @@ public class FileUtils {
 	 * @param suffix
 	 * @return
 	 */
-	public static List<File> searchBySuffix(File f,List<File> fileList,String suffix){
+	public static List<File> searchBySuffix(File f,List<File> fileList,String... suffix){
 		if(null==fileList)fileList=new ArrayList<File>();
 		if(f.isDirectory()){ 
 			File[] childs = f.listFiles();   
@@ -419,9 +419,12 @@ public class FileUtils {
 				if (childs[i].isDirectory()) {  
 					searchBySuffix(childs[i],fileList,suffix);
 				} else {
-					if(childs[i].getName().endsWith(suffix)){
-						fileList.add(childs[i]);
+					for(int j=0;j<suffix.length;j++){
+						if(childs[i].getName().endsWith(suffix[j])){
+							fileList.add(childs[i]);
+						}
 					}
+					
 				}
 			}  
 		}

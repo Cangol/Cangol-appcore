@@ -27,7 +27,11 @@ public class DownloadNotification {
 		this.downloadType=downloadType;
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancelAll();
+	}
+	public void initNotification() {
 		
+	}
+	private void testNotification() {
 		if(update_notification_layout==0){
 			throw new IllegalStateException("please set this value " +
 					"[update_notification_layout," +
@@ -39,8 +43,8 @@ public class DownloadNotification {
 					"download_success_text]");
 		}
 	}
-	
 	public void createNotification() {
+		testNotification();
 		noid = new Random().nextInt(10000);
 		notificaion = new Notification();
 		notificaion.flags |= Notification.FLAG_ONGOING_EVENT;
@@ -59,11 +63,13 @@ public class DownloadNotification {
 	}
 
 	public void cancelNotification() {
+		testNotification();
 		if(notificationManager!=null)
 		notificationManager.cancel(noid);
 	}
 
 	public void finishNotification() {
+		testNotification();
 		PendingIntent pendingIntent =null;
 		if(Download.DownloadType.APK==downloadType){
 			Uri uri = Uri.fromFile(new File(savePath));
@@ -84,7 +90,7 @@ public class DownloadNotification {
 	}
 
 	public void updateNotification(int progress, String speed) {
-		
+		testNotification();
 		notificaion.contentView.setProgressBar(update_notification_progressbar, 100, progress, false);
 		
 		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% "+speed);
@@ -93,6 +99,7 @@ public class DownloadNotification {
 	}
 
 	public void failureNotification() {
+		testNotification();
 		notificaion.tickerText = title;
 		notificaion.when = System.currentTimeMillis();
 		notificaion.contentView.setViewVisibility(update_notification_progressblock, View.GONE);
