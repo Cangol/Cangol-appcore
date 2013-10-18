@@ -76,6 +76,17 @@ public class TimeUtils {
 		CurrentTime = formatter.format(NowDate);
 		return CurrentTime;
 	}
+	/**
+	 * 得到当前的时间，精确到毫秒,共14位
+	 * 返回格式:yyyyMMddHHmmss
+	 * @return String
+	 */
+	public static String getCurrentTime2() {
+		Date NowDate = new Date();
+		SimpleDateFormat formatter =new SimpleDateFormat("yyyyMMddHHmmss");
+		CurrentTime = formatter.format(NowDate);
+		return CurrentTime;
+	}
 	public static Date convertToDate(String date) {
 		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
 		try{

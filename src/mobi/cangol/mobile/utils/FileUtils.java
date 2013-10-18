@@ -430,6 +430,28 @@ public class FileUtils {
 		}
 		return fileList;
 	}
+	public static void writeStr(File file,String content){
+		FileOutputStream os = null;
+		try {
+			byte[] buffer = content.getBytes("UTF-8");
+			os = new FileOutputStream(file);
+			os.write(buffer);
+			os.flush();			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(os!=null){
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				os = null;
+			}
+		}
+	}
 	/**
 	 * 将object写入文件
 	 * @param obj
