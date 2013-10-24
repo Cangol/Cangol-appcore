@@ -2,24 +2,29 @@ package mobi.cangol.mobile.service.stat;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.conf.Config;
 import android.content.Context;
 import android.util.Log;
 @Service("stat")
 public class StatServiceImpl implements StatService {
 	private final static String TAG="StatService";
-	private final static  int STAT_MAX = 5;
 	private Context mContext = null;
 	private AsyncHttpClient asyncHttpClient;
-	
+	private Config mConfig=null;
 	@Override
 	public void init() {
+		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		mConfig=(Config) app.getAppService("config");
 		asyncHttpClient=new AsyncHttpClient();
-		asyncHttpClient.setThreadool((ThreadPoolExecutor) PoolManager.buildPool("stat", STAT_MAX).getExecutorService());
+		asyncHttpClient.setThreadool((ThreadPoolExecutor) PoolManager.
+				buildPool(mConfig.getStringValue(Config.STATSERVICE_THREADPOOL_NAME),
+				mConfig.getIntValue(Config.STATSERVICE_THREAD_MAX)).getExecutorService());
 	}
 
 	@Override

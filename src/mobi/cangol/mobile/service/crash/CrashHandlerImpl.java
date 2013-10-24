@@ -37,7 +37,9 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfig=(Config) app.getAppService("config");
 		asyncHttpClient=new AsyncHttpClient();
-		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager.buildPool("crash",mConfig.getIntValue(Config.CRASHHANDLER_THREAD_MAX))
+		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager
+				.buildPool(mConfig.getStringValue(Config.CRASHHANDLER_THREADPOOL_NAME)
+						,mConfig.getIntValue(Config.CRASHHANDLER_THREAD_MAX))
 				.getExecutorService());
 	}
 
@@ -67,8 +69,8 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 		for(final File file:list){
 			RequestParams params=new RequestParams(getMobileInfo());
 			try {	
-				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_ERROR_PARAM_NAME), file);
-				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_TIMESTAMP_PARAM_NAME), file.getName());
+				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_ERROR), file);
+				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_TIMESTAMP), file.getName());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

@@ -12,5 +12,7 @@ public interface LocationService extends AppService{
 	Location getLastKnownLocation();
 	
 	boolean isBetterLocation(Location mLocation);
+
+	void setBetterLocationListener(BetterLocationListener locationListener);
 }
 

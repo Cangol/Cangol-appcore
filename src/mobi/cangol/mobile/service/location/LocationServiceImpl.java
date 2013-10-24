@@ -1,6 +1,8 @@
 package mobi.cangol.mobile.service.location;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.conf.Config;
 import mobi.cangol.mobile.utils.TimeUtils;
 import android.content.Context;
 import android.location.Location;
@@ -11,15 +13,19 @@ import android.util.Log;
 @Service("location")
 public class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
+	private int betterTime = 1000 * 60 * 2;
 	private Context mContext = null;
 	private LocationListener mLocationListener;
 	private LocationManager mLocationManager;
 	private Location mLocation;
 	private boolean isRemove;
-	
+	private BetterLocationListener mMyLocationListener;
+	private Config mConfig=null;
 	@Override
 	public void init() {
+		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		mConfig=(Config) app.getAppService("config");
+		betterTime=mConfig.getIntValue(Config.LOCATIONSERVICE_BETTERTIME);
 		mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 		mLocation=mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		if(!isBetterLocation(mLocation)){
@@ -54,23 +60,26 @@ public class LocationServiceImpl implements LocationService{
 					mLocation=location;
 					removeLocationUpdates();
 					isRemove=true;
+					mMyLocationListener.onBetterLocation(mLocation);
+				}else{
+					Log.d(TAG, "location "+location.toString());
 				}
 			}
 
 			@Override
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				Log.d(TAG, "onStatusChanged provider"+provider);
+				Log.d(TAG, "onStatusChanged provider "+provider);
 			}
 
 			@Override
 			public void onProviderEnabled(String provider) {
-				Log.d(TAG, "onProviderEnabled provider"+provider);
+				Log.d(TAG, "onProviderEnabled provider "+provider);
 			}
 
 			@Override
 			public void onProviderDisabled(String provider) {
-				Log.d(TAG, "onProviderDisabled provider"+provider);
+				Log.d(TAG, "onProviderDisabled provider "+provider);
 			}
 			
 		};
@@ -95,7 +104,15 @@ public class LocationServiceImpl implements LocationService{
 		if(null==location)return false;
 		long timeDelta=System.currentTimeMillis()-location.getTime();
 		Log.d(TAG, "location time :"+TimeUtils.convert(location.getTime()));
-		return (timeDelta<TWO_MINUTES);
+		return (timeDelta<betterTime);
+	}
+
+	@Override
+	public void setBetterLocationListener(BetterLocationListener locationListener) {
+		this.mMyLocationListener=locationListener;
+		if(mLocation!=null&&!isBetterLocation(mLocation)){
+			mMyLocationListener.onBetterLocation(mLocation);
+		}
 	}
 
 }

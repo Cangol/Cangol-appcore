@@ -9,9 +9,9 @@ public interface Config extends AppService{
 
 	public final static String[] CRASHHANDLER_THREAD_MAX={"CrashHandler","thread_max"};
 	public final static String[] CRASHHANDLER_THREADPOOL_NAME={"CrashHandler","threadpool_name"};
-	public final static String[] CRASHHANDLER_REPORT_ERROR_PARAM_NAME={"CrashHandler","report","error_param_name"};
-	public final static String[] CRASHHANDLER_REPORT_DEVICE_PARAM_NAME={"CrashHandler","report","device_param_name"};
-	public final static String[] CRASHHANDLER_REPORT_TIMESTAMP_PARAM_NAME={"CrashHandler","report","timestamp_param_name"};
+	public final static String[] CRASHHANDLER_REPORT_ERROR={"CrashHandler","report","error_param_name"};
+	public final static String[] CRASHHANDLER_REPORT_DEVICE={"CrashHandler","report","device_param_name"};
+	public final static String[] CRASHHANDLER_REPORT_TIMESTAMP={"CrashHandler","report","timestamp_param_name"};
 	
 	public final static String[] DOWNLOADSERVICE_THREAD_MAX={"DownloadService","thread_max"};
 	public final static String[] DOWNLOADSERVICE_THREADPOOL_NAME={"DownloadService","threadpool_name"};
