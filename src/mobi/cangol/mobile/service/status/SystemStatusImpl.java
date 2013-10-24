@@ -55,7 +55,14 @@ public class SystemStatusImpl implements SystemStatus {
 	public boolean isWifiConnection() {
 		return DeviceInfo.isWifiConnection(mContext);
 	}
-
+	@Override
+	public boolean isGPSLocation() {
+		return DeviceInfo.isGPSLocation(mContext);
+	}
+	@Override
+	public boolean isNetworkLocation() {
+		return DeviceInfo.isNetworkLocation(mContext);
+	}
 	@Override
 	public void setStatusListner(StatusListener statusListener) {
 		mStatusListener=statusListener;

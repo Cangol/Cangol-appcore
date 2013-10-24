@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import mobi.cangol.mobile.MobileApplication;
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
@@ -26,7 +26,6 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	private final static String TAG="CrashHandler";
 	private final static String URL_REPORT="";
 	private final static  String CRASH = ".crash";
-	private final static  int CRASH_MAX = 5;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
 	private Context mContext;
 	private Config mConfig=null;
@@ -35,11 +34,11 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	public void init() {
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
-		MobileApplication app=(MobileApplication) mContext.getApplicationContext();
+		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfig=(Config) app.getAppService("config");
 		asyncHttpClient=new AsyncHttpClient();
-		asyncHttpClient.setThreadool((ThreadPoolExecutor) PoolManager.buildPool("crash", CRASH_MAX).getExecutorService());
-		
+		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager.buildPool("crash",mConfig.getIntValue(Config.CRASHHANDLER_THREAD_MAX))
+				.getExecutorService());
 	}
 
 	@Override
@@ -67,9 +66,9 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 		List<File> list=FileUtils.searchBySuffix(new File(mConfig.getTempDir()), null, CRASH);
 		for(final File file:list){
 			RequestParams params=new RequestParams(getMobileInfo());
-			try {
-				params.put("error", file);
-				params.put("timestamp", file.getName());
+			try {	
+				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_ERROR_PARAM_NAME), file);
+				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_TIMESTAMP_PARAM_NAME), file.getName());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mobi.cangol.mobile.MobileApplication;
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.cache.Object2FileUtils;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.conf.Config;
@@ -39,7 +39,7 @@ public class GlobalDataImpl implements GlobalData {
 	@Override
 	public void init() {
 		//这里使用挂载在application总的session也可实例化一个新的
-		MobileApplication app=(MobileApplication) mContext.getApplicationContext();
+		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mSession=app.session;
 		
 		mConfig=(Config) app.getAppService("config");

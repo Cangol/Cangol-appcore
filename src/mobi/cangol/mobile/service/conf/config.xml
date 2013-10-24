@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<AppDir>app_ext</AppDir>
+	<AppImageDir>image</AppImageDir>
+	<AppDownloadDir>download</AppDownloadDir>
+	<AppTempDir>temp</AppTempDir>
+	<AppUpgradeDir>upgrade</AppUpgradeDir>
+	<DatabaseName>app_db</DatabaseName>
+	<SharedName>app_shared</SharedName>
+	<CrashHandler>
+	     <thread_max>5</thread_max>
+	     <threadpool_name>crash</threadpool_name>
+	     <report>
+	            <error_param_name>error</error_param_name>
+	         	<device_param_name>device</device_param_name>
+	         	<timestamp_param_name>timestamp</timestamp_param_name>
+		 </report>
+	</CrashHandler>
+	<DatabaseService>
+	</DatabaseService>
+	<DownloadService>
+	    <thread_max>5</thread_max>
+	     <threadpool_name>download</threadpool_name>
+	</DownloadService>
+	
+	<LocationService>
+	    <betterTime>120000</betterTime>
+	     <GPS>
+		     <minTime>1000</minTime>
+		     <minDistance>50</minDistance>
+	     </GPS>
+	     <NETWORK>
+		     <minTime>1000</minTime>
+		     <minDistance>50</minDistance>
+	     </NETWORK>
+	</LocationService>
+	
+	<StatService>
+	     <thread_max>5</thread_max>
+	     <threadpool_name>stat</threadpool_name>
+	</StatService>
+	
+	<StatusService>
+	    
+	</StatusService>
+	
+	<UpgradeService>
+	    
+	</UpgradeService>
+	
+</Config>

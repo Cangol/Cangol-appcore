@@ -7,6 +7,10 @@ public interface SystemStatus extends AppService {
 	boolean isConnection();
 
 	boolean isWifiConnection();
+
+	boolean isGPSLocation();
+	
+	boolean isNetworkLocation();
 	
 	void setStatusListner(StatusListener statusListener);
 }
