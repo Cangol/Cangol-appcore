@@ -14,5 +14,7 @@ public interface LocationService extends AppService{
 	boolean isBetterLocation(Location mLocation);
 
 	void setBetterLocationListener(BetterLocationListener locationListener);
+	
+	String getAddress();
 }
 

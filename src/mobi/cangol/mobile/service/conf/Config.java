@@ -21,6 +21,8 @@ public interface Config extends AppService{
 	public final static String[] STATSERVICE_THREADPOOL_NAME={"StatService","threadpool_name"};
 	
 	public final static String[] LOCATIONSERVICE_BETTERTIME={"LocationService","betterTime"};
+	public final static String[] LOCATIONSERVICE_TIMEOUT={"LocationService","timeOut"};
+	public final static String[] LOCATIONSERVICE_BAIDU_AK={"LocationService","baidu_ak"};
 	public final static String[] LOCATIONSERVICE_GPS_MINTIME={"LocationService","GPS","minTime"};
 	public final static String[] LOCATIONSERVICE_GPS_MINDISTANCE={"LocationService","GPS","minDistance"};
 	public final static String[] LOCATIONSERVICE_NETWORK_MINTIME={"LocationService","NETWORK","minTime"};

@@ -11,6 +11,7 @@
 	     <thread_max>5</thread_max>
 	     <threadpool_name>crash</threadpool_name>
 	     <report>
+	         	<url></url>
 	            <error_param_name>error</error_param_name>
 	         	<device_param_name>device</device_param_name>
 	         	<timestamp_param_name>timestamp</timestamp_param_name>
@@ -24,6 +25,7 @@
 	</DownloadService>
 	
 	<LocationService>
+	    <timeOut>300000</timeOut>
 	    <betterTime>120000</betterTime>
 	     <GPS>
 		     <minTime>1000</minTime>
@@ -33,6 +35,7 @@
 		     <minTime>1000</minTime>
 		     <minDistance>50</minDistance>
 	     </NETWORK>
+	     <baidu_ak>694639beed8fa216ffae5d78d8cd51e0</baidu_ak>
 	</LocationService>
 	
 	<StatService>
