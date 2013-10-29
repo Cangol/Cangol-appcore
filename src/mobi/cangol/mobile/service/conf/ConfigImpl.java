@@ -3,6 +3,7 @@ package mobi.cangol.mobile.service.conf;
 import java.io.File;
 import java.io.InputStream;
 
+import mobi.cangol.mobile.json.DocumentParser;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.utils.StorageUtils;
 import android.content.Context;

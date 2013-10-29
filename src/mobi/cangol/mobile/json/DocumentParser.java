@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.service.conf;
+package mobi.cangol.mobile.json;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +12,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import android.util.Log;
 
 public class DocumentParser {
 	private DocumentBuilderFactory factory;
@@ -38,26 +40,48 @@ public class DocumentParser {
 	public Element getRoot() {
 		return root;
 	}
+	
 	public String getNodeValue(String... nodeName){
 		return getNodeValue(root,nodeName);
 	}
-	private String getNodeValue(Element parent,String... nodeName){
-		NodeList nodeList=parent.getElementsByTagName(nodeName[0]);
-		Node node=nodeList.item(0);
-		if(nodeName.length==1){
-			return node.getTextContent();
-		}else{
-			String[] nodes=new String[nodeName.length-1];
-			for(int i=1;i<nodeName.length;i++){
-				nodes[i-1]=nodeName[i];
-			}
-			return getNodeValue((Element) node,nodes);
+	
+	public static String getNodeAttr(Node node,String attrName){
+		Element element=((Element)node);
+		return element.getAttribute(attrName);
+	}
+	
+	public static String getNodeValue(Node parent,String... nodeName){
+		NodeList nodeList=((Element)parent).getElementsByTagName(nodeName[0]);
+		if(null==nodeList){
+			return null;
+		}else {
+			if(nodeList.getLength()>0){
+				Node node=nodeList.item(0);
+				if(nodeName.length==1){
+					return node.getTextContent();
+				}else{
+					String[] nodeNs=new String[nodeName.length-1];
+					for(int i=1;i<nodeName.length;i++){
+						nodeNs[i-1]=nodeName[i];
+					}
+					return getNodeValue((Element) node,nodeNs);
+				}
+			}else
+				return null;
+			
 		}
 	}
-	public Element getElement(String nodeName){
-		NodeList nodeList=root.getElementsByTagName(nodeName);
-		Element element=(Element) nodeList.item(0);
-		return element;
+	public static NodeList getNodeList(Node parent,String nodeName){
+		return ((Element)parent).getElementsByTagName(nodeName);
+	}
+	
+	public static Node getNode(Node parent,String nodeName){
+		NodeList nodeList=((Element)parent).getElementsByTagName(nodeName);
+		if(null==nodeList){
+			return null;
+		}else {
+			return nodeList.item(0);
+		}
 	}
 
 }
