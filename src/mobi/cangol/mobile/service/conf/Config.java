@@ -6,29 +6,40 @@ import mobi.cangol.mobile.service.AppService;
 
 public interface Config extends AppService{
 	
-
-	public final static String[] CRASHHANDLER_THREAD_MAX={"CrashHandler","thread_max"};
-	public final static String[] CRASHHANDLER_THREADPOOL_NAME={"CrashHandler","threadpool_name"};
-	public final static String[] CRASHHANDLER_REPORT_ERROR={"CrashHandler","report","error_param_name"};
-	public final static String[] CRASHHANDLER_REPORT_DEVICE={"CrashHandler","report","device_param_name"};
-	public final static String[] CRASHHANDLER_REPORT_TIMESTAMP={"CrashHandler","report","timestamp_param_name"};
+	public final static String APP_DIR="app_dir";
+	public final static String IMAGE_DIR="image_dir";
+	public final static String DOWNLOAD_DIR="download_dir";
+	public final static String TEMP_DIR="temp_dir";
+	public final static String UPGRADE_DIR="upgrade_dir";
+	public final static String DATABASE_NAME="database_name";
+	public final static String SHARED_NAME="shared_name";
 	
-	public final static String[] DOWNLOADSERVICE_THREAD_MAX={"DownloadService","thread_max"};
-	public final static String[] DOWNLOADSERVICE_THREADPOOL_NAME={"DownloadService","threadpool_name"};
+	public final static String CRASHHANDLER_THREAD_MAX="thread_max";
+	public final static String CRASHHANDLER_THREADPOOL_NAME="threadpool_name";
+	public final static String CRASHHANDLER_REPORT_URL="report_url";
+	public final static String CRASHHANDLER_REPORT_ERROR="report_param_error";
+	public final static String CRASHHANDLER_REPORT_DEVICE="report_param_device";
+	public final static String CRASHHANDLER_REPORT_TIMESTAMP="report_param_timestamp";
+	
+	public final static String DOWNLOADSERVICE_THREAD_MAX="thread_max";
+	public final static String DOWNLOADSERVICE_THREADPOOL_NAME="threadpool_name";
 	
 	
-	public final static String[] STATSERVICE_THREAD_MAX={"StatService","thread_max"};
-	public final static String[] STATSERVICE_THREADPOOL_NAME={"StatService","threadpool_name"};
+	public final static String STATSERVICE_THREAD_MAX="thread_max";
+	public final static String STATSERVICE_THREADPOOL_NAME="threadpool_name";
 	
-	public final static String[] LOCATIONSERVICE_BETTERTIME={"LocationService","betterTime"};
-	public final static String[] LOCATIONSERVICE_TIMEOUT={"LocationService","timeOut"};
-	public final static String[] LOCATIONSERVICE_BAIDU_AK={"LocationService","baidu_ak"};
-	public final static String[] LOCATIONSERVICE_GPS_MINTIME={"LocationService","GPS","minTime"};
-	public final static String[] LOCATIONSERVICE_GPS_MINDISTANCE={"LocationService","GPS","minDistance"};
-	public final static String[] LOCATIONSERVICE_NETWORK_MINTIME={"LocationService","NETWORK","minTime"};
-	public final static String[] LOCATIONSERVICE_NETWORK_MINDISTANCE={"LocationService","NETWORK","minDistance"};
+	public final static String LOCATIONSERVICE_BETTERTIME="better_time";
+	public final static String LOCATIONSERVICE_TIMEOUT="timeout";
+	public final static String LOCATIONSERVICE_BAIDU_AK="baidu_ak";
+	public final static String LOCATIONSERVICE_GPS_MINTIME="gps_min_time";
+	public final static String LOCATIONSERVICE_GPS_MINDISTANCE="gps_min_distance";
+	public final static String LOCATIONSERVICE_NETWORK_MINTIME="network_min_time";
+	public final static String LOCATIONSERVICE_NETWORK_MINDISTANCE="network_min_distance";
+	
 	
 	void setConfigSource(InputStream is);
+	
+	ServiceConfig getServiceConfig(String name);
 	
 	String getAppDir();
 	
@@ -45,12 +56,4 @@ public interface Config extends AppService{
 	String getDatabaseName();
 	
 	String getSharedName();
-	
-	String getStringValue(String... nodeName);
-	
-	int getIntValue(String... nodeName);
-	
-	float getFloatValue(String... nodeName);
-	
-	long getLongValue(String... nodeName);
 }

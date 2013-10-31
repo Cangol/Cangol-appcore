@@ -9,6 +9,8 @@ import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.conf.Config;
+import mobi.cangol.mobile.service.conf.Config;
+import mobi.cangol.mobile.service.conf.ServiceConfig;
 import android.content.Context;
 import android.util.Log;
 @Service("stat")
@@ -16,15 +18,18 @@ public class StatServiceImpl implements StatService {
 	private final static String TAG="StatService";
 	private Context mContext = null;
 	private AsyncHttpClient asyncHttpClient;
-	private Config mConfig=null;
+	private Config mConfigService;
+	private ServiceConfig mServiceConfig=null;
 	@Override
 	public void init() {
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
-		mConfig=(Config) app.getAppService("config");
+		mConfigService=(Config) app.getAppService("config");
+		mServiceConfig=mConfigService.getServiceConfig("stat");
 		asyncHttpClient=new AsyncHttpClient();
-		asyncHttpClient.setThreadool((ThreadPoolExecutor) PoolManager.
-				buildPool(mConfig.getStringValue(Config.STATSERVICE_THREADPOOL_NAME),
-				mConfig.getIntValue(Config.STATSERVICE_THREAD_MAX)).getExecutorService());
+		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager
+				.buildPool(mServiceConfig.getString(Config.STATSERVICE_THREADPOOL_NAME),
+						mServiceConfig.getInt(Config.STATSERVICE_THREAD_MAX))
+				.getExecutorService());
 	}
 
 	@Override

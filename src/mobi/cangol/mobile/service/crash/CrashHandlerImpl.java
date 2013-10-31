@@ -17,6 +17,7 @@ import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.conf.Config;
+import mobi.cangol.mobile.service.conf.ServiceConfig;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
 import android.content.Context;
@@ -28,18 +29,20 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	private final static  String CRASH = ".crash";
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
 	private Context mContext;
-	private Config mConfig=null;
+	private Config mConfigService;
+	private ServiceConfig mServiceConfig=null;
 	private AsyncHttpClient asyncHttpClient;
 	@Override
 	public void init() {
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
-		mConfig=(Config) app.getAppService("config");
+		mConfigService=(Config) app.getAppService("config");
+		mServiceConfig=mConfigService.getServiceConfig("crash");
 		asyncHttpClient=new AsyncHttpClient();
 		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager
-				.buildPool(mConfig.getStringValue(Config.CRASHHANDLER_THREADPOOL_NAME)
-						,mConfig.getIntValue(Config.CRASHHANDLER_THREAD_MAX))
+				.buildPool(mServiceConfig.getString(Config.CRASHHANDLER_THREADPOOL_NAME),
+						mServiceConfig.getInt(Config.CRASHHANDLER_THREAD_MAX))
 				.getExecutorService());
 	}
 
@@ -65,12 +68,12 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 
 	@Override
 	public void report() {
-		List<File> list=FileUtils.searchBySuffix(new File(mConfig.getTempDir()), null, CRASH);
+		List<File> list=FileUtils.searchBySuffix(new File(mConfigService.getTempDir()), null, CRASH);
 		for(final File file:list){
 			RequestParams params=new RequestParams(getMobileInfo());
 			try {	
-				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_ERROR), file);
-				params.put(mConfig.getStringValue(Config.CRASHHANDLER_REPORT_TIMESTAMP), file.getName());
+				params.put(mServiceConfig.getString(Config.CRASHHANDLER_REPORT_ERROR), file);
+				params.put(mServiceConfig.getString(Config.CRASHHANDLER_REPORT_TIMESTAMP), file.getName());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -112,7 +115,7 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	public void uncaughtException(Thread thread, Throwable ex) {
 		Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
 		String error= error(ex);
-		String savePath=mConfig.getTempDir()+File.separator+TimeUtils.getCurrentTime2()+CRASH;
+		String savePath=mConfigService.getTempDir()+File.separator+TimeUtils.getCurrentTime2()+CRASH;
 		save(savePath,error);
 	}
 	private Map<String,String> getMobileInfo() {

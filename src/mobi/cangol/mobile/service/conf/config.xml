@@ -1,54 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Config>
-	<AppDir>app_ext</AppDir>
-	<AppImageDir>image</AppImageDir>
-	<AppDownloadDir>download</AppDownloadDir>
-	<AppTempDir>temp</AppTempDir>
-	<AppUpgradeDir>upgrade</AppUpgradeDir>
-	<DatabaseName>app_db</DatabaseName>
-	<SharedName>app_shared</SharedName>
-	<CrashHandler>
-	     <thread_max>5</thread_max>
-	     <threadpool_name>crash</threadpool_name>
-	     <report>
-	         	<url></url>
-	            <error_param_name>error</error_param_name>
-	         	<device_param_name>device</device_param_name>
-	         	<timestamp_param_name>timestamp</timestamp_param_name>
-		 </report>
-	</CrashHandler>
-	<DatabaseService>
-	</DatabaseService>
-	<DownloadService>
-	    <thread_max>5</thread_max>
-	     <threadpool_name>download</threadpool_name>
-	</DownloadService>
-	
-	<LocationService>
-	    <timeOut>300000</timeOut>
-	    <betterTime>120000</betterTime>
-	     <GPS>
-		     <minTime>1000</minTime>
-		     <minDistance>50</minDistance>
-	     </GPS>
-	     <NETWORK>
-		     <minTime>1000</minTime>
-		     <minDistance>50</minDistance>
-	     </NETWORK>
-	     <baidu_ak>694639beed8fa216ffae5d78d8cd51e0</baidu_ak>
-	</LocationService>
-	
-	<StatService>
-	     <thread_max>5</thread_max>
-	     <threadpool_name>stat</threadpool_name>
-	</StatService>
-	
-	<StatusService>
-	    
-	</StatusService>
-	
-	<UpgradeService>
-	    
-	</UpgradeService>
-	
-</Config>
+<services>
+	<service name="config">
+		<property name="app_dir">app_ext</property>
+		<property name="image_dir">image</property>
+		<property name="download_dir">download</property>
+		<property name="temp_dir">temp</property>
+		<property name="upgrade_dir">upgrade</property>
+		<property name="database_name">app_db</property>
+		<property name="shared_name">app_shared</property>
+	</service>
+	<service name="crash">
+		<property name="thread_max">5</property>
+		<property name="threadpool_name">crash</property>
+		<property name="report_url"></property>
+		<property name="report_param_error">error</property>
+		<property name="report_param_device">device</property>
+		<property name="report_param_timestamp">timestamp</property>
+	</service>
+	<service name="download">
+		<property name="thread_max">5</property>
+		<property name="threadpool_name">download</property>
+	</service>
+	<service name="stat">
+		<property name="thread_max">5</property>
+		<property name="threadpool_name">stat</property>
+	</service>
+	<service name="location">
+		<property name="timeout">300000</property>
+		<property name="better_time">120000</property>
+		<property name="gps_min_time">1000</property>
+		<property name="gps_min_distance">50</property>
+		<property name="network_min_time">1000</property>
+		<property name="network_min_distance">50</property>
+		<property name="baidu_ak">694639beed8fa216ffae5d78d8cd51e0</property>
+	</service>
+</services>
+
