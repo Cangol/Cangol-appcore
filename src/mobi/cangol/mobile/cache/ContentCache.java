@@ -261,6 +261,7 @@ public class ContentCache {
                             Object2FileUtils.writeObject(data, out);
                             editor.commit();
                             out.close();
+                            flush();
                         }
                     } else {
                         snapshot.getInputStream(DISK_CACHE_INDEX).close();
