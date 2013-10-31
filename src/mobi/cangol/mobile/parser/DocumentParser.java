@@ -1,41 +1,32 @@
-package mobi.cangol.mobile.json;
+package mobi.cangol.mobile.parser;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import android.util.Log;
 
 public class DocumentParser {
 	private DocumentBuilderFactory factory;
 	private Element root;
+	private InputStream is;
 	public DocumentParser(InputStream is){
 		factory=DocumentBuilderFactory.newInstance();
-		root=parseRoot(is);
+		this.is=is;
 	}
-	private Element parseRoot(InputStream is){
+	public void parserDom() throws XMLParserException{
 		DocumentBuilder builder;
 		try {
 			builder = factory.newDocumentBuilder();
 			Document document=builder.parse(is);
-			return document.getDocumentElement();
-		} catch (ParserConfigurationException e) {	
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			root=document.getDocumentElement();
+		} catch (Exception e) {
+			throw new XMLParserException(e);
 		}
-		return null;
 	}
 	public Element getRoot() {
 		return root;

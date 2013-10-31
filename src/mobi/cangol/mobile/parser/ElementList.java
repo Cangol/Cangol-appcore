@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.json;
+package mobi.cangol.mobile.parser;
 
 
 import java.lang.annotation.Documented;
@@ -17,6 +17,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Documented 
 @Inherited 
-public  @interface Attribute {
+public  @interface ElementList {
 	 String value() default ""; 
 }

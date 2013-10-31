@@ -1,7 +1,8 @@
-package mobi.cangol.mobile.json;
+package mobi.cangol.mobile.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -17,8 +18,13 @@ import android.util.Log;
 import android.util.Xml;
 
 public class XmlUtils {
-	private final static boolean DEBUG=false;
 	private final static  String TAG = "XmlUtils";
+	private final static boolean DEBUG=false;
+	/**
+	 *  转换Object到xml
+	 * @param obj
+	 * @return
+	 */
 	public static String toXml(Object obj){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 		try {
@@ -28,6 +34,11 @@ public class XmlUtils {
 		}
 		return baos.toString();
 	}
+	/**
+	 * 转换Object到xml 通过注解（支持属性）
+	 * @param obj
+	 * @return
+	 */
 	public static String toXmlByAnnotation(Object obj){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 		try {
@@ -37,6 +48,13 @@ public class XmlUtils {
 		}
 		return baos.toString();
 	}
+	/**
+	 * 转换Object到xml流， 通过注解（支持属性）
+	 * @param obj
+	 * @param outputStream
+	 * @param annotation
+	 * @throws Exception
+	 */
 	public static void toXml(Object obj,OutputStream outputStream,boolean annotation)throws Exception{
 		  XmlSerializer serializer=Xml.newSerializer();  
 	      serializer.setOutput(outputStream, "utf-8"); 
@@ -50,7 +68,7 @@ public class XmlUtils {
 	      serializer.endDocument();  
 	      outputStream.close();
 	}
-	public static void toXml(XmlSerializer serializer,Object obj)throws Exception{
+	private static void toXml(XmlSerializer serializer,Object obj)throws Exception{
 	    serializer.startTag(null, obj.getClass().getSimpleName()); 
 	  	Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
@@ -87,7 +105,7 @@ public class XmlUtils {
 		}
 		serializer.endTag(null, obj.getClass().getSimpleName());  
 	}
-	public static void toXmlByAnnotation(XmlSerializer serializer,Object obj)throws Exception{
+	private static void toXmlByAnnotation(XmlSerializer serializer,Object obj) throws IllegalArgumentException, IllegalStateException, IOException, IllegalAccessException{
 	    serializer.startTag(null, obj.getClass().getSimpleName()); 
 	  	Field[] fields = obj.getClass().getDeclaredFields();
 	  	String filedName=null;
@@ -96,7 +114,7 @@ public class XmlUtils {
 			field.setAccessible(true);
 			if(field.isEnumConstant())continue;
 			if (field.isAnnotationPresent(Attribute.class)){
-				//非集合类型 属性s
+				//非集合类型 属性
 				Attribute element = field.getAnnotation(Attribute.class);
 				filedName="".equals(element.value())?field.getName():element.value();
 				if (isBaseClass(field.getType())) {
@@ -147,26 +165,63 @@ public class XmlUtils {
 	
 	
 	/*************以下开始是解析XML**************/
-
-	public static <T> T  parserToObject(Class<T> c,String str) throws Exception{
+	/**
+	 * 解析xml字符串到c的实例
+	 * @param c
+	 * @param str
+	 * @return
+	 * @throws XMLParserException
+	 */
+	public static <T> T  parserToObject(Class<T> c,String str) throws XMLParserException{
 		InputStream inputSteam= new ByteArrayInputStream(str.getBytes());   
-		return parserToObject(c,inputSteam);	
+		return parserToObject(c,inputSteam);
 	}
-	public static <T> T  parserToObject(Class<T> c,InputStream inputSteam) throws Exception{
+	/**
+	 * 解析xml流串到c的实例
+	 * @param c
+	 * @param inputSteam
+	 * @return
+	 * @throws XMLParserException
+	 */
+	public static <T> T  parserToObject(Class<T> c,InputStream inputSteam) throws XMLParserException{
 		DocumentParser documentParser=new DocumentParser(inputSteam);
+		documentParser.parserDom();
 		return parserToObject(c,documentParser.getRoot());
 	}
-	public static <T> T  parserToObjectByAnnotation(Class<T> c,String str) throws Exception{
+	/**
+	 * 解析xml字符串到c的实例（注解方式 :支持属性）
+	 * @param c
+	 * @param str
+	 * @return
+	 * @throws XMLParserException
+	 */
+	public static <T> T  parserToObjectByAnnotation(Class<T> c,String str) throws XMLParserException{
 		InputStream inputSteam= new ByteArrayInputStream(str.getBytes());   
 		return parserToObjectByAnnotation(c,inputSteam);	
 	}
-	public static <T> T  parserToObjectByAnnotation(Class<T> c,InputStream inputSteam) throws Exception{
+	/**
+	 * 解析xml流串到c的实例（注解方式 :支持属性）
+	 * @param c
+	 * @param inputSteam
+	 * @return
+	 * @throws XMLParserException
+	 */
+	public static <T> T  parserToObjectByAnnotation(Class<T> c,InputStream inputSteam) throws XMLParserException{
 		DocumentParser documentParser=new DocumentParser(inputSteam);
+		documentParser.parserDom();
 		return parserToObjectByAnnotation(c,documentParser.getRoot());
 	}
-	public static <T> T  parserToObject(Class<T> c,Node node) throws Exception{
+	
+	private static <T> T  parserToObject(Class<T> c,Node node) throws XMLParserException{
 		if(null==node)return null;
-		T t  = c.newInstance();
+		T t=null;
+		try {
+			t = c.newInstance();
+		} catch (InstantiationException e) {
+			throw new XMLParserException(c,"must have zero-argument constructor",e);
+		} catch (IllegalAccessException e) {
+			throw new XMLParserException(c,"constructor is not accessible",e);
+		}
 		Field[] fields = c.getDeclaredFields();
 		String filedName=null;
 		for (Field field : fields) {
@@ -181,7 +236,13 @@ public class XmlUtils {
 					ParameterizedType pt = (ParameterizedType) field.getGenericType();  
 					Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
 					List<?> list=parserToList(genericClazz, getNodeList(node,filedName),false);
-					field.set(t,list);
+					try{
+						field.set(t,list);
+					}catch (IllegalArgumentException e) {
+						throw new XMLParserException(c,field,"",e);
+					} catch (IllegalAccessException e) {
+						throw new XMLParserException(c,field,"",e);
+					}
 				}else{
 					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
 				}
@@ -189,9 +250,16 @@ public class XmlUtils {
 		}
 		return t;
 	}
-	public static <T> T parserToObjectByAnnotation(Class<T> c,Node node) throws Exception{
+	private static <T> T parserToObjectByAnnotation(Class<T> c,Node node) throws XMLParserException{
 		if(null==node)return null;
-		T t  = c.newInstance();
+		T t=null;
+		try {
+			t = c.newInstance();
+		} catch (InstantiationException e) {
+			throw new XMLParserException(c,"must have zero-argument constructor",e);
+		} catch (IllegalAccessException e) {
+			throw new XMLParserException(c,"constructor is not accessible",e);
+		}
 		Field[] fields = c.getDeclaredFields();
 		String filedName=null;
 		for (Field field : fields) {
@@ -200,7 +268,7 @@ public class XmlUtils {
 			if (field.isAnnotationPresent(Attribute.class)) {
 				Attribute attr = field.getAnnotation(Attribute.class);
 				filedName="".equals(attr.value())?field.getName():attr.value();
-				field.set(t, field.getType().cast(getNodeAttr(node,filedName)));
+				setValue(t,field,getNodeAttr(node,filedName));
 			}else if (field.isAnnotationPresent(Element.class)) {
 				Element element = field.getAnnotation(Element.class);
 				filedName="".equals(element.value())?field.getName():element.value();
@@ -212,7 +280,13 @@ public class XmlUtils {
 					ParameterizedType pt = (ParameterizedType) field.getGenericType();  
 					Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
 					List<?> list=parserToList(genericClazz,getNodeList(node,filedName),true);
-					field.set(t,list);
+					try{
+						field.set(t,list);
+					}catch (IllegalArgumentException e) {
+						throw new XMLParserException(c,field,"",e);
+					}catch (IllegalAccessException e) {
+						throw new XMLParserException(c,field,"",e);
+					}
 				}else{
 					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
 				}
@@ -223,30 +297,25 @@ public class XmlUtils {
 		return t;
 		
 	}
-	public  static <T> ArrayList<T> parserToList(Class<T> c,NodeList nodeList,boolean useAnnotation) throws Exception{
+	
+	private  static <T> ArrayList<T> parserToList(Class<T> c,NodeList nodeList,boolean useAnnotation)throws XMLParserException{
 		if(null==nodeList)return null;
 		ArrayList<T> list=new ArrayList<T>();
 		T t=null;
 		for (int i = 0; i < nodeList.getLength(); i++) {
-			t=parserToObject(c,nodeList.item(i));
+			if(useAnnotation)
+				t=parserToObjectByAnnotation(c, nodeList.item(i));
+			else
+				t=parserToObject(c,nodeList.item(i));
 			list.add(t);
 		}
 		return list;
 	}
-	private  static <T> void setField(T t,Field field,Node node,boolean useAnnotation,String filedName)throws Exception{
+	
+	private  static <T> void setField(T t,Field field,Node node,boolean useAnnotation,String filedName) throws XMLParserException{
 		field.setAccessible(true);
-		if(field.getType()==String.class){
-			field.set(t, getString(node,filedName));
-		}else if(field.getType()==Integer.class||field.getType()==int.class){
-			field.set(t, getInt(node, 0,filedName));
-		}else if(field.getType()==Long.class||field.getType()==long.class){
-			field.set(t, getLong(node, 0L, filedName));
-		}else if(field.getType()==Double.class||field.getType()==double.class){
-			field.set(t, getDouble(node,0.0d, filedName));
-		}else if(field.getType()==Boolean.class||field.getType()==boolean.class){
-			field.set(t, getBoolean(node, false, filedName));
-		}else if(field.getType()==Float.class||field.getType()==float.class){
-			field.set(t, getFloat(node, 0.0f, filedName));
+		if(isBaseClass(field.getType())){
+			setValue(t,field,getString(node,filedName));
 		}else{	
 			Object obj=null;
 			if(useAnnotation){
@@ -254,33 +323,49 @@ public class XmlUtils {
 			}else{
 				obj=parserToObject(field.getType(), getNode(node,filedName));
 			}
-			field.set(t,obj);
+			try{
+				field.set(t,obj);
+			}catch (IllegalArgumentException e) {
+				throw new XMLParserException(t.getClass(),field,"Illegal Argument value="+obj,e);
+			} catch (IllegalAccessException e) {
+				throw new XMLParserException(t.getClass(),field,"Illegal Access "+t,e);
+			}
 		}
 	}
-	public static <T> void setValue(T t,Field field,String value)throws Exception{
-		if(field.getType()==String.class){
-			field.set(t, value);
-		}else if(field.getType()==Integer.class||field.getType()==int.class){
-			field.set(t, Integer.parseInt(value));
-		}else if(field.getType()==Long.class||field.getType()==long.class){
-			field.set(t, Long.parseLong(value));
-		}else if(field.getType()==Double.class||field.getType()==double.class){
-			field.set(t, Double.parseDouble(value));
-		}else if(field.getType()==Boolean.class||field.getType()==boolean.class){
-			field.set(t, Boolean.parseBoolean(value));
-		}else if(field.getType()==Float.class||field.getType()==float.class){
-			field.set(t, Float.parseFloat(value));
+	
+	private static <T> void setValue(T t,Field field,String value) throws XMLParserException{
+		
+		try{
+			if(field.getType()==String.class){
+				field.set(t, value);
+			}else if(field.getType()==Integer.class||field.getType()==int.class){
+				field.set(t, parseInt(value, 0));
+			}else if(field.getType()==Long.class||field.getType()==long.class){
+				field.set(t, parseLong(value, 0L));
+			}else if(field.getType()==Double.class||field.getType()==double.class){
+				field.set(t, parseDouble(value,0.0d));	
+			}else if(field.getType()==Boolean.class||field.getType()==boolean.class){
+				field.set(t, parseBoolean(value,false));
+			}else if(field.getType()==Float.class||field.getType()==float.class){
+				field.set(t, parseFloat(value, 0.0f));
+			}
+		} catch (IllegalArgumentException e) {
+			throw new XMLParserException(t.getClass(),field,"Illegal Argument value="+value,e);
+		} catch (IllegalAccessException e) {
+			throw new XMLParserException(t.getClass(),field,"Illegal Access "+t,e);
 		}
+		
 	}
-	public static Node getNode(Node node,String nodeName){
+	
+	private static Node getNode(Node node,String nodeName){
 		return DocumentParser.getNode(node, nodeName);
 	}
 	
-	public static NodeList getNodeList(Node node,String nodeName) {
+	private static NodeList getNodeList(Node node,String nodeName) {
 		return DocumentParser.getNodeList(node, nodeName);
 	}
 	
-	public static String getNodeAttr(Node node,String attrName){
+	private static String getNodeAttr(Node node,String attrName){
 		return DocumentParser.getNodeAttr(node, attrName);
 	}
 	
@@ -288,8 +373,7 @@ public class XmlUtils {
 		return DocumentParser.getNodeValue(node,nodeName);
 	}
 	
-	public static int getInt(Node node,int defaultValue,String nodeName) {
-		String str=DocumentParser.getNodeValue(node,nodeName);
+	public static int parseInt(String str,int defaultValue) {
 		try {
 			return Integer.parseInt(str);
 		} catch (NumberFormatException e) {
@@ -297,8 +381,7 @@ public class XmlUtils {
 		}
 	}
 	
-	public static double getDouble(Node node,double defaultValue,String nodeName) {
-		String str=DocumentParser.getNodeValue(node,nodeName);
+	public static double parseDouble(String str,double defaultValue) {
 		try {
 			return Double.parseDouble(str);
 		} catch (NumberFormatException e) {
@@ -306,8 +389,7 @@ public class XmlUtils {
 		}
 	}
 
-	public static boolean getBoolean(Node node,boolean defaultValue,String nodeName) {
-		String str=DocumentParser.getNodeValue(node,nodeName);
+	public static boolean parseBoolean(String str,boolean defaultValue) {
 		try {
 			return Boolean.parseBoolean(str);
 		} catch (NumberFormatException e) {
@@ -315,8 +397,7 @@ public class XmlUtils {
 		}
 	}
 
-	public static long getLong(Node node,long defaultValue,String nodeName) {
-		String str=DocumentParser.getNodeValue(node,nodeName);
+	public static long parseLong(String str,long defaultValue) {
 		try {
 			return Long.parseLong(str);
 		} catch (NumberFormatException e) {
@@ -324,8 +405,7 @@ public class XmlUtils {
 		}
 	}
 	
-	public static float getFloat(Node node,float defaultValue,String nodeName) {
-		String str=DocumentParser.getNodeValue(node,nodeName);
+	public static float parseFloat(String str,float defaultValue) {
 		try {
 			return Float.parseFloat(str);
 		} catch (NumberFormatException e) {

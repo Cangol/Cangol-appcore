@@ -10,13 +10,30 @@ import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.conf.Config;
 import android.app.Application;
 import android.content.res.Resources.NotFoundException;
+import android.os.StrictMode;
 
 public class CoreApplication extends Application {
 	
 	private AppServiceManager serviceManager;
 	public Map<String,Object> session=new HashMap<String,Object>();
+	private boolean devMode=true;
 	@Override
 	public void onCreate() {
+		if(devMode){
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()  
+	        .detectDiskReads()  
+	        .detectDiskWrites()  
+	        .detectNetwork()  
+	        .penaltyLog() 
+	        .penaltyDialog()
+	        .build()); 
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+	        .detectLeakedSqlLiteObjects()
+	        .detectLeakedClosableObjects()
+	        .penaltyLog()
+	        .penaltyDeath()
+	        .build());
+		}
 		super.onCreate();
 		init();
 	}
