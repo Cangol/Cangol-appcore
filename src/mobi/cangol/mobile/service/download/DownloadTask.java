@@ -57,7 +57,7 @@ public class DownloadTask {
 			downloadResource.setProgress(progress);
 			downloadResource.setCompleteSize(end);
 			DownloadTask.this.sendMessage(Download.TYPE_DOWNLOAD_UPDATE,downloadResource);
-			if(downloadNotification!=null)downloadNotification.updateNotification(progress,""+speed);//speed 转换
+			if(downloadNotification!=null)downloadNotification.updateNotification(progress,speed);//speed 转换
 		}
 		
 		@Override

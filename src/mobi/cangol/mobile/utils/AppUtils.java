@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 public class AppUtils {
@@ -60,6 +61,16 @@ public class AppUtils {
 		ApplicationInfo appInfo=getApplicationInfo(context,apkPath);
 		if (appInfo != null) { 
 			return appInfo.packageName;
+		}
+		return null;
+	}
+	public static Drawable getApplicationIcon(Context context,String apkPath){
+		PackageManager packageManager = context.getPackageManager(); 
+		ApplicationInfo appInfo=getApplicationInfo(context,apkPath);
+		if (appInfo != null) {
+			appInfo.sourceDir=apkPath;
+			appInfo.publicSourceDir=apkPath;
+			return packageManager.getApplicationIcon(appInfo);
 		}
 		return null;
 	}

@@ -3,11 +3,16 @@ package mobi.cangol.mobile.service.download;
 import java.io.File;
 import java.util.Random;
 
+import mobi.cangol.mobile.utils.AppUtils;
+import mobi.cangol.mobile.utils.FileUtils;
+import mobi.cangol.mobile.utils.TimeUtils;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -27,9 +32,21 @@ public class DownloadNotification {
 		this.downloadType=downloadType;
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancelAll();
-	}
-	public void initNotification() {
+		initNotification(context);
 		
+	}
+	private void initNotification(Context context){
+		Resources resources=context.getResources();
+		this.update_notification_icon=resources.getIdentifier("update_notification_icon", "id", context.getPackageName());
+		this.update_notification_progressbar =resources.getIdentifier("update_notification_progressbar", "id", context.getPackageName());
+		this.update_notification_progressblock =resources.getIdentifier("update_notification_progressblock", "id", context.getPackageName());
+		this.update_notification_progresstext =resources.getIdentifier("update_notification_progresstext", "id", context.getPackageName());
+		this.update_notification_titletext =resources.getIdentifier("update_notification_titletext", "id", context.getPackageName());
+		this.update_notification_timetext =resources.getIdentifier("update_notification_timetext", "id", context.getPackageName());
+		this.update_notification_infotext =resources.getIdentifier("update_notification_infotext", "id", context.getPackageName());
+		this.update_notification_layout =resources.getIdentifier("update_notification_layout", "layout", context.getPackageName());
+		this.download_failure_text =resources.getIdentifier("download_failure_text", "string", context.getPackageName());
+		this.download_success_text =resources.getIdentifier("download_success_text", "string", context.getPackageName());
 	}
 	private void testNotification() {
 		if(update_notification_layout==0){
@@ -54,11 +71,10 @@ public class DownloadNotification {
 		notificaion.contentIntent =PendingIntent.getActivity(context, 0, new Intent(), 0);
 		notificaion.contentIntent.cancel();
 		notificaion.contentView = new RemoteViews(context.getPackageName(),update_notification_layout);
-		notificaion.contentView.setProgressBar(
-				update_notification_progressbar, 100, 0, false);
-		notificaion.contentView.setTextViewText(
-				update_notification_progresstext, "");
+		notificaion.contentView.setProgressBar(update_notification_progressbar, 100, 0, false);
+		notificaion.contentView.setTextViewText(update_notification_progresstext, "");
 		notificaion.contentView.setTextViewText(update_notification_titletext,title);
+		notificaion.contentView.setTextViewText(update_notification_timetext,TimeUtils.getCurrentHoursMinutes());
 		notificationManager.notify(noid,notificaion);
 	}
 
@@ -83,17 +99,20 @@ public class DownloadNotification {
 		notificaion.when = System.currentTimeMillis();
 		notificaion.contentIntent = pendingIntent;
 		notificaion.flags = Notification.FLAG_AUTO_CANCEL;
-		notificaion.contentView.setViewVisibility(update_notification_progressblock, View.GONE);
-		notificaion.contentView.setTextViewText(update_notification_progresstext,context.getText(download_success_text));
+		notificaion.contentView.setViewVisibility(update_notification_progressbar, View.GONE);
+		notificaion.contentView.setViewVisibility(update_notification_progresstext,View.GONE);
+		notificaion.contentView.setViewVisibility(update_notification_infotext,View.VISIBLE);
+		notificaion.contentView.setImageViewBitmap(update_notification_icon, ((BitmapDrawable) AppUtils.getApplicationIcon(context, savePath)).getBitmap());
+		notificaion.contentView.setTextViewText(update_notification_infotext,context.getString(download_success_text));
 		notificaion.defaults = Notification.DEFAULT_SOUND;
 		notificationManager.notify(noid, notificaion);
 	}
 
-	public void updateNotification(int progress, String speed) {
+	public void updateNotification(int progress, int speed) {
 		testNotification();
 		notificaion.contentView.setProgressBar(update_notification_progressbar, 100, progress, false);
 		
-		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% "+speed);
+		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% "+FileUtils.getReadableSize(speed)+"/s");
 						
 		notificationManager.notify(noid,notificaion);
 	}
@@ -102,19 +121,23 @@ public class DownloadNotification {
 		testNotification();
 		notificaion.tickerText = title;
 		notificaion.when = System.currentTimeMillis();
-		notificaion.contentView.setViewVisibility(update_notification_progressblock, View.GONE);
-		notificaion.contentView.setTextViewText(update_notification_progresstext,context.getText(download_failure_text));
+		notificaion.contentView.setViewVisibility(update_notification_progressbar, View.GONE);
+		notificaion.contentView.setViewVisibility(update_notification_progresstext,View.GONE);
+		notificaion.contentView.setViewVisibility(update_notification_infotext,View.VISIBLE);
+		notificaion.contentView.setTextViewText(update_notification_infotext,context.getString (download_failure_text));
 		notificaion.flags = Notification.FLAG_AUTO_CANCEL;
 		notificaion.defaults = Notification.DEFAULT_SOUND;
 		notificationManager.notify(noid, notificaion);
 	}
 	
 	//please set this value
-	
+	int update_notification_icon;
 	int update_notification_progressbar;
 	int update_notification_progressblock;
 	int update_notification_progresstext;
 	int update_notification_titletext;
+	int update_notification_timetext;
+	int update_notification_infotext;
 	int update_notification_layout;
 	int download_failure_text;
 	int download_success_text;

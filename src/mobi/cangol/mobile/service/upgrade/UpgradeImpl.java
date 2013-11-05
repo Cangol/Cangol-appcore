@@ -56,7 +56,6 @@ public class UpgradeImpl implements Upgrade{
 	@Override
 	public void downloadUpgrade(String url,String savePath) {
 		mDownloadNotification=new DownloadNotification(mContext,"",savePath,Download.DownloadType.APK);
-		mDownloadNotification.initNotification();
 		if(mDownloadHttpClient==null)
 			mDownloadHttpClient=new DownloadHttpClient();
 		File saveFile=new File(savePath);
@@ -84,7 +83,7 @@ public class UpgradeImpl implements Upgrade{
 			@Override
 			public void onProgressUpdate(long end,int progress, int speed) {
 				super.onProgressUpdate(end,progress, speed);
-				mDownloadNotification.updateNotification(progress,""+speed);//speed 转换
+				mDownloadNotification.updateNotification(progress,speed);
 			}
 			@Override
 			public void onFailure(Throwable error, String content) {

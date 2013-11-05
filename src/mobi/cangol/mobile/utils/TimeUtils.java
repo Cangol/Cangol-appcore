@@ -15,7 +15,8 @@
  */
 package mobi.cangol.mobile.utils;
 
-/**
+/**  
+ * 
  * @Description: 日期帮助类
  * @version $Revision: 1.0 $
  * @author xuewu.wei
@@ -63,6 +64,16 @@ public class TimeUtils {
 		java.util.Date NowDate = new java.util.Date();
 
 		SimpleDateFormat formatter = new SimpleDateFormat("dd");
+		return formatter.format(NowDate);
+	}
+	/**
+	 * 得到当前的时间
+	 * 返回格式:HH:mm:
+	 * @return String
+	 */
+	public static String getCurrentHoursMinutes() {
+		java.util.Date NowDate = new java.util.Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 		return formatter.format(NowDate);
 	}
 	/**

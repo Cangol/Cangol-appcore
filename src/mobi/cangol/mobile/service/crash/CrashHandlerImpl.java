@@ -16,13 +16,14 @@ import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.conf.Config;
 import mobi.cangol.mobile.service.conf.ServiceConfig;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
 import android.content.Context;
 import android.util.Log;
-
+@Service("crash")
 public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	private final static String TAG="CrashHandler";
 	private final static String URL_REPORT="";

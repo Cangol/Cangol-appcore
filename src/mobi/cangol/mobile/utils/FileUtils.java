@@ -32,12 +32,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.text.TextUtils;
 
 public class FileUtils {
 	/**
@@ -511,5 +516,69 @@ public class FileUtils {
 			}
 		}
 		return object;
+	}
+	public static String converts(InputStream is){
+        StringBuilder sb = new StringBuilder();
+        String readline = "";
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            while (br.ready())
+            {
+                readline = br.readLine();
+                sb.append(readline);
+            }
+            br.close();
+        } catch (IOException ie)
+        {
+            System.out.println("converts failed.");
+        }
+        return sb.toString();
+    }
+	public static String getReadableSize(long length ) {
+		float SIZE_BT=1024L;
+		float SIZE_KB=SIZE_BT * 1024.0f;
+		float SIZE_MB=SIZE_KB * 1024.0f;
+		float SIZE_GB=SIZE_MB * 1024.0f;
+		float SIZE_TB=SIZE_GB * 1024.0f;
+		int SACLE=2;
+		if(length>=0 && length < SIZE_BT) {
+			return (double)(Math.round(length*10)/10.0)  +"B";
+		} else if(length>=SIZE_BT&&length<SIZE_KB) {
+			return (double)(Math.round((length/SIZE_BT)*10)/10.0)  +"KB";//length/SIZE_BT+"KB";
+		} else if(length>=SIZE_KB&&length<SIZE_MB) {
+			return (double)(Math.round((length/SIZE_KB)*10)/10.0)  +"MB";//length/SIZE_KB+"MB";
+		} else if(length>=SIZE_MB&&length<SIZE_GB) {
+			BigDecimal longs=new BigDecimal(Double.valueOf(length+"").toString());
+			BigDecimal sizeMB=new BigDecimal(Double.valueOf(SIZE_MB+"").toString());
+			String result=longs.divide(sizeMB, SACLE,BigDecimal.ROUND_HALF_UP).toString();
+			//double result=this.length/(double)SIZE_MB;
+			return result+"GB";
+		} else {
+			BigDecimal longs=new BigDecimal(Double.valueOf(length+"").toString());
+			BigDecimal sizeMB=new BigDecimal(Double.valueOf(SIZE_GB+"").toString());
+			String result=longs.divide(sizeMB, SACLE,BigDecimal.ROUND_HALF_UP).toString();
+			return result+"TB";
+		}
+	}
+	@SuppressLint("DefaultLocale")
+	public static long getSize(String sizeStr){
+		if(sizeStr!=null&&sizeStr.trim().length()>0){
+			String unit=sizeStr.replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
+			String size=sizeStr.substring(0, sizeStr.indexOf(unit));
+			if(TextUtils.isEmpty(size))return -1;
+			float s=Float.parseFloat(size);
+			if("b".equals(unit.toLowerCase())){
+				return (long) s;
+			}else if("kb".equals(unit.toLowerCase())||"k".equals(unit.toLowerCase())){
+				return (long) (s*1024);
+			}else if("mb".equals(unit.toLowerCase())||"m".equals(unit.toLowerCase())){
+				return (long) (s*1024*1024);
+			}else if("gb".equals(unit.toLowerCase())||"g".equals(unit.toLowerCase())){
+				return (long) (s*1024*1024*1024);
+			}else if("tb".equals(unit.toLowerCase())||"t".equals(unit.toLowerCase())){
+				return (long) (s*1024*1024*1024*1024);
+			}	
+		}
+		return -1;
 	}
 }

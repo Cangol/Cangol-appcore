@@ -1,5 +1,6 @@
 package mobi.cangol.mobile.service.status;
 
+import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.utils.DeviceInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +9,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
 import android.util.Log;
-
+@Service("status")
 public class SystemStatusImpl implements SystemStatus {
 	private final static String TAG="SystemStatus";
 	private Context mContext = null;
