@@ -1,6 +1,7 @@
 package mobi.cangol.mobile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
@@ -8,7 +9,10 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.conf.Config;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Resources.NotFoundException;
 import android.os.StrictMode;
 
@@ -60,5 +64,25 @@ public class CoreApplication extends Application {
 		if(serviceManager!=null){
 			serviceManager.destoryAllService();
 		}
+	}
+	/**
+	* return application is background
+	* @param context
+	* @return
+	*/
+	public boolean isBackground(Context context) {
+	
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+		for (RunningAppProcessInfo appProcess : appProcesses) {
+			if (appProcess.processName.equals(context.getPackageName())) {
+				if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 }
