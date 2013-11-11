@@ -28,13 +28,15 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	private final static String TAG="CrashHandler";
 	private final static String URL_REPORT="";
 	private final static  String CRASH = ".crash";
+	private boolean debug=false;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
 	private Context mContext;
 	private Config mConfigService;
 	private ServiceConfig mServiceConfig=null;
 	private AsyncHttpClient asyncHttpClient;
 	@Override
-	public void init() {
+	public void create(Context context) {
+		mContext=context;
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
@@ -45,11 +47,6 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 				.buildPool(mServiceConfig.getString(Config.CRASHHANDLER_THREADPOOL_NAME),
 						mServiceConfig.getInt(Config.CRASHHANDLER_THREAD_MAX))
 				.getExecutorService());
-	}
-
-	@Override
-	public void setContext(Context context) {
-		mContext=context;
 	}
 
 	@Override
@@ -65,6 +62,7 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	@Override
 	public void save(String path,String error) {
 		FileUtils.writeStr(new File(path), error);
+		if(debug)Log.d(TAG, "Save Exception:"+path);
 	}
 
 	@Override
@@ -83,21 +81,22 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 				@Override
 				public void onStart() {
 					super.onStart();
-					Log.d(TAG, "Start");
+					if(debug)Log.d(TAG, "Start");
 				}
 				
 				@Override
 				public void onSuccess(String content) {
 					super.onSuccess(content);
-					Log.d(TAG, "Success :"+content);
+					if(debug)Log.d(TAG, "Success :"+content);
 					//提交后删除文件
 					FileUtils.deleteFile(file.getAbsolutePath());
+					if(debug)Log.d(TAG, "delete :"+file.getAbsolutePath());
 				}
 
 				@Override
 				public void onFailure(Throwable error, String content) {
 					super.onFailure(error, content);
-					Log.d(TAG, "Failure :"+content);
+					if(debug)Log.d(TAG, "Failure :"+content);
 				}
 				
 			});
@@ -123,5 +122,10 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 		Map<String,String> map=new HashMap<String,String>();
 		
 		return map;
+	}
+
+	@Override
+	public void setDebug(boolean debug) {
+		
 	}
 }

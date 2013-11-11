@@ -16,12 +16,14 @@ import android.util.Log;
 @Service("stat")
 public class StatServiceImpl implements StatService {
 	private final static String TAG="StatService";
+	private boolean debug=false;
 	private Context mContext = null;
 	private AsyncHttpClient asyncHttpClient;
 	private Config mConfigService;
 	private ServiceConfig mServiceConfig=null;
 	@Override
-	public void init() {
+	public void create(Context context) {
+		mContext=context;
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(Config) app.getAppService("config");
 		mServiceConfig=mConfigService.getServiceConfig("stat");
@@ -30,11 +32,6 @@ public class StatServiceImpl implements StatService {
 				.buildPool(mServiceConfig.getString(Config.STATSERVICE_THREADPOOL_NAME),
 						mServiceConfig.getInt(Config.STATSERVICE_THREAD_MAX))
 				.getExecutorService());
-	}
-
-	@Override
-	public void setContext(Context context) {
-		mContext=context;
 	}
 
 	@Override
@@ -55,22 +52,27 @@ public class StatServiceImpl implements StatService {
 			@Override
 			public void onStart() {
 				super.onStart();
-				Log.d(TAG, "Start");
+				if(debug)Log.d(TAG, "Start");
 			}
 			
 			@Override
 			public void onSuccess(String content) {
 				super.onSuccess(content);
-				Log.d(TAG, "Success :"+content);
+				if(debug)Log.d(TAG, "Success :"+content);
 			}
 
 			@Override
 			public void onFailure(Throwable error, String content) {
 				super.onFailure(error, content);
-				Log.d(TAG, "Failure :"+content);
+				if(debug)Log.d(TAG, "Failure :"+content);
 			}
 			
 		});
+	}
+
+	@Override
+	public void setDebug(boolean debug) {
+		this.debug=debug;
 	}
 
 }

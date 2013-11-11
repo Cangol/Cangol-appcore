@@ -32,12 +32,8 @@ public class GlobalDataImpl implements GlobalData {
 	private Config mConfig=null;
 	
 	@Override
-	public void setContext(Context context) {
+	public void create(Context context) {
 		mContext=context;
-	}
-	
-	@Override
-	public void init() {
 		//这里使用挂载在application总的session也可实例化一个新的
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mSession=app.session;
@@ -128,6 +124,12 @@ public class GlobalDataImpl implements GlobalData {
 	@Override
 	public void clear() {
 		mSession.clear();
+	}
+
+	@Override
+	public void setDebug(boolean debug) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

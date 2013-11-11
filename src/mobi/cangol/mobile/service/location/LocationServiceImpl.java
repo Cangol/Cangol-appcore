@@ -6,19 +6,22 @@ import mobi.cangol.mobile.service.conf.Config;
 import mobi.cangol.mobile.service.conf.ServiceConfig;
 import mobi.cangol.mobile.utils.LocationUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 @Service("location")
 public class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int TIMEOUT=1;
+	private final static int BETTER_LOCATION=2;
+	private boolean debug=false;
 	private int mBetterTime = 1000 * 60 * 2;
 	private int mTimeOut = 1000 * 60 * 5;
 	private Context mContext = null;
@@ -30,21 +33,33 @@ public class LocationServiceImpl implements LocationService{
 	private boolean isRemove;
 	private BetterLocationListener mMyLocationListener;
 	private String mAddress;
-	@SuppressLint("HandlerLeak")
-	private Handler mHandler=new Handler(){
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			if(TIMEOUT==msg.what){
-				removeLocationUpdates();
-				if(mMyLocationListener!=null)
-					mMyLocationListener.timeout(mLocation);
-			}
-		}
-		
-	};
+	private volatile ServiceHandler mServiceHandler;
+	private volatile Looper mServiceLooper;
+	private final class ServiceHandler extends Handler {
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+        	switch(msg.what){
+        		case TIMEOUT:
+        			removeLocationUpdates();
+    				if(mMyLocationListener!=null)
+    					mMyLocationListener.timeout(mLocation);
+        		break;
+        		case BETTER_LOCATION:
+        			handleBetterLocation();
+            	break;
+        	}
+        }
+    }
 	@Override
-	public void init() {
+	public void create(Context context) {
+		HandlerThread thread = new HandlerThread("LocationService");
+        thread.start();
+        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler(mServiceLooper);
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(Config) app.getAppService("config");
 		mServiceConfig=mConfigService.getServiceConfig("location");
@@ -56,11 +71,6 @@ public class LocationServiceImpl implements LocationService{
 			requestLocationUpdates();
 		}
 	}
-	
-	@Override
-	public void setContext(Context context) {
-		mContext=context;
-	}
 
 	@Override
 	public String getName() {
@@ -70,8 +80,14 @@ public class LocationServiceImpl implements LocationService{
 	@Override
 	public void destory() {
 		removeLocationUpdates();
+		mServiceLooper.quit();
 	}
-
+	private void handleBetterLocation(){
+		removeLocationUpdates();
+		if(mMyLocationListener!=null)
+			mMyLocationListener.onBetterLocation(mLocation);
+		getLocationAddress(mLocation);
+	}
 	@Override
 	public void requestLocationUpdates() {
 		if(null!=mLocationListener)return;
@@ -82,10 +98,7 @@ public class LocationServiceImpl implements LocationService{
 				Log.d(TAG, "location "+location.getProvider()+":"+location.getLatitude()+","+location.getLongitude());
 				if(isBetterLocation(location)){
 					mLocation=location;
-					removeLocationUpdates();
-					isRemove=true;
-					if(mMyLocationListener!=null)mMyLocationListener.onBetterLocation(mLocation);
-					getLocationAddress(location);
+					mServiceHandler.sendEmptyMessage(BETTER_LOCATION);
 				}else{
 					Log.d(TAG, "location "+location.toString());
 				}
@@ -116,31 +129,24 @@ public class LocationServiceImpl implements LocationService{
 				mServiceConfig.getInt(Config.LOCATIONSERVICE_NETWORK_MINTIME),
 				mServiceConfig.getInt(Config.LOCATIONSERVICE_NETWORK_MINDISTANCE),
 				mLocationListener);
-		mHandler.sendEmptyMessageDelayed(TIMEOUT, mTimeOut);
+		mServiceHandler.sendEmptyMessageDelayed(TIMEOUT, mTimeOut);
 	}
 
 	protected void getLocationAddress(Location location) {
 		final double lat=location.getLatitude();
 		final double lng=location.getLongitude();
 		//执行网络请求反查地址（百度地图API|Google地图API）
-		new Thread(){
-
-			@Override
-			public void run() {
-				super.run();
-				LocationUtils.getAddressByBaidu(lat, lng, mServiceConfig.getString(Config.LOCATIONSERVICE_BAIDU_AK));
-				
-				LocationUtils.getAddressByGoogle(lat, lng);
-			}
-			
-		}.start();
+		mAddress=LocationUtils.getAddressByBaidu(lat, lng, mServiceConfig.getString(Config.LOCATIONSERVICE_BAIDU_AK));
+		//LocationUtils.getAddressByGoogle(lat, lng);
 		
 	}
 
 	@Override
 	public void removeLocationUpdates() {
-		if(mLocationListener!=null&&!isRemove)
+		if(mLocationListener!=null&&!isRemove){
 			mLocationManager.removeUpdates(mLocationListener);
+			isRemove=true;
+		}
 		mLocationListener=null;
 	}
 
@@ -166,6 +172,11 @@ public class LocationServiceImpl implements LocationService{
 		if(mLocation!=null&&!isBetterLocation(mLocation)){
 			if(mMyLocationListener!=null)mMyLocationListener.onBetterLocation(mLocation);
 		}
+	}
+
+	@Override
+	public void setDebug(boolean debug) {
+		this.debug=debug;
 	}
 
 

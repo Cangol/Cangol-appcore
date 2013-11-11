@@ -5,11 +5,11 @@ import android.content.Context;
 
 public interface AppService {
 	
-	void init();	
-	
-	void setContext(Context context);
+	void create(Context context);
 
 	String getName();
 	
 	void destory();	
+	
+	void setDebug(boolean debug);
 }

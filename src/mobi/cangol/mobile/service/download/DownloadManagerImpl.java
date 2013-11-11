@@ -119,12 +119,18 @@ public class DownloadManagerImpl implements DownloadManager{
 	}
 
 	@Override
-	public void setContext(Context context) {
+	public void create(Context context) {
 		mContext=context;
 	}
 
 	@Override
 	public String getName() {
 		return "download";
+	}
+
+	@Override
+	public void setDebug(boolean debug) {
+		// TODO Auto-generated method stub
+		
 	}
 }

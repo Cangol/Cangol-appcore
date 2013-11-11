@@ -1,7 +1,6 @@
 package mobi.cangol.mobile.service.conf;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,9 +8,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.parser.XMLParserException;
-import mobi.cangol.mobile.parser.XmlUtils;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.utils.StorageUtils;
 
@@ -21,22 +17,37 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
 @Service("config")
 public class ConfigeImpl implements Config {
 	private Context mContext = null;
 	private ServiceConfig mServiceConfig=null;
 	private Map<String,ServiceConfig> configs=new HashMap<String,ServiceConfig>();
 	@Override
-	public void init() {
-		InputStream is=this.getClass().getResourceAsStream("config.xml");
-		setConfigSource(is);
-		mServiceConfig=configs.get("config");
+	public void create(Context context) {
+		mContext=context;
+		if(Build.VERSION.SDK_INT>=9){
+			// Temporarily disable logging of disk reads on the Looper thread
+			StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+            InputStream is= this.getClass().getResourceAsStream("config.xml");
+            setConfigSource(is);
+            StrictMode.setThreadPolicy(oldPolicy);
+       }else{
+       	 	InputStream is= this.getClass().getResourceAsStream("config.xml");
+            setConfigSource(is);
+       }
+	}
+	@Override
+	public void setDebug(boolean debug) {
+		
 	}
 	@Override
 	public void setConfigSource(InputStream is) {
 		try {
 			parser(is);
 			is.close();
+			mServiceConfig=configs.get("config");
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,10 +80,6 @@ public class ConfigeImpl implements Config {
 	@Override
 	public ServiceConfig getServiceConfig(String name){
 		return configs.get(name);
-	}
-	@Override
-	public void setContext(Context ctx) {
-		mContext=ctx;
 	}
 	@Override
 	public String getName() {

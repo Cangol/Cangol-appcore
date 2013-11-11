@@ -10,17 +10,15 @@ import mobi.cangol.mobile.service.download.DownloadResponseHandler;
 import android.content.Context;
 @Service("upgrade")
 public class UpgradeImpl implements Upgrade{
+	private final static String TAG="Upgrade";
+	private boolean debug=false;
 	private Context mContext = null;
 	private DownloadHttpClient mDownloadHttpClient;
 	private DownloadNotification mDownloadNotification;
 	@Override
-	public void init() {
+	public void create(Context context) {
+		mContext=context;
 		
-	}
-
-	@Override
-	public void setContext(Context ctx) {
-		mContext=ctx;
 	}
 
 	@Override
@@ -93,6 +91,11 @@ public class UpgradeImpl implements Upgrade{
 			
 		}, saveFile.length(), savePath);
 		
+	}
+
+	@Override
+	public void setDebug(boolean debug) {
+		this.debug=debug;
 	}
 
 }
