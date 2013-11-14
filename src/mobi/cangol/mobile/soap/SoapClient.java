@@ -36,7 +36,7 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * @Description SoapRequest.java
+ * @Description SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
  * @author xuewu.wei
  * @date 2013-8-14
  */
