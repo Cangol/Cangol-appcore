@@ -41,6 +41,7 @@ public class CoreApplication extends Application {
 		super.onCreate();
 		init();
 	}
+
 	private void init() {
 		serviceManager=new AppServiceManagerImpl(this);
 		Config config=(Config) serviceManager.getAppService("config");
@@ -65,6 +66,10 @@ public class CoreApplication extends Application {
 			serviceManager.destoryAllService();
 		}
 	}
+	public void setDevMode(boolean devMode) {
+		this.devMode = devMode;
+	}
+
 	/**
 	* return application is background
 	* @param context
