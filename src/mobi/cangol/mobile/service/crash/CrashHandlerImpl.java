@@ -58,7 +58,10 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 	public void destory() {
 
 	}
-
+	@Override
+	public void setDebug(boolean debug) {
+		this.debug=debug;
+	}
 	@Override
 	public void save(String path,String error) {
 		FileUtils.writeStr(new File(path), error);
@@ -122,10 +125,5 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 		Map<String,String> map=new HashMap<String,String>();
 		
 		return map;
-	}
-
-	@Override
-	public void setDebug(boolean debug) {
-		
 	}
 }

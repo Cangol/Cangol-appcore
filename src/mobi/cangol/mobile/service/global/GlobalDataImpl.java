@@ -30,7 +30,7 @@ public class GlobalDataImpl implements GlobalData {
 	private Map<String,Object> mSession=null;
 	private SharedPreferences mShared;
 	private Config mConfig=null;
-	
+	private boolean debug=false;
 	@Override
 	public void create(Context context) {
 		mContext=context;
@@ -52,7 +52,10 @@ public class GlobalDataImpl implements GlobalData {
 	public void destory() {
 		mSession.clear();
 	}
-	
+	@Override
+	public void setDebug(boolean debug) {
+		this.debug=debug;
+	}
 	@SuppressWarnings("unchecked")
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
@@ -125,11 +128,4 @@ public class GlobalDataImpl implements GlobalData {
 	public void clear() {
 		mSession.clear();
 	}
-
-	@Override
-	public void setDebug(boolean debug) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
