@@ -25,17 +25,16 @@ import android.util.Log;
 public class ClassUtils {
 	
 	/**
-	 * 获取接口的所有实现类
-	 * @param <T>
+	 *  获取接口的所有实现类
 	 * @param c
 	 * @param context
+	 * @param packageName
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<Class<? extends T>> getAllClassByInterface(Class<T> c,Context context) {
+	public static <T> List<Class<? extends T>> getAllClassByInterface(Class<T> c,Context context,String packageName) {
 		List<Class<? extends T>> returnClassList = new ArrayList<Class<? extends T>>(); 
 		if (c.isInterface()) {
-			String packageName = c.getPackage().getName(); 
 			List<Class<?>> allClass = getAllClassByPackage(packageName,context); 
 			for (int i = 0; i < allClass.size(); i++) {
 				if (c.isAssignableFrom(allClass.get(i))&&!allClass.get(i).isInterface()) { 
@@ -45,30 +44,41 @@ public class ClassUtils {
 		}
 		return returnClassList;
 	}
-	
 	/**
-	 * 获取包内所有类
-	 * @param <T>
-	 * @param packageName
+	 * 获取dexFile所有类
 	 * @param context
 	 * @return
 	 */
-	public  static  List<Class<?>> getAllClassByPackage(String packageName,Context context){
+	public  static  List<Class<?>> getAllClassFromDexFile(Context context){
 		List<Class<?>> classList = new ArrayList<Class<?>>(); 
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
 	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
 	            String s = iter.nextElement();
-	            if(s.startsWith(packageName)){
-	            	Class<?> clazz=(Class<?>) context.getClassLoader().loadClass(s);
-	            	classList.add(clazz);
-	            }
+            	Class<?> clazz=(Class<?>) context.getClassLoader().loadClass(s);
+            	classList.add(clazz);
 	        }
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    } catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		return classList;
+	}
+	/**
+	 * 获取包内所有类
+	 * @param packageName
+	 * @param context
+	 * @return
+	 */
+	public  static  List<Class<?>> getAllClassByPackage(String packageName,Context context){
+		List<Class<?>> classList = new ArrayList<Class<?>>(); 
+        List<Class<?>> list =getAllClassFromDexFile(context);
+        for (Class<?> clazz: list) {
+            if(clazz.getName().startsWith(packageName)){
+            	classList.add(clazz);
+            }
+        }
 		return classList;
 	}
 }

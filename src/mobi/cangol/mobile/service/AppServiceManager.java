@@ -15,4 +15,6 @@ public abstract class AppServiceManager {
 	public abstract void destoryService(String name);
 	
 	public abstract void destoryAllService();
+	
+	public abstract void setScanPackage(String ... packageName);
 }

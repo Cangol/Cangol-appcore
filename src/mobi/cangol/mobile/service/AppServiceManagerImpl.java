@@ -2,14 +2,14 @@ package mobi.cangol.mobile.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import mobi.cangol.mobile.utils.ClassUtils;
 import android.content.Context;
 import android.util.Log;
-
-import mobi.cangol.mobile.utils.ClassUtils;
 
 public class AppServiceManagerImpl extends AppServiceManager {
 	private final static String  TAG=" AppServiceManager";
@@ -17,12 +17,12 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	private Map<String,Class<? extends AppService>> serviceMap = new Hashtable<String,Class<? extends AppService>>();
 	private Context context;
 	private boolean useAnnotation=true;
+	private List<String> packageNames=new ArrayList<String>();
 	public AppServiceManagerImpl(Context context){
 		this.context=context;
-		initServiceMap();
+		initServiceMap(ClassUtils.getAllClassByInterface(AppService.class, context, context.getPackageName()));
 	}
-	private void initServiceMap() {	
-		List<Class<? extends AppService>> classList=ClassUtils.getAllClassByInterface(AppService.class,context);
+	private void initServiceMap(List<Class<? extends AppService>> classList) {	
 		for(Class<? extends AppService> clazz:classList){
 			try {
 				if(useAnnotation){
@@ -90,6 +90,17 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			appService.destory();
 		}
 		
+	}
+	@Override
+	public void setScanPackage(String... packageName) {
+		if(packageName.length>0){
+			List<Class<? extends AppService>> classList= new ArrayList<Class<? extends AppService>>(); 
+			for(String name:packageName){
+				packageNames.add(name);
+				classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, context, name));
+			}
+			initServiceMap(classList);
+		}
 	}
 
 }
