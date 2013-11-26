@@ -8,6 +8,14 @@ import android.content.Context;
 import android.os.Message;
 
 public abstract class SyncHttpClient extends AsyncHttpClient {
+	/**
+	 * Creates a new instance of SyncHttpClient. 
+	 * @param group
+	 */
+	protected SyncHttpClient(String group) {
+		super(group);
+	}
+
 	private int responseCode;
 	/*
 	 * as this is a synchronous request this is just a helping mechanism to pass

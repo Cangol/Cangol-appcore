@@ -27,11 +27,8 @@ public class StatServiceImpl implements StatService {
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(Config) app.getAppService("config");
 		mServiceConfig=mConfigService.getServiceConfig("stat");
-		asyncHttpClient=new AsyncHttpClient();
-		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager
-				.buildPool(mServiceConfig.getString(Config.STATSERVICE_THREADPOOL_NAME),
-						mServiceConfig.getInt(Config.STATSERVICE_THREAD_MAX))
-				.getExecutorService());
+		PoolManager.buildPool(mServiceConfig.getString(Config.STATSERVICE_THREADPOOL_NAME),mServiceConfig.getInt(Config.STATSERVICE_THREAD_MAX));
+		asyncHttpClient=AsyncHttpClient.build(mServiceConfig.getString(Config.STATSERVICE_THREADPOOL_NAME));
 	}
 
 	@Override

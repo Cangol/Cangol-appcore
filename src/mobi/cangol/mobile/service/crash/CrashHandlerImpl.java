@@ -42,11 +42,8 @@ public class CrashHandlerImpl implements CrashHandler,UncaughtExceptionHandler {
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(Config) app.getAppService("config");
 		mServiceConfig=mConfigService.getServiceConfig("crash");
-		asyncHttpClient=new AsyncHttpClient();
-		asyncHttpClient.setThreadool((ThreadPoolExecutor)PoolManager
-				.buildPool(mServiceConfig.getString(Config.CRASHHANDLER_THREADPOOL_NAME),
-						mServiceConfig.getInt(Config.CRASHHANDLER_THREAD_MAX))
-				.getExecutorService());
+		PoolManager.buildPool(mServiceConfig.getString(Config.CRASHHANDLER_THREADPOOL_NAME),mServiceConfig.getInt(Config.CRASHHANDLER_THREAD_MAX));
+		asyncHttpClient=AsyncHttpClient.build(mServiceConfig.getString(Config.CRASHHANDLER_THREADPOOL_NAME));
 	}
 
 	@Override

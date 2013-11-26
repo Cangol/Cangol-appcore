@@ -26,10 +26,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.zip.GZIPInputStream;
+
+import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.PoolManager.Pool;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -82,20 +84,26 @@ public class AsyncHttpClient {
 
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext;
-    private ThreadPoolExecutor threadPool;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
     private final Map<String, String> clientHeaderMap;
-
-
+    
+    private Pool threadPool;
+    
+    public  static AsyncHttpClient build(String group) {
+		AsyncHttpClient asyncHttpClient=new AsyncHttpClient(group);
+		return asyncHttpClient;
+	}
+    public  static void cancel(String group,boolean mayInterruptIfRunning) {
+    	PoolManager.getPool(group).cancle(mayInterruptIfRunning);
+	}
+    
     /**
      * Creates a new AsyncHttpClient.
      */
-    public AsyncHttpClient() {
-
+    protected AsyncHttpClient(String group) {
         httpContext = new SyncBasicHttpContext(new BasicHttpContext());
         httpClient = HttpClientFactory.getDefaultHttpClient();
-        
-        threadPool = (ThreadPoolExecutor)Executors.newCachedThreadPool();
+        threadPool = PoolManager.getPool(group);
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
         clientHeaderMap = new HashMap<String, String>();
     }
@@ -131,8 +139,8 @@ public class AsyncHttpClient {
      * requests. By default, Executors.newCachedThreadPool() is used.
      * @param threadPool an instance of {@link ThreadPoolExecutor} to use for queuing/pooling requests.
      */
-    public void setThreadool(ThreadPoolExecutor threadPool) {
-        this.threadPool = threadPool;
+    public void setThreadool(Pool pool) {
+        this.threadPool = pool;
     }
 
     /**
@@ -494,7 +502,6 @@ public class AsyncHttpClient {
 
             requestList.add(new WeakReference<Future<?>>(request));
 
-            // TODO: Remove dead weakrefs from requestLists?
         }
     }
 

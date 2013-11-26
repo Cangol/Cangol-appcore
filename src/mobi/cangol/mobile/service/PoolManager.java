@@ -1,8 +1,6 @@
 package mobi.cangol.mobile.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,16 +14,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PoolManager {
 	private static ConcurrentHashMap<String,Pool> poolMap=null;
+	private static  final int DEFAULT_MAX=5;
 	private static ExecutorService generateExecutorService(final String name,int max){
 		ExecutorService executorService= Executors.newFixedThreadPool(max,new ThreadFactory() {
 	        private final AtomicInteger mCount = new AtomicInteger(1);
 
 	        public Thread newThread(final Runnable r) {
-	            return new Thread(r, name+"$workThread #" + mCount.getAndIncrement());
+	            return new Thread(r, name+"$WorkThread #" + mCount.getAndIncrement());
 	        }
 	    });
 	    return executorService;
-	} 
+	}
+	
+	public  static Pool getPool(String name){
+		if(null==poolMap)poolMap=new ConcurrentHashMap<String,Pool>();
+		if(!poolMap.containsKey(name)){
+			poolMap.put(name, new Pool(name,DEFAULT_MAX));
+		}
+		return poolMap.get(name);
+	}
+	
 	public  static Pool buildPool(String name,int max){
 		if(null==poolMap)poolMap=new ConcurrentHashMap<String,Pool>();
 		if(!poolMap.containsKey(name)){
@@ -33,12 +41,14 @@ public class PoolManager {
 		}
 		return poolMap.get(name);
 	}
+	
 	public static void clear() {
 		if(null!=poolMap){
 			poolMap.clear();	
 		}
 		poolMap=null;
 	}
+	
 	public static class Pool{
 		private ArrayList<Future<?>> futureTasks= null;
 		private ExecutorService executorService =null;
@@ -56,6 +66,16 @@ public class PoolManager {
 			this.futureTasks.clear();
 			this.isThreadPoolClose=true;
 			this.executorService=null;
+		}
+		public void cancle(boolean mayInterruptIfRunning){
+			for(Future<?> future:futureTasks){
+				future.cancel(mayInterruptIfRunning);
+			}
+		}
+		public Future<?> submit(Runnable task){
+			Future<?> future=this.executorService.submit(task);
+			futureTasks.add(future);
+			return future;
 		}
 		public boolean isTerminated(){
 			return this.executorService.isTerminated();
