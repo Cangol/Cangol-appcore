@@ -2,7 +2,14 @@ Cangol-appcore
 ==============
 
 Android app core module
-	include http	json log security soap stat utils
+	include 
+	http request
+	json|xml parser
+	log
+	security
+	soap request
+	stat
+	utils
 
 License
 -----------
