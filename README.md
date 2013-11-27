@@ -2,9 +2,9 @@ Cangol-appcore
 ==============
 
 Android app core module
-	include 
-	http request
-	json|xml parser
+
+	http request 
+	json|xml parser 
 	log
 	security
 	soap request
