@@ -19,4 +19,15 @@ final public class StatModel {
 		return params;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder=new StringBuilder();
+		builder.append("url="+url);
+		builder.append("\n");
+		for(String key: params.keySet()){
+			builder.append(key+"="+params.get(key));
+		}
+		return builder.toString();
+	}
+	
 }
