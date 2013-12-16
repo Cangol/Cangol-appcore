@@ -61,6 +61,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 				if(serviceMap.containsKey(name)){
 					appService=serviceMap.get(name).newInstance();
 					appService.create(context);
+					runServiceMap.put(name, appService);
 				}else{
 					throw new IllegalStateException("hasn't appService'name is "+name);
 				}
@@ -78,6 +79,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		if(runServiceMap.containsKey(name)){
 			appService= runServiceMap.get(name);
 			appService.destory();
+			runServiceMap.remove(name);
 		}else{
 			Log.d(TAG, name+" Service is not running");
 		}
@@ -89,7 +91,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			appService= runServiceMap.get(name);
 			appService.destory();
 		}
-		
+		runServiceMap.clear();
 	}
 	@Override
 	public void setScanPackage(String... packageName) {

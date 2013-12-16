@@ -4,7 +4,7 @@ import android.content.Context;
 
 public interface StatusListener {
 	
-	void networkConnect(Context context);
+void networkConnect(Context context);
 	
 	void networkDisconnect(Context context);
 	
@@ -14,7 +14,9 @@ public interface StatusListener {
 	
 	void storageMount(Context context);
 	
-	void apkInstall(Context context,String packageName);
+	void callStateIdle();
 	
-	void apkUninstall(Context context,String packageName);
+	void callStateOffhook();
+	
+	void callStateRinging();
 }

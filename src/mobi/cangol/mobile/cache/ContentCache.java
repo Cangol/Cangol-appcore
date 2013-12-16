@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.os.StatFs;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.utils.Object2FileUtils;
 
 
 /**
@@ -96,11 +97,12 @@ public class ContentCache {
 		return obj;
 	}
 	//异步回调接口
-	public interface Callback{
-		 void returnContent(Object object);
+	public interface CacheLoader{
+		 void loading();
+		 void returnContent(Object content);
 	}
 	//异步获取缓存
-	public void getContent(final String context,final String id,final Callback callback){
+	public void getContent(final String context,final String id,final CacheLoader cacheLoader){
 		HashMap<String,Object> contextMap=contextMaps.get(context);
 		if(null==contextMap){
 			contextMap=new HashMap<String,Object>();
@@ -110,6 +112,11 @@ public class ContentCache {
 		if(obj==null){
 			new AsyncTask<String,Void,Object>(){
 				@Override
+				protected void onPreExecute() {
+					super.onPreExecute();
+					if(cacheLoader!=null)cacheLoader.loading();
+				}
+				@Override
 				protected Object doInBackground(String... params) {
 					return getContentFromDiskCache(params[0]);
 				}
@@ -117,12 +124,12 @@ public class ContentCache {
 				protected void onPostExecute(Object result) {
 					super.onPostExecute(result);
 					if(result!=null)addContentToMem(context,id, result);
-					callback.returnContent(result);
+					if(cacheLoader!=null)cacheLoader.returnContent(result);
 				}
 			}.execute(id);
 			
 		}else
-			callback.returnContent(obj);
+			if(cacheLoader!=null)cacheLoader.returnContent(obj);
 	}
 	//判断是否有缓存（内存缓存和磁盘缓存）
 	public boolean hasContent(String context,String id){
@@ -310,6 +317,15 @@ public class ContentCache {
 		} catch (IOException e) {
 			if (DEBUG) Log.d(TAG, "cache remove"+key,e);
 		}
+	}
+	public long size() {   
+		long size=0;
+		synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null) {
+            	size=mDiskLruCache.size();
+            }
+		}
+		return size;
 	}
 	//清除缓存
     public void clearCache() {

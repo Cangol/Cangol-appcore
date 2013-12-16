@@ -2,7 +2,7 @@ package mobi.cangol.mobile.service.status;
 
 import mobi.cangol.mobile.service.AppService;
 
-public interface SystemStatus extends AppService {
+public interface StatusService extends AppService {
 	
 	boolean isConnection();
 
@@ -12,5 +12,9 @@ public interface SystemStatus extends AppService {
 	
 	boolean isNetworkLocation();
 	
-	void setStatusListner(StatusListener statusListener);
+	boolean isCallingState();
+	
+	void registerStatusListener(StatusListener statusListener);
+	
+	void unregisterStatusListener(StatusListener statusListener);
 }
