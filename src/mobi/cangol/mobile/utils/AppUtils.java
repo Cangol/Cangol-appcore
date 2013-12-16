@@ -29,6 +29,7 @@ import android.net.Uri;
 public class AppUtils {
 	public static void install(Context context,String apkPath){
 		Intent intent = new Intent(Intent.ACTION_VIEW);   
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    intent.setDataAndType(Uri.parse("file://"  
 	            + apkPath),   
 	            "application/vnd.android.package-archive");   
