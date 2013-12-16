@@ -1,8 +1,6 @@
 package mobi.cangol.mobile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
@@ -19,7 +17,7 @@ import android.os.StrictMode;
 public class CoreApplication extends Application {
 	
 	private AppServiceManager serviceManager;
-	public Map<String,Object> session=new HashMap<String,Object>();
+	public Session session;
 	private boolean devMode=true;
 	@Override
 	public void onCreate() {
@@ -29,20 +27,19 @@ public class CoreApplication extends Application {
 	        .detectDiskWrites()  
 	        .detectNetwork()  
 	        .penaltyLog() 
-	        .penaltyDialog()
 	        .build()); 
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
 	        .detectLeakedSqlLiteObjects()
 	        .detectLeakedClosableObjects()
 	        .penaltyLog()
-	        .penaltyDeath()
 	        .build());
 		}
 		super.onCreate();
 		init();
 	}
-
+	
 	private void init() {
+		session=new Session();
 		serviceManager=new AppServiceManagerImpl(this);
 		Config config=(Config) serviceManager.getAppService("config");
 		try{
@@ -62,9 +59,11 @@ public class CoreApplication extends Application {
 	}
 	
 	public void exit() {
+		session.clear();
 		if(serviceManager!=null){
 			serviceManager.destoryAllService();
 		}
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 	public void setDevMode(boolean devMode) {
 		this.devMode = devMode;

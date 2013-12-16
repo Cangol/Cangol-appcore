@@ -7,10 +7,11 @@ import java.util.Map;
 import java.util.Set;
 
 import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.cache.Object2FileUtils;
+import mobi.cangol.mobile.Session;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.conf.Config;
 import mobi.cangol.mobile.utils.FileUtils;
+import mobi.cangol.mobile.utils.Object2FileUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ public class GlobalDataImpl implements GlobalData {
 	private final static  String JSONA = ".jsona";
 	private final static  String SER = ".ser";
 	private Context mContext = null;
-	private Map<String,Object> mSession=null;
+	private Session mSession=null;
 	private SharedPreferences mShared;
 	private Config mConfig=null;
 	private boolean debug=false;
