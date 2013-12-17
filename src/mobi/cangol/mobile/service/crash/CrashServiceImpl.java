@@ -23,7 +23,7 @@ import android.content.Context;
 import android.util.Log;
 @Service("CrashService")
 public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
-	private final static String TAG="CrashHandler";
+	private final static String TAG="CrashService";
 	private final static  String _CRASH = ".crash";
 	private boolean debug=false;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
@@ -41,8 +41,8 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		init();
 	}
 	private void init(){
-		PoolManager.buildPool(mServiceProperty.getString(CRASHHANDLER_THREADPOOL_NAME),mServiceProperty.getInt(CRASHHANDLER_THREAD_MAX));
-		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(CRASHHANDLER_THREADPOOL_NAME));
+		PoolManager.buildPool(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(CRASHSERVICE_THREAD_MAX));
+		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME));
 	}
 	@Override
 	public String getName() {
@@ -84,8 +84,8 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		for(final File file:list){
 			RequestParams params=new RequestParams(this.params);
 			try {	
-				params.put(mServiceProperty.getString(CRASHHANDLER_REPORT_ERROR), file);
-				params.put(mServiceProperty.getString(CRASHHANDLER_REPORT_TIMESTAMP), file.getName());
+				params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_ERROR), file);
+				params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_TIMESTAMP), file.getName());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
