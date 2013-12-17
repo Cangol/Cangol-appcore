@@ -44,6 +44,47 @@ public class ClassUtils {
 		}
 		return returnClassList;
 	}
+
+	/**
+	 * 获取包内所有类
+	 * @param packageName
+	 * @param context
+	 * @return
+	 */
+	public  static  List<Class<?>> getAllClassByPackage(String packageName,Context context){
+		List<Class<?>> classList = new ArrayList<Class<?>>(); 
+        List<String> list =getAllClassNameFromDexFile(context);
+        Class<?> clazz=null;
+        try {
+	        for (String classNane: list) {
+	            if(classNane.startsWith(packageName)){
+						clazz = (Class<?>) context.getClassLoader().loadClass(classNane);
+						classList.add(clazz);
+	            }
+	        }
+        } catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return classList;
+	}
+	/**
+	 * 获取dexFile所有类
+	 * @param context
+	 * @return
+	 */
+	public  static  List<String> getAllClassNameFromDexFile(Context context){
+		List<String> classList = new ArrayList<String>(); 
+		try {
+	        DexFile df = new DexFile(context.getPackageCodePath());
+	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
+	            String s = iter.nextElement();
+            	classList.add(s);
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+		return classList;
+	}
 	/**
 	 * 获取dexFile所有类
 	 * @param context
@@ -63,22 +104,6 @@ public class ClassUtils {
 	    } catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return classList;
-	}
-	/**
-	 * 获取包内所有类
-	 * @param packageName
-	 * @param context
-	 * @return
-	 */
-	public  static  List<Class<?>> getAllClassByPackage(String packageName,Context context){
-		List<Class<?>> classList = new ArrayList<Class<?>>(); 
-        List<Class<?>> list =getAllClassFromDexFile(context);
-        for (Class<?> clazz: list) {
-            if(clazz.getName().startsWith(packageName)){
-            	classList.add(clazz);
-            }
-        }
 		return classList;
 	}
 }
