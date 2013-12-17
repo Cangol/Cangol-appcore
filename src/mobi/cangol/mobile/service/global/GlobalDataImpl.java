@@ -9,7 +9,8 @@ import java.util.Set;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.Session;
 import mobi.cangol.mobile.service.Service;
-import mobi.cangol.mobile.service.conf.Config;
+import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.Object2FileUtils;
 
@@ -30,16 +31,16 @@ public class GlobalDataImpl implements GlobalData {
 	private Context mContext = null;
 	private Session mSession=null;
 	private SharedPreferences mShared;
-	private Config mConfig=null;
+	private ConfigService mConfig=null;
 	private boolean debug=false;
 	@Override
-	public void create(Context context) {
+	public void onCreate(Context context) {
 		mContext=context;
 		//这里使用挂载在application总的session也可实例化一个新的
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
-		mSession=app.session;
+		mSession=app.mSession;
 		
-		mConfig=(Config) app.getAppService("config");
+		mConfig=(ConfigService) app.getAppService("config");
 		mShared=mContext.getSharedPreferences(mConfig.getSharedName(), Context.MODE_PRIVATE);
 		refresh();
 	}
@@ -50,7 +51,7 @@ public class GlobalDataImpl implements GlobalData {
 	}
 
 	@Override
-	public void destory() {
+	public void onDestory() {
 		mSession.clear();
 	}
 	@Override
@@ -128,5 +129,14 @@ public class GlobalDataImpl implements GlobalData {
 	@Override
 	public void clear() {
 		mSession.clear();
+	}
+
+	@Override
+	public void setServiceProperty(ServiceProperty serviceProperty) {
+	}
+
+	@Override
+	public ServiceProperty getServiceProperty() {
+		return null;
 	}
 }

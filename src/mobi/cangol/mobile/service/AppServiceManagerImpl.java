@@ -1,34 +1,52 @@
 package mobi.cangol.mobile.service;
 
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.ClassUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import android.content.Context;
-import android.util.Log;
+import android.os.Build;
+import android.os.StrictMode;
 
 public class AppServiceManagerImpl extends AppServiceManager {
 	private final static String  TAG=" AppServiceManager";
-	private Map<String, AppService> runServiceMap = new Hashtable<String, AppService>();
-	private Map<String,Class<? extends AppService>> serviceMap = new Hashtable<String,Class<? extends AppService>>();
-	private Context context;
-	private boolean useAnnotation=true;
-	private List<String> packageNames=new ArrayList<String>();
+	private Map<String, AppService> mRunServiceMap = new Hashtable<String, AppService>();
+	private Map<String,Class<? extends AppService>> mServiceMap = new Hashtable<String,Class<? extends AppService>>();
+	private Context mContext;
+	private boolean mUseAnnotation=true;
+	private List<String> mPackageNames=new ArrayList<String>();
+	private Map<String,ServiceProperty> mProperties=new HashMap<String,ServiceProperty>();
 	public AppServiceManagerImpl(Context context){
-		this.context=context;
-		initServiceMap(ClassUtils.getAllClassByInterface(AppService.class, context, context.getPackageName()));
+		this.mContext=context;
+		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, context, this.getClass().getPackage().getName());
+		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, context, context.getPackageName()));
+		initServiceMap(classList);
+		initServiceProperties();
 	}
 	private void initServiceMap(List<Class<? extends AppService>> classList) {	
 		for(Class<? extends AppService> clazz:classList){
 			try {
-				if(useAnnotation){
+				if(mUseAnnotation){
 					if(clazz.isAnnotationPresent(Service.class)){
 						Service service = clazz.getAnnotation(Service.class);
-						serviceMap.put(service.value(), clazz);
+						mServiceMap.put(service.value(), clazz);
 					}else{
 						Log.d(TAG, clazz+" no Service Annotation");
 					}
@@ -36,7 +54,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 					Method method=clazz.getMethod("getName");
 					Object t=clazz.newInstance();
 					String name=(String) method.invoke(t);
-					serviceMap.put(name, clazz);	
+					mServiceMap.put(name, clazz);	
 				}
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
@@ -54,14 +72,15 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	@Override
 	public AppService getAppService(String name) {
 		AppService appService=null;
-		if(runServiceMap.containsKey(name)){
-			appService= runServiceMap.get(name);
+		if(mRunServiceMap.containsKey(name)){
+			appService= mRunServiceMap.get(name);
 		}else{
 			try {
-				if(serviceMap.containsKey(name)){
-					appService=serviceMap.get(name).newInstance();
-					appService.create(context);
-					runServiceMap.put(name, appService);
+				if(mServiceMap.containsKey(name)){
+					appService=mServiceMap.get(name).newInstance();
+					setServiceProperty(appService,mProperties.get(name));
+					appService.onCreate(mContext);
+					mRunServiceMap.put(name, appService);
 				}else{
 					throw new IllegalStateException("hasn't appService'name is "+name);
 				}
@@ -69,17 +88,44 @@ public class AppServiceManagerImpl extends AppServiceManager {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
-			}
+			} 
 		}
 		return appService;
+	}
+	private void setServiceProperty(AppService appService,ServiceProperty serviceProperty){
+		Field filed=null;
+		try {
+			filed = appService.getClass().getDeclaredField("mServiceProperty");
+			if(filed==null){
+				filed = appService.getClass().getDeclaredField("serviceProperty");
+			}else{
+				for(Field filed1:appService.getClass().getDeclaredFields()){
+					filed1.setAccessible(true);
+					if(filed1.getType() ==ServiceProperty.class){
+						filed=filed1;
+						break;
+					}
+				}
+			}
+			if(filed!=null){
+				filed.setAccessible(true);
+				filed.set(appService,serviceProperty);
+			}
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	@Override
 	public void destoryService(String name) {
 		AppService appService=null;
-		if(runServiceMap.containsKey(name)){
-			appService= runServiceMap.get(name);
-			appService.destory();
-			runServiceMap.remove(name);
+		if(mRunServiceMap.containsKey(name)){
+			appService= mRunServiceMap.get(name);
+			appService.onDestory();
+			mRunServiceMap.remove(name);
 		}else{
 			Log.d(TAG, name+" Service is not running");
 		}
@@ -87,22 +133,76 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	@Override
 	public void destoryAllService() {
 		AppService appService=null;
-		for(String name:runServiceMap.keySet()){
-			appService= runServiceMap.get(name);
-			appService.destory();
+		for(String name:mRunServiceMap.keySet()){
+			appService= mRunServiceMap.get(name);
+			appService.onDestory();
 		}
-		runServiceMap.clear();
+		mRunServiceMap.clear();
+		
+	}
+	@Override
+	public void destory() {
+		destoryAllService() ;
+		mProperties.clear();
+		mServiceMap.clear();
+		mPackageNames.clear();
 	}
 	@Override
 	public void setScanPackage(String... packageName) {
 		if(packageName.length>0){
 			List<Class<? extends AppService>> classList= new ArrayList<Class<? extends AppService>>(); 
 			for(String name:packageName){
-				packageNames.add(name);
-				classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, context, name));
+				mPackageNames.add(name);
+				classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
 			}
 			initServiceMap(classList);
 		}
 	}
-
+	public void initServiceProperties(){
+		if(Build.VERSION.SDK_INT>=9){
+			// Temporarily disable logging of disk reads on the Looper thread
+			StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+	        InputStream is= this.getClass().getResourceAsStream("properties.xml");
+	        setServicePropertySource(is);
+	        StrictMode.setThreadPolicy(oldPolicy);
+	   }else{
+	   	 	InputStream is= this.getClass().getResourceAsStream("properties.xml");
+	   	 	setServicePropertySource(is);
+	   }
+	}
+	@Override
+	public void setServicePropertySource(InputStream is) {
+		try {
+			parser(is);
+			is.close();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void parser(InputStream is) throws Exception{
+		DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document=builder.parse(is);
+		Element root=document.getDocumentElement();
+		NodeList nodeList=root.getChildNodes();
+		for(int i=0;i<nodeList.getLength();i++){
+			Node node=nodeList.item(i);
+			if(node instanceof Element){
+				Element element=(Element)node;
+				String name=element.getAttribute("name");
+				NodeList nodeList2=element.getChildNodes();
+				ServiceProperty properties=new ServiceProperty(name);
+				for(int j=0;j<nodeList2.getLength();j++){
+					Node node2=nodeList2.item(j);
+					if(node2 instanceof Element){
+						Element element2=(Element)node2;	
+						properties.putString(element2.getAttribute("name"), element2.getTextContent());
+					}
+				}
+				mProperties.put(name, properties);
+			}
+		}
+	}
+	
 }

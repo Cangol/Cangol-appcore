@@ -1,5 +1,7 @@
 package mobi.cangol.mobile.service;
 
+import java.io.InputStream;
+
 public abstract class AppServiceManager {
 	
 	public static final String CONFIG_SERVICE = "config";
@@ -16,5 +18,9 @@ public abstract class AppServiceManager {
 	
 	public abstract void destoryAllService();
 	
+	public abstract void destory();
+	
 	public abstract void setScanPackage(String ... packageName);
+	
+	public abstract void setServicePropertySource(InputStream is);
 }

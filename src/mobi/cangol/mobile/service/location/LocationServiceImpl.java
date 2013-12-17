@@ -1,9 +1,7 @@
 package mobi.cangol.mobile.service.location;
 
-import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.service.Service;
-import mobi.cangol.mobile.service.conf.Config;
-import mobi.cangol.mobile.service.conf.ServiceConfig;
+import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.LocationUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
 import android.content.Context;
@@ -16,17 +14,16 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-@Service("location")
+@Service("LocationService")
 public class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int TIMEOUT=1;
 	private final static int BETTER_LOCATION=2;
-	private boolean debug=false;
+	private boolean mDebug=false;
 	private int mBetterTime = 1000 * 60 * 2;
 	private int mTimeOut = 1000 * 60 * 5;
 	private Context mContext = null;
-	private Config mConfigService;
-	private ServiceConfig mServiceConfig=null;
+	private ServiceProperty mServiceProperty=null;
 	private LocationListener mLocationListener;
 	private LocationManager mLocationManager;
 	private Location mLocation;
@@ -55,33 +52,41 @@ public class LocationServiceImpl implements LocationService{
         }
     }
 	@Override
-	public void create(Context context) {
+	public void onCreate(Context context) {
+		this.mContext=context;
 		HandlerThread thread = new HandlerThread("LocationService");
         thread.start();
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
-		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
-		mConfigService=(Config) app.getAppService("config");
-		mServiceConfig=mConfigService.getServiceConfig("location");
-		mBetterTime=mServiceConfig.getInt(Config.LOCATIONSERVICE_BETTERTIME);
-		mTimeOut=mServiceConfig.getInt(Config.LOCATIONSERVICE_TIMEOUT);
 		mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 		mLocation=mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		if(!isBetterLocation(mLocation)){
-			requestLocationUpdates();
-		}
 	}
-
+	private void init(){
+		mBetterTime=mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME);
+		mTimeOut=mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT);
+	}
 	@Override
 	public String getName() {
-		return "location";
+		return "LocationService";
 	}
 
 	@Override
-	public void destory() {
+	public void onDestory() {
 		removeLocationUpdates();
 		mServiceLooper.quit();
 	}
+	@Override
+	public void setServiceProperty(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
+		init();
+	}
+
+	@Override
+	public ServiceProperty getServiceProperty() {
+		return mServiceProperty;
+	}
+
+
 	private void handleBetterLocation(){
 		removeLocationUpdates();
 		if(mMyLocationListener!=null)
@@ -122,12 +127,12 @@ public class LocationServiceImpl implements LocationService{
 			
 		};
 		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				mServiceConfig.getInt(Config.LOCATIONSERVICE_GPS_MINTIME),
-				mServiceConfig.getInt(Config.LOCATIONSERVICE_GPS_MINDISTANCE),
+				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME),
+				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE),
 				mLocationListener);
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
-				mServiceConfig.getInt(Config.LOCATIONSERVICE_NETWORK_MINTIME),
-				mServiceConfig.getInt(Config.LOCATIONSERVICE_NETWORK_MINDISTANCE),
+				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME),
+				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE),
 				mLocationListener);
 		mServiceHandler.sendEmptyMessageDelayed(TIMEOUT, mTimeOut);
 	}
@@ -136,7 +141,7 @@ public class LocationServiceImpl implements LocationService{
 		final double lat=location.getLatitude();
 		final double lng=location.getLongitude();
 		//执行网络请求反查地址（百度地图API|Google地图API）
-		mAddress=LocationUtils.getAddressByBaidu(lat, lng, mServiceConfig.getString(Config.LOCATIONSERVICE_BAIDU_AK));
+		mAddress=LocationUtils.getAddressByBaidu(lat, lng, mServiceProperty.getString(LOCATIONSERVICE_BAIDU_AK));
 		//LocationUtils.getAddressByGoogle(lat, lng);
 		
 	}
@@ -159,7 +164,7 @@ public class LocationServiceImpl implements LocationService{
 	public boolean isBetterLocation(Location location) {
 		if(null==location)return false;
 		long timeDelta=System.currentTimeMillis()-location.getTime();
-		Log.d(TAG, "location time :"+TimeUtils.convert(location.getTime()));
+		if(mDebug)Log.d(TAG, "location time :"+TimeUtils.convert(location.getTime()));
 		return (timeDelta<mBetterTime);
 	}
 	@Override
@@ -176,8 +181,6 @@ public class LocationServiceImpl implements LocationService{
 
 	@Override
 	public void setDebug(boolean debug) {
-		this.debug=debug;
+		this.mDebug=debug;
 	}
-
-
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <services>
-	<service name="config">
+	<service name="ConfigService">
 		<property name="app_dir">app_ext</property>
 		<property name="image_dir">image</property>
 		<property name="download_dir">download</property>
@@ -9,7 +9,7 @@
 		<property name="database_name">app_db</property>
 		<property name="shared_name">app_shared</property>
 	</service>
-	<service name="crash">
+	<service name="CrashService">
 		<property name="thread_max">5</property>
 		<property name="threadpool_name">crash</property>
 		<property name="report_url"></property>
@@ -17,15 +17,15 @@
 		<property name="report_param_device">device</property>
 		<property name="report_param_timestamp">timestamp</property>
 	</service>
-	<service name="download">
+	<service name="DownloadService">
 		<property name="thread_max">5</property>
 		<property name="threadpool_name">download</property>
 	</service>
-	<service name="stat">
+	<service name="StatService">
 		<property name="thread_max">5</property>
 		<property name="threadpool_name">stat</property>
 	</service>
-	<service name="location">
+	<service name="LocationService">
 		<property name="timeout">300000</property>
 		<property name="better_time">120000</property>
 		<property name="gps_min_time">1000</property>

@@ -3,6 +3,7 @@ package mobi.cangol.mobile.service.upgrade;
 import java.io.File;
 
 import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.download.Download;
 import mobi.cangol.mobile.service.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.download.DownloadNotification;
@@ -15,19 +16,22 @@ public class UpgradeImpl implements Upgrade{
 	private Context mContext = null;
 	private DownloadHttpClient mDownloadHttpClient;
 	private DownloadNotification mDownloadNotification;
+	private ServiceProperty mServiceProperty=null;
 	@Override
-	public void create(Context context) {
+	public void onCreate(Context context) {
 		mContext=context;
+		init();
+	}
+	private void init(){
 		
 	}
-
 	@Override
 	public String getName() {
 		return "upgrade";
 	}
 
 	@Override
-	public void destory() {
+	public void onDestory() {
 		
 		if(mDownloadHttpClient!=null){
 			mDownloadHttpClient.cancelRequests(mContext, true);
@@ -39,7 +43,16 @@ public class UpgradeImpl implements Upgrade{
 			mDownloadNotification=null;
 		}
 	}
-	
+	@Override
+	public void setServiceProperty(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
+		init();
+	}
+
+	@Override
+	public ServiceProperty getServiceProperty() {
+		return mServiceProperty;
+	}
 	@Override
 	public boolean isUpgrade(String version) {
 		

@@ -7,8 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
-@Service("download")
+@Service("DownloadService")
 public class DownloadManagerImpl implements DownloadManager{
 	
 	protected static final int DEFAULT_MAX_THREAD = 2;
@@ -107,7 +108,7 @@ public class DownloadManagerImpl implements DownloadManager{
 		}
 	}
 	
-	public  void destory() {
+	public  void onDestory() {
 		if(null==executorMap)return;
 		Enumeration<DownloadExecutor> en = executorMap.elements();
 		while (en.hasMoreElements()) {
@@ -119,18 +120,27 @@ public class DownloadManagerImpl implements DownloadManager{
 	}
 
 	@Override
-	public void create(Context context) {
+	public void onCreate(Context context) {
 		mContext=context;
 	}
 
 	@Override
 	public String getName() {
-		return "download";
+		return "DownloadService";
 	}
 
 	@Override
 	public void setDebug(boolean debug) {
-		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setServiceProperty(ServiceProperty serviceProperty) {
+		
+	}
+
+	@Override
+	public ServiceProperty getServiceProperty() {
+		return null;
 	}
 }

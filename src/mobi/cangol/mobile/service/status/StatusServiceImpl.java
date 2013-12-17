@@ -3,6 +3,8 @@ package mobi.cangol.mobile.service.status;
 import java.util.ArrayList;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.DeviceInfo;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+@Service("StatusService")
 public class StatusServiceImpl implements StatusService {
 	private final static String TAG="StatusService";
 	private boolean debug=false;
@@ -22,7 +25,7 @@ public class StatusServiceImpl implements StatusService {
 	protected ArrayList<StatusListener> listeners = new ArrayList<StatusListener>();  
 	@Override
 
-	public void create(Context context) {
+	public void onCreate(Context context) {
 		mContext=context;
 		
 		IntentFilter intentFileter1=new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
@@ -37,7 +40,7 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public void destory() {
+	public void onDestory() {
 		mContext.unregisterReceiver(networkStatusReceiver);
 		mContext.unregisterReceiver(storageStatusReceiver);
 		mTelephonyManager.listen(null, PhoneStateListener.LISTEN_NONE);
@@ -50,6 +53,14 @@ public class StatusServiceImpl implements StatusService {
 	@Override
 	public void setDebug(boolean debug) {
 		this.debug=debug;
+	}
+	@Override
+	public void setServiceProperty(ServiceProperty serviceProperty) {
+	}
+
+	@Override
+	public ServiceProperty getServiceProperty() {
+		return null;
 	}
 	@Override
 	public boolean isConnection() {
