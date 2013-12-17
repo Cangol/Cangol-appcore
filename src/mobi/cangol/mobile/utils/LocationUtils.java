@@ -16,40 +16,39 @@ import org.json.JSONObject;
 
 import android.net.http.AndroidHttpClient;
 
-import com.google.android.maps.GeoPoint;
 
 public class LocationUtils {
-	/**
-	 * 获取偏移值
-	 * @param longitude
-	 * @param latitude
-	 * @param path
-	 * @return
-	 */
-	public static GeoPoint adjustLoction(double lng, double lat) {
-		String offsetString = getOffset(lat,lng);
-		int index = offsetString.indexOf(",");
-		if (index > 0) {
-			// 将坐标值转为18级相应的像素值
-			double lngPixel = lonToPixel(lng, 18);
-			double latPixel = latToPixel(lat, 18);
-			// 获取偏移值
-			String OffsetX = offsetString.substring(0, index).trim();
-			String OffsetY = offsetString.substring(index + 1).trim();
-			//加上偏移值
-			double adjustLngPixel = lngPixel + Double.valueOf(OffsetX);
-			double adjustLatPixel = latPixel + Double.valueOf(OffsetY);
-			//由像素值再转为经纬度
-			double adjustLng = pixelToLon(adjustLngPixel, 18);
-			double adjustLat = pixelToLat(adjustLatPixel, 18);
-
-			return new GeoPoint((int) (adjustLat * 1000000),
-					(int) (adjustLng * 1000000));
-		}
-		//经验公式
-		return new GeoPoint((int) ((lat - 0.0025) * 1000000),
-				(int) ((lng + 0.0045) * 1000000));
-	}
+//	/**
+//	 * 获取偏移值
+//	 * @param longitude
+//	 * @param latitude
+//	 * @param path
+//	 * @return
+//	 */
+//	public static GeoPoint adjustLoction(double lng, double lat) {
+//		String offsetString = getOffset(lat,lng);
+//		int index = offsetString.indexOf(",");
+//		if (index > 0) {
+//			// 将坐标值转为18级相应的像素值
+//			double lngPixel = lonToPixel(lng, 18);
+//			double latPixel = latToPixel(lat, 18);
+//			// 获取偏移值
+//			String OffsetX = offsetString.substring(0, index).trim();
+//			String OffsetY = offsetString.substring(index + 1).trim();
+//			//加上偏移值
+//			double adjustLngPixel = lngPixel + Double.valueOf(OffsetX);
+//			double adjustLatPixel = latPixel + Double.valueOf(OffsetY);
+//			//由像素值再转为经纬度
+//			double adjustLng = pixelToLon(adjustLngPixel, 18);
+//			double adjustLat = pixelToLat(adjustLatPixel, 18);
+//
+//			return new GeoPoint((int) (adjustLat * 1000000),
+//					(int) (adjustLng * 1000000));
+//		}
+//		//经验公式
+//		return new GeoPoint((int) ((lat - 0.0025) * 1000000),
+//				(int) ((lng + 0.0045) * 1000000));
+//	}
 	/**
 	 * 获取偏移变量
 	 * @param lat
@@ -172,7 +171,6 @@ public class LocationUtils {
 				  int end=response.lastIndexOf(")");
 				  JSONObject json=new JSONObject(response.substring(start, end));	
 				  address=json.getJSONObject("result").getString("formatted_address");
-				  Log.d("address:"+address); 
 			  }else{
 				  Log.d("response fail :"+httpResponse.getStatusLine().getStatusCode() );
 			  }
@@ -210,7 +208,6 @@ public class LocationUtils {
 				  String response = EntityUtils.toString(httpEntity, "UTF-8");
 				  JSONObject json=new JSONObject(response);
 				  address=json.getJSONArray("results").getJSONObject(0).getString("formatted_address");
-				  Log.d("address:"+address); 
 			  }else{
 				  Log.d("response fail :"+httpResponse.getStatusLine().getStatusCode() );
 			  }

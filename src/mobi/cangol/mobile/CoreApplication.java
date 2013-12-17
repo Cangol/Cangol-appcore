@@ -6,7 +6,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
-import mobi.cangol.mobile.service.conf.Config;
+import mobi.cangol.mobile.service.conf.ConfigService;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.Application;
@@ -16,15 +16,16 @@ import android.os.StrictMode;
 
 public class CoreApplication extends Application {
 	
-	private AppServiceManager serviceManager;
-	public Session session;
-	private boolean devMode=true;
+	private AppServiceManager mAppServiceManager;
+	public Session mSession;
+	private boolean mDevMode=true;
 	@Override
 	public void onCreate() {
-		if(devMode){
+		if(mDevMode){
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()  
 	        .detectDiskReads()  
 	        .detectDiskWrites()  
+	        
 	        .detectNetwork()  
 	        .penaltyLog() 
 	        .build()); 
@@ -35,38 +36,34 @@ public class CoreApplication extends Application {
 	        .build());
 		}
 		super.onCreate();
-		init();
+		mSession=new Session();
+		initAppServiceManager();
 	}
 	
-	private void init() {
-		session=new Session();
-		serviceManager=new AppServiceManagerImpl(this);
-		Config config=(Config) serviceManager.getAppService("config");
-		try{
-			int id=this.getResources().getIdentifier("config", "raw", this.getPackageName());
-			config.setConfigSource(this.getResources().openRawResource(id));
-		}catch(NotFoundException e){
-			Log.d("Application","not found config.xml");
-		}
-		Log.d("Application",""+config.getAppDir());
+	private void initAppServiceManager() {
+		mAppServiceManager=new AppServiceManagerImpl(this);
 	}	
-	
+
+	public AppServiceManager getAppServiceManager() {
+		return mAppServiceManager;
+	}
+
 	public AppService getAppService(String name){
-		if(serviceManager!=null){
-			return serviceManager.getAppService(name);
+		if(mAppServiceManager!=null){
+			return mAppServiceManager.getAppService(name);
 		}
 		return null;
 	}
 	
 	public void exit() {
-		session.clear();
-		if(serviceManager!=null){
-			serviceManager.destoryAllService();
+		mSession.clear();
+		if(mAppServiceManager!=null){
+			mAppServiceManager.destory();
 		}
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 	public void setDevMode(boolean devMode) {
-		this.devMode = devMode;
+		this.mDevMode = devMode;
 	}
 
 	/**
