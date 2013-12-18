@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service;
+package mobi.cangol.mobile.service.upgrade;
 
-import android.content.Context;
+import mobi.cangol.mobile.service.AppService;
 
 
-public interface AppService {
+public interface UpgradeService extends AppService{
 	
-	void onCreate(Context context);
-
-	String getName();
+	enum UpgradeType{
+		APK,//apk升级
+		DEX,//dex升级
+		RES,//res升级
+		SO//so库升级
+	}
 	
-	void onDestory();	
+	boolean isUpgrade(String version);
 	
-	void setDebug(boolean debug);
+	String getUpgrade(String version);
 	
-	void setServiceProperty(ServiceProperty serviceProperty);
+	void downloadUpgrade(String url,String savePath);
 	
-	ServiceProperty getServiceProperty();
 }
