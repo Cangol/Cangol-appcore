@@ -33,8 +33,9 @@ final public class StatBuilder {
 		return mUrl;
 	}
 
-	public void setUrl(String mUrl) {
-		this.mUrl = mUrl;
+	public StatBuilder setUrl(String url) {
+		this.mUrl = url;
+		return this;
 	}
 
 	public Map<String, String> getParams() {

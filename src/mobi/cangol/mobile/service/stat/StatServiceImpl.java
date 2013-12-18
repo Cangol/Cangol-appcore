@@ -15,6 +15,9 @@
  */
 package mobi.cangol.mobile.service.stat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
@@ -24,12 +27,13 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 import android.util.Log;
 @Service("StatService")
-public class StatServiceImpl implements StatService {
+public class StatServiceImpl extends TrackerHandler implements StatService {
 	private final static String TAG="StatService";
 	private boolean debug=false;
 	private Context mContext = null;
 	private AsyncHttpClient asyncHttpClient= null;
 	private ServiceProperty mServiceProperty=null;
+	private Map<String,Tracker> mTrackers=new HashMap<String,Tracker>();
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
@@ -58,10 +62,10 @@ public class StatServiceImpl implements StatService {
 		return mServiceProperty;
 	}
 	@Override
-	public void sendStat(StatBuilder statModel) {
-		RequestParams params=new RequestParams(statModel.getParams());
-		if(debug)Log.d(TAG, statModel.toString());
-		asyncHttpClient.get(mContext,statModel.getUrl(), params,  new AsyncHttpResponseHandler(){
+	public void sendStat(String url, Map<String, String> paramsMap) {
+		RequestParams params=new RequestParams(paramsMap);
+		if(debug)Log.d(TAG, "url:"+url+"\n"+params.toString());
+		asyncHttpClient.get(mContext,url, params,  new AsyncHttpResponseHandler(){
 
 			@Override
 			public void onStart() {
@@ -88,5 +92,17 @@ public class StatServiceImpl implements StatService {
 	public void setDebug(boolean debug) {
 		this.debug=debug;
 	}
-
+	@Override
+	public Tracker getTracker(String trackingId) {
+		if(mTrackers.containsKey(trackingId)){
+			return mTrackers.get(trackingId);
+		}else{
+			return new Tracker(trackingId);
+		}
+		
+	}
+	@Override
+	public void closeTracker(String trackingId) {
+		mTrackers.remove(trackingId);
+	}
 }
