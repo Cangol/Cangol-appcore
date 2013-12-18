@@ -58,7 +58,7 @@ public class StatServiceImpl implements StatService {
 		return mServiceProperty;
 	}
 	@Override
-	public void sendStat(StatModel statModel) {
+	public void sendStat(StatBuilder statModel) {
 		RequestParams params=new RequestParams(statModel.getParams());
 		if(debug)Log.d(TAG, statModel.toString());
 		asyncHttpClient.get(mContext,statModel.getUrl(), params,  new AsyncHttpResponseHandler(){
