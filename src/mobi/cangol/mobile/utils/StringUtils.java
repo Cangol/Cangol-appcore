@@ -379,6 +379,12 @@ public class StringUtils {
         }
         return str.substring(0, end);
     }
+	/**
+	 * strip start|end
+	 * @param str
+	 * @param stripChars
+	 * @return
+	 */
 	public static String strip(String str, String stripChars) {
 	        if (isEmpty(str)) {
 	            return str;
@@ -386,6 +392,11 @@ public class StringUtils {
 	        str = stripStart(str, stripChars);
 	        return stripEnd(str, stripChars);
 	}
+	/**
+	 * isNumeric
+	 * @param str
+	 * @return
+	 */
     public static boolean isNumeric(String str) {
         if (str == null) {
             return false;

@@ -23,12 +23,10 @@ package mobi.cangol.mobile.utils;
  */
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -369,47 +367,6 @@ public class FileUtils {
 	}
 
 	/**
-	 * 将AES字符写入文件
-	 * 
-	 * @param str
-	 * @param path
-	 */
-	public static void writeAESFile(String str, String path) {
-		BufferedWriter buff;
-		try {
-			deleteFile(path);
-			buff = new BufferedWriter(new FileWriter(path));
-			buff.write(str);
-			buff.close();
-		} catch (IOException e) {
-			System.out.println("write AES file exception ");
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * 读取文件中AES字符
-	 * 
-	 * @param path
-	 * @return
-	 */
-	@SuppressWarnings("finally")
-	public static String readAESFile(String path) {
-		BufferedReader buff;
-		String str = null;
-		try {
-			buff = new BufferedReader(new FileReader(path));
-			str = buff.readLine();
-			buff.close();
-		} catch (IOException e) {
-			System.out.println("read AES file exception");
-			e.printStackTrace();
-		} finally {
-			return str;
-		}
-	}
-	/**
 	 * 按后缀遍历目录
 	 * @param f
 	 * @param fileList
@@ -435,6 +392,11 @@ public class FileUtils {
 		}
 		return fileList;
 	}
+	/**
+	 * 将字符串写入文件
+	 * @param file
+	 * @param content
+	 */
 	public static void writeStr(File file,String content){
 		FileOutputStream os = null;
 		try {
@@ -517,6 +479,11 @@ public class FileUtils {
 		}
 		return object;
 	}
+	/**
+	 * 输入流转string
+	 * @param is
+	 * @return
+	 */
 	public static String converts(InputStream is){
         StringBuilder sb = new StringBuilder();
         String readline = "";
@@ -534,7 +501,12 @@ public class FileUtils {
         }
         return sb.toString();
     }
-	public static String getReadableSize(long length ) {
+	/**
+	 * 获取格式化的文件大小
+	 * @param length
+	 * @return
+	 */
+	public static String getSize(long length) {
 		float SIZE_BT=1024L;
 		float SIZE_KB=SIZE_BT * 1024.0f;
 		float SIZE_MB=SIZE_KB * 1024.0f;
@@ -561,21 +533,26 @@ public class FileUtils {
 		}
 	}
 	@SuppressLint("DefaultLocale")
+	/**
+	 * 将格式化的文件大小转换为long
+	 * @param sizeStr
+	 * @return
+	 */
 	public static long getSize(String sizeStr){
 		if(sizeStr!=null&&sizeStr.trim().length()>0){
 			String unit=sizeStr.replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
 			String size=sizeStr.substring(0, sizeStr.indexOf(unit));
 			if(TextUtils.isEmpty(size))return -1;
 			float s=Float.parseFloat(size);
-			if("b".equals(unit.toLowerCase())){
+			if("B".equals(unit.toLowerCase())){
 				return (long) s;
-			}else if("kb".equals(unit.toLowerCase())||"k".equals(unit.toLowerCase())){
+			}else if("KB".equals(unit.toLowerCase())||"K".equals(unit.toLowerCase())){
 				return (long) (s*1024);
-			}else if("mb".equals(unit.toLowerCase())||"m".equals(unit.toLowerCase())){
+			}else if("MB".equals(unit.toLowerCase())||"M".equals(unit.toLowerCase())){
 				return (long) (s*1024*1024);
-			}else if("gb".equals(unit.toLowerCase())||"g".equals(unit.toLowerCase())){
+			}else if("GB".equals(unit.toLowerCase())||"G".equals(unit.toLowerCase())){
 				return (long) (s*1024*1024*1024);
-			}else if("tb".equals(unit.toLowerCase())||"t".equals(unit.toLowerCase())){
+			}else if("TB".equals(unit.toLowerCase())||"T".equals(unit.toLowerCase())){
 				return (long) (s*1024*1024*1024*1024);
 			}	
 		}

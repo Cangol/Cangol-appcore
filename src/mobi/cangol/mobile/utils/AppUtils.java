@@ -27,6 +27,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 public class AppUtils {
+	/**
+	 * 安装apk文件
+	 * @param context
+	 * @param apkPath
+	 */
 	public static void install(Context context,String apkPath){
 		Intent intent = new Intent(Intent.ACTION_VIEW);   
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -35,18 +40,33 @@ public class AppUtils {
 	            "application/vnd.android.package-archive");   
 	    context.startActivity(intent);   
 	}
+	/**
+	 * 卸载应用
+	 * @param context
+	 * @param packageName
+	 */
 	public static void unInstall(Context context,String packageName){
 		Uri uri = Uri.parse("package:"+packageName); 
 		Intent intent = new Intent(Intent.ACTION_DELETE, uri); 
 		context.startActivity(intent); 
 	}
+	/**
+	 * 启动应用
+	 * @param context
+	 * @param packageName
+	 */
 	public static void launch(Context context,String packageName){
 		PackageManager packageManager = context.getPackageManager(); 
 		Intent intent=new Intent(); 
 		intent =packageManager.getLaunchIntentForPackage(packageName); 
 		context.startActivity(intent);   
 	}
-	
+	/**
+	 * 判断是否安装应用
+	 * @param context
+	 * @param packageName
+	 * @return
+	 */
 	public static boolean isInstalled(Context context,String packageName){
 		 PackageManager pManager = context.getPackageManager();  
 		 List<PackageInfo> apps = pManager.getInstalledPackages(0);
@@ -57,7 +77,12 @@ public class AppUtils {
 		 }
 		 return false;
 	}
-	
+	/**
+	 * 获取apk应用包名
+	 * @param context
+	 * @param apkPath
+	 * @return
+	 */
 	public static String getPackageName(Context context,String apkPath){
 		ApplicationInfo appInfo=getApplicationInfo(context,apkPath);
 		if (appInfo != null) { 
@@ -65,6 +90,12 @@ public class AppUtils {
 		}
 		return null;
 	}
+	/**
+	 * 获取apk应用icon
+	 * @param context
+	 * @param apkPath
+	 * @return
+	 */
 	public static Drawable getApplicationIcon(Context context,String apkPath){
 		PackageManager packageManager = context.getPackageManager(); 
 		ApplicationInfo appInfo=getApplicationInfo(context,apkPath);
@@ -75,6 +106,12 @@ public class AppUtils {
 		}
 		return null;
 	}
+	/**
+	 * 获取应用信息
+	 * @param context
+	 * @param apkPath
+	 * @return
+	 */
 	public static ApplicationInfo getApplicationInfo(Context context,String apkPath){
 		PackageManager packageManager = context.getPackageManager(); 
 		PackageInfo info = packageManager.getPackageArchiveInfo(apkPath,  
@@ -84,7 +121,11 @@ public class AppUtils {
 		}
 		return null;
 	}
-
+	/**
+	 * 获取所有非系统应用
+	 * @param context
+	 * @return
+	 */
 	public static List<PackageInfo> getAllApps(Context context) {  
 	    List<PackageInfo> apps = new ArrayList<PackageInfo>();  
 	    PackageManager pManager = context.getPackageManager();  

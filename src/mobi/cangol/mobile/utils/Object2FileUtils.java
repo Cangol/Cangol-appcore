@@ -23,7 +23,11 @@ import android.text.TextUtils;
  * @author xuewu.wei
  */
 public class Object2FileUtils {
-	//
+	/**
+	 * 写入json对象到文件
+	 * @param jsonObject
+	 * @param objPath
+	 */
 	public static void writeJSONObject2File(JSONObject jsonObject,String objPath){
 		File file = new File(objPath);
 		FileOutputStream fileOutputStream = null;
@@ -43,7 +47,11 @@ public class Object2FileUtils {
 			}
 		}
 	}
-	
+	/**
+	 * 读取文件到json对象
+	 * @param jsonFile
+	 * @return
+	 */
 	public static JSONObject readFile2JSONObject(File jsonFile){
 		FileInputStream fileInputStream = null;
 		JSONObject jsonObject=null;
@@ -64,7 +72,11 @@ public class Object2FileUtils {
 		}
 		return jsonObject;	
 	}
-	
+	/**
+	 * 写入json对象到输出流
+	 * @param jsonObject
+	 * @param os
+	 */
 	public static void writeJSONObject(JSONObject jsonObject,OutputStream os){
 		try {
 			byte[] buffer = jsonObject.toString().getBytes("UTF-8");
@@ -85,7 +97,11 @@ public class Object2FileUtils {
 			}
 		}
 	}
-	
+	/**
+	 * 从输入流读取json对象
+	 * @param is
+	 * @return
+	 */
 	public static JSONObject readJSONObject(InputStream is){
 		String content = null;
 		JSONObject jsonObject=null;
@@ -113,7 +129,11 @@ public class Object2FileUtils {
 		}
 		return jsonObject;	
 	}
-	
+	/**
+	 * 将object对象写入输出流
+	 * @param obj
+	 * @param out
+	 */
 	public static void writeObject(Object obj,OutputStream out) {
 		ObjectOutputStream oos = null;
 		try {
@@ -131,7 +151,11 @@ public class Object2FileUtils {
 			}
 		}
 	}
-	
+	/**
+	 * 从输入流读取对象
+	 * @param is
+	 * @return
+	 */
 	public static Object readObject(InputStream is) {
 		Object object = null;
 		ObjectInputStream ois = null;
@@ -156,7 +180,11 @@ public class Object2FileUtils {
 		}
 		return object;
 	}
-	
+	/**
+	 * 将对象写入文件
+	 * @param obj
+	 * @param objPath
+	 */
 	public static void writeObject(Object obj,String objPath) {
 
 		File file = new File(objPath);
@@ -175,7 +203,11 @@ public class Object2FileUtils {
 			}
 		}
 	}
-
+	/**
+	 * 从文件读取对象
+	 * @param file
+	 * @return
+	 */
 	public static Object readObject(File file) {
 		if(!file.exists()||file.length()==0)return null;
 		Object object = null;

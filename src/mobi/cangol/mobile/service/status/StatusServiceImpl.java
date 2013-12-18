@@ -23,6 +23,7 @@ public class StatusServiceImpl implements StatusService {
 	private TelephonyManager mTelephonyManager;
 	private boolean mCallingState=true;
 	protected ArrayList<StatusListener> listeners = new ArrayList<StatusListener>();  
+	private ServiceProperty mServiceProperty=null;
 	@Override
 
 	public void onCreate(Context context) {
@@ -56,11 +57,12 @@ public class StatusServiceImpl implements StatusService {
 	}
 	@Override
 	public void setServiceProperty(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
 	}
 
 	@Override
 	public ServiceProperty getServiceProperty() {
-		return null;
+		return mServiceProperty;
 	}
 	@Override
 	public boolean isConnection() {

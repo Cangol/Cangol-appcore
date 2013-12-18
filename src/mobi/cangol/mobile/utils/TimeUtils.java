@@ -98,6 +98,11 @@ public class TimeUtils {
 		CurrentTime = formatter.format(NowDate);
 		return CurrentTime;
 	}
+	/**
+	 * 转换字符（yyyy-MM-dd）串日期到Date
+	 * @param date
+	 * @return
+	 */
 	public static Date convertToDate(String date) {
 		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
 		try{
@@ -107,6 +112,11 @@ public class TimeUtils {
 			return null;
 		}
 	}
+	/**
+	 * 转换日期到字符换yyyy-MM-dd
+	 * @param date
+	 * @return
+	 */
 	public static String convertToString(Date date) {
 		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
 		try{
@@ -323,6 +333,11 @@ public class TimeUtils {
 			return Integer.valueOf(str[0])+"秒";
 		}
 	}
+	/**
+	 * 转换时间yyyy-MM-dd HH:mm:ss到毫秒数
+	 * @param strTime
+	 * @return
+	 */
 	public static long getTimeMillis(String strTime){
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date currentTime = null;

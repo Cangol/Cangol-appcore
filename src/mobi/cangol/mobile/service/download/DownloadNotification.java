@@ -112,7 +112,7 @@ public class DownloadNotification {
 		testNotification();
 		notificaion.contentView.setProgressBar(update_notification_progressbar, 100, progress, false);
 		
-		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% "+FileUtils.getReadableSize(speed)+"/s");
+		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% "+FileUtils.getSize(speed)+"/s");
 						
 		notificationManager.notify(noid,notificaion);
 	}

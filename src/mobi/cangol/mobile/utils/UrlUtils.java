@@ -28,20 +28,40 @@ import java.util.Map;
  * @date 2012-8-27
  */
 public class UrlUtils {
+	
+	/**
+	 * 判断是否是url
+	 * @param value
+	 * @return
+	 */
 	public static boolean isUrl(String value) {
 		if (value!=null){
 			return value.matches("(((http|ftp|https|file)://)?([\\w\\-]+\\.)+[\\w\\-]+(/[\\w\\u4e00-\\u9fa5\\-\\./?\\@\\%\\!\\&=\\+\\~\\:\\#\\;\\,]*)?)");
 		}else 
 			return false;
 	}
+	/**
+	 * url encode
+	 * @param url
+	 * @return
+	 */
 	public static String encode(String url) {
 		return URLEncoder.encode(url);
 	}
-	
+	/**
+	 * url decode
+	 * @param url
+	 * @return
+	 */
 	public static String decode(String url) {
 		return URLDecoder.decode(url);
 	}
-	
+	/**
+	 * 主机和method组合url
+	 * @param host
+	 * @param method
+	 * @return
+	 */
 	public static String getUrl(String host, String method) {
 		
 		try {
@@ -54,7 +74,11 @@ public class UrlUtils {
 			return "";
 		}
 	}
-	
+	/**
+	 * 从url获取主机
+	 * @param url
+	 * @return
+	 */
 	public static String getHost(String url) {
 		
 		try {
@@ -66,7 +90,11 @@ public class UrlUtils {
 			return "";
 		}
 	}
-	
+	/**
+	 * 从url获取域名
+	 * @param url
+	 * @return
+	 */
 	public static String getDomain(String url) {
 		
 		String host = getHost(url);
@@ -85,7 +113,11 @@ public class UrlUtils {
 		}
 		return str;
 	}
-	
+	/**
+	 * 从url获取参数map
+	 * @param url
+	 * @return Map
+	 */
 	public static Map<String, String> getParams(String url) {
 		
 		String query = "";
