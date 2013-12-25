@@ -18,7 +18,7 @@ package mobi.cangol.mobile.utils;
 /**
  * @Description: Bitmap工具类
  * @version $Revision: 1.0 $
- * @author xuewu.wei
+ * @author Cangol
  * @date: 2010-12-6
  * @time: 04:47:39
  */

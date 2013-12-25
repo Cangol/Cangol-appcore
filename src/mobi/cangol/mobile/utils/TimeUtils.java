@@ -19,7 +19,7 @@ package mobi.cangol.mobile.utils;
  * 
  * @Description: 日期帮助类
  * @version $Revision: 1.0 $
- * @author xuewu.wei
+ * @author Cangol
  * @date: 2010-12-6
  * @time: 下午04:47:39
  */

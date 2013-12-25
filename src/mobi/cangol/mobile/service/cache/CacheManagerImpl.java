@@ -38,7 +38,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
 /**
  * @Description ContentCache.java
- * @author xuewu.wei
+ * @author Cangol
  * @date 2013-3-5
  */
 class CacheManagerImpl implements CacheManager{

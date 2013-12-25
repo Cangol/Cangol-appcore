@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * @Description URLUtils.java 
- * @author xuewu.wei
+ * @author Cangol
  * @date 2012-8-27
  */
 public class UrlUtils {

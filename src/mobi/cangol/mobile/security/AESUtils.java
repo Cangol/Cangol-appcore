@@ -18,7 +18,7 @@ package mobi.cangol.mobile.security;
 /**
  * @Description: 简单AES加密解密类
  * @version $Revision: 1.0 $ 
- * @author xuewu.wei 
+ * @author Cangol 
  * @date: 2011-5-17
  */
 

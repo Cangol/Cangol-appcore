@@ -19,7 +19,7 @@ import mobi.cangol.mobile.service.AppService;
 
 /**
  * 适合小型数据缓存
- * @author xuewu.wei
+ * @author Cangol
  *
  */
 public interface GlobalData extends AppService{

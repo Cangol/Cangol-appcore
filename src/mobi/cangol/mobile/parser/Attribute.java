@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Customer VO annotation
- * @author xuewu.wei
+ * @author Cangol
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

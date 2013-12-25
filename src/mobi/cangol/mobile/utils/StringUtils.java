@@ -18,7 +18,7 @@ package mobi.cangol.mobile.utils;
 /**
  * @Description: 字符串类
  * @version $Revision: 1.0 $
- * @author xuewu.wei
+ * @author Cangol
  * @date: 2010-12-6
  */
 

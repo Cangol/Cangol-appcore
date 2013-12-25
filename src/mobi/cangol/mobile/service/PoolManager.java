@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 /**
  * TheadPool manager by name
- * @author xuewu.wei
+ * @author Cangol
  *
  */
 public class PoolManager {

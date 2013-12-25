@@ -35,7 +35,7 @@ import android.text.TextUtils;
 /**
  * @Description:
  * @version $Revision: 1.0 $
- * @author xuewu.wei
+ * @author Cangol
  */
 public class Object2FileUtils {
 	/**

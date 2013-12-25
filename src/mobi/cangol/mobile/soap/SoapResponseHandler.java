@@ -22,7 +22,7 @@ import android.util.Log;
 
 /**
  * @Description SoapResponseHandler.java
- * @author xuewu.wei
+ * @author Cangol
  * @date 2013-8-14
  */
 public class SoapResponseHandler {
