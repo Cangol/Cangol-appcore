@@ -37,7 +37,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 @Service("global")
-public class GlobalDataImpl implements GlobalData {
+class GlobalDataImpl implements GlobalData {
 	
 	private final static  String JSON = ".json";
 	private final static  String JSONA = ".jsona";
@@ -58,7 +58,10 @@ public class GlobalDataImpl implements GlobalData {
 		mShared=mContext.getSharedPreferences(mConfig.getSharedName(), Context.MODE_PRIVATE);
 		refresh();
 	}
-	
+	@Override
+	public void init(ServiceProperty serviceProperty) {
+		
+	}
 	@Override
 	public String getName() {
 		return "global";
@@ -143,10 +146,6 @@ public class GlobalDataImpl implements GlobalData {
 	@Override
 	public void clear() {
 		mSession.clear();
-	}
-
-	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
 	}
 
 	@Override

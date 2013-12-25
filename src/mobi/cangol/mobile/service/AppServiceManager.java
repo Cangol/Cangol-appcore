@@ -37,5 +37,5 @@ public abstract class AppServiceManager {
 	
 	public abstract void setScanPackage(String ... packageName);
 	
-	public abstract void setServicePropertySource(InputStream is);
+	public abstract void initSource(InputStream is);
 }

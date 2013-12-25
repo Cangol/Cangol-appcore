@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mobi.cangol.mobile.cache;
+package mobi.cangol.mobile.service.cache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;

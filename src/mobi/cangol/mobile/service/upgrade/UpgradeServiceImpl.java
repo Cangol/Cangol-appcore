@@ -25,7 +25,7 @@ import mobi.cangol.mobile.service.download.DownloadNotification;
 import mobi.cangol.mobile.service.download.DownloadResponseHandler;
 import android.content.Context;
 @Service("UpgradeService")
-public class UpgradeServiceImpl implements UpgradeService{
+class UpgradeServiceImpl implements UpgradeService{
 	private final static String TAG="Upgrade";
 	private boolean debug=false;
 	private Context mContext = null;
@@ -35,10 +35,10 @@ public class UpgradeServiceImpl implements UpgradeService{
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
-		init();
 	}
-	private void init(){
-		
+	@Override
+	public void init(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
 	}
 	@Override
 	public String getName() {
@@ -57,11 +57,6 @@ public class UpgradeServiceImpl implements UpgradeService{
 			mDownloadNotification.cancelNotification();
 			mDownloadNotification=null;
 		}
-	}
-	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
-		this.mServiceProperty=serviceProperty;
-		init();
 	}
 
 	@Override

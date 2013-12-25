@@ -22,7 +22,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
 import android.content.Context;
 @Service("ConfigService")
-public class ConfigServiceImpl implements ConfigService {
+class ConfigServiceImpl implements ConfigService {
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;
@@ -35,7 +35,7 @@ public class ConfigServiceImpl implements ConfigService {
 		mDebug=debug;
 	}
 	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
+	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
 	}
 

@@ -30,7 +30,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 @Service("LocationService")
-public class LocationServiceImpl implements LocationService{
+class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int TIMEOUT=1;
 	private final static int BETTER_LOCATION=2;
@@ -76,7 +76,8 @@ public class LocationServiceImpl implements LocationService{
 		mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 		mLocation=mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	}
-	private void init(){
+	public void init(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
 		mBetterTime=mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME);
 		mTimeOut=mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT);
 	}
@@ -89,11 +90,6 @@ public class LocationServiceImpl implements LocationService{
 	public void onDestory() {
 		removeLocationUpdates();
 		mServiceLooper.quit();
-	}
-	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
-		this.mServiceProperty=serviceProperty;
-		init();
 	}
 
 	@Override

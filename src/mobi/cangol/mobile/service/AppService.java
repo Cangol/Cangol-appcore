@@ -28,7 +28,7 @@ public interface AppService {
 	
 	void setDebug(boolean debug);
 	
-	void setServiceProperty(ServiceProperty serviceProperty);
+	void init(ServiceProperty serviceProperty);
 	
 	ServiceProperty getServiceProperty();
 }

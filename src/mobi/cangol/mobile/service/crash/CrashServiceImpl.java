@@ -53,7 +53,8 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
 	}
-	private void init(){
+	public void init(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
 		PoolManager.buildPool(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(CRASHSERVICE_THREAD_MAX));
 		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME));
 	}
@@ -69,11 +70,6 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	@Override
 	public void setDebug(boolean debug) {
 		this.debug=debug;
-	}
-	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
-		this.mServiceProperty=serviceProperty;
-		init();
 	}
 
 	@Override

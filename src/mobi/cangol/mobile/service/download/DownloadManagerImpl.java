@@ -25,7 +25,7 @@ import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 @Service("DownloadService")
-public class DownloadManagerImpl implements DownloadManager{
+class DownloadManagerImpl implements DownloadManager{
 	
 	protected static final int DEFAULT_MAX_THREAD = 2;
 	
@@ -39,12 +39,16 @@ public class DownloadManagerImpl implements DownloadManager{
 	
 	protected static ConcurrentHashMap<String, DownloadExecutor> executorMap = null;
 	private Context mContext = null;
-	
+	private ServiceProperty mServiceProperty;
 	private DownloadManagerImpl() {
 		
 	}
-	
-	public  void init(){
+	public void  onCreate(Context context){
+		this.mContext=context;
+	}
+	@Override
+	public void init(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
 		if (executorMap == null) {
 			executorMap = new ConcurrentHashMap<String, DownloadExecutor>();
 		}
@@ -135,13 +139,8 @@ public class DownloadManagerImpl implements DownloadManager{
 	}
 
 	@Override
-	public void onCreate(Context context) {
-		mContext=context;
-	}
-
-	@Override
 	public String getName() {
-		return "DownloadService";
+		return "DownloadManager";
 	}
 
 	@Override
@@ -150,12 +149,7 @@ public class DownloadManagerImpl implements DownloadManager{
 	}
 
 	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
-		
-	}
-
-	@Override
 	public ServiceProperty getServiceProperty() {
-		return null;
+		return mServiceProperty;
 	}
 }

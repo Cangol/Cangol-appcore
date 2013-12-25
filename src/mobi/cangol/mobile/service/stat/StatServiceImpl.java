@@ -27,7 +27,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 import android.util.Log;
 @Service("StatService")
-public class StatServiceImpl extends TrackerHandler implements StatService {
+class StatServiceImpl extends TrackerHandler implements StatService {
 	private final static String TAG="StatService";
 	private boolean debug=false;
 	private Context mContext = null;
@@ -38,7 +38,9 @@ public class StatServiceImpl extends TrackerHandler implements StatService {
 	public void onCreate(Context context) {
 		mContext=context;
 	}
-	private void init(){
+	@Override
+	public void init(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
 		PoolManager.buildPool(mServiceProperty.getString(STATSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(STATSERVICE_THREAD_MAX));
 		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(STATSERVICE_THREADPOOL_NAME));
 	}
@@ -51,12 +53,6 @@ public class StatServiceImpl extends TrackerHandler implements StatService {
 	public void onDestory() {
 		asyncHttpClient.cancelRequests(mContext, true);
 	}
-	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
-		this.mServiceProperty=serviceProperty;
-		init();
-	}
-
 	@Override
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;

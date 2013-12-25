@@ -31,7 +31,7 @@ import android.net.NetworkInfo.State;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 @Service("StatusService")
-public class StatusServiceImpl implements StatusService {
+class StatusServiceImpl implements StatusService {
 	private final static String TAG="StatusService";
 	private boolean debug=false;
 	private Context mContext = null;
@@ -54,7 +54,10 @@ public class StatusServiceImpl implements StatusService {
 		mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 	}
-
+	@Override
+	public void init(ServiceProperty serviceProperty) {
+		this.mServiceProperty=serviceProperty;
+	}
 	@Override
 	public void onDestory() {
 		mContext.unregisterReceiver(networkStatusReceiver);
@@ -69,10 +72,6 @@ public class StatusServiceImpl implements StatusService {
 	@Override
 	public void setDebug(boolean debug) {
 		this.debug=debug;
-	}
-	@Override
-	public void setServiceProperty(ServiceProperty serviceProperty) {
-		this.mServiceProperty=serviceProperty;
 	}
 
 	@Override

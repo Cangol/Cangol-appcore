@@ -93,9 +93,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			try {
 				if(mServiceMap.containsKey(name)){
 					appService=mServiceMap.get(name).newInstance();
-					//setServiceProperty(appService,mProperties.get(name));
 					appService.onCreate(mContext);
-					appService.setServiceProperty(mProperties.get(name));
+					appService.init(mProperties.get(name)!=null?mProperties.get(name):new ServiceProperty(name));
 					mRunServiceMap.put(name, appService);
 				}else{
 					throw new IllegalStateException("hasn't appService'name is "+name);
@@ -108,7 +107,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}
 		return appService;
 	}
-	private void setServiceProperty(AppService appService,ServiceProperty serviceProperty){
+	private void init(AppService appService,ServiceProperty serviceProperty){
 		Field filed=null;
 		try {
 			filed = appService.getClass().getDeclaredField("mServiceProperty");
@@ -179,15 +178,15 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			// Temporarily disable logging of disk reads on the Looper thread
 			StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
 	        InputStream is= this.getClass().getResourceAsStream("properties.xml");
-	        setServicePropertySource(is);
+	        initSource(is);
 	        StrictMode.setThreadPolicy(oldPolicy);
 	   }else{
 	   	 	InputStream is= this.getClass().getResourceAsStream("properties.xml");
-	   	 	setServicePropertySource(is);
+	   	 	initSource(is);
 	   }
 	}
 	@Override
-	public void setServicePropertySource(InputStream is) {
+	public void initSource(InputStream is) {
 		try {
 			parser(is);
 			is.close();
