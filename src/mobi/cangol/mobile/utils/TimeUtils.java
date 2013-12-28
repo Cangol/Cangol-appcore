@@ -24,6 +24,7 @@ package mobi.cangol.mobile.utils;
  * @time: 下午04:47:39
  */
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -349,6 +350,15 @@ public class TimeUtils {
 			e.printStackTrace();
 		}
 		return time;
+	}
+	
+	public static String getFormatDate(int year,int monthOfYear, int dayOfMonth){
+		DecimalFormat  nf = new DecimalFormat ("00");
+		return year+"-"+nf.format((monthOfYear+1))+"-"+nf.format(dayOfMonth);
+	}
+	public static String getFormatTime(int hourOfDay, int minute){
+		DecimalFormat  nf = new DecimalFormat ("00");
+		return nf.format((hourOfDay))+":"+nf.format(minute);
 	}
 }
 
