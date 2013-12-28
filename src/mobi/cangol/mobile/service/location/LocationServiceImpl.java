@@ -30,7 +30,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 @Service("LocationService")
-class LocationServiceImpl implements LocationService{
+public class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int TIMEOUT=1;
 	private final static int BETTER_LOCATION=2;

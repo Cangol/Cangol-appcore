@@ -22,7 +22,12 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
 import android.content.Context;
 @Service("ConfigService")
-class ConfigServiceImpl implements ConfigService {
+/**
+ * @Description ConfigServiceImpl.java 
+ * @author Cangol
+ * @date 2013-12-28
+ */
+public class ConfigServiceImpl implements ConfigService {
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;

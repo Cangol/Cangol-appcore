@@ -107,6 +107,11 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}
 		return appService;
 	}
+	/**
+	 * @deprecated
+	 * @param appService
+	 * @param serviceProperty
+	 */
 	private void init(AppService appService,ServiceProperty serviceProperty){
 		Field filed=null;
 		try {

@@ -25,7 +25,7 @@ import mobi.cangol.mobile.service.download.DownloadNotification;
 import mobi.cangol.mobile.service.download.DownloadResponseHandler;
 import android.content.Context;
 @Service("UpgradeService")
-class UpgradeServiceImpl implements UpgradeService{
+public class UpgradeServiceImpl implements UpgradeService{
 	private final static String TAG="Upgrade";
 	private boolean debug=false;
 	private Context mContext = null;

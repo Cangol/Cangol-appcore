@@ -27,7 +27,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 import android.util.Log;
 @Service("StatService")
-class StatServiceImpl extends TrackerHandler implements StatService {
+public class StatServiceImpl extends TrackerHandler implements StatService {
 	private final static String TAG="StatService";
 	private boolean debug=false;
 	private Context mContext = null;

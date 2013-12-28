@@ -25,7 +25,7 @@ import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 @Service("DownloadService")
-class DownloadManagerImpl implements DownloadManager{
+public class DownloadManagerImpl implements DownloadManager{
 	
 	protected static final int DEFAULT_MAX_THREAD = 2;
 	

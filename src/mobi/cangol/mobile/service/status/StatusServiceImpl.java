@@ -31,7 +31,7 @@ import android.net.NetworkInfo.State;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 @Service("StatusService")
-class StatusServiceImpl implements StatusService {
+public class StatusServiceImpl implements StatusService {
 	private final static String TAG="StatusService";
 	private boolean debug=false;
 	private Context mContext = null;
