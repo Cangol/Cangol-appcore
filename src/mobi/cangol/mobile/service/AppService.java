@@ -20,6 +20,22 @@ import android.content.Context;
 
 public interface AppService {
 	
+	public final static String STATUS_SERVICE="StatusService";
+	
+	public final static String UPGRADE_SERVICE="UpgradeService";
+	
+	public final static String StatService="StatService";
+	
+	public final static String LOCATION_SERVICE="LocationService";
+	
+	public final static String CACHE_MANAGER="StatusService";
+	
+	public final static String CONFIG_SERVICE="ConfigService";
+	
+	public final static String CRASH_SERVICE="CrashService";
+	
+	public final static String DOWNLOAD_MANAGER="DownloadManager";
+	
 	void onCreate(Context context);
 
 	String getName();
