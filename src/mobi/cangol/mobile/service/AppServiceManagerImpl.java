@@ -96,9 +96,9 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}else{
 			try {
 				if(mServiceMap.containsKey(name)){
-					Constructor<AppService> c =(Constructor<AppService>) mServiceMap.get(name).getDeclaredConstructor();
+					Constructor<? extends AppService> c =mServiceMap.get(name).getDeclaredConstructor();
 					c.setAccessible(true);
-					appService=c.newInstance();
+					appService=(AppService) c.newInstance();
 					appService.onCreate(mContext);
 					appService.init(mProperties.get(name)!=null?mProperties.get(name):new ServiceProperty(name));
 					mRunServiceMap.put(name, appService);
