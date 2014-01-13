@@ -16,6 +16,7 @@
 package mobi.cangol.mobile.service;
 
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,14 +51,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	private Map<String,ServiceProperty> mProperties=new HashMap<String,ServiceProperty>();
 	public AppServiceManagerImpl(Context context){
 		this.mContext=context;
-		if(Build.VERSION.SDK_INT>=9){
-			// Temporarily disable logging of disk reads on the Looper thread
-			StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-            initClass();
-            StrictMode.setThreadPolicy(oldPolicy);
-       }else{
-    	   initClass();
-       }
+    	initClass();
 	}
 	private void initClass(){
 		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
@@ -102,7 +96,9 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}else{
 			try {
 				if(mServiceMap.containsKey(name)){
-					appService=mServiceMap.get(name).newInstance();
+					Constructor<AppService> c =(Constructor<AppService>) mServiceMap.get(name).getDeclaredConstructor();
+					c.setAccessible(true);
+					appService=c.newInstance();
 					appService.onCreate(mContext);
 					appService.init(mProperties.get(name)!=null?mProperties.get(name):new ServiceProperty(name));
 					mRunServiceMap.put(name, appService);
@@ -112,6 +108,12 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			} 
 		}

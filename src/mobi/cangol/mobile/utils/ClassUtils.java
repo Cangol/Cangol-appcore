@@ -95,6 +95,7 @@ public class ClassUtils {
 	            String s = iter.nextElement();
             	classList.add(s);
 	        }
+	        df.close();
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

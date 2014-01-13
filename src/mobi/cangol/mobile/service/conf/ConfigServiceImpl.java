@@ -27,7 +27,7 @@ import android.content.Context;
  * @author Cangol
  * @date 2013-12-28
  */
-public class ConfigServiceImpl implements ConfigService {
+class ConfigServiceImpl implements ConfigService {
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;

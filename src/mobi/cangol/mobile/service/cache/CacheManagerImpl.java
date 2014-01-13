@@ -42,7 +42,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
  * @author Cangol
  * @date 2013-3-5
  */
-@Service("CacheManager") public class CacheManagerImpl implements CacheManager{
+@Service("CacheManager") class CacheManagerImpl implements CacheManager{
 	private static final String TAG = "CacheManager";
 	private static final int DISK_CACHE_INDEX = 0;
 	private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB

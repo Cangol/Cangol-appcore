@@ -36,7 +36,7 @@ import mobi.cangol.mobile.utils.TimeUtils;
 import android.content.Context;
 import android.util.Log;
 @Service("CrashService")
-public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
+ class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private final static String TAG="CrashService";
 	private final static  String _CRASH = ".crash";
 	private boolean debug=false;
