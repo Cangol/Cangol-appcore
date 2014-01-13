@@ -50,8 +50,18 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	private Map<String,ServiceProperty> mProperties=new HashMap<String,ServiceProperty>();
 	public AppServiceManagerImpl(Context context){
 		this.mContext=context;
-		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, context, this.getClass().getPackage().getName());
-		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, context, context.getPackageName()));
+		if(Build.VERSION.SDK_INT>=9){
+			// Temporarily disable logging of disk reads on the Looper thread
+			StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+            initClass();
+            StrictMode.setThreadPolicy(oldPolicy);
+       }else{
+    	   initClass();
+       }
+	}
+	private void initClass(){
+		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
+		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
 		initServiceMap(classList);
 		initServiceProperties();
 	}

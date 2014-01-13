@@ -41,7 +41,6 @@ public class CoreApplication extends Application {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()  
 	        .detectDiskReads()  
 	        .detectDiskWrites()  
-	        
 	        .detectNetwork()  
 	        .penaltyLog() 
 	        .build()); 

@@ -399,14 +399,14 @@ public class JsonUtils {
 			return defaultValue;
 		}
 	}
-	public static Object getbject(JSONObject obj, String key) {
+	public static Object getObject(JSONObject obj, String key) {
 		try {
 			return obj.get(key);
 		} catch (JSONException e) {
 			return null;
 		}
 	}
-	public static JSONObject getbject(String json) {
+	public static JSONObject getObject(String json) {
 		try {
 			return new JSONObject(formatJson(json));
 		} catch (JSONException e) {
