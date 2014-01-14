@@ -1,8 +1,8 @@
 package mobi.cangol.mobile.db;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import android.database.Cursor;
 import android.database.SQLException;
@@ -10,75 +10,109 @@ import android.database.sqlite.SQLiteDatabase;
 
 class DaoImpl<T,ID> implements Dao<T, ID> {
 	private CoreSQLiteOpenHelper mDatabaseHelper;
-	private DatabaseTable mDbtable;
-	public DaoImpl(CoreSQLiteOpenHelper databaseHelper,T t){
+	private String mTableName;
+	private Class<T> mClazz;
+	
+	public DaoImpl(CoreSQLiteOpenHelper databaseHelper,Class<T> clazz){
 		this.mDatabaseHelper=databaseHelper;
-		mDbtable = t.getClass().getAnnotation(DatabaseTable.class);
+		this.mClazz=clazz;
+		DatabaseTable dbtable = clazz.getAnnotation(DatabaseTable.class);
+		this.mTableName="".equals(dbtable.value())?clazz.getSimpleName():dbtable.value();
 	}
 	
-//	public Cursor query(QueryBuilder queryBuilder){
-//		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-//		return db.query(, queryBuilder.getTable(), columns, selection, selectionArgs, queryBuilder.getGroupBy(), queryBuilder.getHaving(), queryBuilder.getOrderBy(), queryBuilder.getLimit(), cancellationSignal)
-//	}
+	public Cursor query(SQLiteDatabase db,QueryBuilder queryBuilder){
+		return db.query(queryBuilder.isDistinct(),
+				queryBuilder.getTable(), 
+				null,
+				queryBuilder.getSelection(), 
+				queryBuilder.getSelectionArgs(),
+				queryBuilder.getGroupBy(),
+				queryBuilder.getHaving(),
+				queryBuilder.getOrderBy(),
+				queryBuilder.getLimit());
+	}
 	
 	@Override
-	public T queryForId(ID paramID) throws SQLException {
+	public List<T> query(QueryBuilder queryBuilder){
+		ArrayList<T> list=new ArrayList<T>();
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-			QueryBuilder queryBuilder=new QueryBuilder(null);
-			//Cursor cursor=query(queryBuilder);
-			
+			Cursor cursor=query(db,queryBuilder);
+			T obj=null;
+			while(cursor.moveToNext()){
+				obj=DatabaseUtils.cursorToObject(mClazz,cursor);
+				list.add(obj);
+			}
 			db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return list;
+	}
+	
+	@Override
+	public T queryForId(ID paramID) throws SQLException {
+		ArrayList<T> list=new ArrayList<T>();
+		try {
+			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
+			queryBuilder.addSearch(DatabaseUtils.getId(mClazz), paramID, "==");
+			Cursor cursor=query(db,queryBuilder);
+			T obj=null;	
+			while(cursor.moveToNext()){
+				obj=DatabaseUtils.cursorToObject(mClazz,cursor);
+				list.add(obj);
+			}
+			db.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list.get(0);
 	}
 
 	@Override
 	public List<T> queryForAll() throws SQLException {
+		ArrayList<T> list=new ArrayList<T>();
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-			
+			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
+			Cursor cursor=query(db,queryBuilder);
+			T obj=null;
+			while(cursor.moveToNext()){
+				obj=DatabaseUtils.cursorToObject(mClazz,cursor);
+				list.add(obj);
+			}
 			db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
 
 	@Override
-	public List<T> queryForFieldValues(Map<String, Object> paramMap)
-			throws SQLException {
+	public int refresh(T paramT) throws SQLException {
+		int result=-1;
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-			
+			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
+			queryBuilder.addSearch(DatabaseUtils.getId(mClazz), DatabaseUtils.getId(paramT), "==");
+			Cursor cursor=query(db,queryBuilder);
+			result=cursor.getCount();
+			paramT=DatabaseUtils.cursorToObject(paramT,cursor);
 			db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return result;
 	}
 
-	@Override
-	public List<T> queryForFieldValuesArgs(Map<String, Object> paramMap)
-			throws SQLException {
-		try {
-			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-			
-			db.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
+	
 	@Override
 	public int create(T paramT) throws SQLException {
 		long result=-1;
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-			result=db.insert(mDbtable.value(), "", DatabaseUtils.getContentValues(paramT));
+			result=db.insert(mTableName,null, DatabaseUtils.getContentValues(paramT));
 			db.close();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -89,24 +123,11 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	}
 
 	@Override
-	public T createIfNotExists(T paramT) throws SQLException {
-		
-		try {
-			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-			
-			db.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
 	public int update(T paramT) throws SQLException {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 		int result=-1;
 		try {
-			result = db.update(mDbtable.value(), DatabaseUtils.getContentValues(paramT), "id=?",new String[]{DatabaseUtils.getId(paramT)});
+			result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getId(mClazz)+"=?",new String[]{DatabaseUtils.getId(paramT)});
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -121,7 +142,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 		int result=-1;
 		try {
-			result = db.update(mDbtable.value(), DatabaseUtils.getContentValues(paramT), "id=?",new String[]{""+paramID});
+			result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getId(mClazz)+"=?",new String[]{""+paramID});
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -132,15 +153,10 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	}
 
 	@Override
-	public int refresh(T paramT) throws SQLException {
-		return 0;
-	}
-
-	@Override
 	public int delete(T paramT) throws SQLException {
 		
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-		int result = db.delete(mDbtable.value(), "id=?",new String[]{DatabaseUtils.getId(paramT)});
+		int result = db.delete(mTableName, DatabaseUtils.getId(mClazz)+"=?",new String[]{DatabaseUtils.getId(paramT)});
 		db.close();
 		return result;
 	}
@@ -150,7 +166,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 		int result=-1;
 		for(T t:paramCollection){
-			result = db.delete(mDbtable.value(), "id=?",new String[]{DatabaseUtils.getId(t)});
+			result = db.delete(mTableName, DatabaseUtils.getId(mClazz)+"=?",new String[]{DatabaseUtils.getId(t)});
 		}
 		db.close();
 		return result;
@@ -159,7 +175,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	@Override
 	public int deleteById(ID paramID) throws SQLException {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-		int result = db.delete(mDbtable.value(), "id=?",new String[]{""+paramID});
+		int result = db.delete(mTableName, DatabaseUtils.getId(mClazz)+"=?",new String[]{""+paramID});
 		db.close();
 		return result;
 	}
@@ -169,20 +185,15 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 		int result=-1;
 		for(ID id:paramCollection){
-			db.delete(mDbtable.value(), "id=?",new String[]{""+id});
+			db.delete(mTableName, DatabaseUtils.getId(mClazz)+"=?",new String[]{""+id});
 		}
 		db.close();
 		return result;
 	}
 
 	@Override
-	public String objectToString(T paramT) {
-		return null;
-	}
-
-	@Override
 	public Class<T> getDataClass() {
-		return null;
+		return mClazz;
 	}
-
+	
 }
