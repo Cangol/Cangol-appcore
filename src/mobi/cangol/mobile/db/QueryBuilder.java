@@ -155,16 +155,19 @@ public class QueryBuilder {
 		this.having = having;
 	}
 	public String getLimit() {
-		if(limit!=null&&offset!=null){
-			return "LIMIT "+limit+" OFFSET "+offset;
+		if(limit!=null){
+			if(offset!=null){
+				return offset+","+limit;
+			}
+			return ""+limit;
 		}else
 			return null;
 	}
-	public void limit(Long limit) {
+	public void limit(long limit) {
 		this.limit = limit;
 	}
 
-	public void offset(Long offset) {
+	public void offset(long offset) {
 		this.offset = offset;
 	}
 
