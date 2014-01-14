@@ -73,22 +73,35 @@ public class DatabaseUtils {
 			throw new IllegalStateException(clazz+" not DatabaseTable Annotation");
 		}
 	}
-	
-	public static <T> String getId(T paramT){
-		Field[] fields = paramT.getClass().getDeclaredFields();
+	public static <T> String getIdColumnName(Class<?> clazz){
 		String columnName=null;
-		for (Field field : fields) {
+		for (Field field : clazz.getDeclaredFields()) {
 			field.setAccessible(true);
 			if(field.isEnumConstant())continue;
 			if (field.isAnnotationPresent(DatabaseField.class)) {
 				DatabaseField dbField = field.getAnnotation(DatabaseField.class);
 				if(dbField.primaryKey()==true){
-					columnName=dbField.value();
+					columnName="".equals(dbField.value())?field.getName():dbField.value();
 					break ;
 				}
 			}
 		}
 		return columnName;
+	}
+	public static Object getIdValue(Object obj) throws IllegalAccessException, IllegalArgumentException{
+		Object value=null;
+		for (Field field : obj.getClass().getDeclaredFields()) {
+			field.setAccessible(true);
+			if(field.isEnumConstant())continue;
+			if (field.isAnnotationPresent(DatabaseField.class)) {
+				DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+				if(dbField.primaryKey()==true){
+					value= field.get(obj);
+					break ;
+				}
+			}
+		}
+		return value;
 	}
 	
 	public static ContentValues getContentValues(Object object) throws IllegalAccessException, IllegalArgumentException{
@@ -125,17 +138,15 @@ public class DatabaseUtils {
 	
 	public static <T> T cursorToObject(Class<T> clazz,Cursor cursor) throws InstantiationException, IllegalAccessException {
 		T obj=clazz.newInstance();
-		while(cursor.moveToNext()){
-			Field[] fields = clazz.getDeclaredFields();
-			String columnName=null;
-			for (Field field : fields) {
-				field.setAccessible(true);
-				if(field.isEnumConstant())continue;
-				if (field.isAnnotationPresent(DatabaseField.class)) {
-					DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-					columnName="".equals(dbField.value())?field.getName():dbField.value();
-					setValue(obj,field,columnName,cursor);
-				}
+		Field[] fields = clazz.getDeclaredFields();
+		String columnName=null;
+		for (Field field : fields) {
+			field.setAccessible(true);
+			if(field.isEnumConstant())continue;
+			if (field.isAnnotationPresent(DatabaseField.class)) {
+				DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+				columnName="".equals(dbField.value())?field.getName():dbField.value();
+				setValue(obj,field,columnName,cursor);
 			}
 		}
 		return obj;
