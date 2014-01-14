@@ -32,8 +32,8 @@ public class QueryBuilder {
 		paraValue = new ArrayList<Object>();
 		condList = new ArrayList<String>();
 	}
-	public void addSearch(String pName, Object pValue, String pType) {
-		addSearch(pName, pValue, pType, false);
+	public void addQuery(String pName, Object pValue, String pType) {
+		addQuery(pName, pValue, pType, false);
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class QueryBuilder {
 	 * @param pType 查询类型{}
 	 * @param isOr
 	 */
-	public void addSearch(String pName, Object pValue, String pType, boolean isOr) {
+	public void addQuery(String pName, Object pValue, String pType, boolean isOr) {
 		if (StringUtils.isNotBlank(pName) && pValue != null && !pValue.toString().equals("")) {
 			if (StringUtils.isBlank(pType)) {
 				paraKey.add(pName + "=?");
@@ -85,7 +85,7 @@ public class QueryBuilder {
 		}
 	}
 	
-	public void addSearch(String pName, Object pValue1,Object pValue2 ,String pType,boolean isOr) {
+	public void addQuery(String pName, Object pValue1,Object pValue2 ,String pType,boolean isOr) {
 		if (StringUtils.isNotBlank(pName) && pValue1 != null && pValue2!= null && !pValue1.toString().equals("") && !pValue2.toString().equals("")) {
 			if (pType.equals("between")) {
 				paraKey.add(pName + " between " + pValue1 + " and " +pValue2);

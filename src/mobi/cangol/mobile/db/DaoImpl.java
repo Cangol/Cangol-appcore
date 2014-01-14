@@ -57,7 +57,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
-			queryBuilder.addSearch(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
+			queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
 			Cursor cursor=query(db,queryBuilder);
 			if(cursor.getCount()>0)
 			obj=DatabaseUtils.cursorToObject(mClazz,cursor);
@@ -93,7 +93,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
-			queryBuilder.addSearch(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
+			queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
 			Cursor cursor=query(db,queryBuilder);
 			result=cursor.getCount();
 			paramT=DatabaseUtils.cursorToObject(paramT,cursor);
