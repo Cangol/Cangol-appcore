@@ -15,15 +15,20 @@
  */
 package mobi.cangol.mobile;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.StrictMode;
 /**
  * 
@@ -35,24 +40,23 @@ public class CoreApplication extends Application {
 	private AppServiceManager mAppServiceManager;
 	public Session mSession;
 	private boolean mDevMode=true;
+	public List<WeakReference<Activity>> activityManager;
 	@Override
 	public void onCreate() {
-		if(mDevMode){
+		if(mDevMode&&Build.VERSION.SDK_INT>=9){
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()  
-	        .detectDiskReads()  
-	        .detectDiskWrites()  
-	        .detectNetwork()  
+			 .detectAll()
 	        .penaltyLog() 
 	        .build()); 
 			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-	        .detectLeakedSqlLiteObjects()
-	        .detectLeakedClosableObjects()
+	        .detectAll()
 	        .penaltyLog()
 	        .build());
 		}
 		super.onCreate();
 		mSession=new Session();
 		initAppServiceManager();
+		activityManager = new ArrayList<WeakReference<Activity>>();
 	}
 	
 	private void initAppServiceManager() {
@@ -69,13 +73,36 @@ public class CoreApplication extends Application {
 		}
 		return null;
 	}
-	
+	public void addActivityToManager(Activity act) {
+		for (final WeakReference<Activity> actR : activityManager) {
+			if (actR != null&&!act.equals(actR.get())) {
+				activityManager.add(new WeakReference<Activity>(act));
+			}
+		}
+	}
+
+	public void closeAllActivities() {
+		for (final WeakReference<Activity> actR : activityManager) {
+			if (actR != null&&actR.get()!=null) {
+				actR.get().finish();
+			}
+		}
+	}
+
+	public void delActivityFromManager(Activity act) {
+		for (final WeakReference<Activity> actR : activityManager) {
+			if (actR != null&&act.equals(actR.get())) {
+				activityManager.remove(actR);
+			}
+		}
+	}
 	public void exit() {
 		mSession.clear();
 		if(mAppServiceManager!=null){
 			mAppServiceManager.destory();
 		}
-		android.os.Process.killProcess(android.os.Process.myPid());
+		System.exit(0);
+		//android.os.Process.killProcess(android.os.Process.myPid());
 	}
 	public void setDevMode(boolean devMode) {
 		this.mDevMode = devMode;

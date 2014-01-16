@@ -28,13 +28,15 @@ public interface AppService {
 	
 	public final static String LOCATION_SERVICE="LocationService";
 	
-	public final static String CACHE_MANAGER="StatusService";
+	public final static String CACHE_MANAGER="CacheManager";
 	
 	public final static String CONFIG_SERVICE="ConfigService";
 	
 	public final static String CRASH_SERVICE="CrashService";
 	
 	public final static String DOWNLOAD_MANAGER="DownloadManager";
+	
+	public final static String GLOBAL_DATA="GlobalData";
 	
 	void onCreate(Context context);
 

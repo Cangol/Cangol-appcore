@@ -36,14 +36,14 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	public List<T> query(QueryBuilder queryBuilder){
 		ArrayList<T> list=new ArrayList<T>();
 		try {
-			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+			SQLiteDatabase db=mDatabaseHelper.getReadableDatabase();
 			Cursor cursor=query(db,queryBuilder);
 			T obj=null;
 			while(cursor.moveToNext()){
 				obj=DatabaseUtils.cursorToObject(mClazz,cursor);
 				list.add(obj);
 			}
-			db.close();
+			cursor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,13 +54,13 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	public T queryForId(ID paramID) throws SQLException {
 		T obj=null;	
 		try {
-			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+			SQLiteDatabase db=mDatabaseHelper.getReadableDatabase();
 			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
 			queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
 			Cursor cursor=query(db,queryBuilder);
 			if(cursor.getCount()>0)
 			obj=DatabaseUtils.cursorToObject(mClazz,cursor);
-			db.close();
+			cursor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,7 +79,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 				obj=DatabaseUtils.cursorToObject(mClazz,cursor);
 				list.add(obj);
 			}
-			db.close();
+			cursor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,13 +90,13 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	public int refresh(T paramT) throws SQLException {
 		int result=-1;
 		try {
-			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+			SQLiteDatabase db=mDatabaseHelper.getReadableDatabase();
 			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
 			queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
 			Cursor cursor=query(db,queryBuilder);
 			result=cursor.getCount();
 			paramT=DatabaseUtils.cursorToObject(paramT,cursor);
-			db.close();
+			cursor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,7 +110,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		try {
 			SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 			result=db.insert(mTableName,null, DatabaseUtils.getContentValues(paramT));
-			db.close();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -130,7 +129,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		db.close();
 		return result;
 	}	
 
@@ -145,7 +143,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
-		db.close();
 		return result;
 	}
 
@@ -156,7 +153,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		int result=-1;
 		try {
 			result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+DatabaseUtils.getIdValue(paramT)});
-			db.close();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -173,7 +169,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 			for(T t:paramCollection){
 				result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+DatabaseUtils.getIdValue(t)});
 			}
-			db.close();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -186,7 +181,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	public int deleteById(ID paramID) throws SQLException {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 		int result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+paramID});
-		db.close();
 		return result;
 	}
 
@@ -197,7 +191,6 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		for(ID id:paramCollection){
 			db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+id});
 		}
-		db.close();
 		return result;
 	}
 

@@ -50,7 +50,7 @@ import android.os.Build;
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
-		//这里使用挂载在application总的session也可实例化一个新的
+		//这里使用application中的session也可实例化一个新的
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mSession=app.mSession;
 		
