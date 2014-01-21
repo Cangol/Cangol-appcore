@@ -23,34 +23,42 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-public abstract class DownloadExecutor {
+public abstract class DownloadExecutor<T> {
 	private ArrayList<DownloadResource> mDownloadRes=new ArrayList<DownloadResource>();
 	private ArrayList<WeakReference<DownloadStatusListener>> listeners=new  ArrayList<WeakReference<DownloadStatusListener>>();
 	private Pool mPool;
-	private Context context;
+	private Context mContext;
 	private DownloadEvent mDownloadEvent;
 	private ExecutorHandler mHandler;
 	public DownloadExecutor(String name) {
 		this.mHandler=new ExecutorHandler(this);
+	}
+	public void init() {
 		mDownloadRes.addAll(scanResource());
 	}
 	public void setPool(Pool pool) {
 		this.mPool = pool;
 	}
 	public void setContext(Context context) {
-		this.context = context;
+		this.mContext = context;
 	}
 	public void setDownloadEvent(DownloadEvent downloadEvent) {
 		this.mDownloadEvent = downloadEvent;
 	}
 	
+	protected abstract void add(T t);
+	
+	protected abstract DownloadResource getResource(T t);
+	
+	protected abstract DownloadResource readResource(String filePath);
+	
+	protected abstract void writeResource(DownloadResource resource);
+	
 	public abstract ArrayList<DownloadResource> scanResource();
 	
 	public abstract DownloadNotification notification(Context context,DownloadResource resource);
 	
-	public abstract DownloadResource createResource(String url,String name);
-
-
+	
 	public DownloadResource getDownloadResource(String key) {
 		for(DownloadResource resource:mDownloadRes){
 			if(key!=null&&key.equals(resource.getKey())){
@@ -59,13 +67,14 @@ public abstract class DownloadExecutor {
 		}
 		return null;
 	}
+	
 	public void add(DownloadResource resource) {
 		if(mDownloadRes.contains(resource)){
 			return;
 		}else{
 			DownloadTask downloadTask=new DownloadTask(resource,mPool,mHandler);
 			resource.setDownloadTask(downloadTask);
-			downloadTask.setDownloadNotification(notification(context,resource));
+			downloadTask.setDownloadNotification(notification(mContext,resource));
 			downloadTask.start();
 			synchronized(mDownloadRes){
 				mDownloadRes.add(resource);
@@ -76,6 +85,11 @@ public abstract class DownloadExecutor {
 	public void start(DownloadResource resource) {
 		if(mDownloadRes.contains(resource)){
 			DownloadTask downloadTask=resource.getDownloadTask();
+			if(downloadTask==null){
+				downloadTask=new DownloadTask(resource,mPool,mHandler);
+				resource.setDownloadTask(downloadTask);
+				downloadTask.setDownloadNotification(notification(mContext,resource));
+			}
 			downloadTask.start();
 		}
 	}
@@ -178,15 +192,21 @@ public abstract class DownloadExecutor {
 	}
 	
 	private void _handleMessage(Message msg) {
+		DownloadResource resource=(DownloadResource) msg.obj;
 		switch (msg.what) {
 			case Download.TYPE_DOWNLOAD_START:
-				if(null!=mDownloadEvent)mDownloadEvent.onStart((DownloadResource) msg.obj);
+				if(null!=mDownloadEvent)mDownloadEvent.onStart(resource);
+				writeResource(resource);
+			case Download.TYPE_DOWNLOAD_STOP:
+				writeResource(resource);
 			case Download.TYPE_DOWNLOAD_FINISH:
-				if(null!=mDownloadEvent)mDownloadEvent.onFinish((DownloadResource) msg.obj);
+				if(null!=mDownloadEvent)mDownloadEvent.onFinish(resource);
+				writeResource(resource);
 			case Download.TYPE_DOWNLOAD_FAILED:
-				if(null!=mDownloadEvent)mDownloadEvent.onFailure((DownloadResource) msg.obj);
+				if(null!=mDownloadEvent)mDownloadEvent.onFailure(resource);
+				writeResource(resource);
 			default:
-				notifyUpdateStatus((DownloadResource) msg.obj,msg.what);
+				notifyUpdateStatus(resource,msg.what);
 				break;
 		}
 	}

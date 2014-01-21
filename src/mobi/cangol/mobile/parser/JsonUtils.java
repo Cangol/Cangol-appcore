@@ -18,6 +18,7 @@ package mobi.cangol.mobile.parser;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -43,13 +44,14 @@ public class JsonUtils {
 	private final static  String TAG = "JsonUtils";
 	/**
 	 * 转换Object到JSONObject
+	 * @param <T>
 	 * @param obj
 	 * @return
 	 * @throws JSONException
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static JSONObject toJSONObject(Object obj) throws JSONException, IllegalArgumentException, IllegalAccessException{
+	public static <T> JSONObject toJSONObject(T obj) throws JSONException, IllegalArgumentException, IllegalAccessException{
 		JSONObject json=new JSONObject();
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
@@ -59,7 +61,7 @@ public class JsonUtils {
 				//非集合类型
 				if (isBaseClass(field.getType())) {
 					json.put(field.getName(), field.get(obj));
-				}else{
+				}else if(!Modifier.isTransient(field.getModifiers())){
 					json.put(field.getName(), toJSONObject(field.get(obj)));
 				}
 			}else{

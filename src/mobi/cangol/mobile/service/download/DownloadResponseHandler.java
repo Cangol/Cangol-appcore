@@ -30,7 +30,7 @@ import android.util.Log;
 
 public class DownloadResponseHandler{
 	public final static  String TAG = "DownloadResponseHandler";
-	private final static boolean DEBUG=false;
+	private final static boolean DEBUG=true;
 	protected static final int WAIT_MESSAGE = 0;
 	protected static final int START_MESSAGE = 1;
 	protected static final int PROGRESS_MESSAGE = 2;
@@ -38,7 +38,7 @@ public class DownloadResponseHandler{
 	protected static final int FAILURE_MESSAGE = 4;
 	protected static final int FINISH_MESSAGE = 5;
 	
-	private final int BUFF_SIZE=4*1024;
+	private final int BUFF_SIZE=2*1024;
 	private Handler handler;
     public DownloadResponseHandler() {
         if(Looper.myLooper() != null) {
@@ -114,6 +114,7 @@ public class DownloadResponseHandler{
 						startLength=0;
 					}
 				}
+				if(threadfile!=null)threadfile.close();
 				if(oldLength==length){
 					sendProgressMessage(oldLength,100,0);
 					sendFinishMessage(threadfile.length());

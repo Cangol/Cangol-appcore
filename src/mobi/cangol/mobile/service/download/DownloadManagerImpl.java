@@ -15,29 +15,22 @@
  */
 package mobi.cangol.mobile.service.download;
 
+import java.lang.reflect.Constructor;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
-@Service("DownloadService")
+@Service("DownloadManager")
  class DownloadManagerImpl implements DownloadManager{
 	
 	protected static final int DEFAULT_MAX_THREAD = 2;
-	
-	static Map<String,Integer> conf=new HashMap<String,Integer>();
-	
-	static {
-		//配置每个下载执行器的核心线程数
-		conf.put("Apk", 1);
-		conf.put("Book", 5);
-	}
-	
-	protected static ConcurrentHashMap<String, DownloadExecutor> executorMap = null;
+	protected boolean debug=false;
+	protected ConcurrentHashMap<String, DownloadExecutor<?>> executorMap = null;
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty;
 	private DownloadManagerImpl() {
@@ -50,56 +43,38 @@ import android.content.Context;
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
 		if (executorMap == null) {
-			executorMap = new ConcurrentHashMap<String, DownloadExecutor>();
-		}
-		DownloadExecutor downloadExecutor = null;
-		for(String name:conf.keySet()){
-			downloadExecutor = create(name);
-			downloadExecutor.setContext(mContext);
-			downloadExecutor.setPool(PoolManager.buildPool(name, conf.containsKey(name)?conf.get(name):DEFAULT_MAX_THREAD));
-			executorMap.put(name, downloadExecutor);
+			executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
 		}
 	}
 	
-	public  synchronized DownloadExecutor getDownloadExecutor(String name) {
-		DownloadExecutor downloadExecutor = null;
+	public  synchronized DownloadExecutor<?> getDownloadExecutor(String name) {
+		DownloadExecutor<?> downloadExecutor = null;
 		if (executorMap == null) {
-			executorMap = new ConcurrentHashMap<String, DownloadExecutor>();
+			executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
 		}
 		if (executorMap.containsKey(name)) {
 			downloadExecutor = executorMap.get(name);
-		} else {
-			downloadExecutor = create(name);
-			downloadExecutor.setContext(mContext);
-			downloadExecutor.setPool(PoolManager.buildPool(name, conf.containsKey(name)?conf.get(name):DEFAULT_MAX_THREAD));
-			executorMap.put(name, downloadExecutor);
-		}
+		} 
 		return downloadExecutor;
 	}
 	
-	private  DownloadExecutor create(String name){
-		if("Apk".equals(name)){
-			return new ApkDownloadExecutor(name);
-		}else if("Book".equals(name)){
-			return null;
-		}
-		return null;	
-	}
 	//提前注册各个下载器 减少需要用时再初始化造成的时间消耗（初始化扫描耗时较多）
-	public  void registerExecutor(String name,Class<? extends DownloadExecutor> clazz,int max){
-		DownloadExecutor downloadExecutor=null;
+	public  void registerExecutor(String name,Class<? extends DownloadExecutor<?>> clazz,int max){
+		DownloadExecutor<?> downloadExecutor=null;
 		if (executorMap == null) {
-			executorMap = new ConcurrentHashMap<String, DownloadExecutor>();
+			executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
 		}
 		if (executorMap.containsKey(name)) {
 			downloadExecutor = executorMap.get(name);
 		} else {
 			try {
-				downloadExecutor = clazz.getConstructor(String.class).newInstance(name);
+				Constructor<? extends DownloadExecutor<?>> c=clazz.getDeclaredConstructor(String.class);
+				c.setAccessible(true);
+				downloadExecutor = c.newInstance(name);
+				downloadExecutor.init();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			conf.put(name, max);
 			downloadExecutor.setContext(mContext);
 			downloadExecutor.setPool(PoolManager.buildPool(name, max));
 			executorMap.put(name, downloadExecutor);
@@ -109,8 +84,8 @@ import android.content.Context;
 	
 	public  void recoverAllAllDownloadExecutor() {
 		if(null==executorMap)return;
-		Enumeration<DownloadExecutor> en = executorMap.elements();
-		DownloadExecutor downloadExecutor=null;
+		Enumeration<DownloadExecutor<?>> en = executorMap.elements();
+		DownloadExecutor<?> downloadExecutor=null;
 		while (en.hasMoreElements()) {
 			downloadExecutor=en.nextElement();
 			downloadExecutor.recoverAll();
@@ -119,8 +94,8 @@ import android.content.Context;
 	
 	public  void interruptAllDownloadExecutor() {
 		if(null==executorMap)return;
-		Enumeration<DownloadExecutor> en = executorMap.elements();
-		DownloadExecutor downloadExecutor=null;
+		Enumeration<DownloadExecutor<?>> en = executorMap.elements();
+		DownloadExecutor<?> downloadExecutor=null;
 		while (en.hasMoreElements()) {
 			downloadExecutor=en.nextElement();
 			downloadExecutor.interruptAll();
@@ -129,7 +104,7 @@ import android.content.Context;
 	
 	public  void onDestory() {
 		if(null==executorMap)return;
-		Enumeration<DownloadExecutor> en = executorMap.elements();
+		Enumeration<DownloadExecutor<?>> en = executorMap.elements();
 		while (en.hasMoreElements()) {
 			en.nextElement().close();
 		}
@@ -145,7 +120,7 @@ import android.content.Context;
 
 	@Override
 	public void setDebug(boolean debug) {
-		
+		this.debug=debug;
 	}
 
 	@Override

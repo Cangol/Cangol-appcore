@@ -17,7 +17,7 @@
 		<property name="report_param_device">device</property>
 		<property name="report_param_timestamp">timestamp</property>
 	</service>
-	<service name="DownloadService">
+	<service name="DownloadManager">
 		<property name="thread_max">5</property>
 		<property name="threadpool_name">download</property>
 	</service>

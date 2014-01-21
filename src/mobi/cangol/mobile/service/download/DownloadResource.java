@@ -15,6 +15,10 @@
  */
 package mobi.cangol.mobile.service.download;
 
+import java.util.HashMap;
+
+import mobi.cangol.mobile.logging.Log;
+
 
 
 public class DownloadResource {
@@ -44,12 +48,26 @@ public class DownloadResource {
 	protected String  object;
 	//唯一标示
 	protected String  key;
+	
 	protected transient DownloadTask downloadTask;
 
+	protected transient HashMap<Object,BaseViewHolder> viewHolders=new HashMap<Object,BaseViewHolder>();
+	
+	public DownloadResource() {
+	}
 	
 	public DownloadResource(String url, String fileName) {
 		this.url = url;
 		this.fileName = fileName;
+	}
+	public BaseViewHolder getViewHolder(Object obj) {
+		return viewHolders.get(obj);
+	}
+
+	public void setViewHolder(Object obj,BaseViewHolder viewHolder) {
+		if(viewHolders==null)
+			viewHolders=new HashMap<Object,BaseViewHolder>();
+		this.viewHolders.put(obj, viewHolder);
 	}
 	public long getCompleteSize() {
 		return completeSize;
@@ -146,16 +164,4 @@ public class DownloadResource {
 		speed=0;
 		status=0;
 	}
-	
-	public static DownloadResource initFromFile(String absolutePath) {
-		
-		return null;
-	}
-	
-	public void save() {
-		
-	}
-	
-	
-	
 }

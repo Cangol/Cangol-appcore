@@ -20,7 +20,9 @@ public interface Download {
 		APK,//下载完会提示安装
 		OTHER,
 	}
+	//下载文件后缀
 	public static final String SUFFIX_SOURCE=".tmp";
+	//配置文件后缀
 	public static final String SUFFIX_CONFIG=".conf";
 	//正在等待
 	public static final int STATUS_WAIT	    = 0;
@@ -46,11 +48,11 @@ public interface Download {
 	
 	public final static int TYPE_DOWNLOAD_DELETE = 5;
 	
-	public final static int TYPE_DOWNLOAD_UPDATEFILE = 6;
+	//public final static int TYPE_DOWNLOAD_UPDATEFILE = 6;
 	
 	public final static int TYPE_DOWNLOAD_STOP = 7;
 	
-	public final static int TYPE_DOWNLOAD_INSTALL = 8;
+	//public final static int TYPE_DOWNLOAD_INSTALL = 8;
 	
 	public final static int TYPE_DOWNLOAD_CONTINUE = 9;
 	
