@@ -50,6 +50,8 @@ public abstract class DownloadExecutor<T> {
 	
 	protected abstract DownloadResource getResource(T t);
 	
+	protected abstract T getDownloadModel(DownloadResource resource);
+	
 	protected abstract DownloadResource readResource(String filePath);
 	
 	protected abstract void writeResource(DownloadResource resource);
