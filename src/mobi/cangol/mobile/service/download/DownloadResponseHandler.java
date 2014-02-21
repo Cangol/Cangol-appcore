@@ -30,7 +30,7 @@ import android.util.Log;
 
 public class DownloadResponseHandler{
 	public final static  String TAG = "DownloadResponseHandler";
-	private final static boolean DEBUG=true;
+	private final static boolean DEBUG=false;
 	protected static final int WAIT_MESSAGE = 0;
 	protected static final int START_MESSAGE = 1;
 	protected static final int PROGRESS_MESSAGE = 2;

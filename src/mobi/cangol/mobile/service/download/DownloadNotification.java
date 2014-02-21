@@ -50,24 +50,28 @@ public class DownloadNotification {
 		initNotification(context);
 		
 	}
+	
 	private void initNotification(Context context){
 		Resources resources=context.getResources();
 		this.update_notification_icon=resources.getIdentifier("update_notification_icon", "id", context.getPackageName());
 		this.update_notification_progressbar =resources.getIdentifier("update_notification_progressbar", "id", context.getPackageName());
-		this.update_notification_progressblock =resources.getIdentifier("update_notification_progressblock", "id", context.getPackageName());
+		this.update_notification_progressinfo =resources.getIdentifier("update_notification_progressinfo", "id", context.getPackageName());
+		this.update_notification_speedtext =resources.getIdentifier("update_notification_speedtext", "id", context.getPackageName());
 		this.update_notification_progresstext =resources.getIdentifier("update_notification_progresstext", "id", context.getPackageName());
 		this.update_notification_titletext =resources.getIdentifier("update_notification_titletext", "id", context.getPackageName());
 		this.update_notification_timetext =resources.getIdentifier("update_notification_timetext", "id", context.getPackageName());
-		this.update_notification_infotext =resources.getIdentifier("update_notification_infotext", "id", context.getPackageName());
+		this.update_notification_statustext =resources.getIdentifier("update_notification_statustext", "id", context.getPackageName());
 		this.update_notification_layout =resources.getIdentifier("update_notification_layout", "layout", context.getPackageName());
 		this.download_failure_text =resources.getIdentifier("download_failure_text", "string", context.getPackageName());
 		this.download_success_text =resources.getIdentifier("download_success_text", "string", context.getPackageName());
 	}
+	
 	private void testNotification() {
 		if(update_notification_layout==0){
 			throw new IllegalStateException("please set this value " +
 					"[update_notification_layout," +
-					"update_notification_progressblock," +
+					"update_notification_progressinfo," +
+					"update_notification_speedtext," +
 					"update_notification_progresstext," +
 					"update_notification_titletext," +
 					"update_notification_progressbar," +
@@ -87,6 +91,7 @@ public class DownloadNotification {
 		notificaion.contentIntent.cancel();
 		notificaion.contentView = new RemoteViews(context.getPackageName(),update_notification_layout);
 		notificaion.contentView.setProgressBar(update_notification_progressbar, 100, 0, false);
+		notificaion.contentView.setTextViewText(update_notification_speedtext, "");
 		notificaion.contentView.setTextViewText(update_notification_progresstext, "");
 		notificaion.contentView.setTextViewText(update_notification_titletext,title);
 		notificaion.contentView.setTextViewText(update_notification_timetext,TimeUtils.getCurrentHoursMinutes());
@@ -115,10 +120,10 @@ public class DownloadNotification {
 		notificaion.contentIntent = pendingIntent;
 		notificaion.flags = Notification.FLAG_AUTO_CANCEL;
 		notificaion.contentView.setViewVisibility(update_notification_progressbar, View.GONE);
-		notificaion.contentView.setViewVisibility(update_notification_progresstext,View.GONE);
-		notificaion.contentView.setViewVisibility(update_notification_infotext,View.VISIBLE);
+		notificaion.contentView.setViewVisibility(update_notification_progressinfo,View.GONE);
+		notificaion.contentView.setViewVisibility(update_notification_statustext,View.VISIBLE);
 		notificaion.contentView.setImageViewBitmap(update_notification_icon, ((BitmapDrawable) AppUtils.getApplicationIcon(context, savePath)).getBitmap());
-		notificaion.contentView.setTextViewText(update_notification_infotext,context.getString(download_success_text));
+		notificaion.contentView.setTextViewText(update_notification_statustext,context.getString(download_success_text));
 		notificaion.defaults = Notification.DEFAULT_SOUND;
 		notificationManager.notify(noid, notificaion);
 	}
@@ -126,8 +131,8 @@ public class DownloadNotification {
 	public void updateNotification(int progress, int speed) {
 		testNotification();
 		notificaion.contentView.setProgressBar(update_notification_progressbar, 100, progress, false);
-		
-		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% "+FileUtils.getSize(speed)+"/s");
+		notificaion.contentView.setTextViewText(update_notification_speedtext, FileUtils.getSize(speed)+"/s");
+		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% ");
 						
 		notificationManager.notify(noid,notificaion);
 	}
@@ -137,9 +142,9 @@ public class DownloadNotification {
 		notificaion.tickerText = title;
 		notificaion.when = System.currentTimeMillis();
 		notificaion.contentView.setViewVisibility(update_notification_progressbar, View.GONE);
-		notificaion.contentView.setViewVisibility(update_notification_progresstext,View.GONE);
-		notificaion.contentView.setViewVisibility(update_notification_infotext,View.VISIBLE);
-		notificaion.contentView.setTextViewText(update_notification_infotext,context.getString (download_failure_text));
+		notificaion.contentView.setViewVisibility(update_notification_progressinfo,View.GONE);
+		notificaion.contentView.setViewVisibility(update_notification_statustext,View.VISIBLE);
+		notificaion.contentView.setTextViewText(update_notification_statustext,context.getString (download_failure_text));
 		notificaion.flags = Notification.FLAG_AUTO_CANCEL;
 		notificaion.defaults = Notification.DEFAULT_SOUND;
 		notificationManager.notify(noid, notificaion);
@@ -148,11 +153,12 @@ public class DownloadNotification {
 	//please set this value
 	int update_notification_icon;
 	int update_notification_progressbar;
-	int update_notification_progressblock;
+	int update_notification_progressinfo;
+	int update_notification_speedtext;
 	int update_notification_progresstext;
 	int update_notification_titletext;
 	int update_notification_timetext;
-	int update_notification_infotext;
+	int update_notification_statustext;
 	int update_notification_layout;
 	int download_failure_text;
 	int download_success_text;
