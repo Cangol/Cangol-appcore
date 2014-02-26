@@ -26,11 +26,11 @@ public interface UpgradeService extends AppService{
 		RES,//res升级
 		SO//so库升级
 	}
+	void upgradeRes(String name,String url,boolean load);
 	
-	boolean isUpgrade(String version);
+	void upgradeDex(String name,String url,boolean launch);
 	
-	String getUpgrade(String version);
+	void upgradeSo(String name,String url,boolean load);
 	
-	void downloadUpgrade(String url,String savePath);
-	
+	void upgradeApk(String name,String url,boolean install);
 }

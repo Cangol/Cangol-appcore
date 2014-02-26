@@ -87,8 +87,8 @@ public class DownloadTask {
 		this.downloadResource = downloadResource;
 		this.pool=pool;
 		this.handler=handler;
-		downloadHttpClient=new DownloadHttpClient();
-		downloadHttpClient.setThreadool((ThreadPoolExecutor) pool.getExecutorService());
+		downloadHttpClient=DownloadHttpClient.build(pool.getName());
+		downloadHttpClient.setThreadool(pool);
 	}
 	public void setDownloadNotification(DownloadNotification downloadNotification) {
 		this.downloadNotification = downloadNotification;

@@ -32,8 +32,10 @@ import android.util.Log;
 @Service("LocationService")
 class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
-	private final static int TIMEOUT=1;
-	private final static int BETTER_LOCATION=2;
+	private final static int FLAG_TIMEOUT=1;
+	private final static int FLAG_BETTER_LOCATION=2;
+	private final static int MINTIME=2*1000;
+	private final static int MINDISTANCE=50;
 	private boolean mDebug=false;
 	private int mBetterTime = 1000 * 60 * 2;
 	private int mTimeOut = 1000 * 60 * 5;
@@ -55,12 +57,12 @@ class LocationServiceImpl implements LocationService{
         @Override
         public void handleMessage(Message msg) {
         	switch(msg.what){
-        		case TIMEOUT:
+        		case FLAG_TIMEOUT:
         			removeLocationUpdates();
     				if(mMyLocationListener!=null)
     					mMyLocationListener.timeout(mLocation);
         		break;
-        		case BETTER_LOCATION:
+        		case FLAG_BETTER_LOCATION:
         			handleBetterLocation();
             	break;
         	}
@@ -78,8 +80,8 @@ class LocationServiceImpl implements LocationService{
 	}
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
-		mBetterTime=mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME);
-		mTimeOut=mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT);
+		mBetterTime=mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME,mBetterTime);
+		mTimeOut=mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT,mTimeOut);
 	}
 	@Override
 	public String getName() {
@@ -114,7 +116,7 @@ class LocationServiceImpl implements LocationService{
 				Log.d(TAG, "location "+location.getProvider()+":"+location.getLatitude()+","+location.getLongitude());
 				if(isBetterLocation(location)){
 					mLocation=location;
-					mServiceHandler.sendEmptyMessage(BETTER_LOCATION);
+					mServiceHandler.sendEmptyMessage(FLAG_BETTER_LOCATION);
 				}else{
 					Log.d(TAG, "location "+location.toString());
 				}
@@ -138,14 +140,14 @@ class LocationServiceImpl implements LocationService{
 			
 		};
 		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME),
-				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE),
+				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME,MINTIME),
+				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE,MINDISTANCE),
 				mLocationListener);
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
-				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME),
-				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE),
+				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME,MINTIME),
+				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE,MINDISTANCE),
 				mLocationListener);
-		mServiceHandler.sendEmptyMessageDelayed(TIMEOUT, mTimeOut);
+		mServiceHandler.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut);
 	}
 
 	protected void getLocationAddress(Location location) {

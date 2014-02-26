@@ -41,17 +41,19 @@ public class ServiceProperty {
 	}
 
 	public String getString(String key) {
+		return getString(key,null);
+	}
+	public String getString(String key,String defaultValue) {
 		Object o = mMap.get(key);
 		if (o == null) {
-			return null;
+			return defaultValue;
 		}
 		try {
 			return (String) o;
 		} catch (ClassCastException e) {
-			return null;
+			return defaultValue;
 		}
 	}
-
 	public void putInt(String key, int value) {
 		mMap.put(key, value);
 	}

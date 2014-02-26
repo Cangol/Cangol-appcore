@@ -24,6 +24,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import mobi.cangol.mobile.http.AsyncHttpClient;
+import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.PoolManager.Pool;
+
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -45,12 +49,12 @@ public class DownloadHttpClient {
 	public final static  String TAG = "PollingHttpClient";
     private DefaultHttpClient httpClient;
     private final HttpContext httpContext;
-    private ThreadPoolExecutor threadPool;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
     private final static int DEFAULT_RETRYTIMES=5;
     private final static int DEFAULT_SOCKET_TIMEOUT = 20 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-    public DownloadHttpClient() {
+    private Pool threadPool;
+    protected DownloadHttpClient(String group) {
         
     	httpContext = new SyncBasicHttpContext(new BasicHttpContext());
 		httpClient = new DefaultHttpClient();
@@ -62,15 +66,22 @@ public class DownloadHttpClient {
 		HttpClientParams.setRedirecting(params, true);
 		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
 		httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-		threadPool = (ThreadPoolExecutor)Executors.newCachedThreadPool();
+		threadPool = PoolManager.getPool(group);
 
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
     }
+    public  static DownloadHttpClient build(String group) {
+    	DownloadHttpClient asyncHttpClient=new DownloadHttpClient(group);
+		return asyncHttpClient;
+	}
+    public  static void cancel(String group,boolean mayInterruptIfRunning) {
+    	PoolManager.getPool(group).cancle(mayInterruptIfRunning);
+	}
     public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
     	httpClient.setHttpRequestRetryHandler(retryHandler);
     }
-    public void setThreadool(ThreadPoolExecutor threadPool) {
-        this.threadPool = threadPool;
+    public void setThreadool(Pool pool) {
+        this.threadPool = pool;
     }
     public Future<?> send(Context context,String url,DownloadResponseHandler responseHandler,long from,String saveFile) {
         HttpUriRequest request = new HttpGet(url);

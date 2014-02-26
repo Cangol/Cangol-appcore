@@ -89,7 +89,7 @@ public class DownloadResponseHandler{
 	void sendResponseMessage(HttpResponse response,String saveFile) throws IOException{
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_PARTIAL_CONTENT 
 				||response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
-			Log.d(TAG, "StatusCode="+response.getStatusLine().getStatusCode()); 
+			if(DEBUG)Log.d(TAG, "StatusCode="+response.getStatusLine().getStatusCode()); 
 			HttpEntity entity = response.getEntity();
 			long length = entity.getContentLength();
 			RandomAccessFile threadfile= new RandomAccessFile(saveFile, "rwd");  

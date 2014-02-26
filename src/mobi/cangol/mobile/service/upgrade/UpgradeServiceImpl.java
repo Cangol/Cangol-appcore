@@ -17,24 +17,29 @@ package mobi.cangol.mobile.service.upgrade;
 
 import java.io.File;
 
+import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.service.download.Download;
 import mobi.cangol.mobile.service.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.download.DownloadNotification;
 import mobi.cangol.mobile.service.download.DownloadResponseHandler;
+import mobi.cangol.mobile.utils.AppUtils;
 import android.content.Context;
 @Service("UpgradeService")
 class UpgradeServiceImpl implements UpgradeService{
-	private final static String TAG="Upgrade";
+	private final static String TAG="UpgradeService";
 	private boolean debug=false;
 	private Context mContext = null;
-	private DownloadHttpClient mDownloadHttpClient;
-	private DownloadNotification mDownloadNotification;
 	private ServiceProperty mServiceProperty=null;
+	private ConfigService mConfigService;
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
+		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {
@@ -47,45 +52,31 @@ class UpgradeServiceImpl implements UpgradeService{
 
 	@Override
 	public void onDestory() {
+		DownloadHttpClient.cancel(TAG, true);
 		
-		if(mDownloadHttpClient!=null){
-			mDownloadHttpClient.cancelRequests(mContext, true);
-			mDownloadHttpClient=null;
-		}
-		
-		if(mDownloadNotification!=null){
-			mDownloadNotification.cancelNotification();
-			mDownloadNotification=null;
-		}
 	}
 
 	@Override
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
 	}
-	@Override
-	public boolean isUpgrade(String version) {
-		
-		return false;
-	}
 
 	@Override
-	public String getUpgrade(String version) {
-		
-		return null;
+	public void setDebug(boolean debug) {
+		this.debug=debug;
 	}
 	@Override
-	public void downloadUpgrade(String url,String savePath) {
-		mDownloadNotification=new DownloadNotification(mContext,"",savePath,Download.DownloadType.APK);
-		if(mDownloadHttpClient==null)
-			mDownloadHttpClient=new DownloadHttpClient();
+	public void upgradeApk(String name,String url,final boolean install){
+		final String savePath=mConfigService.getDownloadDir() +name+".apk";
+		final DownloadNotification  downloadNotification=new DownloadNotification(mContext,name,savePath,Download.DownloadType.APK);
 		File saveFile=new File(savePath);
 		if(saveFile.exists())saveFile.delete();
-		mDownloadHttpClient.send(mContext, url, new DownloadResponseHandler(){
+		DownloadHttpClient downloadHttpClient=DownloadHttpClient.build(TAG);
+		downloadHttpClient.send(mContext, url, new DownloadResponseHandler(){
 			@Override
 			public void onWait() {
 				super.onWait();
-				mDownloadNotification.createNotification();
+				downloadNotification.createNotification();
 			}
 			@Override
 			public void onStart(long from) {
@@ -94,31 +85,43 @@ class UpgradeServiceImpl implements UpgradeService{
 			@Override
 			public void onStop(long end) {
 				super.onStop(end);
-				mDownloadNotification.cancelNotification();
+				downloadNotification.cancelNotification();
 			}
 			@Override
 			public void onFinish(long end) {
 				super.onFinish(end);
-				mDownloadNotification.finishNotification();
+				downloadNotification.finishNotification();
+				if(install){
+					AppUtils.install(mContext, savePath);
+				}
+		
 			}
 			@Override
 			public void onProgressUpdate(long end,int progress, int speed) {
 				super.onProgressUpdate(end,progress, speed);
-				mDownloadNotification.updateNotification(progress,speed);
+				downloadNotification.updateNotification(progress,speed);
 			}
 			@Override
 			public void onFailure(Throwable error, String content) {
 				super.onFailure(error, content);
-				mDownloadNotification.failureNotification();
+				downloadNotification.failureNotification();
 			}
 			
 		}, saveFile.length(), savePath);
 		
 	}
-
+	
 	@Override
-	public void setDebug(boolean debug) {
-		this.debug=debug;
+	public void upgradeRes(String name, String url,boolean load) {
+		
+	}
+	@Override
+	public void upgradeDex(String name, String url,boolean launch) {
+		
+	}
+	@Override
+	public void upgradeSo(String name, String url, boolean load) {
+		
 	}
 
 }

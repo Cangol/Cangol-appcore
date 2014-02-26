@@ -22,6 +22,7 @@ import java.util.Set;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.Session;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.conf.ConfigService;
@@ -45,7 +46,7 @@ import android.os.Build;
 	private Context mContext = null;
 	private Session mSession=null;
 	private SharedPreferences mShared;
-	private ConfigService mConfig=null;
+	private ConfigService mConfigService=null;
 	private boolean debug=false;
 	@Override
 	public void onCreate(Context context) {
@@ -54,8 +55,8 @@ import android.os.Build;
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mSession=app.mSession;
 		
-		mConfig=(ConfigService) app.getAppService("config");
-		mShared=mContext.getSharedPreferences(mConfig.getSharedName(), Context.MODE_PRIVATE);
+		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+		mShared=mContext.getSharedPreferences(mConfigService.getSharedName(), Context.MODE_PRIVATE);
 		refresh();
 	}
 	@Override
@@ -93,11 +94,11 @@ import android.os.Build;
 		}else if(value instanceof Set&&Build.VERSION.SDK_INT>=11){
 			editor.putStringSet(key, (Set<String>) value).commit();
 		}else if(value instanceof JSONObject){
-			Object2FileUtils.writeJSONObject2File((JSONObject) value, mConfig.getCacheDir()+File.separator+key+JSON);
+			Object2FileUtils.writeJSONObject2File((JSONObject) value, mConfigService.getCacheDir()+File.separator+key+JSON);
 		}else if(value instanceof JSONArray){
-			Object2FileUtils.writeJSONObject2File((JSONObject) value, mConfig.getCacheDir()+File.separator+key+JSONA);
+			Object2FileUtils.writeJSONObject2File((JSONObject) value, mConfigService.getCacheDir()+File.separator+key+JSONA);
 		}else if(Serializable.class.isAssignableFrom(value.getClass())){
-			Object2FileUtils.writeObject(value, mConfig.getCacheDir()+File.separator+key+SER);
+			Object2FileUtils.writeObject(value, mConfigService.getCacheDir()+File.separator+key+SER);
 		}else{
 			//其他缓存方案
 			
@@ -122,7 +123,7 @@ import android.os.Build;
 		mSession.clear();
 		mSession.putAll(map);
 		
-		List<File> list=FileUtils.searchBySuffix(new File(mConfig.getCacheDir()), null, JSON,JSONA,SER);
+		List<File> list=FileUtils.searchBySuffix(new File(mConfigService.getCacheDir()), null, JSON,JSONA,SER);
 		for(File file:list){
 			if(file.getName().endsWith(JSON)){
 				JSONObject json=Object2FileUtils.readFile2JSONObject(file);

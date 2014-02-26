@@ -24,9 +24,11 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 import java.util.Map;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -39,6 +41,7 @@ import android.util.Log;
  class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private final static String TAG="CrashService";
 	private final static  String _CRASH = ".crash";
+	private final static  int DEFAULT_MAX = 2;
 	private boolean debug=false;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
 	private Context mContext;
@@ -52,12 +55,15 @@ import android.util.Log;
 		mContext=context;
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
+		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
 	}
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
-		PoolManager.buildPool(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(CRASHSERVICE_THREAD_MAX));
-		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME));
+		PoolManager.buildPool(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME,TAG),mServiceProperty.getInt(CRASHSERVICE_THREAD_MAX,DEFAULT_MAX));
+		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME,TAG));
 	}
+	
 	@Override
 	public String getName() {
 		return "CrashService";

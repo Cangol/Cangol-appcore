@@ -45,7 +45,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 @Service("CacheManager") class CacheManagerImpl implements CacheManager{
 	private static final String TAG = "CacheManager";
 	private static final int DISK_CACHE_INDEX = 0;
-	private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+	private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 20MB
 	private boolean mDebug;
 	private DiskLruCache mDiskLruCache;
 	private HashMap<String,HashMap<String,Object>> mContextMaps=new HashMap<String,HashMap<String,Object>>();

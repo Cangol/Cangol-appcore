@@ -60,7 +60,7 @@ class ConfigServiceImpl implements ConfigService {
 	
 	@Override
 	public String getAppDir() {
-		return StorageUtils.getExternalStorageDir(mContext, mServiceProperty.getString(ConfigService.APP_DIR));
+		return StorageUtils.getExternalStorageDir(mContext, mServiceProperty.getString(ConfigService.APP_DIR,mContext.getApplicationInfo().name));
 	}
 
 	@Override
