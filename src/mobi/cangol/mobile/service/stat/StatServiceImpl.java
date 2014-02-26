@@ -29,7 +29,6 @@ import android.util.Log;
 @Service("StatService")
 class StatServiceImpl extends TrackerHandler implements StatService {
 	private final static String TAG="StatService";
-	private final static  int DEFAULT_MAX = 2;
 	private boolean debug=false;
 	private Context mContext = null;
 	private AsyncHttpClient asyncHttpClient= null;
@@ -42,8 +41,8 @@ class StatServiceImpl extends TrackerHandler implements StatService {
 	@Override
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
-		PoolManager.buildPool(mServiceProperty.getString(STATSERVICE_THREADPOOL_NAME,TAG),mServiceProperty.getInt(STATSERVICE_THREAD_MAX,DEFAULT_MAX));
-		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(STATSERVICE_THREADPOOL_NAME,TAG));
+		PoolManager.buildPool(mServiceProperty.getString(STATSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(STATSERVICE_THREAD_MAX));
+		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(STATSERVICE_THREADPOOL_NAME));
 	}
 	@Override
 	public String getName() {

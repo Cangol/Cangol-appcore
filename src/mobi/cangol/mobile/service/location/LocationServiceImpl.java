@@ -34,8 +34,6 @@ class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int FLAG_TIMEOUT=1;
 	private final static int FLAG_BETTER_LOCATION=2;
-	private final static int MINTIME=2*1000;
-	private final static int MINDISTANCE=50;
 	private boolean mDebug=false;
 	private int mBetterTime = 1000 * 60 * 2;
 	private int mTimeOut = 1000 * 60 * 5;
@@ -80,8 +78,8 @@ class LocationServiceImpl implements LocationService{
 	}
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
-		mBetterTime=mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME,mBetterTime);
-		mTimeOut=mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT,mTimeOut);
+		mBetterTime=mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME);
+		mTimeOut=mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT);
 	}
 	@Override
 	public String getName() {
@@ -140,12 +138,12 @@ class LocationServiceImpl implements LocationService{
 			
 		};
 		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME,MINTIME),
-				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE,MINDISTANCE),
+				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME),
+				mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE),
 				mLocationListener);
 		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 
-				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME,MINTIME),
-				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE,MINDISTANCE),
+				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME),
+				mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE),
 				mLocationListener);
 		mServiceHandler.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut);
 	}

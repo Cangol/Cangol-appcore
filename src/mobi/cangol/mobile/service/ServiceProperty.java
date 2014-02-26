@@ -66,7 +66,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return (Integer) o;
+			return Integer.valueOf(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}
@@ -84,7 +84,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return (Double) o;
+			return Double.valueOf(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}
@@ -102,7 +102,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return (Boolean) o;
+			return Boolean.valueOf(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}
@@ -120,7 +120,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return (Long) o;
+			return Long.valueOf(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}
@@ -138,7 +138,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return (Float) o;
+			return Float.valueOf(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}
