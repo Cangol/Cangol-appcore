@@ -16,8 +16,11 @@
 package mobi.cangol.mobile.service.upgrade;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -27,6 +30,8 @@ import mobi.cangol.mobile.service.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.download.DownloadNotification;
 import mobi.cangol.mobile.service.download.DownloadResponseHandler;
 import mobi.cangol.mobile.utils.AppUtils;
+import mobi.cangol.mobile.utils.FileUtils;
+import android.app.NotificationManager;
 import android.content.Context;
 @Service("UpgradeService")
 class UpgradeServiceImpl implements UpgradeService{
@@ -35,11 +40,13 @@ class UpgradeServiceImpl implements UpgradeService{
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private ConfigService mConfigService;
+	private List<Integer> mIds=new ArrayList<Integer>();
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+		FileUtils.newFolder(mConfigService.getUpgradeDir());
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {
@@ -52,8 +59,13 @@ class UpgradeServiceImpl implements UpgradeService{
 
 	@Override
 	public void onDestory() {
+		if(debug)Log.d("onDestory");
 		DownloadHttpClient.cancel(TAG, true);
-		
+		NotificationManager notificationManager=(NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		for(Integer id:mIds){
+			notificationManager.cancel(id);
+			if(debug)Log.d("notification cancel "+id);
+		}
 	}
 
 	@Override
@@ -67,8 +79,10 @@ class UpgradeServiceImpl implements UpgradeService{
 	}
 	@Override
 	public void upgradeApk(String name,String url,final boolean install){
-		final String savePath=mConfigService.getDownloadDir() +name+".apk";
+		final String savePath=mConfigService.getUpgradeDir()+File.separator +name+".apk";
+		if(debug)Log.d("upgradeApk savePath:"+savePath);
 		final DownloadNotification  downloadNotification=new DownloadNotification(mContext,name,savePath,Download.DownloadType.APK);
+		mIds.add(downloadNotification.getId());
 		File saveFile=new File(savePath);
 		if(saveFile.exists())saveFile.delete();
 		DownloadHttpClient downloadHttpClient=DownloadHttpClient.build(TAG);
@@ -85,7 +99,8 @@ class UpgradeServiceImpl implements UpgradeService{
 			@Override
 			public void onStop(long end) {
 				super.onStop(end);
-				downloadNotification.cancelNotification();
+				downloadNotification.cancelNotification();	
+				mIds.remove(Integer.valueOf(downloadNotification.getId()));
 			}
 			@Override
 			public void onFinish(long end) {

@@ -97,6 +97,7 @@ public class CoreApplication extends Application {
 		}
 	}
 	public void exit() {
+		Log.d("exit");
 		mSession.clear();
 		if(mAppServiceManager!=null){
 			mAppServiceManager.destory();

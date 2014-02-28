@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 
 public class FileUtils {
@@ -235,7 +236,15 @@ public class FileUtils {
 		}
 
 	}
+	/**
+	 * 异步删除
+	 * @param filePathAndName
+	 * 				String 文件路径及名称 如c:/fqf.txt
+	 */
+	public static void delFileAsync(String filePathAndName) {
+		new FileDeleter().execute(filePathAndName);
 
+	}
 	/**
 	 * 删除文件夹
 	 * 
@@ -557,5 +566,14 @@ public class FileUtils {
 			}	
 		}
 		return -1;
+	}
+	
+	static class FileDeleter extends AsyncTask<String, Void, Void> {
+
+		@Override
+		protected Void doInBackground(String... params) {
+			delFile(params[0]);
+			return null;
+		}	
 	}
 }

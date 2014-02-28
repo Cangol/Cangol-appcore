@@ -35,7 +35,7 @@ import android.widget.RemoteViews;
 public class DownloadNotification {
 	private NotificationManager notificationManager;
 	private Notification notificaion;
-	private int noid;
+	private int id;
 	private String title;
 	private String savePath;
 	private Context context;
@@ -50,7 +50,9 @@ public class DownloadNotification {
 		initNotification(context);
 		
 	}
-	
+	public int getId(){
+		return id;
+	}
 	private void initNotification(Context context){
 		Resources resources=context.getResources();
 		this.update_notification_icon=resources.getIdentifier("update_notification_icon", "id", context.getPackageName());
@@ -81,7 +83,7 @@ public class DownloadNotification {
 	}
 	public void createNotification() {
 		testNotification();
-		noid = new Random().nextInt(10000);
+		id = new Random().nextInt(10000);
 		notificaion = new Notification();
 		notificaion.flags |= Notification.FLAG_ONGOING_EVENT;
 		notificaion.icon = android.R.drawable.stat_sys_download;
@@ -95,13 +97,13 @@ public class DownloadNotification {
 		notificaion.contentView.setTextViewText(update_notification_progresstext, "");
 		notificaion.contentView.setTextViewText(update_notification_titletext,title);
 		notificaion.contentView.setTextViewText(update_notification_timetext,TimeUtils.getCurrentHoursMinutes());
-		notificationManager.notify(noid,notificaion);
+		notificationManager.notify(id,notificaion);
 	}
 
 	public void cancelNotification() {
 		testNotification();
 		if(notificationManager!=null)
-		notificationManager.cancel(noid);
+		notificationManager.cancel(id);
 	}
 
 	public void finishNotification() {
@@ -125,7 +127,7 @@ public class DownloadNotification {
 		notificaion.contentView.setImageViewBitmap(update_notification_icon, ((BitmapDrawable) AppUtils.getApplicationIcon(context, savePath)).getBitmap());
 		notificaion.contentView.setTextViewText(update_notification_statustext,context.getString(download_success_text));
 		notificaion.defaults = Notification.DEFAULT_SOUND;
-		notificationManager.notify(noid, notificaion);
+		notificationManager.notify(id, notificaion);
 	}
 
 	public void updateNotification(int progress, int speed) {
@@ -134,7 +136,7 @@ public class DownloadNotification {
 		notificaion.contentView.setTextViewText(update_notification_speedtext, FileUtils.getSize(speed)+"/s");
 		notificaion.contentView.setTextViewText(update_notification_progresstext, progress+"% ");
 						
-		notificationManager.notify(noid,notificaion);
+		notificationManager.notify(id,notificaion);
 	}
 
 	public void failureNotification() {
@@ -147,7 +149,7 @@ public class DownloadNotification {
 		notificaion.contentView.setTextViewText(update_notification_statustext,context.getString (download_failure_text));
 		notificaion.flags = Notification.FLAG_AUTO_CANCEL;
 		notificaion.defaults = Notification.DEFAULT_SOUND;
-		notificationManager.notify(noid, notificaion);
+		notificationManager.notify(id, notificaion);
 	}
 	
 	//please set this value

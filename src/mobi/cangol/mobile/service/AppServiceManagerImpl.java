@@ -164,6 +164,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	}
 	@Override
 	public void destoryAllService() {
+		Log.d(TAG, "destoryAllService");
 		AppService appService=null;
 		for(String name:mRunServiceMap.keySet()){
 			appService= mRunServiceMap.get(name);
@@ -174,6 +175,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	}
 	@Override
 	public void destory() {
+		Log.d(TAG, "destory");
 		destoryAllService() ;
 		mProperties.clear();
 		mServiceMap.clear();
