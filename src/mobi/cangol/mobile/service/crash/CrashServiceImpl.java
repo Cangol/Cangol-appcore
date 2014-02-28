@@ -37,11 +37,13 @@ import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.widget.Toast;
 @Service("CrashService")
  class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private final static String TAG="CrashService";
 	private final static  String _CRASH = ".crash";
-	private boolean debug=false;
+	private boolean debug=true;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
 	private Context mContext;
 	private ConfigService mConfigService;
@@ -56,6 +58,7 @@ import android.content.Context;
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+		FileUtils.newFolder(mConfigService.getTempDir());
 	}
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
@@ -89,6 +92,7 @@ import android.content.Context;
 	}
 	
 	protected void save(String path,String error) {
+		//new AsyncFileWriter().execute(path,error);
 		FileUtils.writeStr(new File(path), error);
 		if(debug)Log.d(TAG, "Save Exception:"+path);
 	}
@@ -108,7 +112,7 @@ import android.content.Context;
 				@Override
 				public void onStart() {
 					super.onStart();
-					if(debug)Log.d(TAG, "Start");
+					if(debug)Log.d(TAG, "Start crashfile:"+file.getName());
 				}
 				
 				@Override
@@ -116,8 +120,8 @@ import android.content.Context;
 					super.onSuccess(content);
 					if(debug)Log.d(TAG, "Success :"+content);
 					//提交后删除文件
-					FileUtils.deleteFile(file.getAbsolutePath());
 					if(debug)Log.d(TAG, "delete :"+file.getAbsolutePath());
+					FileUtils.delFileAsync(file.getAbsolutePath());
 				}
 
 				@Override
@@ -140,12 +144,22 @@ import android.content.Context;
 
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
+		
 		Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
 		String error= error(ex);
 		String savePath=mConfigService.getTempDir()+File.separator+TimeUtils.getCurrentTime2()+_CRASH;
+		Log.e("AndroidRuntime",error);
 		save(savePath,error);
+        System.exit(1); 
 	}
 
+	static class AsyncFileWriter extends AsyncTask<String, Void, Void> {
 
+		@Override
+		protected Void doInBackground(String... params) {
+			FileUtils.writeStr(new File(params[0]), params[1]);
+			return null;
+		}	
+	}
 
 }
