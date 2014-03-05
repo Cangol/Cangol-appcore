@@ -30,15 +30,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.cache.CacheManagerImpl;
-import mobi.cangol.mobile.service.conf.ConfigServiceImpl;
-import mobi.cangol.mobile.service.crash.CrashServiceImpl;
-import mobi.cangol.mobile.service.download.DownloadManagerImpl;
-import mobi.cangol.mobile.service.global.GlobalDataImpl;
-import mobi.cangol.mobile.service.location.LocationServiceImpl;
-import mobi.cangol.mobile.service.stat.StatServiceImpl;
-import mobi.cangol.mobile.service.status.StatusServiceImpl;
-import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 import org.w3c.dom.Document;

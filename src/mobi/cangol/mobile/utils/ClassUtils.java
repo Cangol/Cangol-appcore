@@ -56,6 +56,7 @@ public class ClassUtils {
 					returnClassList.add((Class<? extends T>) allClass.get(i));
 				}
 			}
+			allClass=null;
 		}
 		return returnClassList;
 	}
@@ -75,8 +76,10 @@ public class ClassUtils {
 	            if(classNane.startsWith(packageName)){
 						clazz = (Class<?>) context.getClassLoader().loadClass(classNane);
 						classList.add(clazz);
+						clazz=null;
 	            }
 	        }
+	        list=null;
         } catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -92,8 +95,7 @@ public class ClassUtils {
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
 	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
-	            String s = iter.nextElement();
-            	classList.add(s);
+            	classList.add(iter.nextElement());
 	        }
 	        df.close();
 	    } catch (IOException e) {
@@ -110,10 +112,11 @@ public class ClassUtils {
 		List<Class<?>> classList = new ArrayList<Class<?>>(); 
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
+	        Class<?> clazz=null;
 	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
-	            String s = iter.nextElement();
-            	Class<?> clazz=(Class<?>) context.getClassLoader().loadClass(s);
+            	clazz=(Class<?>) context.getClassLoader().loadClass(iter.nextElement());
             	classList.add(clazz);
+            	clazz=null;
 	        }
 	        df.close();
 	    } catch (IOException e) {
