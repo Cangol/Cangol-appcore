@@ -30,6 +30,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.cache.CacheManagerImpl;
+import mobi.cangol.mobile.service.conf.ConfigServiceImpl;
+import mobi.cangol.mobile.service.crash.CrashServiceImpl;
+import mobi.cangol.mobile.service.download.DownloadManagerImpl;
+import mobi.cangol.mobile.service.global.GlobalDataImpl;
+import mobi.cangol.mobile.service.location.LocationServiceImpl;
+import mobi.cangol.mobile.service.stat.StatServiceImpl;
+import mobi.cangol.mobile.service.status.StatusServiceImpl;
+import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 import org.w3c.dom.Document;
@@ -56,6 +65,19 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	private void initClass(){
 		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
 		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
+		// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+		Log.d("System.gc()");
+		System.gc();
+//		List<Class<? extends AppService>> classList=new ArrayList<Class<? extends AppService>>();
+//		classList.add(CacheManagerImpl.class);
+//		classList.add(ConfigServiceImpl.class);
+//		classList.add(CrashServiceImpl.class);
+//		classList.add(DownloadManagerImpl.class);
+//		classList.add(GlobalDataImpl.class);
+//		classList.add(LocationServiceImpl.class);
+//		classList.add(StatServiceImpl.class);
+//		classList.add(StatusServiceImpl.class);
+//		classList.add(UpgradeServiceImpl.class);
 		initServiceMap(classList);
 		initServiceProperties();
 	}

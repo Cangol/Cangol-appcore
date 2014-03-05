@@ -115,6 +115,7 @@ public class ClassUtils {
             	Class<?> clazz=(Class<?>) context.getClassLoader().loadClass(s);
             	classList.add(clazz);
 	        }
+	        df.close();
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    } catch (ClassNotFoundException e) {

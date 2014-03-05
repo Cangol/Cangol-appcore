@@ -37,8 +37,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
+/**
+ * @Description GlobalDataImpl.java 
+ * @author Cangol
+ * @date 2013-12-28
+ * @hide
+ */
 @Service("global")
- class GlobalDataImpl implements GlobalData {
+public class GlobalDataImpl implements GlobalData {
 	
 	private final static  String JSON = ".json";
 	private final static  String JSONA = ".jsona";

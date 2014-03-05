@@ -29,8 +29,14 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+/**
+ * @Description LocationServiceImpl.java 
+ * @author Cangol
+ * @date 2013-12-28
+ * @hide
+ */
 @Service("LocationService")
-class LocationServiceImpl implements LocationService{
+public class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int FLAG_TIMEOUT=1;
 	private final static int FLAG_BETTER_LOCATION=2;

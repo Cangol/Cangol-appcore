@@ -25,8 +25,14 @@ import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
+/**
+ * @Description ConfigServiceImpl.java 
+ * @author Cangol
+ * @date 2013-12-28
+ * @hide
+ */
 @Service("DownloadManager")
- class DownloadManagerImpl implements DownloadManager{
+public class DownloadManagerImpl implements DownloadManager{
 	
 	protected static final int DEFAULT_MAX_THREAD = 2;
 	protected boolean debug=false;

@@ -33,8 +33,14 @@ import mobi.cangol.mobile.utils.AppUtils;
 import mobi.cangol.mobile.utils.FileUtils;
 import android.app.NotificationManager;
 import android.content.Context;
+/**
+ * @Description UpgradeServiceImpl.java 
+ * @author Cangol
+ * @date 2013-12-28
+ * @hide
+ */
 @Service("UpgradeService")
-class UpgradeServiceImpl implements UpgradeService{
+public class UpgradeServiceImpl implements UpgradeService{
 	private final static String TAG="UpgradeService";
 	private boolean debug=false;
 	private Context mContext = null;
