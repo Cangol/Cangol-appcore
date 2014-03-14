@@ -102,9 +102,21 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		FileUtils.writeStr(new File(path), error);
 		if(debug)Log.d(TAG, "Save Exception:"+path);
 	}
+	
 	@Override
 	public void report() {
-		List<File> list=FileUtils.searchBySuffix(new File(mConfigService.getTempDir()), null, _CRASH);
+		new AsyncFileScan(){
+
+			@Override
+			protected void onPostExecute(List<File> result) {
+				super.onPostExecute(result);
+				report(result);
+			}
+			
+		}.execute(mConfigService.getTempDir());
+	}
+	
+	private void report(List<File> list) {
 		for(final File file:list){
 			RequestParams params=new RequestParams(this.params);
 			try {	
@@ -167,5 +179,11 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 			return null;
 		}	
 	}
+	static class AsyncFileScan extends AsyncTask<String, Void, List<File>> {
 
+		@Override
+		protected List<File> doInBackground(String... params) {
+			return FileUtils.searchBySuffix(new File(params[0]), null, _CRASH);
+		}	
+	}
 }
