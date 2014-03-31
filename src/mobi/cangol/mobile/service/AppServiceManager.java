@@ -38,4 +38,6 @@ public abstract class AppServiceManager {
 	public abstract void setScanPackage(String ... packageName);
 	
 	public abstract void initSource(InputStream is);
+	
+	public abstract void setDebug(boolean debug);
 }

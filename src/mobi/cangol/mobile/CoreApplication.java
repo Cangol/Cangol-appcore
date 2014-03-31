@@ -54,6 +54,11 @@ public class CoreApplication extends Application {
 	        .build());
 		}
 		super.onCreate();
+		if(mDevMode){
+			Log.setLogLevelFormat(android.util.Log.VERBOSE,false);
+		}else{
+			Log.setLogLevelFormat(android.util.Log.WARN,true);
+		}
 		mSession=new Session();
 		initAppServiceManager();
 		activityManager = new ArrayList<WeakReference<Activity>>();
@@ -61,6 +66,7 @@ public class CoreApplication extends Application {
 	
 	private void initAppServiceManager() {
 		mAppServiceManager=new AppServiceManagerImpl(this);
+		
 	}	
 
 	public AppServiceManager getAppServiceManager() {
@@ -107,6 +113,10 @@ public class CoreApplication extends Application {
 	}
 	public void setDevMode(boolean devMode) {
 		this.mDevMode = devMode;
+	}
+	
+	public boolean isDevMode() {
+		return mDevMode;
 	}
 
 	/**

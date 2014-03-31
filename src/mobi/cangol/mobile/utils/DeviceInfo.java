@@ -50,8 +50,12 @@ public class DeviceInfo {
 		return android.os.Build.VERSION.RELEASE;
 	}
 
-	public static String getDevice() {
+	public static String getDeviceModel() {
 		return android.os.Build.MODEL;
+	}
+	
+	public static String getDeviceBrand() {
+		return android.os.Build.BRAND;
 	}
 	
 	public static String getMobileInfo() {
@@ -102,7 +106,7 @@ public class DeviceInfo {
 		return metrics.heightPixels + "x" + metrics.widthPixels;
 	}
 
-	public static String getCarrier(Context context) {
+	public static String getOperator(Context context) {
 		TelephonyManager manager = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		return manager.getNetworkOperatorName();

@@ -151,6 +151,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 			});
 		}
 	}
+	
 	protected String error(Throwable ex) {
 		Writer writer = new StringWriter();
 		PrintWriter pw = new PrintWriter(writer);

@@ -49,6 +49,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	private boolean mUseAnnotation=true;
 	private List<String> mPackageNames=new ArrayList<String>();
 	private Map<String,ServiceProperty> mProperties=new HashMap<String,ServiceProperty>();
+	private boolean debug=false;
 	public AppServiceManagerImpl(Context context){
 		this.mContext=context;
     	initClass();
@@ -57,7 +58,6 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
 		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
 		// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
-		Log.d("System.gc()");
 		System.gc();
 //		List<Class<? extends AppService>> classList=new ArrayList<Class<? extends AppService>>();
 //		classList.add(CacheManagerImpl.class);
@@ -80,7 +80,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 						Service service = clazz.getAnnotation(Service.class);
 						mServiceMap.put(service.value(), clazz);
 					}else{
-						Log.d(TAG, clazz+" no Service Annotation");
+						if(debug)Log.d(TAG, clazz+" no Service Annotation");
 					}
 				}else{
 					Method method=clazz.getMethod("getName");
@@ -102,6 +102,10 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}
 	}
 	@Override
+	public void setDebug(boolean debug) {
+		this.debug=debug;
+	}
+	@Override
 	public AppService getAppService(String name) {
 		AppService appService=null;
 		if(mRunServiceMap.containsKey(name)){
@@ -114,6 +118,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 					appService=(AppService) c.newInstance();
 					appService.onCreate(mContext);
 					appService.init(mProperties.get(name)!=null?mProperties.get(name):new ServiceProperty(name));
+					appService.setDebug(debug);
 					mRunServiceMap.put(name, appService);
 				}else{
 					throw new IllegalStateException("hasn't appService'name is "+name);
@@ -172,12 +177,12 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			appService.onDestory();
 			mRunServiceMap.remove(name);
 		}else{
-			Log.d(TAG, name+" Service is not running");
+			if(debug)Log.d(TAG, name+" Service is not running");
 		}
 	}
 	@Override
 	public void destoryAllService() {
-		Log.d(TAG, "destoryAllService");
+		if(debug)Log.d(TAG, "destoryAllService");
 		AppService appService=null;
 		for(String name:mRunServiceMap.keySet()){
 			appService= mRunServiceMap.get(name);
@@ -188,7 +193,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	}
 	@Override
 	public void destory() {
-		Log.d(TAG, "destory");
+		if(debug)Log.d(TAG, "destory");
 		destoryAllService() ;
 		mProperties.clear();
 		mServiceMap.clear();
