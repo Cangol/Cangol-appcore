@@ -15,17 +15,25 @@
  */
 package mobi.cangol.mobile.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Locale;
 import java.util.UUID;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,7 +42,9 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -244,4 +254,25 @@ public class DeviceInfo {
 		LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 	}
+	
+	public static String getSignHashkey(Context context) {  
+	    PackageInfo info;
+	    try {
+	        info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+	        for (Signature signature : info.signatures) {
+	            MessageDigest md;
+	            md = MessageDigest.getInstance("SHA");
+	            md.update(signature.toByteArray());
+	            String something = new String(Base64.encode(md.digest(), 0));
+	            return something;
+	        }
+	    } catch (NameNotFoundException e1) {
+	        Log.e("name not found", e1.toString());
+	    } catch (NoSuchAlgorithmException e) {
+	        Log.e("no such an algorithm", e.toString());
+	    } catch (Exception e) {
+	        Log.e("exception", e.toString());
+	    }
+		return null;
+	}  
 }
