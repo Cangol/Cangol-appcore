@@ -169,7 +169,26 @@ public class RequestParams {
         urlParams.remove(key);
         fileParams.remove(key);
     }
+    
+    public String toDebugString() {
+        StringBuilder result = new StringBuilder();
+        for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
 
+            result.append(entry.getKey());
+            result.append("=");
+            result.append(entry.getValue());
+            result.append("\n");
+        }
+
+        for(ConcurrentHashMap.Entry<String, FileWrapper> entry : fileParams.entrySet()) {
+            result.append(entry.getKey());
+            result.append("=");
+            result.append("FILE");
+            result.append("\n");
+        }
+
+        return result.toString();
+    }
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -250,7 +269,6 @@ public class RequestParams {
 
         return lparams;
     }
-
     protected String getParamString() {
         return URLEncodedUtils.format(getParamsList(), ENCODING);
     }

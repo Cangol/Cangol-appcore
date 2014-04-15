@@ -30,6 +30,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.zip.GZIPInputStream;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.PoolManager.Pool;
 
@@ -81,7 +82,7 @@ import android.content.Context;
  * </pre>
  */
 public class AsyncHttpClient {
-
+	public final static  String TAG = "AsyncHttpClient";
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
@@ -489,7 +490,7 @@ public class AsyncHttpClient {
         if(contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }
-
+        Log.d(TAG, "url:"+uriRequest.getURI().toString());
         Future<?> request = threadPool.submit(new AsyncHttpRequest(client, httpContext, uriRequest, responseHandler));
 
         if(context != null) {
