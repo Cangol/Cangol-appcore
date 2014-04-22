@@ -189,7 +189,19 @@ public class JsonUtils {
         data = null;  
         return new String(outStream.toByteArray(),"utf-8");  
     } 
-	
+	public static String getFieldName(Field field){
+		String filedName=null;
+		if (field.isAnnotationPresent(Element.class)) {
+			Element element = field.getAnnotation(Element.class);
+			filedName="".equals(element.value())?field.getName():element.value();
+		}else if (field.isAnnotationPresent(ElementList.class)) {
+			ElementList elementList = field.getAnnotation(ElementList.class);
+			filedName="".equals(elementList.value())?field.getName():elementList.value();
+		}else{
+			filedName=field.getName();
+		}
+		return filedName;
+	}
 	public static <T> T parserToObjectByAnnotation(Class<T> c,JSONObject jsonObject) throws JSONParserException{
 		if(null==jsonObject)return null;
 		T t=null;
@@ -205,13 +217,10 @@ public class JsonUtils {
 		for (Field field : fields) {
 			if(field.isEnumConstant())continue;
 			field.setAccessible(true);
-			if (field.isAnnotationPresent(Element.class)) {
-				Element element = field.getAnnotation(Element.class);
-				filedName="".equals(element.value())?field.getName():element.value();
+			filedName=getFieldName(field);
+			if (!List.class.isAssignableFrom(field.getType())) {
 				setField(t,field,filedName,jsonObject,true);
-			}else if (field.isAnnotationPresent(ElementList.class)) {
-				ElementList elementList = field.getAnnotation(ElementList.class);
-				filedName="".equals(elementList.value())?field.getName():elementList.value();
+			}else {
 				if(field.getGenericType() instanceof ParameterizedType){
 					ParameterizedType pt = (ParameterizedType) field.getGenericType();  
 					Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
@@ -226,8 +235,6 @@ public class JsonUtils {
 				}else{
 					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
 				}
-			}else{
-				if(DEBUG)Log.i(TAG,"Field:" + field.getName()+ " no Annotation");
 			}
 		}
 		return t;
@@ -320,7 +327,7 @@ public class JsonUtils {
 	public static <T> void setValue(T t,Field field,String key,JSONObject jsonObject) throws JSONParserException{
 		try{
 			if(field.getType()==String.class){
-				field.set(t, getString(jsonObject,key,null));
+				field.set(t, getString(jsonObject,key));
 			}else if(field.getType()==Integer.class||field.getType()==int.class){
 				field.set(t, getInt(jsonObject,key, 0));
 			}else if(field.getType()==Long.class||field.getType()==long.class){
@@ -393,10 +400,25 @@ public class JsonUtils {
 			return defaultValue;
 		}
 	}
+	public static String getString(JSONObject obj, String key) {
+		try {
+			if(obj.isNull(key)){
+				return null;
+			}else{
+				return obj.getString(key);
+			}
+		} catch (JSONException e) {
+			return null;
+		}
+	}
 	
 	public static String getString(JSONObject obj, String key, String defaultValue) {
 		try {
-			return obj.getString(key);
+			if(obj.isNull(key)){
+				return defaultValue;
+			}else{
+				return obj.getString(key);
+			}
 		} catch (JSONException e) {
 			return defaultValue;
 		}
