@@ -117,6 +117,9 @@ public class Log {
 		if(null==tag){
 			tag= (filename != null && filename.contains(".java"))?filename.replace(".java", ""):"";
 		}
+		if (output == null) {
+			output=""+null;
+		}
 		switch (logLevel) {
 		case android.util.Log.VERBOSE:
 			if (error == null) {

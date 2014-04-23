@@ -15,26 +15,10 @@
  */
 package mobi.cangol.mobile.service.upgrade;
 
-import mobi.cangol.mobile.service.AppService;
-
-
-public interface UpgradeService extends AppService{
+public interface UpgradeListener {
 	
-	enum UpgradeType{
-		APK,//apk升级
-		DEX,//dex升级
-		RES,//res升级
-		SO//so库升级
-	}
-	void upgradeRes(String name,String url,boolean load);
+	void upgrade(boolean constraint);
 	
-	void upgradeDex(String name,String url,boolean launch);
+	void finish();
 	
-	void upgradeSo(String name,String url,boolean load);
-	
-	void upgradeApk(String name,String url,boolean install);
-	
-	void upgrade(String name,String url,boolean constraint);
-	
-	void setOnUpgradeListener(UpgradeListener upgradeListener);
 }

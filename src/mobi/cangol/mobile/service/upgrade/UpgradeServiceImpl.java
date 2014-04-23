@@ -47,6 +47,7 @@ public class UpgradeServiceImpl implements UpgradeService{
 	private ServiceProperty mServiceProperty=null;
 	private ConfigService mConfigService;
 	private List<Integer> mIds=new ArrayList<Integer>();
+	private UpgradeListener mUpgradeListener;
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
@@ -73,7 +74,7 @@ public class UpgradeServiceImpl implements UpgradeService{
 			if(debug)Log.d("notification cancel "+id);
 		}
 	}
-
+	
 	@Override
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
@@ -84,7 +85,20 @@ public class UpgradeServiceImpl implements UpgradeService{
 		this.debug=debug;
 	}
 	@Override
+	public void setOnUpgradeListener(UpgradeListener upgradeListener) {
+		mUpgradeListener=upgradeListener;
+	}
+	@Override
+	public void upgrade(String name,String url,final boolean constraint){
+		if(mUpgradeListener!=null)mUpgradeListener.upgrade(constraint);
+		upgradeApk(name,url,true,true);
+	}
+	@Override
 	public void upgradeApk(String name,String url,final boolean install){
+		upgradeApk(name,url,true,false);
+		
+	}
+	public void upgradeApk(String name,String url,final boolean install,final boolean constraint){
 		final String savePath=mConfigService.getUpgradeDir()+File.separator +name+".apk";
 		if(debug)Log.d("upgradeApk savePath:"+savePath);
 		final DownloadNotification  downloadNotification=new DownloadNotification(mContext,name,savePath,Download.DownloadType.APK);
@@ -112,10 +126,10 @@ public class UpgradeServiceImpl implements UpgradeService{
 			public void onFinish(long end) {
 				super.onFinish(end);
 				downloadNotification.finishNotification();
+				if(constraint&&mUpgradeListener!=null)mUpgradeListener.finish();
 				if(install){
 					AppUtils.install(mContext, savePath);
 				}
-		
 			}
 			@Override
 			public void onProgressUpdate(long end,int progress, int speed) {
@@ -129,7 +143,6 @@ public class UpgradeServiceImpl implements UpgradeService{
 			}
 			
 		}, saveFile.length(), savePath);
-		
 	}
 	
 	@Override

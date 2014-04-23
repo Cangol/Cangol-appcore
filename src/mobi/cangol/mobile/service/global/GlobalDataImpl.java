@@ -43,7 +43,7 @@ import android.os.Build;
  * @date 2013-12-28
  * @hide
  */
-@Service("global")
+@Service("GlobalData")
 public class GlobalDataImpl implements GlobalData {
 	
 	private final static  String JSON = ".json";
@@ -71,7 +71,7 @@ public class GlobalDataImpl implements GlobalData {
 	}
 	@Override
 	public String getName() {
-		return "global";
+		return "GlobalData";
 	}
 
 	@Override
