@@ -64,7 +64,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 		this.mServiceProperty=serviceProperty;
 		String dir=mServiceProperty.getString(CacheManager.CACHE_DIR);
 		long size=mServiceProperty.getLong(CacheManager.CACHE_SIZE);
-		setDiskCache(!TextUtils.isEmpty(dir)?new File(dir):getDiskCacheDir(mContext,"ContentCache"),size>0?size:DEFAULT_DISK_CACHE_SIZE);
+		setDiskCache(!TextUtils.isEmpty(dir)?getDiskCacheDir(mContext,dir):getDiskCacheDir(mContext,"ContentCache"),size>0?size:DEFAULT_DISK_CACHE_SIZE);
 	}
 	
 	public File getDiskCacheDir() {
@@ -76,6 +76,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 		this.mDiskCacheDir = cacheDir;
 		this.mDiskCacheSize = cacheSize;
 		mDiskCacheStarting=true;
+		Log.d("mDiskCacheDir:"+mDiskCacheDir);
 		initDiskCache(mDiskCacheDir,mDiskCacheSize);
 	}
 	
