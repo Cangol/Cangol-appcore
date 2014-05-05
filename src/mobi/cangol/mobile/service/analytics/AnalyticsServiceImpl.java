@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.stat;
+package mobi.cangol.mobile.service.analytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,14 +33,14 @@ import android.util.Log;
  * @date 2013-12-28
  * @hide
  */
-@Service("StatService")
-public class StatServiceImpl extends TrackerHandler implements StatService {
-	private final static String TAG="StatService";
+@Service("AnalyticsService")
+public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
+	private final static String TAG="AnalyticsService";
 	private boolean debug=false;
 	private Context mContext = null;
 	private AsyncHttpClient asyncHttpClient= null;
 	private ServiceProperty mServiceProperty=null;
-	private Map<String,Tracker> mTrackers=new HashMap<String,Tracker>();
+	private Map<String,ITracker> mTrackers=new HashMap<String,ITracker>();
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
@@ -65,7 +65,7 @@ public class StatServiceImpl extends TrackerHandler implements StatService {
 		return mServiceProperty;
 	}
 	@Override
-	public void sendStat(String url, Map<String, String> paramsMap) {
+	public void send(String url, Map<String, String> paramsMap) {
 		RequestParams params=new RequestParams(paramsMap);
 		if(debug)Log.d(TAG, "url:"+url+"\n"+params.toString());
 		asyncHttpClient.get(mContext,url, params,  new AsyncHttpResponseHandler(){
@@ -96,11 +96,11 @@ public class StatServiceImpl extends TrackerHandler implements StatService {
 		this.debug=debug;
 	}
 	@Override
-	public Tracker getTracker(String trackingId) {
+	public ITracker getTracker(String trackingId) {
 		if(mTrackers.containsKey(trackingId)){
 			return mTrackers.get(trackingId);
 		}else{
-			return new Tracker(trackingId);
+			return new ITracker(trackingId);
 		}
 		
 	}

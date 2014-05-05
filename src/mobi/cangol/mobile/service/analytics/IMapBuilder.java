@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.stat;
+package mobi.cangol.mobile.service.analytics;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.utils.TimeUtils;
 
-final public class StatBuilder {
+final public class IMapBuilder {
 
 	private String mUrl;
 	private Map<String, String> mParams;
 
-	private StatBuilder() {
+	private IMapBuilder() {
 		mParams = new HashMap<String, String> ();
 	}
 
@@ -33,16 +34,12 @@ final public class StatBuilder {
 		return mUrl;
 	}
 
-	public StatBuilder setUrl(String url) {
+	public IMapBuilder setUrl(String url) {
 		this.mUrl = url;
 		return this;
 	}
 
-	public Map<String, String> getParams() {
-		return mParams;
-	}
-
-	public StatBuilder set(String paramName, String paramValue) {
+	public IMapBuilder set(String paramName, String paramValue) {
 		if (paramName != null)
 			mParams.put(paramName, paramValue);
 		else {
@@ -51,7 +48,7 @@ final public class StatBuilder {
 		return this;
 	}
 
-	public StatBuilder setAll(Map<String, String> params) {
+	public IMapBuilder setAll(Map<String, String> params) {
 		if (params == null) {
 			return this;
 		}
@@ -73,8 +70,11 @@ final public class StatBuilder {
 		}
 		return builder.toString();
 	}
-
-	public static StatBuilder build() {
-		return new StatBuilder();
+	public  Map<String, String> getParams(){
+		return mParams;
 	}
+	public static IMapBuilder build() {
+		return new IMapBuilder();
+	}
+
 }

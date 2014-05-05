@@ -110,6 +110,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 			@Override
 			protected void onPostExecute(List<File> result) {
 				super.onPostExecute(result);
+				System.gc();
 				report(result);
 			}
 			
@@ -163,10 +164,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
-		Log.e("AndroidRuntime 1","m "+ex.toString());
-		Log.e("AndroidRuntime 1","l "+ex.getLocalizedMessage());
 		Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
-		
 		
 		String error= error(ex);
 		String savePath=mConfigService.getTempDir()+File.separator+TimeUtils.getCurrentTime2()+_CRASH;

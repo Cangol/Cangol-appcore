@@ -130,6 +130,8 @@ public class GlobalDataImpl implements GlobalData {
 		mSession.putAll(map);
 		
 		List<File> list=FileUtils.searchBySuffix(new File(mConfigService.getCacheDir()), null, JSON,JSONA,SER);
+		// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+		System.gc();
 		for(File file:list){
 			if(file.getName().endsWith(JSON)){
 				JSONObject json=Object2FileUtils.readFile2JSONObject(file);

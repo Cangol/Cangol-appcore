@@ -20,9 +20,12 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -63,7 +66,6 @@ public class DeviceInfo {
 	public static String getDeviceBrand() {
 		return android.os.Build.BRAND;
 	}
-	
 	public static String getMobileInfo() {
 		StringBuffer sb = new StringBuffer();
 		try {
@@ -111,7 +113,28 @@ public class DeviceInfo {
 
 		return metrics.heightPixels + "x" + metrics.widthPixels;
 	}
+    public static String getDensity(Context context) {
+        int density = context.getResources().getDisplayMetrics().densityDpi;
 
+        switch (density) {
+            case DisplayMetrics.DENSITY_LOW:
+                return "LDPI";
+            case DisplayMetrics.DENSITY_MEDIUM:
+                return "MDPI";
+            case DisplayMetrics.DENSITY_TV:
+                return "TVDPI";
+            case DisplayMetrics.DENSITY_HIGH:
+                return "HDPI";
+            case DisplayMetrics.DENSITY_XHIGH:
+                return "XHDPI";
+            case DisplayMetrics.DENSITY_XXHIGH:
+                return "XXHDPI";
+            case DisplayMetrics.DENSITY_XXXHIGH:
+                return "XXXHDPI";
+            default:
+                return "";
+        }
+    }
 	public static String getOperator(Context context) {
 		TelephonyManager manager = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
@@ -271,4 +294,25 @@ public class DeviceInfo {
 	    }
 		return null;
 	}  
+	
+	/**
+	* return application is background
+	* @param context
+	* @return
+	*/
+	public boolean isBackground(Context context) {
+	
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+		for (RunningAppProcessInfo appProcess : appProcesses) {
+			if (appProcess.processName.equals(context.getPackageName())) {
+				if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
 }

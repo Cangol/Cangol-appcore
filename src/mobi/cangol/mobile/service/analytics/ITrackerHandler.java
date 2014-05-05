@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.stat;
+package mobi.cangol.mobile.service.analytics;
 
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import java.util.Map;
  * @date 2013-12-18
  */
 
-abstract class TrackerHandler
+abstract class ITrackerHandler
 {
-  abstract void sendStat(String url,Map<String, String> paramMap);
+  abstract void send(String url,Map<String, String> paramMap);
 }

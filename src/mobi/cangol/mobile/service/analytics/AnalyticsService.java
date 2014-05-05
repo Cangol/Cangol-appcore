@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.stat;
+package mobi.cangol.mobile.service.analytics;
 
 import mobi.cangol.mobile.service.AppService;
 
-public interface StatService extends AppService{
+public interface AnalyticsService extends AppService{
 	public final static String STATSERVICE_THREAD_MAX="thread_max";
 	public final static String STATSERVICE_THREADPOOL_NAME="threadpool_name";
 	
-	Tracker getTracker(String trackingId);
+	ITracker getTracker(String trackingId);
 	
 	 void closeTracker(String trackingId);
 }

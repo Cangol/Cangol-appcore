@@ -38,6 +38,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -45,20 +46,24 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	private final static String  TAG=" AppServiceManager";
 	private Map<String, AppService> mRunServiceMap = new Hashtable<String, AppService>();
 	private Map<String,Class<? extends AppService>> mServiceMap = new Hashtable<String,Class<? extends AppService>>();
-	private Context mContext;
+	public Context mContext;
 	private boolean mUseAnnotation=true;
 	private List<String> mPackageNames=new ArrayList<String>();
 	private Map<String,ServiceProperty> mProperties=new HashMap<String,ServiceProperty>();
 	private boolean debug=false;
+	private AsyncClassScan mAsyncClassScan;
 	public AppServiceManagerImpl(Context context){
 		this.mContext=context;
     	initClass();
 	}
 	private void initClass(){
-		List<Class<? extends AppService>> classList=	ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
+		final List<Class<? extends AppService>> classList=ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
 		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
 		// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
 		System.gc();
+		initServiceMap(classList);
+		initServiceProperties();
+		
 //		List<Class<? extends AppService>> classList=new ArrayList<Class<? extends AppService>>();
 //		classList.add(CacheManagerImpl.class);
 //		classList.add(ConfigServiceImpl.class);
@@ -69,8 +74,21 @@ public class AppServiceManagerImpl extends AppServiceManager {
 //		classList.add(StatServiceImpl.class);
 //		classList.add(StatusServiceImpl.class);
 //		classList.add(UpgradeServiceImpl.class);
-		initServiceMap(classList);
-		initServiceProperties();
+//		mAsyncClassScan=new AsyncClassScan(mContext){
+//
+//			@Override
+//			protected void onPostExecute(List<Class<? extends AppService>> result) {
+//				super.onPostExecute(result);
+//				// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+//				System.gc();
+//				classList.addAll(result);
+//				initServiceMap(classList);
+//				initServiceProperties();
+//			}
+//			
+//		};
+//		mAsyncClassScan.execute(mContext.getPackageName());
+		
 	}
 	private void initServiceMap(List<Class<? extends AppService>> classList) {	
 		for(Class<? extends AppService> clazz:classList){
@@ -194,6 +212,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	@Override
 	public void destory() {
 		if(debug)Log.d(TAG, "destory");
+		if(mAsyncClassScan!=null)mAsyncClassScan.cancel(true);
 		destoryAllService() ;
 		mProperties.clear();
 		mServiceMap.clear();
@@ -206,6 +225,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			for(String name:packageName){
 				mPackageNames.add(name);
 				classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
+				// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+				System.gc();
 			}
 			initServiceMap(classList);
 		}
@@ -255,6 +276,17 @@ public class AppServiceManagerImpl extends AppServiceManager {
 				mProperties.put(name, properties);
 			}
 		}
+	}
+	static class AsyncClassScan extends AsyncTask<String, Void,List<Class<? extends AppService>>> {
+		Context context;
+		AsyncClassScan(Context context){
+			this.context=context;
+		}
+		@Override
+		protected List<Class<? extends AppService>> doInBackground(String... params) {
+			return ClassUtils.getAllClassByInterface(AppService.class, context,params[0]);
+		}
+		
 	}
 	
 }

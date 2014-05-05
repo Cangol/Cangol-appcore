@@ -118,25 +118,4 @@ public class CoreApplication extends Application {
 	public boolean isDevMode() {
 		return mDevMode;
 	}
-
-	/**
-	* return application is background
-	* @param context
-	* @return
-	*/
-	public boolean isBackground(Context context) {
-	
-		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-		for (RunningAppProcessInfo appProcess : appProcesses) {
-			if (appProcess.processName.equals(context.getPackageName())) {
-				if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
 }

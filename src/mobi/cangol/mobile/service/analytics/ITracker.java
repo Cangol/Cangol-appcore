@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.stat;
+package mobi.cangol.mobile.service.analytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,29 +23,29 @@ import java.util.Map;
  * @author Cangol
  * @date 2013-12-18
  */
-public class Tracker {
+public class ITracker {
 	private final String mTrackingId;
 	private final Map<String, String> mParams = new HashMap<String, String>();
 	private long mStartTime;
-	private TrackerHandler mHandler;
+	private ITrackerHandler mHandler;
 
-	public Tracker(String trackingId) {
+	public ITracker(String trackingId) {
 		super();
 		this.mTrackingId = trackingId;
 	}
 	public void sendTiming(String url) {
-		mHandler.sendStat(url, mParams);
+		mHandler.send(url, mParams);
 		mStartTime=0;
 		mParams.clear();
 	}
-	public void send(StatBuilder statBuilder) {
+	public void send(IMapBuilder statBuilder) {
 		if (statBuilder != null) {
-			mHandler.sendStat(statBuilder.getUrl(), statBuilder.getParams());
+			mHandler.send(statBuilder.getUrl(), statBuilder.getParams());
 		}
 	}
 	public void send(String url, Map<String, String> params) {
 		if (params != null) {
-			mHandler.sendStat(url, params);
+			mHandler.send(url, params);
 		}
 	}
 

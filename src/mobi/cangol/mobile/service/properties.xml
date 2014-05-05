@@ -25,7 +25,7 @@
 		<property name="thread_max">5</property>
 		<property name="threadpool_name">download</property>
 	</service>
-	<service name="StatService">
+	<service name="AnalyticsService">
 		<property name="thread_max">5</property>
 		<property name="threadpool_name">stat</property>
 	</service>

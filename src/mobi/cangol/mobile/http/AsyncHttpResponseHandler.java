@@ -21,6 +21,8 @@ package mobi.cangol.mobile.http;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import mobi.cangol.mobile.logging.Log;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -254,7 +256,11 @@ public class AsyncHttpResponseHandler {
         }
 
         if(status.getStatusCode() >= 300) {
-            sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+        	if(status.getStatusCode()==404){
+        		sendFailureMessage(new HttpResponseException(status.getStatusCode(), "Page not Found"), "Not Found");
+        	}else{
+        		sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+        	}
         } else {
             sendSuccessMessage(status.getStatusCode(), responseBody);
         }

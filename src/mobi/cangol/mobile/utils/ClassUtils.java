@@ -24,7 +24,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -33,7 +32,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import dalvik.system.DexFile;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -57,6 +55,7 @@ public class ClassUtils {
 				}
 			}
 			allClass=null;
+			System.gc();
 		}
 		return returnClassList;
 	}
@@ -80,6 +79,7 @@ public class ClassUtils {
 	            }
 	        }
 	        list=null;
+	        System.gc();
         } catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -98,6 +98,7 @@ public class ClassUtils {
             	classList.add(iter.nextElement());
 	        }
 	        df.close();
+	        System.gc();
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
@@ -119,6 +120,7 @@ public class ClassUtils {
             	clazz=null;
 	        }
 	        df.close();
+	        System.gc();
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    } catch (ClassNotFoundException e) {

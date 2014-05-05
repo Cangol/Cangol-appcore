@@ -24,7 +24,7 @@ public interface AppService {
 	
 	public final static String UPGRADE_SERVICE="UpgradeService";
 	
-	public final static String StatService="StatService";
+	public final static String ANALYTICS_SERVICE="AnalyticsService";
 	
 	public final static String LOCATION_SERVICE="LocationService";
 	

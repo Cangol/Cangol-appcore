@@ -462,4 +462,12 @@ public class StringUtils {
 		   result[3] = (byte)(num );      
 		   return result;
 	}
+	/**
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String null2Empty(String str){
+		return str == null ? "" : str;
+	}
 }
