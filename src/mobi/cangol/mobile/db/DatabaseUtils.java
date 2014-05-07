@@ -19,13 +19,15 @@ public class DatabaseUtils {
 			String filedName=null;
 			boolean isFirst=true;
 			for (Field field : fields) {
-				if(!isFirst){
-					sql.append(",");  
-				}else
-					isFirst=false;
 				field.setAccessible(true);
 				if(field.isEnumConstant())continue;
 				if (field.isAnnotationPresent(DatabaseField.class)){
+					
+					if(!isFirst){
+						sql.append(",");  
+					}else
+						isFirst=false;
+					
 					DatabaseField dbField = field.getAnnotation(DatabaseField.class);
 					filedName="".equals(dbField.value())?field.getName():dbField.value();
 					sql.append(""+filedName+"");
