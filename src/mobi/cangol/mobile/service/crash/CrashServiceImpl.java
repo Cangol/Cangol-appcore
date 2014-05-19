@@ -165,7 +165,6 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
 		Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
-		
 		String error= error(ex);
 		String savePath=mConfigService.getTempDir()+File.separator+TimeUtils.getCurrentTime2()+_CRASH;
 		Log.e("AndroidRuntime",error);
@@ -182,6 +181,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 			return null;
 		}	
 	}
+	
 	static class AsyncFileScan extends AsyncTask<String, Void, List<File>> {
 
 		@Override

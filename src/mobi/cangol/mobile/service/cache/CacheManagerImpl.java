@@ -24,6 +24,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.json.JSONException;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -32,6 +34,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.Object2FileUtils;
@@ -76,7 +79,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 		this.mDiskCacheDir = cacheDir;
 		this.mDiskCacheSize = cacheSize;
 		mDiskCacheStarting=true;
-		Log.d("mDiskCacheDir:"+mDiskCacheDir);
+		Log.i(TAG,"mDiskCacheDir:"+mDiskCacheDir);
 		initDiskCache(mDiskCacheDir,mDiskCacheSize);
 	}
 	
@@ -240,6 +243,8 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 	}
 	//添加到磁盘缓存（也添加到内存缓存）
 	public void addContent(String context, String id, Object data){
+		Log.i(TAG,"addContent:"+id+","+data);
+		removeContent(context,id);
 		addContentToMem(context,id,data);
 		//addContentToDiskCache(id,data);
 		asyncAddContentToDiskCache(id,data);

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import mobi.cangol.mobile.logging.Log;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
@@ -43,7 +44,6 @@ import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -274,33 +274,44 @@ public class DeviceInfo {
 		return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 	}
 	
-	public static String getSignHashkey(Context context) {  
+	public static String getMD5Fingerprint(Context context) {  
 	    PackageInfo info;
 	    try {
 	        info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
 	        for (Signature signature : info.signatures) {
-	            MessageDigest md;
-	            md = MessageDigest.getInstance("SHA");
-	            md.update(signature.toByteArray());
-	            String something = new String(Base64.encode(md.digest(), 0));
+	        	String something=StringUtils.md5(signature.toByteArray());
 	            return something;
 	        }
 	    } catch (NameNotFoundException e1) {
 	        Log.e("name not found", e1.toString());
-	    } catch (NoSuchAlgorithmException e) {
-	        Log.e("no such an algorithm", e.toString());
 	    } catch (Exception e) {
 	        Log.e("exception", e.toString());
 	    }
 		return null;
-	}  
-	
+	}
+	public static String getSHA1Fingerprint(Context context) {  
+	    PackageInfo info;
+	    try {
+	        info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+	        for (Signature signature : info.signatures) {
+	        	 MessageDigest md=MessageDigest.getInstance("SHA1");
+		         md.update(signature.toByteArray());
+		         String something = new String(md.digest());
+		         return something;
+	        }
+	    } catch (NameNotFoundException e1) {
+	        Log.e("name not found", e1.toString());
+	    } catch (Exception e) {
+	        Log.e("exception", e.toString());
+	    }
+		return null;
+	}
 	/**
 	* return application is background
 	* @param context
 	* @return
 	*/
-	public boolean isBackground(Context context) {
+	public static boolean isBackground(Context context) {
 	
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();

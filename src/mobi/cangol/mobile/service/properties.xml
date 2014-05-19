@@ -10,7 +10,7 @@
 		<property name="shared_name">app_shared</property>
 	</service>
 	<service name="CacheManager">
-		<property name="cache_dir">cache_dir</property>
+		<property name="cache_dir">contentCache</property>
 		<property name="cache_size">20971520</property>
 	</service>
 	<service name="CrashService">
