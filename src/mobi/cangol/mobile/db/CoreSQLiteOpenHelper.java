@@ -7,10 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public abstract class CoreSQLiteOpenHelper {
 	private static final String TAG = "CoreSQLiteOpenHelper";
-	/**
-	 * SQLite数据库实例
-	 */
-	public SQLiteDatabase mDb = null;
 
 	/**
 	 * 数据库创建帮手
