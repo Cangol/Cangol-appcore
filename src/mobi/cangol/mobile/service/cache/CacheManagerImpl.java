@@ -435,11 +435,13 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
     public  File getDiskCacheDir(Context context, String uniqueName) {
         // Check if media is mounted or storage is built-in, if so, try and use external cache dir
         // otherwise use internal cache dir
-        final String cachePath =
-                Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
-                        !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
-                                context.getCacheDir().getPath();
-
+        String cachePath =null;
+        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||!isExternalStorageRemovable()){
+        	cachePath=getExternalCacheDir(context).getPath() ;
+        }else{
+        	cachePath=context.getCacheDir().getPath();
+        }
+                        	
         return new File(cachePath + File.separator + uniqueName);
     }
     @TargetApi(9)
@@ -451,13 +453,18 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
     }
     @TargetApi(8)
     public  File getExternalCacheDir(Context context) {
+    	File file=null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            return context.getExternalCacheDir();
+        	file= context.getExternalCacheDir();
         }
-
-        // Before Froyo we need to construct the external cache dir ourselves
-        final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
-        return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+        if(file==null){
+        	 // Before Froyo we need to construct the external cache dir ourselves
+            final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
+            file=new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+            file.mkdirs();
+            return file;
+        } 
+        return file;
     }
     @TargetApi(9)
     public  long getUsableSpace(File path) {
