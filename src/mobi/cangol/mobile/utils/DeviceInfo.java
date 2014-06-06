@@ -113,6 +113,11 @@ public class DeviceInfo {
 
 		return metrics.heightPixels + "x" + metrics.widthPixels;
 	}
+	
+	public static DisplayMetrics getDisplayMetrics(Context context) {
+		return context.getResources().getDisplayMetrics();
+	}
+	
     public static String getDensity(Context context) {
         int density = context.getResources().getDisplayMetrics().densityDpi;
 
