@@ -322,7 +322,9 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 			id=iterator.next();
 			String key=hashKeyForDisk(id);
 			try {
-				mDiskLruCache.remove(key);
+				if (mDiskLruCache != null) {
+					mDiskLruCache.remove(key);
+				}
 			} catch (IOException e) {
 				if (mDebug) Log.d(TAG, "cache remove"+key,e);
 			}
@@ -337,7 +339,9 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 		contextMap.remove(id);
 		String key=hashKeyForDisk(id);
 		try {
-			mDiskLruCache.remove(key);
+			if (mDiskLruCache != null) {
+				mDiskLruCache.remove(key);
+			}
 		} catch (IOException e) {
 			if (mDebug) Log.d(TAG, "cache remove"+key,e);
 		}
