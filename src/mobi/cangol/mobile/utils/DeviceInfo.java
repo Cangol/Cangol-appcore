@@ -117,7 +117,10 @@ public class DeviceInfo {
 	public static DisplayMetrics getDisplayMetrics(Context context) {
 		return context.getResources().getDisplayMetrics();
 	}
-	
+	public static float getFloatDensity(Context context) {
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); 
+		return displayMetrics.density;
+	}
     public static String getDensity(Context context) {
         int density = context.getResources().getDisplayMetrics().densityDpi;
 

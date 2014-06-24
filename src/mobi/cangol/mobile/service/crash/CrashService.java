@@ -27,6 +27,7 @@ public interface CrashService  extends AppService{
 	public final static String CRASHSERVICE_REPORT_DEVICE="report_param_device";
 	public final static String CRASHSERVICE_REPORT_TIMESTAMP="report_param_timestamp";
 	
+	
 	void setReport(String url,Map<String,String> params);
 	
 	void report();

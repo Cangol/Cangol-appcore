@@ -58,8 +58,10 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 			QueryBuilder queryBuilder=new QueryBuilder(mClazz);
 			queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
 			Cursor cursor=query(db,queryBuilder);
-			if(cursor.getCount()>0)
-			obj=DatabaseUtils.cursorToObject(mClazz,cursor);
+			if(cursor.getCount()>0){
+				cursor.moveToFirst();
+				obj=DatabaseUtils.cursorToObject(mClazz,cursor);
+			}
 			cursor.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,19 +166,28 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	@Override
 	public int delete(Collection<T> paramCollection) throws SQLException {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-		int result=-1;
+		int result=0;
 		try {
+			db.beginTransaction();
 			for(T t:paramCollection){
-				result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+DatabaseUtils.getIdValue(t)});
+				result =result+ db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+DatabaseUtils.getIdValue(t)});
 			}
-		} catch (IllegalAccessException e) {
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+		} finally {
+			db.endTransaction();
 		}
 		return result;
 	}
 
+	@Override
+	public int delete(DeleteBuilder deleteBuilder) throws SQLException {
+		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+		int result = db.delete(mTableName, deleteBuilder.getWhere(),deleteBuilder.getWhereArgs());
+		return result;
+	}
+	
 	@Override
 	public int deleteById(ID paramID) throws SQLException {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
@@ -187,16 +198,23 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 	@Override
 	public int deleteByIds(Collection<ID> paramCollection) throws SQLException {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
-		int result=-1;
-		for(ID id:paramCollection){
-			db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+id});
+		int result = 0;
+		try {
+			db.beginTransaction();
+			for(ID id:paramCollection){
+				result=result+db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)+"=?",new String[]{""+id});
+			}
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
 		}
 		return result;
 	}
 
 	@Override
-	public Class<T> getDataClass() {
+	public Class<T> getEntityClass() {
 		return mClazz;
 	}
-	
 }

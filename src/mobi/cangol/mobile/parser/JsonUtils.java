@@ -345,12 +345,18 @@ public class JsonUtils {
 			throw new JSONParserException(t.getClass(),field,"Illegal Access "+t,e);
 		}
 	}
-	private static String formatJson(String json) {
+	public static String formatJson(String json) {
 		if(null != json && json.startsWith("{\"\"")) {
 			json = json.replaceFirst("\"\"", "\"");
 		}
 		return json;
 	}	
+	public static JSONObject formatJSONObject(String json) throws JSONException {
+		if(null != json && json.startsWith("{\"\"")) {
+			json = json.replaceFirst("\"\"", "\"");
+		}
+		return new JSONObject(json);
+	}
 	private static boolean isBaseClass(Class<?> clz){  
 	    return isWrapClass(clz)||clz.isPrimitive()||clz==String.class;
 	} 

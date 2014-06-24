@@ -2,7 +2,6 @@ package mobi.cangol.mobile.db;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import android.database.SQLException;
 
@@ -21,6 +20,8 @@ public abstract interface Dao<T, ID> {
 	public abstract int update(T paramT) throws SQLException;
 
 	public abstract int updateId(T paramT, ID paramID) throws SQLException;
+	
+	public abstract int delete(DeleteBuilder deleteBuilder) throws SQLException;
 
 	public abstract int delete(T paramT) throws SQLException;
 	
@@ -30,6 +31,6 @@ public abstract interface Dao<T, ID> {
 
 	public abstract int deleteByIds(Collection<ID> paramCollection)throws SQLException;
 
-	public abstract Class<T> getDataClass();
+	public abstract Class<T> getEntityClass();
 	
 }
