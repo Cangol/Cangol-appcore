@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcelable;
 import android.util.Log;
 
 
@@ -56,7 +57,7 @@ public class JsonUtils {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
-			if(field.isEnumConstant())continue;
+			if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
 			if (!List.class.isAssignableFrom(field.getType())) {
 				//非集合类型
 				if (isBaseClass(field.getType())) {

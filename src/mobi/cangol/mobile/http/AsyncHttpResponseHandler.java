@@ -21,7 +21,6 @@ package mobi.cangol.mobile.http;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import mobi.cangol.mobile.logging.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
