@@ -18,8 +18,10 @@
 		<property name="threadpool_name">crash</property>
 		<property name="report_url"></property>
 		<property name="report_param_error">error</property>
-		<property name="report_param_device">device</property>
+		<property name="report_param_position">position</property>
+		<property name="report_param_context">context</property>
 		<property name="report_param_timestamp">timestamp</property>
+		<property name="report_param_fatal">fatal</property>
 	</service>
 	<service name="DownloadManager">
 		<property name="thread_max">5</property>

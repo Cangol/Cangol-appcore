@@ -243,17 +243,18 @@ public class AsyncHttpResponseHandler {
     void sendResponseMessage(HttpResponse response) {
         StatusLine status = response.getStatusLine();
         String responseBody = null;
+        HttpEntity entity = null;
         try {
-            HttpEntity entity = null;
             HttpEntity temp = response.getEntity();
             if(temp != null) {
                 entity = new BufferedHttpEntity(temp);
                 responseBody = EntityUtils.toString(entity, "UTF-8");
             }
+            if(entity!=null)
+            	entity.consumeContent();
         } catch(IOException e) {
             sendFailureMessage(e, (String) null);
         }
-
         if(status.getStatusCode() >= 300) {
         	if(status.getStatusCode()==404){
         		sendFailureMessage(new HttpResponseException(status.getStatusCode(), "Page not Found"), "Not Found");

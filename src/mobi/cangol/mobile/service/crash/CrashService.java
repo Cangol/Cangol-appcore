@@ -24,11 +24,12 @@ public interface CrashService  extends AppService{
 	public final static String CRASHSERVICE_THREADPOOL_NAME="threadpool_name";
 	public final static String CRASHSERVICE_REPORT_URL="report_url";
 	public final static String CRASHSERVICE_REPORT_ERROR="report_param_error";
-	public final static String CRASHSERVICE_REPORT_DEVICE="report_param_device";
+	public final static String CRASHSERVICE_REPORT_POSITION="report_param_position";
+	public final static String CRASHSERVICE_REPORT_CONTEXT="report_param_context";
 	public final static String CRASHSERVICE_REPORT_TIMESTAMP="report_param_timestamp";
-	
+	public final static String CRASHSERVICE_REPORT_FATAL="report_param_fatal";
 	
 	void setReport(String url,Map<String,String> params);
 	
-	void report();
+	void report(CrashReportListener crashReportListener);
 }
