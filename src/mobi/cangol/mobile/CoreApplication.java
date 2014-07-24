@@ -108,8 +108,8 @@ public class CoreApplication extends Application {
 		if(mAppServiceManager!=null){
 			mAppServiceManager.destory();
 		}
-		//System.exit(0);
-		android.os.Process.killProcess(android.os.Process.myPid());
+		//0 正常推退出
+		System.exit(0);
 	}
 	public void setDevMode(boolean devMode) {
 		this.mDevMode = devMode;

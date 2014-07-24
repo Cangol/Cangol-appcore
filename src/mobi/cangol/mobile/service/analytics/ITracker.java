@@ -29,9 +29,10 @@ public class ITracker {
 	private long mStartTime;
 	private ITrackerHandler mHandler;
 
-	public ITracker(String trackingId) {
+	public ITracker(String trackingId,ITrackerHandler handler) {
 		super();
 		this.mTrackingId = trackingId;
+		this.mHandler=handler;
 	}
 	public void sendTiming(String url) {
 		mHandler.send(url, mParams);

@@ -53,7 +53,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	}
 	@Override
 	public String getName() {
-		return "StatService";
+		return "AnalyticsService";
 	}
 
 	@Override
@@ -67,25 +67,24 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	@Override
 	public void send(String url, Map<String, String> paramsMap) {
 		RequestParams params=new RequestParams(paramsMap);
-		if(debug)Log.d(TAG, "url:"+url+"\n"+params.toString());
+		if(debug)Log.d(TAG, "send "+AsyncHttpClient.getUrlWithQueryString(url, params));
 		asyncHttpClient.get(mContext,url, params,  new AsyncHttpResponseHandler(){
 
 			@Override
 			public void onStart() {
 				super.onStart();
-				if(debug)Log.d(TAG, "Start");
 			}
 			
 			@Override
 			public void onSuccess(String content) {
 				super.onSuccess(content);
-				if(debug)Log.d(TAG, "Success :"+content);
+				if(debug)Log.d(TAG, "send Success :"+content);
 			}
 
 			@Override
 			public void onFailure(Throwable error, String content) {
 				super.onFailure(error, content);
-				if(debug)Log.d(TAG, "Failure :"+content);
+				if(debug)Log.d(TAG, "send Failure :"+content);
 			}
 			
 		});
@@ -100,7 +99,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 		if(mTrackers.containsKey(trackingId)){
 			return mTrackers.get(trackingId);
 		}else{
-			return new ITracker(trackingId);
+			return new ITracker(trackingId,this);
 		}
 		
 	}

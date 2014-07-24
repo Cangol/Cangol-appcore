@@ -156,11 +156,12 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	public void uncaughtException(Thread thread, Throwable ex) {
 		Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
 		ReportError error=makeReportError(ex);
-		if(debug)Log.e("AndroidRuntime",error.context);
+		Log.e("AndroidRuntime",error.context);
 		if(debug)Log.d(TAG,"save .crash "+error.path);
 		Object2FileUtils.writeObject(error, error.path);
 		System.gc();
-        System.exit(1); 
+		//0 正常推退出  1异常退出
+		System.exit(1); 
 	}
 	@Override
 	public void report(final CrashReportListener crashReportListener){
