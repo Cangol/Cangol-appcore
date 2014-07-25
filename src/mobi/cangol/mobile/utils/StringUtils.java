@@ -182,7 +182,7 @@ public class StringUtils {
 	}
 	
 	/**
-	 * MD5
+	 * MD5 s
 	 * @param s
 	 * @return
 	 */
@@ -208,7 +208,11 @@ public class StringUtils {
 			return null;
 		}
 	}
-	
+	/**
+	 * MD5 byte[]
+	 * @param strTemp
+	 * @return
+	 */
 	public  static String md5(byte[] strTemp) {
 		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 				'a', 'b', 'c', 'd', 'e', 'f' };
@@ -429,7 +433,11 @@ public class StringUtils {
         }
         return true;
     }
-
+    /**
+     * isNumericSpace
+     * @param str
+     * @return
+     */
     public static boolean isNumericSpace(String str) {
         if (str == null) {
             return false;
@@ -442,7 +450,12 @@ public class StringUtils {
         }
         return true;
     }
-    
+    /**
+     * byte[] xor int
+     * @param data
+     * @param xor
+     * @return
+     */
 	public static byte[] byteXorInt(byte[] data,int xor){
 		byte[] data2=new byte[4];
 		for(int i=0;i<data.length;i=i+4){
@@ -458,6 +471,11 @@ public class StringUtils {
 		}
 		return data;
 	}
+	/**
+	 * byte[] to int
+	 * @param b
+	 * @return
+	 */
 	public static int byteArray2int(byte[] b){
 	    byte[] a = new byte[4];
 	    int i = a.length - 1,j = b.length - 1;
@@ -473,7 +491,11 @@ public class StringUtils {
 	    int v3 = (a[3] & 0xff) ;
 	    return v0 + v1 + v2 + v3;
 	 }
-	
+	/**
+	 * int to byte[]
+	 * @param num
+	 * @return
+	 */
 	public static byte[] int2byteArray(int num) {
 		   byte[] result = new byte[4];
 		   result[0] = (byte)(num >>> 24);

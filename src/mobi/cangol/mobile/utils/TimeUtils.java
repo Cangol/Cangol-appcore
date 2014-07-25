@@ -351,11 +351,23 @@ public class TimeUtils {
 		}
 		return time;
 	}
-	
+	/**
+	 * 获取格式化日期yyyy-MM-dd
+	 * @param year
+	 * @param monthOfYear
+	 * @param dayOfMonth
+	 * @return
+	 */
 	public static String getFormatDate(int year,int monthOfYear, int dayOfMonth){
 		DecimalFormat  nf = new DecimalFormat ("00");
 		return year+"-"+nf.format((monthOfYear+1))+"-"+nf.format(dayOfMonth);
 	}
+	/**
+	 * 获取格式化时间HH:mm
+	 * @param hourOfDay
+	 * @param minute
+	 * @return
+	 */
 	public static String getFormatTime(int hourOfDay, int minute){
 		DecimalFormat  nf = new DecimalFormat ("00");
 		return nf.format((hourOfDay))+":"+nf.format(minute);

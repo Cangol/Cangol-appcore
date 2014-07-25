@@ -375,7 +375,13 @@ public class BitmapUtils {
 
 	    return roundedSize;
 	}
-
+	/**
+	 * 计算
+	 * @param options
+	 * @param minSideLength
+	 * @param maxNumOfPixels
+	 * @return
+	 */
 	private static int computeInitialSampleSize(BitmapFactory.Options options,int minSideLength, int maxNumOfPixels) {
 	    double w = options.outWidth;
 	    double h = options.outHeight;

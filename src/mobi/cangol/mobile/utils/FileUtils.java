@@ -137,7 +137,11 @@ public class FileUtils {
 			return false;
 		}
 	}
-
+	/**
+	 * 拷贝文件oldPath到newPath
+	 * @param oldPath
+	 * @param newPath
+	 */
 	public static void copyFile(String oldPath, String newPath) {
 		try {
 			int bytesum = 0;
