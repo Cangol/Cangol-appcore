@@ -14,8 +14,8 @@
 		<property name="cache_size">20971520</property>
 	</service>
 	<service name="CrashService">
-		<property name="thread_max">5</property>
-		<property name="threadpool_name">crash</property>
+		<property name="thread_max">1</property>
+		<property name="threadpool_name">CrashService</property>
 		<property name="report_url"></property>
 		<property name="report_param_error">error</property>
 		<property name="report_param_position">position</property>
@@ -24,12 +24,12 @@
 		<property name="report_param_fatal">fatal</property>
 	</service>
 	<service name="DownloadManager">
-		<property name="thread_max">5</property>
-		<property name="threadpool_name">download</property>
+		<property name="thread_max">2</property>
+		<property name="threadpool_name">Download</property>
 	</service>
 	<service name="AnalyticsService">
-		<property name="thread_max">5</property>
-		<property name="threadpool_name">stat</property>
+		<property name="thread_max">2</property>
+		<property name="threadpool_name">AnalyticsService</property>
 	</service>
 	<service name="LocationService">
 		<property name="timeout">300000</property>

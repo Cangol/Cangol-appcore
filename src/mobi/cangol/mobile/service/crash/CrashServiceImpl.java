@@ -161,7 +161,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		Object2FileUtils.writeObject(error, error.path);
 		System.gc();
 		//0 正常推退出  1异常退出
-		System.exit(1); 
+		System.exit(0); 
 	}
 	@Override
 	public void report(final CrashReportListener crashReportListener){

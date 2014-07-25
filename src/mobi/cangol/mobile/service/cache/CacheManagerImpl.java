@@ -24,8 +24,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.json.JSONException;
-
+import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.utils.Object2FileUtils;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -33,11 +35,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.parser.JsonUtils;
-import mobi.cangol.mobile.service.Service;
-import mobi.cangol.mobile.service.ServiceProperty;
-import mobi.cangol.mobile.utils.Object2FileUtils;
 
 
 /**

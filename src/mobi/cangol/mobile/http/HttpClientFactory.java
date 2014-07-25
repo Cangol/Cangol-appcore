@@ -51,10 +51,10 @@ import org.apache.http.protocol.SyncBasicHttpContext;
 import android.util.Log;
 
 public class HttpClientFactory {
-	private static final int DEFAULT_MAX_CONNECTIONS = 50;
-	private static final int DEFAULT_MAX_CONNECTIONS_PER_ROUTE = 5;
+	private static final int DEFAULT_MAX_CONNECTIONS = 20;
+	private static final int DEFAULT_MAX_CONNECTIONS_PER_ROUTE = 2;
     private static final int DEFAULT_SOCKET_TIMEOUT = 20 * 1000;
-    private static final int DEFAULT_MAX_RETRIES = 5;
+    private static final int DEFAULT_MAX_RETRIES = 3;
     private static final int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
     private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String ENCODING_GZIP = "gzip";
@@ -86,7 +86,7 @@ public class HttpClientFactory {
 		
 		ConnManagerParams.setMaxTotalConnections(httpParams, DEFAULT_MAX_CONNECTIONS);
 		ConnManagerParams.setMaxConnectionsPerRoute(httpParams,new ConnPerRouteBean(DEFAULT_MAX_CONNECTIONS_PER_ROUTE));
-		ConnManagerParams.setTimeout(httpParams, 2*DEFAULT_SOCKET_TIMEOUT);
+		ConnManagerParams.setTimeout(httpParams, DEFAULT_SOCKET_TIMEOUT);
 		
 		HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setUserAgent(httpParams, String.format("android"));

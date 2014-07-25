@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PoolManager {
 	private static ConcurrentHashMap<String,Pool> poolMap=null;
-	private static  final int DEFAULT_MAX=5;
+	private static  final int DEFAULT_MAX=2;
 	private static ExecutorService generateExecutorService(final String name,int max){
 		ExecutorService executorService= Executors.newFixedThreadPool(max,new ThreadFactory() {
 	        private final AtomicInteger mCount = new AtomicInteger(1);
