@@ -29,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import mobi.cangol.mobile.logging.Log;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -46,6 +48,8 @@ import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
+import android.view.View;
 
 public class BitmapUtils {
 	/**
@@ -532,5 +536,26 @@ public class BitmapUtils {
 			return null;
 		}
 	}
-
+	/**
+	 * 截屏
+	 * @param activity
+	 * @return
+	 */
+	public static Bitmap screenShot(Activity activity) {  
+        View view = activity.getWindow().getDecorView();  
+        view.setDrawingCacheEnabled(true);  
+        view.buildDrawingCache();  
+        Bitmap b1 = view.getDrawingCache();  
+        // 获取状态栏高度  
+        Rect frame = new Rect();  
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
+        int statusBarHeight = frame.top;  
+        // 获取屏幕长和高  
+        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics(); 
+        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.heightPixels;  
+        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height  - statusBarHeight);  
+        view.destroyDrawingCache();  
+        return b;  
+	}
 }
