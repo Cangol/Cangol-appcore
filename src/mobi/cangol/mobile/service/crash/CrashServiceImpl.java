@@ -34,6 +34,8 @@ import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.conf.ConfigService;
+import mobi.cangol.mobile.service.global.GlobalData;
+import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.Object2FileUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
@@ -53,6 +55,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private static boolean debug=true;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
 	private Context mContext;
+	private GlobalData mGlobalData;
 	private ConfigService mConfigService;
 	private ServiceProperty mServiceProperty=null;
 	private AsyncHttpClient asyncHttpClient;
@@ -64,6 +67,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		mGlobalData=(GlobalData) app.getAppService(AppService.GLOBAL_DATA);
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
 		FileUtils.newFolder(mConfigService.getTempDir());
 	}
@@ -160,6 +164,8 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		if(debug)Log.d(TAG,"save .crash "+error.path);
 		Object2FileUtils.writeObject(error, error.path);
 		System.gc();
+		mGlobalData.save("exitCode","1");
+		mGlobalData.save("exitVersion",DeviceInfo.getAppVersion(mContext));
 		//0 正常推退出  1异常退出
 		System.exit(0); 
 	}
