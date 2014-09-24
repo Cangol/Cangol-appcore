@@ -94,7 +94,7 @@ public class ClassUtils {
 		List<String> classList = new ArrayList<String>(); 
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
-	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
+	        if(df!=null) for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
             	classList.add(iter.nextElement());
 	        }
 	        df.close();
@@ -114,7 +114,7 @@ public class ClassUtils {
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
 	        Class<?> clazz=null;
-	        for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
+	        if(df!=null)for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
             	clazz=(Class<?>) context.getClassLoader().loadClass(iter.nextElement());
             	classList.add(clazz);
             	clazz=null;
