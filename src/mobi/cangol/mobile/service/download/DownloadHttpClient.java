@@ -50,8 +50,8 @@ public class DownloadHttpClient {
     private DefaultHttpClient httpClient;
     private final HttpContext httpContext;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
-    private final static int DEFAULT_RETRYTIMES=5;
-    private final static int DEFAULT_SOCKET_TIMEOUT = 20 * 1000;
+    private final static int DEFAULT_RETRYTIMES=10;
+    private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
     private Pool threadPool;
     protected DownloadHttpClient(String group) {

@@ -30,6 +30,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl;
+import mobi.cangol.mobile.service.cache.CacheManagerImpl;
+import mobi.cangol.mobile.service.conf.ConfigServiceImpl;
+import mobi.cangol.mobile.service.crash.CrashServiceImpl;
+import mobi.cangol.mobile.service.download.DownloadManagerImpl;
+import mobi.cangol.mobile.service.global.GlobalDataImpl;
+import mobi.cangol.mobile.service.location.LocationServiceImpl;
+import mobi.cangol.mobile.service.status.StatusServiceImpl;
+import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 import org.w3c.dom.Document;
@@ -57,38 +66,27 @@ public class AppServiceManagerImpl extends AppServiceManager {
     	initClass();
 	}
 	private void initClass(){
-		final List<Class<? extends AppService>> classList=ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
-		classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
-		// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+		List<Class<? extends AppService>> classList=null;
+		if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			classList=ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
+			classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
+			// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+		}else{
+			classList=new ArrayList<Class<? extends AppService>>();
+			classList.add(CacheManagerImpl.class);
+			classList.add(ConfigServiceImpl.class);
+			classList.add(CrashServiceImpl.class);
+			classList.add(DownloadManagerImpl.class);
+			classList.add(GlobalDataImpl.class);
+			classList.add(LocationServiceImpl.class);
+			classList.add(AnalyticsServiceImpl.class);
+			classList.add(StatusServiceImpl.class);
+			classList.add(UpgradeServiceImpl.class);
+		}
+		
 		System.gc();
 		initServiceMap(classList);
 		initServiceProperties();
-		
-//		List<Class<? extends AppService>> classList=new ArrayList<Class<? extends AppService>>();
-//		classList.add(CacheManagerImpl.class);
-//		classList.add(ConfigServiceImpl.class);
-//		classList.add(CrashServiceImpl.class);
-//		classList.add(DownloadManagerImpl.class);
-//		classList.add(GlobalDataImpl.class);
-//		classList.add(LocationServiceImpl.class);
-//		classList.add(StatServiceImpl.class);
-//		classList.add(StatusServiceImpl.class);
-//		classList.add(UpgradeServiceImpl.class);
-//		mAsyncClassScan=new AsyncClassScan(mContext){
-//
-//			@Override
-//			protected void onPostExecute(List<Class<? extends AppService>> result) {
-//				super.onPostExecute(result);
-//				// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
-//				System.gc();
-//				classList.addAll(result);
-//				initServiceMap(classList);
-//				initServiceProperties();
-//			}
-//			
-//		};
-//		mAsyncClassScan.execute(mContext.getPackageName());
-		
 	}
 	private void initServiceMap(List<Class<? extends AppService>> classList) {	
 		for(Class<? extends AppService> clazz:classList){
