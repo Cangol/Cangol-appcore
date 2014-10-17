@@ -118,4 +118,12 @@ public class CoreApplication extends Application {
 	public boolean isDevMode() {
 		return mDevMode;
 	}
+
+	/**
+	 * @return the mSession
+	 */
+	public Session getSession() {
+		return mSession;
+	}
+	
 }
