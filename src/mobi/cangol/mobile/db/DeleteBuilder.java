@@ -3,7 +3,6 @@ package mobi.cangol.mobile.db;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobi.cangol.mobile.utils.StringUtils;
 
 public class DeleteBuilder {
 	private String table;
@@ -36,8 +35,8 @@ public class DeleteBuilder {
 	 * @param isOr
 	 */
 	public void addQuery(String pName, Object pValue, String pType, boolean isOr) {
-		if (StringUtils.isNotBlank(pName) && pValue != null && !pValue.toString().equals("")) {
-			if (StringUtils.isBlank(pType)) {
+		if (pName!= null && !pName.toString().equals("") && pValue != null && !pValue.toString().equals("")) {
+			if (pValue == null || pValue.toString().trim().equals("")) {
 				paraKey.add(pName + "=?");
 				paraValue.add(pValue);
 			} else if (pType.equals("like")) {
@@ -78,7 +77,7 @@ public class DeleteBuilder {
 	}
 	
 	public void addQuery(String pName, Object pValue1,Object pValue2 ,String pType,boolean isOr) {
-		if (StringUtils.isNotBlank(pName) && pValue1 != null && pValue2!= null && !pValue1.toString().equals("") && !pValue2.toString().equals("")) {
+		if (pName!= null && !pName.toString().equals("") && pValue1 != null && pValue2!= null && !pValue1.toString().equals("") && !pValue2.toString().equals("")) {
 			if (pType.equals("between")) {
 				paraKey.add(pName + " between " + pValue1 + " and " +pValue2);
 			}

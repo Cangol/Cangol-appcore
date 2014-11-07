@@ -1,9 +1,9 @@
 package mobi.cangol.mobile.db;
 
-import mobi.cangol.mobile.logging.Log;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public abstract class CoreSQLiteOpenHelper {
 	private static final String TAG = "CoreSQLiteOpenHelper";

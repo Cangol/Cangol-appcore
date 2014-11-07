@@ -2,7 +2,6 @@ package mobi.cangol.mobile.db;
 
 import java.lang.reflect.Field;
 
-import mobi.cangol.mobile.logging.Log;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,7 +40,6 @@ public class DatabaseUtils {
 				}
 			}
 			sql.append(")");
-			Log.d(""+sql.toString());
 			db.execSQL(sql.toString());	
 		}else{
 			throw new IllegalStateException(clazz+" not DatabaseTable Annotation");
@@ -57,8 +55,10 @@ public class DatabaseUtils {
 				|| clazz == Long.class || clazz == long.class				
 				|| clazz == Short.class || clazz == short.class) {
 			return "INTEGER";
-		}else if(clazz == Float.class || clazz == float.class || clazz == Double.class || clazz == double.class) {
-			return "REAL";
+		}else if(clazz == Double.class || clazz == double.class) {
+			return "Double";
+		}else if(clazz == Float.class || clazz == float.class ) {
+			return "FLOAT";
 		}else {
 			return "BLOB";
 		}

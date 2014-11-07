@@ -102,6 +102,11 @@ public class CoreApplication extends Application {
 			}
 		}
 	}
+	
+	public List<WeakReference<Activity>> getActivityManager() {
+		return activityManager;
+	}
+
 	public void exit() {
 		Log.d("exit");
 		mSession.clear();
