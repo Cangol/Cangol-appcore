@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import mobi.cangol.mobile.logging.Log;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.Context;
@@ -34,6 +34,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.graphics.Rect;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -42,7 +43,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -113,7 +113,11 @@ public class DeviceInfo {
 
 		return metrics.heightPixels + "x" + metrics.widthPixels;
 	}
-	
+	public static int getStatusBarHeight(Activity activity){
+		Rect frame = new Rect();  
+		activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
+		return frame.top; 
+	}
 	public static DisplayMetrics getDisplayMetrics(Context context) {
 		return context.getResources().getDisplayMetrics();
 	}
