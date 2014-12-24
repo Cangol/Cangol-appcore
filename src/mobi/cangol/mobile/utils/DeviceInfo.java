@@ -51,21 +51,38 @@ public class DeviceInfo {
 	public static final String SPECIAL_IMEI="000000000000000";
 	public static final String SPECIAL_ANDROID_ID="9774d56d682e549c";
 
+	/**
+	 * 获取操作系统类型
+	 * @return
+	 */
 	public static String getOS() {
 		return "Android";
 	}
-
+	/**
+	 * 获取操作系统版本号
+	 * @return
+	 */
 	public static String getOSVersion() {
 		return android.os.Build.VERSION.RELEASE;
 	}
-
+	/**
+	 * 获取设备型号
+	 * @return
+	 */
 	public static String getDeviceModel() {
 		return android.os.Build.MODEL;
 	}
-	
+	/**
+	 * 获取设备品牌
+	 * @return
+	 */
 	public static String getDeviceBrand() {
 		return android.os.Build.BRAND;
 	}
+	/**
+	 * 获取设备信息
+	 * @return
+	 */
 	public static String getMobileInfo() {
 		StringBuffer sb = new StringBuffer();
 		try {
@@ -83,7 +100,10 @@ public class DeviceInfo {
 		}
 		return sb.toString();
 	}
-	
+	/**
+	 * 获取设备cpu信息
+	 * @return
+	 */
 	public static String getCPUInfo() {
 		try
 		{
@@ -102,6 +122,11 @@ public class DeviceInfo {
 		}
 		return "";
 	}
+	/**
+	 * 获取设备分辨率
+	 * @param context
+	 * @return
+	 */
 	public static String getResolution(Context context) {
 		WindowManager wm = (WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE);
@@ -113,6 +138,11 @@ public class DeviceInfo {
 
 		return metrics.heightPixels + "x" + metrics.widthPixels;
 	}
+	/**
+	 * 获取状态栏高度
+	 * @param activity
+	 * @return
+	 */
 	public static int getStatusBarHeight(Activity activity){
 		Rect frame = new Rect();  
 		activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
@@ -121,10 +151,20 @@ public class DeviceInfo {
 	public static DisplayMetrics getDisplayMetrics(Context context) {
 		return context.getResources().getDisplayMetrics();
 	}
+	/**
+	 * 获取设备Density
+	 * @param context
+	 * @return
+	 */
 	public static float getFloatDensity(Context context) {
 		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); 
 		return displayMetrics.density;
 	}
+	/**
+	 * 获取设备Density类型
+	 * @param context
+	 * @return
+	 */
     public static String getDensity(Context context) {
         int density = context.getResources().getDisplayMetrics().densityDpi;
 
@@ -147,27 +187,45 @@ public class DeviceInfo {
                 return "";
         }
     }
+    /**
+     * 获取设备运营商
+     * @param context
+     * @return
+     */
 	public static String getOperator(Context context) {
 		TelephonyManager manager = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 		return manager.getNetworkOperatorName();
 	}
-
+	/**
+     * 获取设备Locale信息
+     * @return
+     */
 	public static String getLocale() {
 		Locale locale = Locale.getDefault();
 		return locale.getLanguage() + "_" + locale.getCountry();
 	}
-
+	/**
+     * 获取设备语言
+     * @return
+     */
 	public static String getLanguage() {
 		Locale locale = Locale.getDefault();
 		return locale.getLanguage();
 	}
-
+	/**
+     * 获取设备国家
+     * @return
+     */
 	public static String getCountry() {
 		Locale locale = Locale.getDefault();
 		return locale.getCountry();
 	}
-
+	/**
+	 * 获取app版本号
+	 * @param context
+	 * @return
+	 */
 	public static String getAppVersion(Context context) {
 		String result = "UNKNOWN";
 		try {
@@ -177,6 +235,12 @@ public class DeviceInfo {
 		}
 		return result;
 	}
+	/**
+	 * 获取Meta数据
+	 * @param context
+	 * @param key
+	 * @return
+	 */
 	public static Object getAppMetaData(Context context, String key) {
 		Object data = null;
 		ApplicationInfo appInfo;
@@ -188,12 +252,22 @@ public class DeviceInfo {
 		}
 		return data;
 	}
+	/**
+	 * 获取mac地址
+	 * @param context
+	 * @return
+	 */
 	public static String getMacAddress(Context context) {
 		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		WifiInfo wifiInfo = manager.getConnectionInfo();
 		String macAddress = wifiInfo.getMacAddress();
 		return macAddress;
 	}
+	/**
+	 * 获取IP地址
+	 * @param context
+	 * @return
+	 */
 	public static int getIpAddress(Context context) {
 		int ipAddress = 0;
 		WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
@@ -205,12 +279,21 @@ public class DeviceInfo {
 		}
 		return ipAddress;
 	}
+	/**
+	 * 获取IP地址(%d.%d.%d.%d)
+	 * @param context
+	 * @return
+	 */
 	public static String getIpStr(Context context) {
 		int ipAddress = getIpAddress(context);
 		return String.format("%d.%d.%d.%d", (ipAddress & 0xff),
 				(ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff),
 				(ipAddress >> 24 & 0xff));
 	}
+	/**
+	 * 获取系统文件编码类型
+	 * @return
+	 */
 	public static String getCharset() {
 		return System.getProperty("file.encoding");
 	}
@@ -251,6 +334,11 @@ public class DeviceInfo {
 		}
 		return did;
 	}
+	/**
+	 * 获取网络类型
+	 * @param context
+	 * @return
+	 */
 	public static String getNetworkType(Context context) {
 		ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE); 
 	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo(); 
@@ -260,6 +348,11 @@ public class DeviceInfo {
 	    	return "UNKNOWN";
 	    }
 	}
+	/**
+	 * 判读WIFI网络是否连接
+	 * @param context
+	 * @return
+	 */
 	public static boolean isWifiConnection(Context context){
 		 final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	     final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -268,6 +361,11 @@ public class DeviceInfo {
 	     }
 	     return false;
 	}
+	/**
+	 * 判读网络是否连接
+	 * @param context
+	 * @return
+	 */
 	public static boolean isConnection(Context context){
 		 final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	     final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
@@ -276,16 +374,29 @@ public class DeviceInfo {
 	      }
 	     return true;
 	}
-	
+	/**
+	 * 判断GPS定位是否开启
+	 * @param context
+	 * @return
+	 */
 	public static boolean isGPSLocation(Context context){
 		LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
+	/**
+	 * 判断网络定位是否开启
+	 * @param context
+	 * @return
+	 */
 	public static boolean isNetworkLocation(Context context){
 		LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 	}
-	
+	/**
+	 * 返回签名证书MD5值
+	 * @param context
+	 * @return
+	 */
 	public static String getMD5Fingerprint(Context context) {  
 	    PackageInfo info;
 	    try {
@@ -301,6 +412,11 @@ public class DeviceInfo {
 	    }
 		return null;
 	}
+	/**
+	 * 返回签名证书SHA1值
+	 * @param context
+	 * @return
+	 */
 	public static String getSHA1Fingerprint(Context context) {  
 	    PackageInfo info;
 	    try {
