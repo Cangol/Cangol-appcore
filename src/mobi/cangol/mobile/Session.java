@@ -17,6 +17,7 @@ package mobi.cangol.mobile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 /**
  * 
  * @author Cangol
@@ -26,7 +27,7 @@ public class Session {
 	private Map<String, Object> map = null;
 	private long createTime;
 	public Session(){
-		map=new HashMap<String, Object>();
+		map=new ConcurrentHashMap<String, Object>();
 	}
 	public Session(Map<String, Object> map){
 		if(map==null){
@@ -98,10 +99,8 @@ public class Session {
 	public boolean containsValue(Object value){
 		return map.containsValue(value);
 	}
-	public void remove(String key){
-		if(containsValue(key)){
-			map.remove(key);
-		}
+	public Object remove(String key){
+		return map.remove(key);
 	}
 	public void clear() {
 		map.clear();

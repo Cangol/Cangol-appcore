@@ -107,6 +107,10 @@ public class CoreApplication extends Application {
 		return activityManager;
 	}
 
+	public Session getSession() {
+		return mSession;
+	}
+
 	public void exit() {
 		Log.d("exit");
 		mSession.clear();
@@ -123,4 +127,5 @@ public class CoreApplication extends Application {
 	public boolean isDevMode() {
 		return mDevMode;
 	}
+	
 }
