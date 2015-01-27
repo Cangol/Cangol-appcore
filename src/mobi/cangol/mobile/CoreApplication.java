@@ -120,10 +120,17 @@ public class CoreApplication extends Application {
 		//0 正常推退出
 		System.exit(0);
 	}
+	/**
+	 * 设置研发模式
+	 * @param devMode
+	 */
 	public void setDevMode(boolean devMode) {
 		this.mDevMode = devMode;
 	}
-	
+	/**
+	 * 获取当前是否研发模式
+	 * @return
+	 */
 	public boolean isDevMode() {
 		return mDevMode;
 	}
