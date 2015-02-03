@@ -40,7 +40,8 @@ public class CoreApplication extends Application {
 	private AppServiceManager mAppServiceManager;
 	public Session mSession;
 	private boolean mDevMode=true;
-	public List<WeakReference<Activity>> activityManager;
+	public List<WeakReference<Activity>> mActivityManager;
+	
 	@Override
 	public void onCreate() {
 		if(mDevMode&&Build.VERSION.SDK_INT>=9){
@@ -61,7 +62,7 @@ public class CoreApplication extends Application {
 		}
 		mSession=new Session();
 		initAppServiceManager();
-		activityManager = new ArrayList<WeakReference<Activity>>();
+		mActivityManager = new ArrayList<WeakReference<Activity>>();
 	}
 	
 	private void initAppServiceManager() {
@@ -80,15 +81,15 @@ public class CoreApplication extends Application {
 		return null;
 	}
 	public void addActivityToManager(Activity act) {
-		for (final WeakReference<Activity> actR : activityManager) {
+		for (final WeakReference<Activity> actR : mActivityManager) {
 			if (actR != null&&!act.equals(actR.get())) {
-				activityManager.add(new WeakReference<Activity>(act));
+				mActivityManager.add(new WeakReference<Activity>(act));
 			}
 		}
 	}
 
 	public void closeAllActivities() {
-		for (final WeakReference<Activity> actR : activityManager) {
+		for (final WeakReference<Activity> actR : mActivityManager) {
 			if (actR != null&&actR.get()!=null) {
 				actR.get().finish();
 			}
@@ -96,15 +97,15 @@ public class CoreApplication extends Application {
 	}
 
 	public void delActivityFromManager(Activity act) {
-		for (final WeakReference<Activity> actR : activityManager) {
+		for (final WeakReference<Activity> actR : mActivityManager) {
 			if (actR != null&&act.equals(actR.get())) {
-				activityManager.remove(actR);
+				mActivityManager.remove(actR);
 			}
 		}
 	}
 	
 	public List<WeakReference<Activity>> getActivityManager() {
-		return activityManager;
+		return mActivityManager;
 	}
 
 	public Session getSession() {
@@ -112,7 +113,6 @@ public class CoreApplication extends Application {
 	}
 
 	public void exit() {
-		Log.d("exit");
 		mSession.clear();
 		if(mAppServiceManager!=null){
 			mAppServiceManager.destory();
@@ -128,7 +128,8 @@ public class CoreApplication extends Application {
 		this.mDevMode = devMode;
 	}
 	/**
-	 * 获取当前是否研发模式
+	 * 获取当前是否研发模式 
+	 * 研发模式log级别为VERBOSE，非研发模式log级别为WARN
 	 * @return
 	 */
 	public boolean isDevMode() {
