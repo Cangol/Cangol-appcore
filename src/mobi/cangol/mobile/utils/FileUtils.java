@@ -47,8 +47,7 @@ public class FileUtils {
 	/**
 	 * 删除文件，可以是单个文件或文件夹
 	 * 
-	 * @param fileName
-	 *            待删除的文件名
+	 * @param fileName待删除的文件名
 	 * @return 文件删除成功返回true,否则返回false
 	 */
 	public static boolean delete(String fileName) {
@@ -69,8 +68,7 @@ public class FileUtils {
 	/**
 	 * 删除单个文件
 	 * 
-	 * @param fileName
-	 *            被删除文件的文件名
+	 * @param fileName被删除文件的文件名
 	 * @return 单个文件删除成功返回true,否则返回false
 	 */
 	public static boolean deleteFile(String fileName) {
@@ -137,8 +135,10 @@ public class FileUtils {
 			return false;
 		}
 	}
+
 	/**
 	 * 拷贝文件oldPath到newPath
+	 * 
 	 * @param oldPath
 	 * @param newPath
 	 */
@@ -240,15 +240,18 @@ public class FileUtils {
 		}
 
 	}
+
 	/**
 	 * 异步删除
+	 * 
 	 * @param filePathAndName
-	 * 				String 文件路径及名称 如c:/fqf.txt
+	 *            String 文件路径及名称 如c:/fqf.txt
 	 */
 	public static void delFileAsync(String filePathAndName) {
 		new FileDeleter().execute(filePathAndName);
 
 	}
+
 	/**
 	 * 删除文件夹
 	 * 
@@ -305,6 +308,7 @@ public class FileUtils {
 			}
 		}
 	}
+
 	/**
 	 * 复制整个文件夹内容
 	 * 
@@ -353,6 +357,7 @@ public class FileUtils {
 		}
 
 	}
+
 	/**
 	 * 移动文件到指定目录
 	 * 
@@ -366,6 +371,7 @@ public class FileUtils {
 		delFile(oldPath);
 
 	}
+
 	/**
 	 * 移动文件到指定目录
 	 * 
@@ -381,48 +387,54 @@ public class FileUtils {
 
 	/**
 	 * 按后缀遍历目录
+	 * 
 	 * @param f
 	 * @param fileList
 	 * @param suffix
 	 * @return
 	 */
-	public static List<File> searchBySuffix(File f,List<File> fileList,String... suffix){
-		if(null==fileList)fileList=new ArrayList<File>();
-		if(f.isDirectory()){ 
-			File[] childs = f.listFiles();   
-			if(childs!=null)for (int i = 0; i < childs.length; i++) {   
-				if (childs[i].isDirectory()) {  
-					searchBySuffix(childs[i],fileList,suffix);
-				} else {
-					for(int j=0;j<suffix.length;j++){
-						if(childs[i].getName().endsWith(suffix[j])){
-							fileList.add(childs[i]);
+	public static List<File> searchBySuffix(File f, List<File> fileList,
+			String... suffix) {
+		if (null == fileList)
+			fileList = new ArrayList<File>();
+		if (f.isDirectory()) {
+			File[] childs = f.listFiles();
+			if (childs != null)
+				for (int i = 0; i < childs.length; i++) {
+					if (childs[i].isDirectory()) {
+						searchBySuffix(childs[i], fileList, suffix);
+					} else {
+						for (int j = 0; j < suffix.length; j++) {
+							if (childs[i].getName().endsWith(suffix[j])) {
+								fileList.add(childs[i]);
+							}
 						}
+
 					}
-					
 				}
-			}  
 		}
 		return fileList;
 	}
+
 	/**
 	 * 将字符串写入文件
+	 * 
 	 * @param file
 	 * @param content
 	 */
-	public static void writeStr(File file,String content){
+	public static void writeStr(File file, String content) {
 		FileOutputStream os = null;
 		try {
 			byte[] buffer = content.getBytes("UTF-8");
 			os = new FileOutputStream(file);
 			os.write(buffer);
-			os.flush();			
+			os.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			if(os!=null){
+			if (os != null) {
 				try {
 					os.close();
 				} catch (IOException e) {
@@ -432,15 +444,17 @@ public class FileUtils {
 			}
 		}
 	}
+
 	/**
 	 * 将object写入文件
+	 * 
 	 * @param obj
 	 * @param objPath
 	 */
-	public static void writeObject(Object obj,String objPath) {
+	public static void writeObject(Object obj, String objPath) {
 
 		File file = new File(objPath);
-		//if (file.exists())file.delete();
+		// if (file.exists())file.delete();
 		FileOutputStream os = null;
 		ObjectOutputStream oos = null;
 		try {
@@ -453,20 +467,25 @@ public class FileUtils {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(oos!=null)oos.close();
-				if(os!=null)os.close();
+				if (oos != null)
+					oos.close();
+				if (os != null)
+					os.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
 	/**
 	 * 从文件读取object
+	 * 
 	 * @param file
 	 * @return
 	 */
 	public static Object readObject(File file) {
-		if(!file.exists()||file.length()==0)return null;
+		if (!file.exists() || file.length() == 0)
+			return null;
 		Object object = null;
 		InputStream is = null;
 		ObjectInputStream ois = null;
@@ -484,100 +503,117 @@ public class FileUtils {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(ois!=null)ois.close();
-				if(is!=null)is.close();
+				if (ois != null)
+					ois.close();
+				if (is != null)
+					is.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		return object;
 	}
+
 	/**
 	 * 输入流转string
+	 * 
 	 * @param is
 	 * @return
 	 */
-	public static String converts(InputStream is){
-        StringBuilder sb = new StringBuilder();
-        String readline = "";
-        try{
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            while (br.ready())
-            {
-                readline = br.readLine();
-                sb.append(readline);
-            }
-            br.close();
-        } catch (IOException ie)
-        {
-            System.out.println("converts failed.");
-        }
-        return sb.toString();
-    }
+	public static String converts(InputStream is) {
+		StringBuilder sb = new StringBuilder();
+		String readline = "";
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			while (br.ready()) {
+				readline = br.readLine();
+				sb.append(readline);
+			}
+			br.close();
+		} catch (IOException ie) {
+			System.out.println("converts failed.");
+		}
+		return sb.toString();
+	}
+
 	/**
 	 * 获取格式化的文件大小
+	 * 
 	 * @param length
 	 * @return
 	 */
 	public static String getSize(long length) {
-		float SIZE_BT=1024L;
-		float SIZE_KB=SIZE_BT * 1024.0f;
-		float SIZE_MB=SIZE_KB * 1024.0f;
-		float SIZE_GB=SIZE_MB * 1024.0f;
-		float SIZE_TB=SIZE_GB * 1024.0f;
-		int SACLE=2;
-		if(length>=0 && length < SIZE_BT) {
-			return (double)(Math.round(length*10)/10.0)  +"B";
-		} else if(length>=SIZE_BT&&length<SIZE_KB) {
-			return (double)(Math.round((length/SIZE_BT)*10)/10.0)  +"KB";//length/SIZE_BT+"KB";
-		} else if(length>=SIZE_KB&&length<SIZE_MB) {
-			return (double)(Math.round((length/SIZE_KB)*10)/10.0)  +"MB";//length/SIZE_KB+"MB";
-		} else if(length>=SIZE_MB&&length<SIZE_GB) {
-			BigDecimal longs=new BigDecimal(Double.valueOf(length+"").toString());
-			BigDecimal sizeMB=new BigDecimal(Double.valueOf(SIZE_MB+"").toString());
-			String result=longs.divide(sizeMB, SACLE,BigDecimal.ROUND_HALF_UP).toString();
-			//double result=this.length/(double)SIZE_MB;
-			return result+"GB";
+		float SIZE_BT = 1024L;
+		float SIZE_KB = SIZE_BT * 1024.0f;
+		float SIZE_MB = SIZE_KB * 1024.0f;
+		float SIZE_GB = SIZE_MB * 1024.0f;
+		float SIZE_TB = SIZE_GB * 1024.0f;
+		int SACLE = 2;
+		if (length >= 0 && length < SIZE_BT) {
+			return (double) (Math.round(length * 10) / 10.0) + "B";
+		} else if (length >= SIZE_BT && length < SIZE_KB) {
+			return (double) (Math.round((length / SIZE_BT) * 10) / 10.0) + "KB";// length/SIZE_BT+"KB";
+		} else if (length >= SIZE_KB && length < SIZE_MB) {
+			return (double) (Math.round((length / SIZE_KB) * 10) / 10.0) + "MB";// length/SIZE_KB+"MB";
+		} else if (length >= SIZE_MB && length < SIZE_GB) {
+			BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
+					.toString());
+			BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_MB + "")
+					.toString());
+			String result = longs.divide(sizeMB, SACLE,
+					BigDecimal.ROUND_HALF_UP).toString();
+			// double result=this.length/(double)SIZE_MB;
+			return result + "GB";
 		} else {
-			BigDecimal longs=new BigDecimal(Double.valueOf(length+"").toString());
-			BigDecimal sizeMB=new BigDecimal(Double.valueOf(SIZE_GB+"").toString());
-			String result=longs.divide(sizeMB, SACLE,BigDecimal.ROUND_HALF_UP).toString();
-			return result+"TB";
+			BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
+					.toString());
+			BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_GB + "")
+					.toString());
+			String result = longs.divide(sizeMB, SACLE,
+					BigDecimal.ROUND_HALF_UP).toString();
+			return result + "TB";
 		}
 	}
+
 	@SuppressLint("DefaultLocale")
 	/**
 	 * 将格式化的文件大小转换为long
 	 * @param sizeStr
 	 * @return
 	 */
-	public static long getSize(String sizeStr){
-		if(sizeStr!=null&&sizeStr.trim().length()>0){
-			String unit=sizeStr.replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
-			String size=sizeStr.substring(0, sizeStr.indexOf(unit));
-			if(TextUtils.isEmpty(size))return -1;
-			float s=Float.parseFloat(size);
-			if("B".equals(unit.toLowerCase())){
+	public static long getSize(String sizeStr) {
+		if (sizeStr != null && sizeStr.trim().length() > 0) {
+			String unit = sizeStr
+					.replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
+			String size = sizeStr.substring(0, sizeStr.indexOf(unit));
+			if (TextUtils.isEmpty(size))
+				return -1;
+			float s = Float.parseFloat(size);
+			if ("B".equals(unit.toLowerCase())) {
 				return (long) s;
-			}else if("KB".equals(unit.toLowerCase())||"K".equals(unit.toLowerCase())){
-				return (long) (s*1024);
-			}else if("MB".equals(unit.toLowerCase())||"M".equals(unit.toLowerCase())){
-				return (long) (s*1024*1024);
-			}else if("GB".equals(unit.toLowerCase())||"G".equals(unit.toLowerCase())){
-				return (long) (s*1024*1024*1024);
-			}else if("TB".equals(unit.toLowerCase())||"T".equals(unit.toLowerCase())){
-				return (long) (s*1024*1024*1024*1024);
-			}	
+			} else if ("KB".equals(unit.toLowerCase())
+					|| "K".equals(unit.toLowerCase())) {
+				return (long) (s * 1024);
+			} else if ("MB".equals(unit.toLowerCase())
+					|| "M".equals(unit.toLowerCase())) {
+				return (long) (s * 1024 * 1024);
+			} else if ("GB".equals(unit.toLowerCase())
+					|| "G".equals(unit.toLowerCase())) {
+				return (long) (s * 1024 * 1024 * 1024);
+			} else if ("TB".equals(unit.toLowerCase())
+					|| "T".equals(unit.toLowerCase())) {
+				return (long) (s * 1024 * 1024 * 1024 * 1024);
+			}
 		}
 		return -1;
 	}
-	
+
 	static class FileDeleter extends AsyncTask<String, Void, Void> {
 
 		@Override
 		protected Void doInBackground(String... params) {
 			delFile(params[0]);
 			return null;
-		}	
+		}
 	}
 }

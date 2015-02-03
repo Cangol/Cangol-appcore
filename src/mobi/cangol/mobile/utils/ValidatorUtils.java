@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2013 xuewu.wei.
+ * Copyright (c) 2013 Cangol
  * 
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,14 @@ import android.widget.TextView;
 
 /**
  * @Description Validatorutils.java
- * @author xuewu.wei
+ * @author Cangol
  * @date 2013-7-14
  */
 public class ValidatorUtils {
-	
+
 	/**
 	 * 验证字符串是否不为空
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -40,24 +41,26 @@ public class ValidatorUtils {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 验证消息字符串大小(5-140)
+	 * 
 	 * @param str
 	 * @return
 	 */
 	public static boolean validateContent(String str) {
 		if (TextUtils.isEmpty(str)) {
 			return false;
-		}else if (str.length() >= 5 && str.length() <= 140) {
+		} else if (str.length() >= 5 && str.length() <= 140) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 验证昵称格式是否正确(长度5-20,所有单词字符，包括中文，中文算2个字符)
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -80,24 +83,25 @@ public class ValidatorUtils {
 			}
 		}
 
-		if (num <= MAXCOUNT&&num>5)
+		if (num <= MAXCOUNT && num > 5)
 			flag = false;
 
 		return flag;
 	}
-	
+
 	/**
 	 * 验证帐号(手机号码或邮箱)格式是否正确
+	 * 
 	 * @param str
 	 * @return
 	 */
 	public static boolean validateAccount(String str) {
-        return validateMobile(str)||validateEmail(str);
+		return validateMobile(str) || validateEmail(str);
 	}
-	
+
 	/**
-	 * 验证密码格式是否正确(可包含大小写字母、数字、下划线、小数点)
-	 * ^[a-zA-Z0-9_.]{5,20}$
+	 * 验证密码格式是否正确(可包含大小写字母、数字、下划线、小数点) ^[a-zA-Z0-9_.]{5,20}$
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -110,9 +114,10 @@ public class ValidatorUtils {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 验证电话号码格式是否正确
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -125,24 +130,26 @@ public class ValidatorUtils {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 验证手机号码格式是否正确
+	 * 
 	 * @param str
 	 * @return
 	 */
 	public static boolean validateMobile(String str) {
-        Pattern p  = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号  
-        Matcher m = p.matcher(str);  
-        if (m.matches()) {
+		Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
+		Matcher m = p.matcher(str);
+		if (m.matches()) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 验证email地址格式是否正确
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -155,9 +162,10 @@ public class ValidatorUtils {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 验证web url地址格式是否正确
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -170,9 +178,10 @@ public class ValidatorUtils {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 验证IP地址格式正确 255.255.255.255
+	 * 
 	 * @param str
 	 * @return
 	 */
