@@ -51,7 +51,6 @@ public class GlobalDataImpl implements GlobalData {
 	private final static  String SER = ".ser";
 	private Context mContext = null;
 	private Session mSession=null;
-	private SharedPreferences mShared;
 	private ConfigService mConfigService=null;
 	private boolean debug=false;
 	@Override
@@ -62,8 +61,11 @@ public class GlobalDataImpl implements GlobalData {
 		mSession=app.mSession;
 		
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
-		mShared=mContext.getSharedPreferences(mConfigService.getSharedName(), Context.MODE_PRIVATE);
+		
 		refresh();
+	}
+	private SharedPreferences getShared(){
+		return mContext.getSharedPreferences(mConfigService.getSharedName(), Context.MODE_PRIVATE);
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {
@@ -86,7 +88,7 @@ public class GlobalDataImpl implements GlobalData {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void save(String key, Object value) {
-		Editor editor=mShared.edit();
+		Editor editor=getShared().edit();
 		if(value instanceof Float){
 			editor.putFloat(key, (Float) value).commit();
 		}else if(value instanceof Boolean){
@@ -125,7 +127,7 @@ public class GlobalDataImpl implements GlobalData {
 
 	@Override
 	public void refresh() {
-		Map<String,?> map=mShared.getAll();
+		Map<String,?> map=getShared().getAll();
 		mSession.clear();
 		mSession.putAll(map);
 		
