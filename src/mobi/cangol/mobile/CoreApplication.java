@@ -40,7 +40,7 @@ public class CoreApplication extends Application {
 	private AppServiceManager mAppServiceManager;
 	public Session mSession;
 	private boolean mDevMode=true;
-	public List<WeakReference<Activity>> activityManager;
+	private List<WeakReference<Activity>> activityManager;
 	@Override
 	public void onCreate() {
 		if(mDevMode&&Build.VERSION.SDK_INT>=9){
@@ -102,6 +102,14 @@ public class CoreApplication extends Application {
 			}
 		}
 	}
+	public boolean existActivityFromManager(Activity act) {
+		for (final WeakReference<Activity> actR : activityManager) {
+			if (actR != null&&act.equals(actR.get())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public void exit() {
 		Log.d("exit");
 		mSession.clear();
@@ -111,6 +119,14 @@ public class CoreApplication extends Application {
 		//0 正常推退出
 		System.exit(0);
 	}
+	
+	/**
+	 * @return the activityManager
+	 */
+	public List<WeakReference<Activity>> getActivityManager() {
+		return activityManager;
+	}
+
 	public void setDevMode(boolean devMode) {
 		this.mDevMode = devMode;
 	}
