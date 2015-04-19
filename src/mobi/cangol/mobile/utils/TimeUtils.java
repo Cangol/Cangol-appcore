@@ -421,6 +421,8 @@ public class TimeUtils {
 	 * @return
 	 */
 	public static String convertToString(String strTime) {
+		if (null == strTime || "".equals(strTime))
+			return "";
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date currentTime = null;
 		Date commentTime = null;

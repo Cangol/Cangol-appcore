@@ -15,8 +15,10 @@
  */
 package mobi.cangol.mobile.utils;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.util.List;
@@ -34,6 +36,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -105,22 +108,20 @@ public class DeviceInfo {
 	 * @return
 	 */
 	public static String getCPUInfo() {
-		try
-		{
-			byte[] bs = new byte[1024];
-			RandomAccessFile reader = new RandomAccessFile("/proc/cpuinfo", "r");
-			reader.read(bs);
-			String ret = new String(bs);
-			int index = ret.indexOf(0);
-			if(index != -1) {
-				return ret.substring(0, index);
-			} else {
-				return ret;
+		try {
+			FileReader fr = new FileReader("/proc/cpuinfo");
+			BufferedReader br = new BufferedReader(fr);
+			String text = br.readLine();
+			String[] array = text.split(":\\s+", 2);
+			for (int i = 0; i < array.length; i++) {
 			}
-		}catch (IOException e){
+			return array[1];
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "";
+		return null;
 	}
 	/**
 	 * 获取设备分辨率
@@ -132,11 +133,10 @@ public class DeviceInfo {
 				.getSystemService(Context.WINDOW_SERVICE);
 
 		Display display = wm.getDefaultDisplay();
+		Point point = new Point(); 
+		display.getRealSize(point);
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		display.getMetrics(metrics);
-
-		return metrics.heightPixels + "x" + metrics.widthPixels;
+		return point.y + "x" + point.x;
 	}
 	/**
 	 * 获取状态栏高度
@@ -156,18 +156,26 @@ public class DeviceInfo {
 	 * @param context
 	 * @return
 	 */
-	public static float getFloatDensity(Context context) {
+	public static float getDensity(Context context) {
 		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); 
 		return displayMetrics.density;
 	}
 	/**
-	 * 获取设备Density类型
+	 * 获取设备Density
 	 * @param context
 	 * @return
 	 */
-    public static String getDensity(Context context) {
+	public static float getDensityDpi(Context context) {
+		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); 
+		return displayMetrics.densityDpi;
+	}
+	/**
+	 * 获取设备Densitydpi 类型
+	 * @param context
+	 * @return
+	 */
+    public static String getDensityDpiStr(Context context) {
         int density = context.getResources().getDisplayMetrics().densityDpi;
-
         switch (density) {
             case DisplayMetrics.DENSITY_LOW:
                 return "LDPI";
@@ -186,6 +194,23 @@ public class DeviceInfo {
             default:
                 return "";
         }
+    }
+    /**
+     * 获取屏幕物理尺寸 单位英寸
+     * @param context
+     * @return
+     */
+    public static String getScreenSize(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int width=dm.widthPixels;
+        int height=dm.heightPixels;
+        double x = Math.pow(width,2);
+        double y = Math.pow(height,2);
+        double diagonal = Math.sqrt(x+y);
+
+        int dens=dm.densityDpi;
+        double screenInches = diagonal/(double)dens;
+        return String.format("%.2f", screenInches);
     }
     /**
      * 获取设备运营商
