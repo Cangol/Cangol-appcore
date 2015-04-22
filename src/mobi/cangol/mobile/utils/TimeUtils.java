@@ -420,7 +420,7 @@ public class TimeUtils {
 	 * @param strTime
 	 * @return
 	 */
-	public static String convertToString(String strTime) {
+	public static String formatLatelyTime(String strTime) {
 		if (null == strTime || "".equals(strTime))
 			return "";
 		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

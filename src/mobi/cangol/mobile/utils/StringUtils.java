@@ -67,6 +67,33 @@ public class StringUtils {
 		return sb.toString();
 	}
 	/**
+	 * 格式化为中文数量
+	 * @param time
+	 * @return
+	 */
+	public static String formatZhNum(long num) {
+		long yi = num / (10000*10000);
+		long qianwan = (num %(10000*10000))/(1000*10000);
+		long wan = num / (10000);
+		long qian=(num%(10000))/(1000);
+		
+		if(yi>0){
+			if(qianwan>0){
+				return yi+"."+qianwan+"亿";
+			}else{
+				return yi+"亿";
+			}
+		}else if(wan>0){
+			if(qian>0){
+				return wan+"."+qian+"万";
+			}else{
+				return wan+"万";
+			}
+		}else{
+			return ""+num;
+		}
+	}
+	/**
 	 * format speed   /s
 	 * @param value
 	 * @return

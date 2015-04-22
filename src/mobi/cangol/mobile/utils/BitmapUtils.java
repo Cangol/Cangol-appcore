@@ -29,10 +29,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import mobi.cangol.mobile.logging.Log;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -48,6 +48,7 @@ import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
 
@@ -557,5 +558,60 @@ public class BitmapUtils {
         Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height  - statusBarHeight);  
         view.destroyDrawingCache();  
         return b;  
+	}
+	/**
+	 * Bitmap转成String
+	 * @param bitmap
+	 * @return
+	 */
+	public static String bitmapToString(Bitmap bitmap)
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
+		bitmap.compress(CompressFormat.JPEG, 100, baos);
+		byte[] bmByte = baos.toByteArray();// 转为byte数组
+		try {
+			baos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			bitmap.recycle();
+			bitmap = null;
+		}
+		return Base64.encodeToString(bmByte, Base64.DEFAULT);
+	}
+	/**
+	 * 图片文件转string
+	 * @param imagePath
+	 * @return
+	 */
+	public static String imageFileToString(String imagePath) {
+		Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bitmap.compress(CompressFormat.JPEG, 100, baos);
+		try {
+			baos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			bitmap.recycle();
+			bitmap = null;
+		}
+		return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+	}
+	/**
+	 * String转成Bitmap
+	 * @param st
+	 */
+	public static Bitmap stringToBitmap(String string){
+		Bitmap bitmap = null;
+		try{
+			byte[] bitmapArray;
+			bitmapArray = Base64.decode(string, Base64.DEFAULT);
+			bitmap =BitmapFactory.decodeByteArray(bitmapArray, 0,bitmapArray.length);
+			return bitmap;
+		}catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
