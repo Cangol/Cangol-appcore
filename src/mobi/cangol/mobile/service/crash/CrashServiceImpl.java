@@ -151,7 +151,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		error.position=ex.getStackTrace()[0].toString();
 		error.context=throwableToString(ex);
 		error.timestamp=TimeUtils.getCurrentTime2();
-		error.fatal="";
+		error.fatal="0";
 		error.path=mConfigService.getTempDir()+File.separator+TimeUtils.getCurrentTime2()+_CRASH;
 		return error;
 	}
@@ -179,7 +179,8 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 				for(final ReportError errorReport:result){
 					if(!TextUtils.isEmpty(mUrl))report(errorReport);
 					if(crashReportListener!=null)
-						crashReportListener.report(errorReport.error,
+						crashReportListener.report(errorReport.path,
+								errorReport.error,
 								errorReport.position,
 								errorReport.context,
 								errorReport.timestamp,

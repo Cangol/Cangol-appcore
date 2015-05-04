@@ -18,5 +18,5 @@ package mobi.cangol.mobile.service.crash;
 
 public interface CrashReportListener {
 
-	void report(String error,String position,String context,String timestamp,String fatal);
+	void report(String path,String error,String position,String context,String timestamp,String fatal);
 }
