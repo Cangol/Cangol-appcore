@@ -294,7 +294,7 @@ public class TimeUtils {
 	 * @param time
 	 * @return
 	 */
-	public static String countTime(String time) {
+	public static String formatRecentTime(String time) {
 		if (null == time || "".equals(time))
 			return "";
 		Date commentTime = null;

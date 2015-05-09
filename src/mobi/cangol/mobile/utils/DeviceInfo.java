@@ -108,20 +108,26 @@ public class DeviceInfo {
 	 * @return
 	 */
 	public static String getCPUInfo() {
+		String str1 = "/proc/cpuinfo";
+		String str2 = "";
+		String[] cpuInfo = { "", "" };
+		String[] arrayOfString;
 		try {
-			FileReader fr = new FileReader("/proc/cpuinfo");
-			BufferedReader br = new BufferedReader(fr);
-			String text = br.readLine();
-			String[] array = text.split(":\\s+", 2);
-			for (int i = 0; i < array.length; i++) {
+			FileReader fr = new FileReader(str1);
+			BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
+			str2 = localBufferedReader.readLine();
+			arrayOfString = str2.split("\\s+");
+			for (int i = 2; i < arrayOfString.length; i++) {
+				cpuInfo[0] = cpuInfo[0] + arrayOfString[i] + " ";
 			}
-			return array[1];
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			str2 = localBufferedReader.readLine();
+			arrayOfString = str2.split("\\s+");
+			cpuInfo[1] += arrayOfString[2];
+			localBufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return cpuInfo[0];
 	}
 	/**
 	 * 获取设备分辨率

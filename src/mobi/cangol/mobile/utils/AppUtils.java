@@ -17,16 +17,36 @@ package mobi.cangol.mobile.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 
 public class AppUtils {
+	/**
+	 * 修改locale ,修改后只对新生成activity有效，旧的activity需要重启
+	 * @param resources
+	 * @param locale
+	 */
+	public static void changeLocale(Context context, Locale locale) {
+        Configuration config = context.getResources().getConfiguration();
+        DisplayMetrics dm =  context.getResources().getDisplayMetrics();
+        config.locale = locale;
+        context.getResources().updateConfiguration(config, dm);
+        
+        Application app= (Application) context.getApplicationContext();
+        app.onConfigurationChanged(config);
+        
+    }
 	/**
 	 * 安装apk文件
 	 * @param context
