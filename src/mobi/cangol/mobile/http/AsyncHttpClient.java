@@ -84,7 +84,7 @@ public class AsyncHttpClient {
 	public final static  String TAG = "AsyncHttpClient";
     private final DefaultHttpClient httpClient;
     private final HttpContext httpContext;
-    private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
+    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
     private final Map<String, String> clientHeaderMap;
     
     private Pool threadPool;
@@ -104,7 +104,7 @@ public class AsyncHttpClient {
         httpContext = new SyncBasicHttpContext(new BasicHttpContext());
         httpClient = HttpClientFactory.getDefaultHttpClient();
         threadPool = PoolManager.getPool(group);
-        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
+        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
         clientHeaderMap = new HashMap<String, String>();
     }
 
@@ -217,7 +217,7 @@ public class AsyncHttpClient {
      * @param context the android Context instance associated to the request.
      * @param mayInterruptIfRunning specifies if active requests should be cancelled along with pending requests.
      */
-    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
+    public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if(requestList != null) {
             for(WeakReference<Future<?>> requestRef : requestList) {
@@ -271,7 +271,7 @@ public class AsyncHttpClient {
      * @param params additional GET parameters to send with the request.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void get(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public void get(Object context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         sendRequest(httpClient, httpContext, new HttpGet(getUrlWithQueryString(url, params)), null, responseHandler, context);
     }
     
@@ -323,7 +323,7 @@ public class AsyncHttpClient {
      * @param params additional POST parameters or files to send with the request.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void post(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public void post(Object context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         post(context, url, paramsToEntity(params), null, responseHandler);
     }
 
@@ -335,7 +335,7 @@ public class AsyncHttpClient {
      * @param contentType the content type of the payload you are sending, for example application/json if sending a json payload.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
+    public void post(Object context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         sendRequest(httpClient, httpContext, addEntityToRequestBase(new HttpPost(url), entity), contentType, responseHandler, context);
     }
 
@@ -413,7 +413,7 @@ public class AsyncHttpClient {
      * @param params additional PUT parameters or files to send with the request.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void put(Context context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public void put(Object context, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         put(context, url, paramsToEntity(params), null, responseHandler);
     }
 
@@ -426,7 +426,7 @@ public class AsyncHttpClient {
      * @param contentType the content type of the payload you are sending, for example application/json if sending a json payload.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void put(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
+    public void put(Object context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         sendRequest(httpClient, httpContext, addEntityToRequestBase(new HttpPut(url), entity), contentType, responseHandler, context);
     }
     
@@ -440,7 +440,7 @@ public class AsyncHttpClient {
      * @param contentType the content type of the payload you are sending, for example application/json if sending a json payload.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void put(Context context, String url,Header[] headers, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
+    public void put(Object context, String url,Header[] headers, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         HttpEntityEnclosingRequestBase request = addEntityToRequestBase(new HttpPut(url), entity);
         if(headers != null) request.setHeaders(headers);
         sendRequest(httpClient, httpContext, request, contentType, responseHandler, context);
@@ -465,7 +465,7 @@ public class AsyncHttpClient {
      * @param url the URL to send the request to.
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void delete(Context context, String url, AsyncHttpResponseHandler responseHandler) {
+    public void delete(Object context, String url, AsyncHttpResponseHandler responseHandler) {
         final HttpDelete delete = new HttpDelete(url);
         sendRequest(httpClient, httpContext, delete, null, responseHandler, context);
     }
@@ -477,7 +477,7 @@ public class AsyncHttpClient {
      * @param headers set one-time headers for this request
      * @param responseHandler the response handler instance that should handle the response.
      */
-    public void delete(Context context, String url, Header[] headers, AsyncHttpResponseHandler responseHandler) {
+    public void delete(Object context, String url, Header[] headers, AsyncHttpResponseHandler responseHandler) {
         final HttpDelete delete = new HttpDelete(url);
         if(headers != null) delete.setHeaders(headers);
         sendRequest(httpClient, httpContext, delete, null, responseHandler, context);
@@ -485,7 +485,7 @@ public class AsyncHttpClient {
 
 
     // Private stuff
-    protected void sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, AsyncHttpResponseHandler responseHandler, Context context) {
+    protected void sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, AsyncHttpResponseHandler responseHandler, Object context) {
         if(contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }

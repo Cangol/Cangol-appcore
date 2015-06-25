@@ -4,7 +4,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HttpContext;
 
-import android.content.Context;
 import android.os.Message;
 
 public abstract class SyncHttpClient extends AsyncHttpClient {
@@ -62,13 +61,13 @@ public abstract class SyncHttpClient extends AsyncHttpClient {
 	protected void sendRequest(DefaultHttpClient client,
 			HttpContext httpContext, HttpUriRequest uriRequest,
 			String contentType, AsyncHttpResponseHandler responseHandler,
-			Context context) {
+			Object context) {
 		if (contentType != null) {
 			uriRequest.addHeader("Content-Type", contentType);
 		}
 
 		/*
-		 * will execute the request directly
+		 * will execute the requeObjecst directly
 		 */
 		new AsyncHttpRequest(client, httpContext, uriRequest, responseHandler)
 				.run();
@@ -122,7 +121,7 @@ public abstract class SyncHttpClient extends AsyncHttpClient {
 	}
 
 	public String delete(String url) {
-		this.delete(url, null, responseHandler);
+		this.delete(url, responseHandler);
 		return result;
 	}
 

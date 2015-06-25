@@ -19,7 +19,7 @@ package mobi.cangol.mobile.utils;
  * @Description:文件工具类
  * @version $Revision: 1.0 $
  * @author Cangol
- * @date: 2010-12-10
+ * @date: 2013-12-10
  */
 
 import java.io.BufferedReader;
@@ -39,11 +39,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobi.cangol.mobile.logging.Log;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
 public class FileUtils {
+	public static final String TAG="FileUtils";
+	
 	/**
 	 * 删除文件，可以是单个文件或文件夹
 	 * 
@@ -53,11 +56,10 @@ public class FileUtils {
 	public static boolean delete(String fileName) {
 		File file = new File(fileName);
 		if (!file.exists()) {
-			System.out.println("delete File fail! " + fileName + " not exist");
+			Log.d(TAG,"delete File fail! " + fileName + " not exist");
 			return false;
 		} else {
 			if (file.isFile()) {
-
 				return deleteFile(fileName);
 			} else {
 				return deleteDirectory(fileName);
@@ -75,10 +77,10 @@ public class FileUtils {
 		File file = new File(fileName);
 		if (file.isFile() && file.exists()) {
 			file.delete();
-			System.out.println("delete single file" + fileName + " success!");
+			Log.d(TAG,"delete single file" + fileName + " success!");
 			return true;
 		} else {
-			System.out.println("delete single file" + fileName + " fail!");
+			Log.d(TAG,"delete single file" + fileName + " fail!");
 			return false;
 		}
 	}
@@ -98,7 +100,7 @@ public class FileUtils {
 		File dirFile = new File(dir);
 		// 如果dir对应的文件不存在，或者不是一个目录，则退出
 		if (!dirFile.exists() || !dirFile.isDirectory()) {
-			System.out.println("delete directory fail " + dir + " not exist");
+			Log.d(TAG,"delete directory fail " + dir + " not exist");
 			return false;
 		}
 		boolean flag = true;
@@ -122,16 +124,16 @@ public class FileUtils {
 		}
 
 		if (!flag) {
-			System.out.println("delete directory fail");
+			Log.d(TAG,"delete directory fail");
 			return false;
 		}
 
 		// 删除当前目录
 		if (dirFile.delete()) {
-			System.out.println("delete directory " + dir + " success!");
+			Log.d(TAG,"delete directory " + dir + " success!");
 			return true;
 		} else {
-			System.out.println("delete directory " + dir + " fail!");
+			Log.d(TAG,"delete directory " + dir + " fail!");
 			return false;
 		}
 	}
@@ -153,13 +155,12 @@ public class FileUtils {
 				byte[] buffer = new byte[1444];
 				while ((byteread = inStream.read(buffer)) != -1) {
 					bytesum += byteread; // 字节数 文件大小
-					System.out.println(bytesum);
 					fs.write(buffer, 0, byteread);
 				}
 				inStream.close();
 			}
 		} catch (Exception e) {
-			System.out.println("copy file error!");
+			Log.d(TAG,"copy file error!");
 			e.printStackTrace();
 		}
 	}
@@ -180,7 +181,7 @@ public class FileUtils {
 				myFilePath.mkdirs();
 			}
 		} catch (Exception e) {
-			System.out.println("新建目录操作出错 ");
+			Log.d(TAG,"新建目录操作出错 ");
 			e.printStackTrace();
 		}
 	}
@@ -210,7 +211,7 @@ public class FileUtils {
 			resultFile.close();
 
 		} catch (Exception e) {
-			System.out.println("新建目录操作出错 ");
+			Log.d(TAG,"新建目录操作出错 ");
 			e.printStackTrace();
 
 		}
@@ -234,7 +235,7 @@ public class FileUtils {
 			myDelFile.delete();
 
 		} catch (Exception e) {
-			System.out.println("删除文件操作出错 ");
+			Log.d(TAG,"删除文件操作出错 ");
 			e.printStackTrace();
 
 		}
@@ -270,7 +271,7 @@ public class FileUtils {
 			myFilePath.delete(); // 删除空文件夹
 
 		} catch (Exception e) {
-			System.out.println("删除文件夹操作出错 ");
+			Log.d(TAG,"删除文件夹操作出错 ");
 			e.printStackTrace();
 
 		}
@@ -351,7 +352,7 @@ public class FileUtils {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("复制整个文件夹内容操作出错 ");
+			Log.d(TAG,"复制整个文件夹内容操作出错 ");
 			e.printStackTrace();
 
 		}
@@ -422,7 +423,7 @@ public class FileUtils {
 	 * @param file
 	 * @param content
 	 */
-	public static void writeStr(File file, String content) {
+	public static void writeString(File file, String content) {
 		FileOutputStream os = null;
 		try {
 			byte[] buffer = content.getBytes("UTF-8");
@@ -520,7 +521,7 @@ public class FileUtils {
 	 * @param is
 	 * @return
 	 */
-	public static String converts(InputStream is) {
+	public static String convertString(InputStream is) {
 		StringBuilder sb = new StringBuilder();
 		String readline = "";
 		try {
@@ -531,7 +532,7 @@ public class FileUtils {
 			}
 			br.close();
 		} catch (IOException ie) {
-			System.out.println("converts failed.");
+			Log.d(TAG,"converts failed.");
 		}
 		return sb.toString();
 	}
@@ -542,7 +543,7 @@ public class FileUtils {
 	 * @param length
 	 * @return
 	 */
-	public static String getSize(long length) {
+	public static String formatSize(long length) {
 		float SIZE_BT = 1024L;
 		float SIZE_KB = SIZE_BT * 1024.0f;
 		float SIZE_MB = SIZE_KB * 1024.0f;
@@ -581,7 +582,7 @@ public class FileUtils {
 	 * @param sizeStr
 	 * @return
 	 */
-	public static long getSize(String sizeStr) {
+	public static long formatSize(String sizeStr) {
 		if (sizeStr != null && sizeStr.trim().length() > 0) {
 			String unit = sizeStr
 					.replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
@@ -607,7 +608,29 @@ public class FileUtils {
 		}
 		return -1;
 	}
-
+	/**
+	 * 获取文件夹中总文件大小
+	 * @param file
+	 * @return 文件大小 单位字节
+	 * @throws Exception
+	 */
+	public static long getFolderSize(File file) throws Exception {
+		long size = 0;
+		try {
+			File[] fileList = file.listFiles();
+			for (int i = 0; i < fileList.length; i++) {
+				if (fileList[i].isDirectory()) {
+					size = size + getFolderSize(fileList[i]);
+				} else {
+					size = size + fileList[i].length();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return size;
+	}
+	
 	static class FileDeleter extends AsyncTask<String, Void, Void> {
 
 		@Override

@@ -53,26 +53,57 @@ public class DataCleanManager {
 	public static void cleanCustomCache(String filePath) {
 		deleteFilesByDirectory(new File(filePath));
 	}
-
 	/** * 清除本应用所有的数据 * * @param context * @param filepath */
 	public static void cleanApplicationData(Context context, String... filepath) {
 		cleanInternalCache(context);
 		cleanExternalCache(context);
-		cleanDatabases(context);
-		cleanSharedPreference(context);
-		cleanFiles(context);
+		//cleanDatabases(context);
+		//cleanSharedPreference(context);
+		//cleanFiles(context);
 		for (String filePath : filepath) {
 			cleanCustomCache(filePath);
 		}
 	}
 
-	/** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件，将不做处理 * * @param directory */
+	/** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件夹，将递归删除文件 * * @param directory */
 	private static void deleteFilesByDirectory(File directory) {
 		Log.d("deleteFilesByDirectory="+directory.getAbsolutePath());
 		if (directory != null && directory.exists() && directory.isDirectory()) {
 			for (File item : directory.listFiles()) {
-				Log.d("delete "+item.getAbsoluteFile()+",result="+item.delete());
+				if(!item.isDirectory()){
+					Log.d("delete "+item.getAbsoluteFile()+",result="+item.delete());
+				}else{
+					deleteFilesByDirectory(item);
+				}
 			}
 		}
+	}
+	public static long getFolderSize(File file) {
+		long size = 0;
+		try {
+			for (File item : file.listFiles()) {
+				if(!item.isDirectory()){
+					size = size + getFolderSize(item);
+				}else{
+					size = size + item.length();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return size;
+	}
+	
+	public static long getAllCacheSize(Context context, String... filepath) {
+		long size = 0;
+		size=size+getFolderSize(context.getCacheDir());
+		size=size+getFolderSize(context.getExternalCacheDir());
+		//size=size+getFolderSize(context.getFilesDir());
+		//size=size+getFolderSize(new File("/data/data/"+ context.getPackageName() + "/shared_prefs"));
+		//size=size+getFolderSize(new File("/data/data/"+ context.getPackageName() + "/databases"));
+		for (String filePath : filepath) {
+			size=size+getFolderSize(new File(filePath));
+		}
+		return size;
 	}
 }
