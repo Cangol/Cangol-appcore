@@ -505,7 +505,7 @@ public class AsyncHttpClient {
     }
 
     public static String getUrlWithQueryString(String url, RequestParams params) {
-        if(params != null) {
+        if(params != null&&!params.isEmpty()) {
             String paramString = params.getParamString();
             url += "?" + paramString;
         }

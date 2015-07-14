@@ -169,7 +169,9 @@ public class RequestParams {
         urlParams.remove(key);
         fileParams.remove(key);
     }
-    
+    public boolean isEmpty(){
+        return urlParams.isEmpty()&&fileParams.isEmpty();
+    }
     public String toDebugString() {
         StringBuilder result = new StringBuilder();
         for(ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
