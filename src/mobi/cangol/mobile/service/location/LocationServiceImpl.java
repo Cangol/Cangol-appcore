@@ -89,7 +89,7 @@ public class LocationServiceImpl implements LocationService{
 	}
 	@Override
 	public String getName() {
-		return "LocationService";
+		return TAG;
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class LocationServiceImpl implements LocationService{
 		mServiceHandler.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut);
 	}
 
-	protected void getLocationAddress(Location location) {
+	private void getLocationAddress(Location location) {
 		final double lat=location.getLatitude();
 		final double lng=location.getLongitude();
 		//执行网络请求反查地址（百度地图API|Google地图API）

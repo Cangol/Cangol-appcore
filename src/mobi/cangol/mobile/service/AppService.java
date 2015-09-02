@@ -55,15 +55,43 @@ public interface AppService {
 	 */
 	public final static String GLOBAL_DATA = "GlobalData";
 
+	/**
+	 * 当创建时
+	 * 
+	 * @param context
+	 */
 	void onCreate(Context context);
 
+	/**
+	 * 获取应用服务名称
+	 * 
+	 * @return
+	 */
 	String getName();
 
+	/**
+	 * 当销毁时
+	 */
 	void onDestory();
 
+	/**
+	 * 设置debug模式
+	 * 
+	 * @param debug
+	 */
 	void setDebug(boolean debug);
 
+	/**
+	 * 初始化应用服务属性
+	 * 
+	 * @param serviceProperty
+	 */
 	void init(ServiceProperty serviceProperty);
 
+	/**
+	 * 获取应用服务属性
+	 * 
+	 * @return
+	 */
 	ServiceProperty getServiceProperty();
 }

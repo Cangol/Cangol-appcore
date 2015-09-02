@@ -23,6 +23,12 @@ public class DeleteBuilder {
 		paraValue = new ArrayList<Object>();
 		condList = new ArrayList<String>();
 	}
+	/**
+	 * 
+	 * @param pName 字段名称
+	 * @param pValue 字段值
+	 * @param pType 查询类型{}
+	 */
 	public void addQuery(String pName, Object pValue, String pType) {
 		addQuery(pName, pValue, pType, false);
 	}
@@ -75,7 +81,13 @@ public class DeleteBuilder {
 			condList.add(isOr ? " or " : " and ");
 		}
 	}
-	
+	/**
+	 * 添加查询条件
+	 * @param pName 字段名称
+	 * @param pValue 字段值
+	 * @param pType 查询类型{}
+	 * @param isOr
+	 */
 	public void addQuery(String pName, Object pValue1,Object pValue2 ,String pType,boolean isOr) {
 		if (pName!= null && !pName.toString().equals("") && pValue1 != null && pValue2!= null && !pValue1.toString().equals("") && !pValue2.toString().equals("")) {
 			if (pType.equals("between")) {
@@ -84,7 +96,7 @@ public class DeleteBuilder {
 			condList.add(isOr ? " or " : " and ");
 		}
 	}
-	public String getWhere() {
+	protected String getWhere() {
 		StringBuffer sql = new StringBuffer();
     	if (paraKey != null) {
 	    	for (int i = 0; i < paraKey.size(); i++) {
@@ -101,7 +113,7 @@ public class DeleteBuilder {
     	}
 	}
 	
-	public String[] getWhereArgs() {
+	protected String[] getWhereArgs() {
 		if(paraValue!=null){
 			String[] args=new String[paraValue.size()];
 			for (int i = 0; i < paraValue.size(); i++) {
@@ -114,7 +126,7 @@ public class DeleteBuilder {
 		}
 		
 	}
-	public String getTable() {
+	protected String getTable() {
 		return table;
 	}
 	

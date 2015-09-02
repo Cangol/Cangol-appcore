@@ -101,7 +101,7 @@ public class Log {
 		formatLog(android.util.Log.ERROR, tag, msg, t);
 	}
 	
-	public static void formatLog(int logLevel,String tag,String msg,Throwable error){
+	private static void formatLog(int logLevel,String tag,String msg,Throwable error){
 		if (LEVEL > logLevel) return;
 		StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
 		String classname = stackTrace.getClassName();

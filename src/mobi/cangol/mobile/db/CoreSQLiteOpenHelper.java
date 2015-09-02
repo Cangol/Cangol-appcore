@@ -27,9 +27,17 @@ public abstract class CoreSQLiteOpenHelper {
 	 * @return
 	 */
 	protected abstract int getDataBaseVersion();
-	
+	/**
+	 * 创建数据库
+	 * @param db
+	 */
 	public abstract void onCreate(SQLiteDatabase db);
-	
+	/**
+	 * 升级数据库
+	 * @param db
+	 * @param oldVersion
+	 * @param newVersion
+	 */
 	public abstract void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 	/**
 	 * 
@@ -52,12 +60,18 @@ public abstract class CoreSQLiteOpenHelper {
 			CoreSQLiteOpenHelper.this.onUpgrade(db,oldVersion,newVersion);
 		}
 	}
-	
+	/**
+	 * 初始化数据库
+	 * @param context
+	 */
 	public void open(Context context) {
 		Log.i(TAG, "Open database '" + getDataBaseName() + "'");
 		mDbHelper = new CreateDBHelper(context);
 	}
-	
+	/**
+	 * 获取读写数据库
+	 * @return
+	 */
 	public SQLiteDatabase getWritableDatabase() {
 		if(mDbHelper!=null){
 			return mDbHelper.getWritableDatabase();
@@ -65,7 +79,10 @@ public abstract class CoreSQLiteOpenHelper {
 			throw new IllegalStateException("mDbHelper==null,please invoke open method");
 		}
 	}
-	
+	/**
+	 * 获取只读数据库
+	 * @return
+	 */
 	public SQLiteDatabase getReadableDatabase() {
 		if(mDbHelper!=null){
 			return mDbHelper.getReadableDatabase();
@@ -73,11 +90,17 @@ public abstract class CoreSQLiteOpenHelper {
 			throw new IllegalStateException("mDbHelper==null,please invoke open method");
 		}
 	}
-	
+	/**
+	 * 获取对象dao
+	 * @param clazz
+	 * @return
+	 */
 	public <T, ID> Dao<T, ID> getDao(Class<T> clazz) {
 		return new DaoImpl<T, ID>(this,clazz);	
 	}
-	
+	/**
+	 * 关闭
+	 */
 	public void close() {
 		if (mDbHelper != null) {
 			Log.i(TAG, "Close database '" + getDataBaseName() + "'");

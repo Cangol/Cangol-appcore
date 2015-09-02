@@ -7,7 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class DatabaseUtils {
-	
+	/**
+	 * 创建表
+	 * @param db
+	 * @param clazz
+	 */
 	public static void createTable(SQLiteDatabase db,Class<?> clazz) {
 		if (clazz.isAnnotationPresent(DatabaseTable.class)){
 			StringBuilder sql=new StringBuilder("CREATE TABLE IF NOT EXISTS ");
@@ -45,7 +49,11 @@ public class DatabaseUtils {
 			throw new IllegalStateException(clazz+" not DatabaseTable Annotation");
 		}
 	}
-	
+	/**
+	 * 获取sqlite对应的数据类型
+	 * @param clazz
+	 * @return
+	 */
 	public static String getDbType(Class<?> clazz) {
 		if(clazz == String.class 
 				|| clazz == Character.class || clazz == char.class 
@@ -63,7 +71,11 @@ public class DatabaseUtils {
 			return "BLOB";
 		}
 	}
-	
+	/**
+	 * 删除表
+	 * @param db
+	 * @param clazz
+	 */
 	public static void dropTable(SQLiteDatabase db,Class<?> clazz) {
 		if (clazz.isAnnotationPresent(DatabaseTable.class)){
 			StringBuilder sql=new StringBuilder("DROP TABLE IF EXISTS ");
@@ -75,6 +87,11 @@ public class DatabaseUtils {
 			throw new IllegalStateException(clazz+" not DatabaseTable Annotation");
 		}
 	}
+	/**
+	 * 获取主键的列名
+	 * @param clazz
+	 * @return
+	 */
 	public static <T> String getIdColumnName(Class<?> clazz){
 		String columnName=null;
 		for (Field field : clazz.getDeclaredFields()) {
@@ -90,6 +107,13 @@ public class DatabaseUtils {
 		}
 		return columnName;
 	}
+	/**
+	 * 获取主键的值
+	 * @param obj
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 */
 	public static Object getIdValue(Object obj) throws IllegalAccessException, IllegalArgumentException{
 		Object value=null;
 		for (Field field : obj.getClass().getDeclaredFields()) {
@@ -105,7 +129,13 @@ public class DatabaseUtils {
 		}
 		return value;
 	}
-	
+	/**
+	 * 获取键值对象
+	 * @param object
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 */
 	public static ContentValues getContentValues(Object object) throws IllegalAccessException, IllegalArgumentException{
 		ContentValues v = new ContentValues();
 		for( Field field : object.getClass().getDeclaredFields() ) {	

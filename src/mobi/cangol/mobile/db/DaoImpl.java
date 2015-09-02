@@ -20,7 +20,7 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		this.mTableName="".equals(dbtable.value())?clazz.getSimpleName():dbtable.value();
 	}
 	
-	public Cursor query(SQLiteDatabase db,QueryBuilder queryBuilder){
+	private Cursor query(SQLiteDatabase db,QueryBuilder queryBuilder){
 		return db.query(queryBuilder.isDistinct(),
 				queryBuilder.getTable(), 	
 				null,

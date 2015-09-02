@@ -14,7 +14,7 @@
 ##AppService
 应用服务:实现方式为依赖注入，这是整个框架的核心内容
 
-* [AnalyticsService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/AnalyticsService.html) 统计服务
+*   [AnalyticsService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/AnalyticsService.html) 统计服务
 * 	[CacheService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/cache/CacheService.html) 缓存服务
 * 	[CrashService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/crash/CrashService.html)  异常处理服务
 * 	[ConfigService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/conf/ConfigService.html)  应用配置服务
@@ -71,7 +71,7 @@
 
 ###Utils工具类
 
-* [AppUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/AppUtils.html) 应用管理工具类
+*   [AppUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/AppUtils.html) 应用管理工具类
 * 	[BitmapUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/BitmapUtils.html) 图像工具类
 * 	[ClassUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ClassUtils.html) Class工具类
 * 	[DeviceInfo](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/DeviceInfo.html) 设备信息工具类

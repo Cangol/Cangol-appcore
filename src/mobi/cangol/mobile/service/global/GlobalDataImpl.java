@@ -22,6 +22,7 @@ import java.util.Set;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.Session;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -45,7 +46,7 @@ import android.os.Build;
  */
 @Service("GlobalData")
 public class GlobalDataImpl implements GlobalData {
-	
+	private final static String TAG="GlobalData";
 	private final static  String JSON = ".json";
 	private final static  String JSONA = ".jsona";
 	private final static  String SER = ".ser";
@@ -73,7 +74,7 @@ public class GlobalDataImpl implements GlobalData {
 	}
 	@Override
 	public String getName() {
-		return "GlobalData";
+		return TAG;
 	}
 
 	@Override
@@ -130,7 +131,7 @@ public class GlobalDataImpl implements GlobalData {
 		Map<String,?> map=getShared().getAll();
 		mSession.clear();
 		mSession.putAll(map);
-		
+		if(debug)Log.d("scan cache file");
 		List<File> list=FileUtils.searchBySuffix(new File(mConfigService.getCacheDir()), null, JSON,JSONA,SER);
 		// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
 		System.gc();

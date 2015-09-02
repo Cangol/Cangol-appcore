@@ -32,5 +32,9 @@ import java.lang.annotation.Target;
 @Documented 
 @Inherited 
 public  @interface DatabaseTable {
+	/**
+	 * 表名 默认为类名
+	 * @return
+	 */
 	 String value() default ""; 
 }

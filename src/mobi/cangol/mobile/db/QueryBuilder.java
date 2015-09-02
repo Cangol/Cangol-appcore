@@ -31,6 +31,12 @@ public class QueryBuilder {
 		paraValue = new ArrayList<Object>();
 		condList = new ArrayList<String>();
 	}
+	/**
+	 * 添加查询条件
+	 * @param pName 字段名称
+	 * @param pValue 字段值
+	 * @param pType 查询类型{}
+	 */
 	public void addQuery(String pName, Object pValue, String pType) {
 		addQuery(pName, pValue, pType, false);
 	}
@@ -83,7 +89,14 @@ public class QueryBuilder {
 			condList.add(isOr ? " or " : " and ");
 		}
 	}
-	
+	/**
+	 * 添加between条件
+	 * @param pName
+	 * @param pValue1
+	 * @param pValue2
+	 * @param pType
+	 * @param isOr
+	 */
 	public void addQuery(String pName, Object pValue1,Object pValue2 ,String pType,boolean isOr) {
 		if (pName!= null && !pName.toString().equals("") && !pValue1.toString().equals("") && !pValue2.toString().equals("")) {
 			if (pType.equals("between")) {
@@ -92,7 +105,7 @@ public class QueryBuilder {
 			condList.add(isOr ? " or " : " and ");
 		}
 	}
-	public String getSelection() {
+	protected String getSelection() {
 		StringBuffer sql = new StringBuffer();
     	if (paraKey != null) {
 	    	for (int i = 0; i < paraKey.size(); i++) {
@@ -109,7 +122,7 @@ public class QueryBuilder {
     	}
 	}
 	
-	public String[] getSelectionArgs() {
+	protected String[] getSelectionArgs() {
 		if(paraValue!=null){
 			String[] args=new String[paraValue.size()];
 			for (int i = 0; i < paraValue.size(); i++) {
@@ -123,37 +136,51 @@ public class QueryBuilder {
 		
 	}
 	
-	public boolean isDistinct() {
+	protected boolean isDistinct() {
 		return distinct;
 	}
+	/**
+	 * 设置distinct
+	 * @param distinct
+	 */
 	public void distinct(boolean distinct) {
 		this.distinct = distinct;
 	}
-	public String getTable() {
+	protected String getTable() {
 		return table;
 	}
-	public void setTable(String table) {
-		this.table = table;
-	}
-	public String getOrderBy() {
+
+	protected String getOrderBy() {
 		return orderBy;
 	}
+	/**
+	 * 设置 orderBy
+	 * @param orderBy
+	 */
 	public void orderBy(String orderBy) {
 		this.orderBy = orderBy;
 	}
-	public String getGroupBy() {
+	protected String getGroupBy() {
 		return groupBy;
 	}
+	/**
+	 * 设置groupBy
+	 * @param groupBy
+	 */
 	public void groupBy(String groupBy) {
 		this.groupBy = groupBy;
 	}
-	public String getHaving() {
+	protected String getHaving() {
 		return having;
 	}
+	/**
+	 * 设置having
+	 * @param having
+	 */
 	public void having(String having) {
 		this.having = having;
 	}
-	public String getLimit() {
+	protected String getLimit() {
 		if(limit!=null){
 			if(offset!=null){
 				return offset+","+limit;
@@ -162,10 +189,17 @@ public class QueryBuilder {
 		}else
 			return null;
 	}
+	/**
+	 * 设置limit
+	 * @param limit
+	 */
 	public void limit(long limit) {
 		this.limit = limit;
 	}
-
+	/**
+	 * 设置offset
+	 * @param offset
+	 */
 	public void offset(long offset) {
 		this.offset = offset;
 	}

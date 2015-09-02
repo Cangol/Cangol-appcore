@@ -76,7 +76,7 @@ public class StatusServiceImpl implements StatusService {
 
 	@Override
 	public String getName() {
-		return "StatusService";
+		return TAG;
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class StatusServiceImpl implements StatusService {
 
 		}
 	}
-
+	@Override
 	public void unregisterStatusListener(StatusListener statusListener) {
 		if (statusListener == null) {
 			throw new IllegalArgumentException("The StatusListener is null.");
@@ -136,14 +136,14 @@ public class StatusServiceImpl implements StatusService {
 		}
 	}
 
-	public void notifyNetworkConnect(Context context) {
+	private void notifyNetworkConnect(Context context) {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
 				listener.networkConnect(context);
 		}
 	}
 
-	public void notifyNetworkDisconnect(Context context) {
+	private void notifyNetworkDisconnect(Context context) {
 		for (StatusListener listener : listeners) {
 			if (listener != null) {
 				listener.networkDisconnect(context);
@@ -153,42 +153,42 @@ public class StatusServiceImpl implements StatusService {
 		}
 	}
 
-	public void notifyNetworkTo3G(Context context) {
+	private void notifyNetworkTo3G(Context context) {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
-				listener.networkToGPRS(context);
+				listener.networkTo3G(context);
 		}
 	}
 
-	public void notifyStorageRemove(Context context) {
+	private void notifyStorageRemove(Context context) {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
 				listener.storageRemove(context);
 		}
 	}
 
-	public void notifyStorageMount(Context context) {
+	private void notifyStorageMount(Context context) {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
 				listener.storageMount(context);
 		}
 	}
 
-	public void notifyCallStateIdle() {
+	private void notifyCallStateIdle() {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
 				listener.callStateIdle();
 		}
 	}
 
-	public void notifyCallStateOffhook() {
+	private void notifyCallStateOffhook() {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
 				listener.callStateOffhook();
 		}
 	}
 
-	public void notifyCallStateRinging() {
+	private void notifyCallStateRinging() {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
 				listener.callStateRinging();

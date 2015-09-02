@@ -57,11 +57,11 @@ public class CacheManagerImpl implements CacheManager {
 	private long mDiskCacheSize;
 	private ServiceProperty mServiceProperty;
 	private Context mContext;
-
+	@Override
 	public void onCreate(Context context) {
 		this.mContext = context;
 	}
-
+	@Override
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty = serviceProperty;
 		String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
@@ -71,12 +71,12 @@ public class CacheManagerImpl implements CacheManager {
 				size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
 	}
 
-	public File getDiskCacheDir() {
-		return mDiskCacheDir;
-	}
-
-	// 设置磁盘缓存位置，并初始化
-	public void setDiskCache(File cacheDir, long cacheSize) {
+	/**
+	 * 设置磁盘缓存位置，并初始化
+	 * @param cacheDir
+	 * @param cacheSize
+	 */
+	private void setDiskCache(File cacheDir, long cacheSize) {
 		this.mDiskCacheDir = cacheDir;
 		this.mDiskCacheSize = cacheSize;
 		mDiskCacheStarting = true;
@@ -84,8 +84,12 @@ public class CacheManagerImpl implements CacheManager {
 		initDiskCache(mDiskCacheDir, mDiskCacheSize);
 	}
 
-	// 初始化磁盘缓存
-	public void initDiskCache(File diskCacheDir, long diskCacheSize) {
+	/**
+	 * 初始化磁盘缓存
+	 * @param diskCacheDir
+	 * @param diskCacheSize
+	 */
+	private void initDiskCache(File diskCacheDir, long diskCacheSize) {
 		// Set up disk cache
 		synchronized (mDiskCacheLock) {
 			if (mDiskLruCache == null || mDiskLruCache.isClosed()) {
@@ -110,7 +114,7 @@ public class CacheManagerImpl implements CacheManager {
 		}
 	}
 
-	// 同步获取缓存
+	@Override
 	public Object getContent(String context, String id) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
@@ -126,7 +130,7 @@ public class CacheManagerImpl implements CacheManager {
 		return obj;
 	}
 
-	// 异步获取缓存
+	@Override
 	public void getContent(final String context, final String id, final CacheLoader cacheLoader) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
@@ -162,7 +166,7 @@ public class CacheManagerImpl implements CacheManager {
 			cacheLoader.returnContent(obj);
 	}
 
-	// 判断是否有缓存（内存缓存和磁盘缓存）
+	@Override
 	public boolean hasContent(String context, String id) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
@@ -177,7 +181,11 @@ public class CacheManagerImpl implements CacheManager {
 		}
 	}
 
-	// 判断磁盘缓存是否含有
+	/**
+	 * 判断磁盘缓存是否含有
+	 * @param id
+	 * @return
+	 */
 	private boolean hasContentFromDiskCache(String id) {
 		final String key = hashKeyForDisk(id);
 		synchronized (mDiskCacheLock) {
@@ -212,7 +220,11 @@ public class CacheManagerImpl implements CacheManager {
 		}
 	}
 
-	// 从磁盘缓存获取
+	/**
+	 * 从磁盘缓存获取
+	 * @param id
+	 * @return
+	 */
 	private Object getContentFromDiskCache(String id) {
 		final String key = hashKeyForDisk(id);
 		synchronized (mDiskCacheLock) {
@@ -248,7 +260,12 @@ public class CacheManagerImpl implements CacheManager {
 
 	}
 
-	// 添加到内存缓存
+	/**
+	 * 添加到内存缓存
+	 * @param context
+	 * @param id
+	 * @param data
+	 */
 	private void addContentToMem(String context, String id, Object data) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
@@ -258,7 +275,10 @@ public class CacheManagerImpl implements CacheManager {
 		mContextMaps.put(context, contextMap);
 	}
 
-	// 添加到磁盘缓存（也添加到内存缓存）
+	/**
+	 * 添加到磁盘缓存（也添加到内存缓存）
+	 */
+	@Override
 	public void addContent(String context, String id, Object data) {
 		Log.i(TAG, "addContent:" + id + "," + data);
 		removeContent(context, id);
@@ -267,8 +287,11 @@ public class CacheManagerImpl implements CacheManager {
 		asyncAddContentToDiskCache(id, data);
 	}
 
-	// context暂停或退出时，持久化context关联的缓存（持久化到磁盘）
-	public void moveContentToDiskCache(String context) {
+	/**
+	 * context暂停或退出时，持久化context关联的缓存（持久化到磁盘）
+	 * @param context
+	 */
+	private void moveContentToDiskCache(String context) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap || contextMap.isEmpty())
 			return;
@@ -283,7 +306,11 @@ public class CacheManagerImpl implements CacheManager {
 		mContextMaps.remove(context);
 	}
 
-	// 异步添加到磁盘缓存
+	/**
+	 * 异步添加到磁盘缓存
+	 * @param id
+	 * @param data
+	 */
 	private void asyncAddContentToDiskCache(final String id, final Object data) {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
@@ -294,7 +321,11 @@ public class CacheManagerImpl implements CacheManager {
 		}.execute();
 	}
 
-	// 添加到磁盘缓存
+	/**
+	 * 添加到磁盘缓存
+	 * @param id
+	 * @param data
+	 */
 	private void addContentToDiskCache(String id, Object data) {
 
 		synchronized (mDiskCacheLock) {
@@ -333,7 +364,7 @@ public class CacheManagerImpl implements CacheManager {
 		}
 	}
 
-	// 移除context缓存
+	@Override
 	public void removeContext(String context) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap || contextMap.isEmpty())
@@ -355,7 +386,7 @@ public class CacheManagerImpl implements CacheManager {
 		contextMap.clear();
 		mContextMaps.remove(context);
 	}
-
+	@Override
 	public void removeContent(String context, String id) {
 		HashMap<String, Object> contextMap = mContextMaps.get(context);
 		if (null == contextMap || contextMap.isEmpty())
@@ -371,7 +402,7 @@ public class CacheManagerImpl implements CacheManager {
 				Log.d(TAG, "cache remove" + key, e);
 		}
 	}
-
+	@Override
 	public long size() {
 		long size = 0;
 		synchronized (mDiskCacheLock) {
@@ -381,8 +412,7 @@ public class CacheManagerImpl implements CacheManager {
 		}
 		return size;
 	}
-
-	// 清除缓存
+	@Override
 	public void clearCache() {
 		if (mContextMaps != null) {
 			mContextMaps.clear();
@@ -407,8 +437,7 @@ public class CacheManagerImpl implements CacheManager {
 			}
 		}
 	}
-
-	// 刷新缓存
+	@Override
 	public void flush() {
 		synchronized (mDiskCacheLock) {
 			if (mDiskLruCache != null) {
@@ -423,8 +452,7 @@ public class CacheManagerImpl implements CacheManager {
 			}
 		}
 	}
-
-	// 关闭缓存
+	@Override
 	public void close() {
 		synchronized (mDiskCacheLock) {
 			if (mDiskLruCache != null) {
@@ -468,7 +496,7 @@ public class CacheManagerImpl implements CacheManager {
 		return sb.toString();
 	}
 
-	public File getDiskCacheDir(Context context, String uniqueName) {
+	private File getDiskCacheDir(Context context, String uniqueName) {
 		// Check if media is mounted or storage is built-in, if so, try and use
 		// external cache dir
 		// otherwise use internal cache dir
@@ -483,7 +511,7 @@ public class CacheManagerImpl implements CacheManager {
 	}
 
 	@TargetApi(9)
-	public boolean isExternalStorageRemovable() {
+	private boolean isExternalStorageRemovable() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			return Environment.isExternalStorageRemovable();
 		}
@@ -491,7 +519,7 @@ public class CacheManagerImpl implements CacheManager {
 	}
 
 	@TargetApi(8)
-	public File getExternalCacheDir(Context context) {
+	private File getExternalCacheDir(Context context) {
 		File file = null;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 			file = context.getExternalCacheDir();
@@ -508,7 +536,7 @@ public class CacheManagerImpl implements CacheManager {
 	}
 
 	@TargetApi(9)
-	public long getUsableSpace(File path) {
+	private long getUsableSpace(File path) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			return path.getUsableSpace();
 		}
@@ -518,7 +546,7 @@ public class CacheManagerImpl implements CacheManager {
 
 	@Override
 	public String getName() {
-		return "CacheManager";
+		return TAG;
 	}
 
 	@Override

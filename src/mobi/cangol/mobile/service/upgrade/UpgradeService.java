@@ -19,6 +19,11 @@ import mobi.cangol.mobile.service.AppService;
 
 public interface UpgradeService extends AppService {
 
+	/**
+	 * 跟新类型枚举
+	 * @author Cangol
+	 *
+	 */
 	public enum UpgradeType {
 		APK, // apk升级
 		DEX, // dex升级

@@ -61,7 +61,7 @@ public class UpgradeServiceImpl implements UpgradeService{
 	}
 	@Override
 	public String getName() {
-		return "UpgradeService";
+		return TAG;
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class UpgradeServiceImpl implements UpgradeService{
 		upgradeApk(name,url,true,false);
 		
 	}
-	public void upgradeApk(String name,String url,final boolean install,final boolean constraint){
+	private void upgradeApk(String name,String url,final boolean install,final boolean constraint){
 		final String savePath=mConfigService.getUpgradeDir()+File.separator +name+".apk";
 		if(debug)Log.d("upgradeApk savePath:"+savePath);
 		final DownloadNotification  downloadNotification=new DownloadNotification(mContext,name,savePath,Download.DownloadType.APK);
