@@ -18,8 +18,8 @@
 * 	[CacheService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/cache/CacheService.html) 缓存服务
 * 	[CrashService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/crash/CrashService.html)  异常处理服务
 * 	[ConfigService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/conf/ConfigService.html)  应用配置服务
-* 	[DownloadService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/download/DownloadService.html)  下载服务
-* 	[GlobalService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/global/GlobalService.html) 全局变量服务
+* 	[DownloadManager](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/download/DownloadManager.html)  下载服务
+* 	[GlobalData](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/global/GlobalData.html) 全局变量服务
 * 	[LocationService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/location/LocationService.html) 位置服务
 * 	[StatusService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/status/StatusService.html) 状态监听服务
 * 	[UpgradeService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/upgrade/UpgradeService.html) 更新服务
