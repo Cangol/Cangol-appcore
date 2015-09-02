@@ -2,6 +2,7 @@
 ==============
 
 >这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
+>[详细文档JavaDoc](http://cangol.github.io/Cangol-appcore)
 
 ##CoreApplication
 >核心Application 提供整个哭的初始化和一些方法
@@ -10,7 +11,7 @@
 >一个可以用来做缓存的集合，生命周期随Application
 
 ##AppService
->应用服务:实现方式为依赖注入
+>应用服务:实现方式为依赖注入，这是整个框架的核心内容
 
 	AnalyticsService统计服务
 	CacheService 缓存服务
@@ -32,9 +33,10 @@
 	p.putString(ConfigService.SHARED_NAME, Constants.SHARED);
 			
 ##ORM数据库模块
->实现数据库的orm
->1.数据表的创建删除在无需SQL
->2.对数据对象的CRUD均无需SQL语句，并支持复杂条件租车查询。
+
+1. 实现数据库的orm
+2. 数据表的创建删除在无需SQL
+3. 对数据对象的CRUD均无需SQL语句，并支持复杂条件租车查询。
 
 ##日志Log
 >封装并重写部分方法，是的日志输出更格式化，并提供可控制“开发”和”发布“模式的开关。
