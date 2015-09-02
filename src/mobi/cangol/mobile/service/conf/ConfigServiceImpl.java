@@ -25,10 +25,11 @@ import android.content.Context;
 /**
  * @Description ConfigServiceImpl.java 
  * @author Cangol
- * @date 2013-12-28
+ * @date 2013-08-01
  * @hide
  */
 public class ConfigServiceImpl implements ConfigService {
+	private final static String TAG="ConfigService";
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;
@@ -51,7 +52,7 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 	@Override
 	public String getName() {
-		return "ConfigService";
+		return TAG;
 	}
 
 	@Override

@@ -71,6 +71,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
 		FileUtils.newFolder(mConfigService.getTempDir());
 	}
+	@Override
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
 		PoolManager.buildPool(mServiceProperty.getString(CRASHSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(CRASHSERVICE_THREAD_MAX));
@@ -79,7 +80,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 
 	@Override
 	public String getName() {
-		return "CrashService";
+		return TAG;
 	}
 
 	@Override

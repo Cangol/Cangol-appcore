@@ -26,20 +26,43 @@ public interface ConfigService extends AppService{
 	public final static String UPGRADE_DIR="upgrade_dir";
 	public final static String DATABASE_NAME="database_name";
 	public final static String SHARED_NAME="shared_name";
-	
+	/**
+	 * 获取应用目录
+	 */
 	String getAppDir();
-	
+	/**
+	 * 获取缓存目录
+	 * @return
+	 */
 	String getCacheDir();
-	
+	/**
+	 * 获取图片目录
+	 * @return
+	 */
 	String getImageDir();
-	
+	/**
+	 * 获取临时目录
+	 * @return
+	 */
 	String getTempDir();
-	
+	/**
+	 * 获取下载目录
+	 * @return
+	 */
 	String getDownloadDir();
-	
+	/**
+	 * 获取更新目录
+	 * @return
+	 */
 	String getUpgradeDir();
-	
+	/**
+	 * 获取数据库名称
+	 * @return
+	 */
 	String getDatabaseName();
-	
+	/**
+	 * 获取共享文件名称
+	 * @return
+	 */
 	String getSharedName();
 }
