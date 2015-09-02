@@ -18,6 +18,7 @@ package mobi.cangol.mobile;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * 
  * @author Cangol
@@ -26,19 +27,22 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Session {
 	private Map<String, Object> map = null;
 	private long createTime;
-	public Session(){
-		map=new ConcurrentHashMap<String, Object>();
+
+	public Session() {
+		map = new ConcurrentHashMap<String, Object>();
 	}
-	public Session(Map<String, Object> map){
-		if(map==null){
-			map=new HashMap<String, Object>();
+
+	public Session(Map<String, Object> map) {
+		if (map == null) {
+			map = new HashMap<String, Object>();
 		}
-		createTime=System.currentTimeMillis();
+		createTime = System.currentTimeMillis();
 	}
+
 	public long getCreateTime() {
 		return createTime;
 	}
-	
+
 	public Object get(String key) {
 		return map.get(key);
 	}
@@ -91,25 +95,28 @@ public class Session {
 			return 0f;
 		}
 	}
-	
-	public boolean containsKey(String key){
+
+	public boolean containsKey(String key) {
 		return map.containsKey(key);
 	}
-	
-	public boolean containsValue(Object value){
+
+	public boolean containsValue(Object value) {
 		return map.containsValue(value);
 	}
-	public Object remove(String key){
+
+	public Object remove(String key) {
 		return map.remove(key);
 	}
+
 	public void clear() {
 		map.clear();
 	}
-	
+
 	public void put(String key, Object value) {
 		map.put(key, value);
 	}
-	public void putAll(Map<String, ?> map2){
-		this.map.putAll(map2);	
+
+	public void putAll(Map<String, ?> map2) {
+		this.map.putAll(map2);
 	}
 }

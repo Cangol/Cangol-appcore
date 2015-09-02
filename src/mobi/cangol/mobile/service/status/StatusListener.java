@@ -18,20 +18,43 @@ package mobi.cangol.mobile.service.status;
 import android.content.Context;
 
 public interface StatusListener {
-	
-void networkConnect(Context context);
-	
+	/**
+	 * 网络已连接
+	 */
+	void networkConnect(Context context);
+
+	/**
+	 * 网络连接中断
+	 */
 	void networkDisconnect(Context context);
-	
+
+	/**
+	 * 网络连接到手机
+	 */
 	void networkTo3G(Context context);
-	
+
+	/**
+	 * 外置存储移除
+	 */
 	void storageRemove(Context context);
-	
+
+	/**
+	 * 外置存储挂载
+	 */
 	void storageMount(Context context);
-	
+
+	/**
+	 * 呼叫状态
+	 */
 	void callStateIdle();
-	
+
+	/**
+	 * 挂起状态
+	 */
 	void callStateOffhook();
-	
+
+	/**
+	 * 响铃状态
+	 */
 	void callStateRinging();
 }

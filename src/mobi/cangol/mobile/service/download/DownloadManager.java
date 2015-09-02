@@ -18,14 +18,39 @@ package mobi.cangol.mobile.service.download;
 import mobi.cangol.mobile.service.AppService;
 
 public interface DownloadManager extends AppService {
-	public final static String DOWNLOADSERVICE_THREAD_MAX="thread_max";
-	public final static String DOWNLOADSERVICE_THREADPOOL_NAME="threadpool_name";
-	
+	/**
+	 * 并发线程数
+	 */
+	public final static String DOWNLOADSERVICE_THREAD_MAX = "thread_max";
+	/**
+	 * 线程池名称
+	 */
+	public final static String DOWNLOADSERVICE_THREADPOOL_NAME = "threadpool_name";
+
+	/**
+	 * 获取一个下载执行器
+	 * 
+	 * @param name
+	 * @return
+	 */
 	DownloadExecutor<?> getDownloadExecutor(String name);
-	
-	void registerExecutor(String name,Class<? extends DownloadExecutor<?>> clazz,int max);
-	
+
+	/**
+	 * 注册一个下载执行器
+	 * 
+	 * @param name
+	 * @param clazz
+	 * @param max
+	 */
+	void registerExecutor(String name, Class<? extends DownloadExecutor<?>> clazz, int max);
+
+	/**
+	 * 恢复所有下载执行器
+	 */
 	void recoverAllAllDownloadExecutor();
-	
+
+	/**
+	 * 中断所有下载执行器
+	 */
 	void interruptAllDownloadExecutor();
 }

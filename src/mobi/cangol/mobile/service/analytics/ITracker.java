@@ -29,21 +29,24 @@ public class ITracker {
 	private long mStartTime;
 	private ITrackerHandler mHandler;
 
-	public ITracker(String trackingId,ITrackerHandler handler) {
+	public ITracker(String trackingId, ITrackerHandler handler) {
 		super();
 		this.mTrackingId = trackingId;
-		this.mHandler=handler;
+		this.mHandler = handler;
 	}
+
 	public void sendTiming(String url) {
 		mHandler.send(url, mParams);
-		mStartTime=0;
+		mStartTime = 0;
 		mParams.clear();
 	}
+
 	public void send(IMapBuilder statBuilder) {
 		if (statBuilder != null) {
 			mHandler.send(statBuilder.getUrl(), statBuilder.getParams());
 		}
 	}
+
 	public void send(String url, Map<String, String> params) {
 		if (params != null) {
 			mHandler.send(url, params);
@@ -57,19 +60,23 @@ public class ITracker {
 	public void set(String key, String value) {
 		mParams.put(key, value);
 	}
+
 	public void setAll(Map<String, String> params) {
 		if (params != null) {
 			mParams.putAll(params);
 		}
 	}
+
 	public String getTrackingId() {
 		return mTrackingId;
 	}
+
 	public long start() {
-		mStartTime=System.currentTimeMillis();
+		mStartTime = System.currentTimeMillis();
 		return mStartTime;
 	}
-	public long end(){
-		return System.currentTimeMillis()-mStartTime;
+
+	public long end() {
+		return System.currentTimeMillis() - mStartTime;
 	}
 }

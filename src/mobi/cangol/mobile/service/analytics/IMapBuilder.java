@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.utils.TimeUtils;
 
 final public class IMapBuilder {
 

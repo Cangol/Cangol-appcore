@@ -18,12 +18,11 @@ package mobi.cangol.mobile.service.analytics;
 import java.util.Map;
 
 /**
- * @Description TrackerHandler.java 
+ * @Description TrackerHandler.java
  * @author Cangol
  * @date 2013-12-18
  */
 
-abstract class ITrackerHandler
-{
-  abstract void send(String url,Map<String, String> paramMap);
+abstract class ITrackerHandler {
+	abstract void send(String url, Map<String, String> paramMap);
 }

@@ -17,11 +17,17 @@ package mobi.cangol.mobile.service.analytics;
 
 import mobi.cangol.mobile.service.AppService;
 
-public interface AnalyticsService extends AppService{
-	public final static String STATSERVICE_THREAD_MAX="thread_max";
-	public final static String STATSERVICE_THREADPOOL_NAME="threadpool_name";
-	
+public interface AnalyticsService extends AppService {
+	/**
+	 * 并发线程数
+	 */
+	public final static String ANALYTICSSERVICE_THREAD_MAX = "thread_max";
+	/**
+	 * 线程池名称
+	 */
+	public final static String ANALYTICSSERVICE_THREADPOOL_NAME = "threadpool_name";
+
 	ITracker getTracker(String trackingId);
-	
-	 void closeTracker(String trackingId);
+
+	void closeTracker(String trackingId);
 }

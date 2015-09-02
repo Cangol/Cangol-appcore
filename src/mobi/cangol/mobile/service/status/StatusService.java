@@ -18,18 +18,48 @@ package mobi.cangol.mobile.service.status;
 import mobi.cangol.mobile.service.AppService;
 
 public interface StatusService extends AppService {
-	
+	/**
+	 * 网络是否连接
+	 * 
+	 * @return
+	 */
 	boolean isConnection();
 
+	/**
+	 * Wifi是否连接
+	 * 
+	 * @return
+	 */
 	boolean isWifiConnection();
 
+	/**
+	 * gps定位是否开启
+	 * 
+	 * @return
+	 */
 	boolean isGPSLocation();
-	
+
+	/**
+	 * network定位是否开启
+	 * 
+	 * @return
+	 */
 	boolean isNetworkLocation();
-	
+
+	/**
+	 * 是否在呼叫状态
+	 * 
+	 * @return
+	 */
 	boolean isCallingState();
-	
+
+	/**
+	 * 注册状态监听
+	 */
 	void registerStatusListener(StatusListener statusListener);
-	
+
+	/**
+	 * 移除状态监听
+	 */
 	void unregisterStatusListener(StatusListener statusListener);
 }

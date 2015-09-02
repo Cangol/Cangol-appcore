@@ -15,8 +15,7 @@ public class DataCleanManager {
 
 	/** * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases) * * @param context */
 	public static void cleanDatabases(Context context) {
-		deleteFilesByDirectory(new File("/data/data/"
-				+ context.getPackageName() + "/databases"));
+		deleteFilesByDirectory(new File("/data/data/" + context.getPackageName() + "/databases"));
 	}
 
 	/**
@@ -24,8 +23,7 @@ public class DataCleanManager {
 	 * context
 	 */
 	public static void cleanSharedPreference(Context context) {
-		deleteFilesByDirectory(new File("/data/data/"
-				+ context.getPackageName() + "/shared_prefs"));
+		deleteFilesByDirectory(new File("/data/data/" + context.getPackageName() + "/shared_prefs"));
 	}
 
 	/** * 按名字清除本应用数据库 * * @param context * @param dbName */
@@ -43,8 +41,7 @@ public class DataCleanManager {
 	 * context
 	 */
 	public static void cleanExternalCache(Context context) {
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
+		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			deleteFilesByDirectory(context.getExternalCacheDir());
 		}
 	}
@@ -53,13 +50,14 @@ public class DataCleanManager {
 	public static void cleanCustomCache(String filePath) {
 		deleteFilesByDirectory(new File(filePath));
 	}
+
 	/** * 清除本应用所有的数据 * * @param context * @param filepath */
 	public static void cleanApplicationData(Context context, String... filepath) {
 		cleanInternalCache(context);
 		cleanExternalCache(context);
-		//cleanDatabases(context);
-		//cleanSharedPreference(context);
-		//cleanFiles(context);
+		// cleanDatabases(context);
+		// cleanSharedPreference(context);
+		// cleanFiles(context);
 		for (String filePath : filepath) {
 			cleanCustomCache(filePath);
 		}
@@ -67,24 +65,25 @@ public class DataCleanManager {
 
 	/** * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件夹，将递归删除文件 * * @param directory */
 	private static void deleteFilesByDirectory(File directory) {
-		Log.d("deleteFilesByDirectory="+directory.getAbsolutePath());
+		Log.d("deleteFilesByDirectory=" + directory.getAbsolutePath());
 		if (directory != null && directory.exists() && directory.isDirectory()) {
 			for (File item : directory.listFiles()) {
-				if(!item.isDirectory()){
-					Log.d("delete "+item.getAbsoluteFile()+",result="+item.delete());
-				}else{
+				if (!item.isDirectory()) {
+					Log.d("delete " + item.getAbsoluteFile() + ",result=" + item.delete());
+				} else {
 					deleteFilesByDirectory(item);
 				}
 			}
 		}
 	}
+
 	public static long getFolderSize(File file) {
 		long size = 0;
 		try {
 			for (File item : file.listFiles()) {
-				if(!item.isDirectory()){
+				if (!item.isDirectory()) {
 					size = size + getFolderSize(item);
-				}else{
+				} else {
 					size = size + item.length();
 				}
 			}
@@ -93,16 +92,18 @@ public class DataCleanManager {
 		}
 		return size;
 	}
-	
+
 	public static long getAllCacheSize(Context context, String... filepath) {
 		long size = 0;
-		size=size+getFolderSize(context.getCacheDir());
-		size=size+getFolderSize(context.getExternalCacheDir());
-		//size=size+getFolderSize(context.getFilesDir());
-		//size=size+getFolderSize(new File("/data/data/"+ context.getPackageName() + "/shared_prefs"));
-		//size=size+getFolderSize(new File("/data/data/"+ context.getPackageName() + "/databases"));
+		size = size + getFolderSize(context.getCacheDir());
+		size = size + getFolderSize(context.getExternalCacheDir());
+		// size=size+getFolderSize(context.getFilesDir());
+		// size=size+getFolderSize(new File("/data/data/"+
+		// context.getPackageName() + "/shared_prefs"));
+		// size=size+getFolderSize(new File("/data/data/"+
+		// context.getPackageName() + "/databases"));
 		for (String filePath : filepath) {
-			size=size+getFolderSize(new File(filePath));
+			size = size + getFolderSize(new File(filePath));
 		}
 		return size;
 	}

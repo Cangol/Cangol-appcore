@@ -53,12 +53,27 @@ public class SoapClient {
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
 		envelope.dotNet = true;
 	}
+	/**
+	 * 添加header
+	 * @param namespace
+	 * @param authheader
+	 * @param headers
+	 */
 	public void addHeader(String namespace,String authheader,HashMap<String, String> headers){
 		if(authheader!=null&&headers!=null){
 			envelope.headerOut = new Element[1];
 			envelope.headerOut[0] = buildAuthHeader(namespace,authheader,headers);
 		}
 	}
+	/**
+	 * 执行请求
+	 * @param context
+	 * @param url
+	 * @param namespace
+	 * @param action
+	 * @param params
+	 * @param responseHandler
+	 */
 	public void send(Context context,String url, String namespace, String action,HashMap<String, String> params,SoapResponseHandler responseHandler) {
 		
 		if (params != null) {
@@ -75,6 +90,13 @@ public class SoapClient {
 		ht=new HttpTransportSE(url,TIMEOUT);
 		sendRequest(ht,envelope,namespace,responseHandler,context);
 	}
+	/**
+	 * 构建auth header
+	 * @param namespace
+	 * @param authheader
+	 * @param params
+	 * @return
+	 */
 	private  Element buildAuthHeader(String namespace,String authheader,HashMap<String, String> params) {
 		Element header = new Element().createElement(namespace, authheader);
 		for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -84,6 +106,11 @@ public class SoapClient {
 		}
 		return header;
 	}
+	/**
+	 * 取消请求
+	 * @param context
+	 * @param mayInterruptIfRunning
+	 */
 	public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
 	        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
 	        if(requestList != null) {
@@ -96,6 +123,14 @@ public class SoapClient {
 	        }
 	        requestMap.remove(context);
 	 }
+	/**
+	 * 发生请求
+	 * @param ht
+	 * @param envelope
+	 * @param namespace
+	 * @param responseHandler
+	 * @param context
+	 */
 	protected void sendRequest(HttpTransportSE ht, SoapSerializationEnvelope envelope,
 			String namespace, SoapResponseHandler responseHandler,Context context) {
 

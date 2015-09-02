@@ -17,24 +17,64 @@ package mobi.cangol.mobile.service.upgrade;
 
 import mobi.cangol.mobile.service.AppService;
 
+public interface UpgradeService extends AppService {
 
-public interface UpgradeService extends AppService{
-	
-	enum UpgradeType{
-		APK,//apk升级
-		DEX,//dex升级
-		RES,//res升级
-		SO//so库升级
+	public enum UpgradeType {
+		APK, // apk升级
+		DEX, // dex升级
+		RES, // res升级
+		SO// so库升级
 	}
-	void upgradeRes(String name,String url,boolean load);
-	
-	void upgradeDex(String name,String url,boolean launch);
-	
-	void upgradeSo(String name,String url,boolean load);
-	
-	void upgradeApk(String name,String url,boolean install);
-	
-	void upgrade(String name,String url,boolean constraint);
-	
+
+	/**
+	 * 更新资源
+	 * 
+	 * @param name
+	 * @param url
+	 * @param load
+	 */
+	void upgradeRes(String name, String url, boolean load);
+
+	/**
+	 * 更新dex
+	 * 
+	 * @param name
+	 * @param url
+	 * @param launch
+	 */
+	void upgradeDex(String name, String url, boolean launch);
+
+	/**
+	 * 更新so
+	 * 
+	 * @param name
+	 * @param url
+	 * @param load
+	 */
+	void upgradeSo(String name, String url, boolean load);
+
+	/**
+	 * 更新插件apk
+	 * 
+	 * @param name
+	 * @param url
+	 * @param install
+	 */
+	void upgradeApk(String name, String url, boolean install);
+
+	/**
+	 * 更新主程序
+	 * 
+	 * @param name
+	 * @param url
+	 * @param constraint
+	 */
+	void upgrade(String name, String url, boolean constraint);
+
+	/**
+	 * 设置更新监听接口
+	 * 
+	 * @param upgradeListener
+	 */
 	void setOnUpgradeListener(UpgradeListener upgradeListener);
 }

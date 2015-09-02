@@ -88,7 +88,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	}
 	@Override
 	public void setDebug(boolean debug) {
-		this.debug=debug;
+		CrashServiceImpl.debug=debug;
 	}
 
 	@Override

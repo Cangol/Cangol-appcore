@@ -17,6 +17,14 @@ package mobi.cangol.mobile.service.crash;
 
 
 public interface CrashReportListener {
-
+	/**
+	 * 报告异常
+	 * @param path
+	 * @param error
+	 * @param position
+	 * @param context
+	 * @param timestamp
+	 * @param fatal
+	 */
 	void report(String path,String error,String position,String context,String timestamp,String fatal);
 }

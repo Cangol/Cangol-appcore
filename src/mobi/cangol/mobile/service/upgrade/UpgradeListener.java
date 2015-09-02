@@ -15,10 +15,24 @@
  */
 package mobi.cangol.mobile.service.upgrade;
 
+/**
+ * 更新监听接口
+ * 
+ * @author cangol
+ *
+ */
 public interface UpgradeListener {
-	
+	/**
+	 * 更新
+	 * 
+	 * @param constraint
+	 *            是否强制更新
+	 */
 	void upgrade(boolean constraint);
-	
-	void finish();
-	
+
+	/**
+	 * 更新完成
+	 */
+	void onFinish();
+
 }

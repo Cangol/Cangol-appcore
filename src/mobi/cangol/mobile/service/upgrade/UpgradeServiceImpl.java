@@ -126,7 +126,7 @@ public class UpgradeServiceImpl implements UpgradeService{
 			public void onFinish(long end) {
 				super.onFinish(end);
 				downloadNotification.finishNotification();
-				if(constraint&&mUpgradeListener!=null)mUpgradeListener.finish();
+				if(constraint&&mUpgradeListener!=null)mUpgradeListener.onFinish();
 				if(install){
 					AppUtils.install(mContext, savePath);
 				}

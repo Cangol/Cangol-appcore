@@ -18,8 +18,17 @@ package mobi.cangol.mobile.service.location;
 import android.location.Location;
 
 public interface BetterLocationListener {
-
+	/**
+	 * 获取最新有效地位置
+	 * 
+	 * @param mLocation
+	 */
 	void onBetterLocation(Location mLocation);
 
+	/**
+	 * 更新位置超时,返回最后的有效位置
+	 * 
+	 * @param mLocation
+	 */
 	void timeout(Location mLocation);
 }
