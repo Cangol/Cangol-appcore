@@ -1,5 +1,4 @@
 #Cangol-appcore
-==============
 
 >这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
 >[详细文档JavaDoc](http://cangol.github.io/Cangol-appcore)
