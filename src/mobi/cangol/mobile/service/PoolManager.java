@@ -40,7 +40,11 @@ public class PoolManager {
 	    });
 	    return executorService;
 	}
-	
+	/**
+	 * 获取一个线程池
+	 * @param name
+	 * @return
+	 */
 	public  static Pool getPool(String name){
 		if(null==poolMap)poolMap=new ConcurrentHashMap<String,Pool>();
 		if(!poolMap.containsKey(name)){
@@ -48,7 +52,9 @@ public class PoolManager {
 		}
 		return poolMap.get(name);
 	}
-	
+	/*
+	 * 创建一个线程池
+	 */
 	public  static Pool buildPool(String name,int max){
 		if(null==poolMap)poolMap=new ConcurrentHashMap<String,Pool>();
 		if(!poolMap.containsKey(name)){

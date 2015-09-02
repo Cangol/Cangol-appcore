@@ -19,25 +19,48 @@ import java.io.InputStream;
 
 public abstract class AppServiceManager {
 	
-	public static final String CONFIG_SERVICE = "config";
-	
-	public static final String UPGRADE_SERVICE = "upgrade";
-	
-	public static final String DOWNLOAD_SERVICE = "download";
-	
-	public static final String STAT_SERVICE = "stat";
-	
+	/**
+	 * 获取一个应用服务
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public abstract AppService getAppService(String name);
-	
+
+	/**
+	 * 销毁一个应用服务
+	 * 
+	 */
 	public abstract void destoryService(String name);
-	
+
+	/**
+	 * 销毁所有服务
+	 */
 	public abstract void destoryAllService();
-	
+
+	/**
+	 * 销毁
+	 */
 	public abstract void destory();
-	
-	public abstract void setScanPackage(String ... packageName);
-	
+
+	/**
+	 * 设置服务扫描包
+	 * 
+	 * @param packageName
+	 */
+	public abstract void setScanPackage(String... packageName);
+
+	/**
+	 * 设置初始化源
+	 * 
+	 * @param is
+	 */
 	public abstract void initSource(InputStream is);
-	
+
+	/**
+	 * 设置debug
+	 * 
+	 * @param debug
+	 */
 	public abstract void setDebug(boolean debug);
 }

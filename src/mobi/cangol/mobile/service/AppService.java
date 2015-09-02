@@ -17,36 +17,53 @@ package mobi.cangol.mobile.service;
 
 import android.content.Context;
 
-
 public interface AppService {
-	
-	public final static String STATUS_SERVICE="StatusService";
-	
-	public final static String UPGRADE_SERVICE="UpgradeService";
-	
-	public final static String ANALYTICS_SERVICE="AnalyticsService";
-	
-	public final static String LOCATION_SERVICE="LocationService";
-	
-	public final static String CACHE_MANAGER="CacheManager";
-	
-	public final static String CONFIG_SERVICE="ConfigService";
-	
-	public final static String CRASH_SERVICE="CrashService";
-	
-	public final static String DOWNLOAD_MANAGER="DownloadManager";
-	
-	public final static String GLOBAL_DATA="GlobalData";
-	
+	/**
+	 * 状态监听服务
+	 */
+	public final static String STATUS_SERVICE = "StatusService";
+	/**
+	 * 更新服务
+	 */
+	public final static String UPGRADE_SERVICE = "UpgradeService";
+	/**
+	 * 统计服务
+	 */
+	public final static String ANALYTICS_SERVICE = "AnalyticsService";
+	/**
+	 * 位置服务
+	 */
+	public final static String LOCATION_SERVICE = "LocationService";
+	/**
+	 * 缓存服务
+	 */
+	public final static String CACHE_MANAGER = "CacheManager";
+	/**
+	 * 应用配置服务
+	 */
+	public final static String CONFIG_SERVICE = "ConfigService";
+	/**
+	 * 异常监听服务
+	 */
+	public final static String CRASH_SERVICE = "CrashService";
+	/**
+	 * 下载服务
+	 */
+	public final static String DOWNLOAD_MANAGER = "DownloadManager";
+	/**
+	 * 全局缓存服务
+	 */
+	public final static String GLOBAL_DATA = "GlobalData";
+
 	void onCreate(Context context);
 
 	String getName();
-	
-	void onDestory();	
-	
+
+	void onDestory();
+
 	void setDebug(boolean debug);
-	
+
 	void init(ServiceProperty serviceProperty);
-	
+
 	ServiceProperty getServiceProperty();
 }
