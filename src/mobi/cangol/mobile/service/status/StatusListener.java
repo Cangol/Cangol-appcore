@@ -31,7 +31,7 @@ public interface StatusListener {
 	/**
 	 * 连接到手机网络
 	 */
-	void networkToGPRS(Context context);
+	void networkTo3G(Context context);
 
 	/**
 	 * 外置存储移除
