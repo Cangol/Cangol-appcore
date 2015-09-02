@@ -18,8 +18,8 @@
 * 	[CacheService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/cache/CacheService.html) 缓存服务
 * 	[CrashService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/crash/CrashService.html)  异常处理服务
 * 	[ConfigService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/conf/ConfigService.html)  应用配置服务
-* 	[DownloadService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/download/DownloadService.html)  下载服务
-* 	[GlobalService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/global/GlobalService.html) 全局变量服务
+* 	[DownloadManager](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/download/DownloadManager.html)  下载服务
+* 	[GlobalData](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/global/GlobalData.html) 全局变量服务
 * 	[LocationService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/location/LocationService.html) 位置服务
 * 	[StatusService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/status/StatusService.html) 状态监听服务
 * 	[UpgradeService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/upgrade/UpgradeService.html) 更新服务
@@ -75,14 +75,14 @@
 * 	[BitmapUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/BitmapUtils.html) 图像工具类
 * 	[ClassUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ClassUtils.html) Class工具类
 * 	[DeviceInfo](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/DeviceInfo.html) 设备信息工具类
-* 	[HanziToPinyin](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/HanziToPinyin.html) 汉子转拼音
+* 	[HanziToPinyin](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/HanziToPinyin.html) 汉字转拼音
 * 	[LocationUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/LocationUtils.html) 位置工具类
 * 	[Object2FileUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/Object2FileUtils.html) 对象文件互转工具类
 * 	[StorageUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StorangeUtils.html) 存储工具类
 * 	[StringUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StringUtils.html) 字符串工具类
 * 	[TimeUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/TimeUtils.html) 时间工具类
 * 	[UrlUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/UrlUtils.html) URL工具类
-* 	[ValidateUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ValidateUtils.html) 验证工具类
+* 	[ValidatorUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ValidatorUtils.html) 验证工具类
 
 License
 -----------
