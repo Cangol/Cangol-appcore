@@ -29,9 +29,9 @@ public interface StatusListener {
 	void networkDisconnect(Context context);
 
 	/**
-	 * 网络连接到手机
+	 * 连接到手机网络
 	 */
-	void networkTo3G(Context context);
+	void networkToGPRS(Context context);
 
 	/**
 	 * 外置存储移除

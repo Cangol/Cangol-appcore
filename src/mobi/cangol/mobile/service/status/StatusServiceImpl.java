@@ -156,7 +156,7 @@ public class StatusServiceImpl implements StatusService {
 	public void notifyNetworkTo3G(Context context) {
 		for (StatusListener listener : listeners) {
 			if (listener != null)
-				listener.networkTo3G(context);
+				listener.networkToGPRS(context);
 		}
 	}
 
