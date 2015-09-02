@@ -4,7 +4,7 @@
 >[详细文档](http://cangol.github.io/Cangol-appcore)
 
 ##CoreApplication
->核心Application 提供整个哭的初始化和一些方法，
+>核心Application 提供整个库的初始化和一些方法，
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/CoreApplication.html)
 
 ##Session
@@ -15,7 +15,7 @@
 应用服务:实现方式为依赖注入，这是整个框架的核心内容
 
 *   [AnalyticsService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/AnalyticsService.html) 统计服务
-* 	[CacheService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/cache/CacheService.html) 缓存服务
+* 	[CacheManager](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/cache/CacheManager.html) 缓存服务
 * 	[CrashService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/crash/CrashService.html)  异常处理服务
 * 	[ConfigService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/conf/ConfigService.html)  应用配置服务
 * 	[DownloadManager](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/download/DownloadManager.html)  下载服务
@@ -26,7 +26,7 @@
 
 >使用方式
 	
-	//获取方式类似系统SysService
+	//获取方式类似系统SystemService
 	ConfigService configService = (ConfigService) getAppService(AppService.CONFIG_SERVICE);
 	//可修改属性
 	ServiceProperty p=configService.getServiceProperty();
@@ -35,9 +35,9 @@
 			
 ##数据库ORM
 
-1. 实现数据库的orm
-2. 数据表的创建删除在无需SQL
-3. 对数据对象的CRUD均无需SQL语句，并支持复杂条件租车查询。
+* 实现数据库的orm
+* 数据表的创建删除在无需SQL
+* 对数据对象的CRUD均无需SQL语句，并支持复杂条件租车查询。
 
 ##日志Log
 >封装并重写部分方法，是的日志输出更格式化，并提供可控制“开发”和”发布“模式的开关。
@@ -59,13 +59,13 @@
 
 ###网络Http请求
 
->修正AsyncHttpClient的部分bug，优化请求参数配置，扩展超时自动重置机制，增加Gzip的支持。并扩展：
+>修正AsyncHttpClient的部分bug，优化请求参数配置，扩展超时自动重试机制，增加gzip的支持。并扩展：
 
-* [PollingHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/AESUtils.html) 可轮询请求的httpclient
-* [RouteHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/AESUtils.html) 可设置不同host的httpclient
+* [PollingHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/extras/PollingHttpClient.html) 可轮询请求的httpclient
+* [RouteHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/extras/RouteHttpClient.html) 可设置不同host的httpclient
 
 ###WebService请求
->使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar 对Soap进行异步封装。
+>使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar 对Soap进行异步封装。[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/soap/SoapClient.html)
 
 
 
@@ -78,7 +78,7 @@
 * 	[HanziToPinyin](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/HanziToPinyin.html) 汉字转拼音
 * 	[LocationUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/LocationUtils.html) 位置工具类
 * 	[Object2FileUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/Object2FileUtils.html) 对象文件互转工具类
-* 	[StorageUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StorangeUtils.html) 存储工具类
+* 	[StorageUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StorageUtils.html) 存储工具类
 * 	[StringUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StringUtils.html) 字符串工具类
 * 	[TimeUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/TimeUtils.html) 时间工具类
 * 	[UrlUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/UrlUtils.html) URL工具类
