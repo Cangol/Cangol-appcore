@@ -27,7 +27,16 @@ public interface AnalyticsService extends AppService {
 	 */
 	public final static String ANALYTICSSERVICE_THREADPOOL_NAME = "threadpool_name";
 
+	/**
+	 * 获取一个统计跟踪器
+	 * 
+	 * @param trackingId
+	 * @return
+	 */
 	ITracker getTracker(String trackingId);
 
+	/**
+	 * 关闭统计跟踪器
+	 */
 	void closeTracker(String trackingId);
 }

@@ -52,7 +52,7 @@ public class PoolManager {
 		}
 		return poolMap.get(name);
 	}
-	/*
+	/**
 	 * 创建一个线程池
 	 */
 	public  static Pool buildPool(String name,int max){
@@ -62,7 +62,9 @@ public class PoolManager {
 		}
 		return poolMap.get(name);
 	}
-	
+	/**
+	 * 清除线程池
+	 */
 	public static void clear() {
 		if(null!=poolMap){
 			poolMap.clear();	

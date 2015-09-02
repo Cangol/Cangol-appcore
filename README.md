@@ -12,15 +12,15 @@
 ##AppService
 >应用服务:实现方式为依赖注入，这是整个框架的核心内容
 
-	AnalyticsService统计服务
-	CacheService 缓存服务
-	CrashService 异常处理服务
-	ConfigService 应用配置服务
-	DownloadService 下载服务
-	GlobalService 全局变量服务
-	LocationService 地理位置服务
-	StatusService 状态服务
-	UpgradeService 更新服务
+	[AnalyticsService统计服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/AnalyticsService.html)
+	[CacheService 缓存服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/CacheService.html)
+	[CrashService 异常处理服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/CrashService.html)
+	[ConfigService 应用配置服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/ConfigService.html)
+	[DownloadService 下载服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/DownloadService.html)
+	[GlobalService 全局变量服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/GlobalService.html)
+	[LocationService 位置服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/LocationService.html)
+	[StatusService 状态监听服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/StatusService.html)
+	[UpgradeService 更新服务](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/UpgradeService.html)
 
 >使用方式
 	
@@ -60,18 +60,18 @@
 
 ###Utils工具类
 
-	AppUtils 应用管理工具类
-	BitmapUtils 图像工具类
-	ClassUtils Class工具类
-	DeviceInfo 设备信息工具类
-	HanziToPinyin 汉子转拼音
-	LocationUtils 位置工具类
-	Object2FileUtils 对象文件互转工具类
-	StorageUtils 存储工具类
-	StringUtils 字符串工具类
-	TimeUtils 时间工具类
-	UrlUtils URL工具类
-	ValidateUtils 验证工具类
+	[AppUtils 应用管理工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/AppUtils.html)
+	[BitmapUtils 图像工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/BitmapUtils.html)
+	[ClassUtils Class工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ClassUtils.html)
+	[DeviceInfo 设备信息工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/DeviceInfo.html)
+	[HanziToPinyin 汉子转拼音](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/HanziToPinyin.html)
+	[LocationUtils 位置工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/LocationUtils.html)
+	[Object2FileUtils 对象文件互转工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/Object2FileUtils.html)
+	[StorageUtils 存储工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StorangeUtils.html)
+	[StringUtils 字符串工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/StringUtils.html)
+	[TimeUtils 时间工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/TimeUtils.html)
+	[UrlUtils URL工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/UrlUtils.html)
+	[ValidateUtils 验证工具类](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ValidateUtils.html)
 
 License
 -----------
