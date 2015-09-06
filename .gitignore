@@ -18,3 +18,23 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+.settings
+eclipsebin
+
+build
+out
+lib
+
+target
+pom.xml.*
+release.properties
+
+.idea
+*.iml
+*.ipr
+*.iws
+classes
+
+obj
+
+.DS_Store
