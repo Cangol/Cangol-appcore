@@ -30,9 +30,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 /**
- * @Description LocationServiceImpl.java 
  * @author Cangol
- * @date 2013-12-28
  * @hide
  */
 @Service("LocationService")

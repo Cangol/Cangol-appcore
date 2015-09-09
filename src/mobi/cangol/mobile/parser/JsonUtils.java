@@ -35,10 +35,7 @@ import android.util.Log;
 
 
 /**
- * @Description: Customer VO annotation
- * @version $Revision: 1.0 $ 
  * @author Cangol
- * @date: 2012-6-5
  */
 public class JsonUtils {
 	private final static boolean DEBUG=false;

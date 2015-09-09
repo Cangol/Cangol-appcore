@@ -28,9 +28,7 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * @Description StatServiceImpl.java 
  * @author Cangol
- * @date 2013-12-28
  * @hide
  */
 @Service("AnalyticsService")

@@ -34,9 +34,7 @@ import mobi.cangol.mobile.utils.FileUtils;
 import android.app.NotificationManager;
 import android.content.Context;
 /**
- * @Description UpgradeServiceImpl.java 
  * @author Cangol
- * @date 2013-12-28
  * @hide
  */
 @Service("UpgradeService")

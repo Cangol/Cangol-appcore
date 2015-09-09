@@ -23,9 +23,7 @@ import android.util.Patterns;
 import android.widget.TextView;
 
 /**
- * @Description Validatorutils.java
  * @author Cangol
- * @date 2013-7-14
  */
 public class ValidatorUtils {
 

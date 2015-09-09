@@ -37,9 +37,7 @@ import android.os.StatFs;
 import android.text.TextUtils;
 
 /**
- * @Description ContentCache.java
  * @author Cangol
- * @date 2013-3-5
  * @hide
  */
 

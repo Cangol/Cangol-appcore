@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Description Tracker.java
  * @author Cangol
- * @date 2013-12-18
  */
 public class ITracker {
 	private final String mTrackingId;

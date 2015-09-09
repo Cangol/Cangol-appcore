@@ -16,10 +16,7 @@
 package mobi.cangol.mobile.security;
 
 /**
- * @Description: Base64类
- * @version $Revision: 1.0 $ 
- * @author Cangol 
- * @date: 2011-5-17
+ * @author Cangol
  */
 
 public class Base64 {

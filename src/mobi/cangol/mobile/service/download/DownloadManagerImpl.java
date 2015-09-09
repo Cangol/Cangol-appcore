@@ -26,9 +26,7 @@ import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 /**
- * @Description ConfigServiceImpl.java 
  * @author Cangol
- * @date 2013-12-28
  * @hide
  */
 @Service("DownloadManager")

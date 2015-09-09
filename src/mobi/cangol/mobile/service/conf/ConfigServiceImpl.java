@@ -23,9 +23,7 @@ import mobi.cangol.mobile.utils.StorageUtils;
 import android.content.Context;
 @Service("ConfigService")
 /**
- * @Description ConfigServiceImpl.java 
  * @author Cangol
- * @date 2013-08-01
  * @hide
  */
 public class ConfigServiceImpl implements ConfigService {

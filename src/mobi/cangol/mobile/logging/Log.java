@@ -19,7 +19,6 @@ package mobi.cangol.mobile.logging;
  * 
  * @Description Log.java 
  * @author Cangol
- * @date 2011-12-18
  */
 public class Log {
 	private  static int LEVEL = android.util.Log.VERBOSE;

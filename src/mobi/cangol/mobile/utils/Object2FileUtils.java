@@ -33,8 +33,6 @@ import org.json.JSONObject;
 
 import android.text.TextUtils;
 /**
- * @Description:
- * @version $Revision: 1.0 $
  * @author Cangol
  */
 public class Object2FileUtils {

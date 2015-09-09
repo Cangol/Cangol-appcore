@@ -18,9 +18,7 @@ package mobi.cangol.mobile.service.analytics;
 import java.util.Map;
 
 /**
- * @Description TrackerHandler.java
  * @author Cangol
- * @date 2013-12-18
  */
 
 abstract class ITrackerHandler {

@@ -43,9 +43,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 /**
- * @Description ConfigServiceImpl.java 
  * @author Cangol
- * @date 2013-12-28
  * @hide
  */
 @Service("CrashService")

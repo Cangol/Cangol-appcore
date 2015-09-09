@@ -16,10 +16,8 @@
 package mobi.cangol.mobile.security;
 
 /**
- * @Description: RSA加密解密类
- * @version $Revision: 1.0 $ 
- * @author Cangol 
- * @date: 2011-5-17
+ *  RSA加密解密类
+ * @author Cangol
  */
 
 import java.math.BigInteger;

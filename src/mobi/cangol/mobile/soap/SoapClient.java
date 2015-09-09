@@ -36,9 +36,8 @@ import android.content.Context;
 import android.util.Log;
 
 /**
- * @Description SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
+ *  SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
  * @author Cangol
- * @date 2013-8-14
  */
 public class SoapClient {
 	private static final String TAG = "SoapRequest";

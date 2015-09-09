@@ -24,9 +24,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 
 /**
- * @Description SoapRequest.java
  * @author Cangol
- * @date 2013-8-14
  */
 public class SoapRequest implements Runnable {
 	private static final boolean DEBUG = false;

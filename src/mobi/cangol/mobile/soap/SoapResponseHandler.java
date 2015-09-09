@@ -21,9 +21,7 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * @Description SoapResponseHandler.java
  * @author Cangol
- * @date 2013-8-14
  */
 public class SoapResponseHandler {
 	private static final boolean DEBUG = true;

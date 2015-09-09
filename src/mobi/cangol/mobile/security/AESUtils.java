@@ -16,10 +16,7 @@
 package mobi.cangol.mobile.security;
 
 /**
- * @Description: 简单AES加密解密类
- * @version $Revision: 1.0 $ 
- * @author Cangol 
- * @date: 2011-5-17
+ * @author Cangol
  */
 
 import java.security.SecureRandom;

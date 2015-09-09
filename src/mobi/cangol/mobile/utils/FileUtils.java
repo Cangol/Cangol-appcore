@@ -16,10 +16,7 @@
 package mobi.cangol.mobile.utils;
 
 /**
- * @Description:文件工具类
- * @version $Revision: 1.0 $
  * @author Cangol
- * @date: 2013-12-10
  */
 
 import java.io.BufferedReader;

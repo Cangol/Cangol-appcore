@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Description Serv.java
  * @author Cangol
- * @date 2013-10-31
  */
 public class ServiceProperty {
 	private String mName;

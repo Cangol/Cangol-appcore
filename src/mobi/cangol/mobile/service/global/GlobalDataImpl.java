@@ -39,9 +39,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 /**
- * @Description GlobalDataImpl.java 
  * @author Cangol
- * @date 2013-12-28
  * @hide
  */
 @Service("GlobalData")
