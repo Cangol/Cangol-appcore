@@ -6,6 +6,8 @@
 # files for the dex VM
 *.dex
 
+/gradlew.bat
+/gradlew
 # Java class files
 *.class
 
