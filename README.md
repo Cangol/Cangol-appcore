@@ -2,9 +2,11 @@
 
 >这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
 >[详细文档](http://cangol.github.io/Cangol-appcore)
+
 引用方式
-`compile(group: 'mobi.cangol.mobile', name: 'Cangol-appcore', version: '1.0.0', ext: 'jar')
- compile 'mobi.cangol.mobile:Cangol-appcore:1.0.0'`
+`compile(group: 'mobi.cangol.mobile', name: 'Cangol-appcore', version: '1.0.0', ext: 'jar')`
+`compile 'mobi.cangol.mobile:Cangol-appcore:1.0.0'`
+ 
 ##CoreApplication
 >核心Application 提供整个库的初始化和一些方法，
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/CoreApplication.html)
