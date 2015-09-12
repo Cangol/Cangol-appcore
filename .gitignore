@@ -1,4 +1,3 @@
-/gradle/wrapper/gradle-wrapper.properties
 # built application files
 *.apk
 *.ap_
@@ -6,8 +5,7 @@
 # files for the dex VM
 *.dex
 
-/gradlew.bat
-/gradlew
+
 # Java class files
 *.class
 
@@ -18,6 +16,10 @@ gen/
 # Gradle files
 .gradle/
 build/
+gradle/
+gradlew.bat
+gradlew
+settings.gradle
 
 # Local configuration file (sdk path, etc)
 local.properties
