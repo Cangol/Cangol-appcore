@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ActionBar-Demo</string>
+    <string name="hello_world">你好</string>
+    
+    <string name="action_delete">删除</string>
+    <string name="action_selectAll">全选</string>
+    <string name="action_invert">反选</string>
+    <string name="action_setting">设置</string>
+    
+    <string name="startProgress">启动Progress</string>
+    <string name="stopProgress">停止Progress</string>
+    <string name="startSearchMode">启动搜索</string>
+    <string name="stopSearchMode">停止搜索</string>
+    <string name="startCustomActionMode">启动ActionMode</string>
+    
+      <string name="language">语言</string>
+</resources>

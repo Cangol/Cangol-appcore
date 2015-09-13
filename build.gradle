@@ -1,3 +1,4 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
         jcenter()
@@ -8,152 +9,12 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
     }
 }
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+allprojects {
 
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-}
-// Bintray
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.0"
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
-    }
-    lintOptions {
-        abortOnError false
-    }
-
-}
-android.libraryVariants.all { variant ->
-    def name = variant.buildType.name
-    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
-        return; // Skip debug builds.
-    }
-    def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompile
-    task.from variant.javaCompile.destinationDir
-    task.exclude '**/BuildConfig.class'
-    task.exclude '**/R.class'
-    artifacts.add('archives', task);
-}
-//// build a jar with source files
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-    exclude '**/BuildConfig.java'
-    exclude '**/R.java'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    options {
-        links "http://docs.oracle.com/javase/7/docs/api/"
-        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
-    }
-    exclude '**/BuildConfig.java'
-    exclude '**/R.java'
-
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    //archives sourcesJar
-    //archives javadocJar
-}
-
-version = properties.getProperty("LIBRARY_VERSION")
-group= properties.getProperty("GROUP_ID")
-
-bintray (){
-    user = properties.getProperty("BINTRAY.USER")
-    key = properties.getProperty("BINTRAY.APIKEY")
-
-    configurations = ['archives']
-    pkg {
-        repo = 'maven'
-        name = properties.getProperty("LIBRARY_NAME")
-        desc = properties.getProperty("LIBRARY_DESCRIPTION")
-        websiteUrl = properties.getProperty("SITE_URL")
-        vcsUrl = properties.getProperty("GIT_URL")
-        licenses = ["Apache-2.0"]
-        labels = ['android','core']
-        publish = true
-        publicDownloadNumbers = true
-        version {
-            desc = properties.getProperty("LIBRARY_DESCRIPTION")
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = properties.getProperty("BINTRAY.GPG.PASSWORD")
-                //Optional. The passphrase for GPG signing'
-            }
-        }
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        //This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'jar'
-                groupId properties.getProperty("GROUP_ID")
-                artifactId properties.getProperty("ARTIFACT_NAME")
-
-                // Add your description here
-                name properties.getProperty("LIBRARY_NAME")
-                description properties.getProperty("LIBRARY_DESCRIPTION")
-                url properties.getProperty("SITE_URL")
-
-                // Set your license
-                licenses {
-                    license {
-                        name properties.getProperty("LICENSE_NAME")
-                        url properties.getProperty("LICENSE_URL")
-                    }
-                }
-                developers {
-                    developer {
-                        id properties.getProperty("DEVELOPER_ID")
-                        name properties.getProperty("DEVELOPER_NAME")
-                        email properties.getProperty("DEVELOPER_EMAIL")
-                    }
-                }
-                scm {
-                    connection properties.getProperty("GIT_URL")
-                    developerConnection properties.getProperty("GIT_URL")
-                    url properties.getProperty("SITE_URL")
-
-                }
-            }
+    repositories {
+        jcenter()
+        maven {
+            url  "http://dl.bintray.com/cangol/maven"
         }
     }
 }
