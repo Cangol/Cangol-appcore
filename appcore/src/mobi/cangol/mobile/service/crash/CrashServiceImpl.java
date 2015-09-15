@@ -96,6 +96,20 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	}
 
 	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		sp.putString(CRASHSERVICE_THREADPOOL_NAME, TAG);
+		sp.putInt(CRASHSERVICE_THREAD_MAX, 1);
+		sp.putString(CRASHSERVICE_REPORT_URL, "");
+		sp.putString(CRASHSERVICE_REPORT_ERROR, "error");
+		sp.putString(CRASHSERVICE_REPORT_POSITION,"position");
+		sp.putString(CRASHSERVICE_REPORT_TIMESTAMP,"timestamp");
+		sp.putString(CRASHSERVICE_REPORT_CONTEXT,"content");
+		sp.putString(CRASHSERVICE_REPORT_FATAL,"fatal");
+		return sp;
+	}
+
+	@Override
 	public void setReport(String url, Map<String, String> params) {
 		this.mUrl=url;
 		this.mParams=params;

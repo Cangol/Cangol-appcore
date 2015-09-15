@@ -101,6 +101,18 @@ public class LocationServiceImpl implements LocationService{
 		return mServiceProperty;
 	}
 
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		sp.putString(LOCATIONSERVICE_BAIDU_AK, "694639beed8fa216ffae5d78d8cd51e0");
+		sp.putInt(LOCATIONSERVICE_BETTERTIME, 120000);
+		sp.putInt(LOCATIONSERVICE_TIMEOUT, 300000);
+		sp.putInt(LOCATIONSERVICE_GPS_MINTIME, 1000);
+		sp.putInt(LOCATIONSERVICE_GPS_MINDISTANCE, 50);
+		sp.putInt(LOCATIONSERVICE_NETWORK_MINTIME, 1000);
+		sp.putInt(LOCATIONSERVICE_NETWORK_MINDISTANCE, 50);
+		return sp;
+	}
 
 	private void handleBetterLocation(){
 		removeLocationUpdates();

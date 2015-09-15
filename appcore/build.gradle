@@ -52,6 +52,7 @@ android.libraryVariants.all { variant ->
     task.exclude '**/R.class'
     artifacts.add('archives', task);
 }
+
 //// build a jar with source files
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs

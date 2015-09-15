@@ -561,5 +561,12 @@ public class CacheManagerImpl implements CacheManager {
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
 	}
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		sp.putString(CACHE_DIR, "contentCache");
+		sp.putInt(CACHE_SIZE, 20971520);
+		return sp;
+	}
 
 }

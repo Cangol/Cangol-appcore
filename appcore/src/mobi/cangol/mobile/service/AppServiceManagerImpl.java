@@ -133,7 +133,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 					c.setAccessible(true);
 					appService=(AppService) c.newInstance();
 					appService.onCreate(mContext);
-					appService.init(mProperties.get(name)!=null?mProperties.get(name):new ServiceProperty(name));
+					appService.init(mProperties.get(name)!=null?mProperties.get(name):appService.defaultServiceProperty());
 					appService.setDebug(debug);
 					mRunServiceMap.put(name, appService);
 				}else{

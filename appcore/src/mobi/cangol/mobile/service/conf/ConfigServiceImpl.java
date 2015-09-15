@@ -48,6 +48,21 @@ public class ConfigServiceImpl implements ConfigService {
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
 	}
+
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+
+		sp.putString(APP_DIR, "app_ext");
+		sp.putString(IMAGE_DIR, "image");
+		sp.putString(DOWNLOAD_DIR, "download");
+		sp.putString(TEMP_DIR,"temp");
+		sp.putString(UPGRADE_DIR,"upgrade");
+		sp.putString(DATABASE_NAME,"app_db");
+		sp.putString(SHARED_NAME,"app_shared");
+		return sp;
+	}
+
 	@Override
 	public String getName() {
 		return TAG;

@@ -162,4 +162,9 @@ public class GlobalDataImpl implements GlobalData {
 	public ServiceProperty getServiceProperty() {
 		return null;
 	}
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		return sp;
+	}
 }

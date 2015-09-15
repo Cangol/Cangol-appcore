@@ -66,7 +66,11 @@ public class StatusServiceImpl implements StatusService {
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty = serviceProperty;
 	}
-
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		return sp;
+	}
 	@Override
 	public void onDestory() {
 		mContext.unregisterReceiver(networkStatusReceiver);

@@ -77,7 +77,11 @@ public class UpgradeServiceImpl implements UpgradeService{
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
 	}
-
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		return sp;
+	}
 	@Override
 	public void setDebug(boolean debug) {
 		this.debug=debug;

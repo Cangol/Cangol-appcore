@@ -31,7 +31,7 @@ import android.content.Context;
  */
 @Service("DownloadManager")
 public class DownloadManagerImpl implements DownloadManager{
-	
+	private final static String TAG="DownloadManager";
 	protected static final int DEFAULT_MAX_THREAD = 2;
 	protected boolean debug=false;
 	protected ConcurrentHashMap<String, DownloadExecutor<?>> executorMap = null;
@@ -130,5 +130,12 @@ public class DownloadManagerImpl implements DownloadManager{
 	@Override
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
+	}
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		sp.putString(DOWNLOADSERVICE_THREADPOOL_NAME, TAG);
+		sp.putInt(DOWNLOADSERVICE_THREAD_MAX, DEFAULT_MAX_THREAD);
+		return sp;
 	}
 }

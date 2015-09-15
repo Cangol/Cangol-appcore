@@ -62,6 +62,14 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	public ServiceProperty getServiceProperty() {
 		return mServiceProperty;
 	}
+
+	@Override
+	public ServiceProperty defaultServiceProperty() {
+		ServiceProperty sp=new ServiceProperty(TAG);
+		sp.putString(ANALYTICSSERVICE_THREAD_MAX, TAG);
+		sp.putInt(ANALYTICSSERVICE_THREADPOOL_NAME, 2);
+		return sp;
+	}
 	@Override
 	public void send(String url, Map<String, String> paramsMap) {
 		RequestParams params=new RequestParams(paramsMap);
