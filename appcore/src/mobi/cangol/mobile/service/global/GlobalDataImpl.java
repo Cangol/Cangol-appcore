@@ -23,6 +23,7 @@ import java.util.Set;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.Session;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -108,7 +109,6 @@ public class GlobalDataImpl implements GlobalData {
 			Object2FileUtils.writeObject(value, mConfigService.getCacheDir()+File.separator+key+SER);
 		}else{
 			//其他缓存方案
-			
 		}
 		mSession.put(key, value);
 		
@@ -124,7 +124,17 @@ public class GlobalDataImpl implements GlobalData {
 		return mSession.get(key);
 	}
 
-	@Override
+    @Override
+    public void remove(String key) {
+        mSession.remove(key);
+        Editor editor=getShared().edit();
+        editor.remove(key).commit();
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSON);
+        FileUtils.delete(mConfigService.getCacheDir()+File.separator+key+JSONA);
+        FileUtils.delete(mConfigService.getCacheDir()+File.separator+key+SER);
+    }
+
+    @Override
 	public void refresh() {
 		Map<String,?> map=getShared().getAll();
 		mSession.clear();

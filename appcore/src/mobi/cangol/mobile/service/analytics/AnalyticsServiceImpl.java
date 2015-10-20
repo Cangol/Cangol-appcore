@@ -46,7 +46,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	@Override
 	public void init(ServiceProperty serviceProperty) {
 		this.mServiceProperty=serviceProperty;
-		PoolManager.buildPool(mServiceProperty.getString(ANALYTICSSERVICE_THREAD_MAX),mServiceProperty.getInt(ANALYTICSSERVICE_THREAD_MAX));
+		PoolManager.buildPool(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME),mServiceProperty.getInt(ANALYTICSSERVICE_THREAD_MAX));
 		asyncHttpClient=AsyncHttpClient.build(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME));
 	}
 	@Override
@@ -66,8 +66,8 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	@Override
 	public ServiceProperty defaultServiceProperty() {
 		ServiceProperty sp=new ServiceProperty(TAG);
-		sp.putString(ANALYTICSSERVICE_THREAD_MAX, TAG);
-		sp.putInt(ANALYTICSSERVICE_THREADPOOL_NAME, 2);
+		sp.putString(ANALYTICSSERVICE_THREADPOOL_NAME, TAG);
+		sp.putInt(ANALYTICSSERVICE_THREAD_MAX, 2);
 		return sp;
 	}
 	@Override

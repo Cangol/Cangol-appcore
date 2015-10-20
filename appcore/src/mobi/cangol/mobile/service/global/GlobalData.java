@@ -45,10 +45,15 @@ public interface GlobalData extends AppService{
 	 * @return
 	 */
 	Object get(String name);
+    /**
+     * 删除本地缓存和内存缓存
+     * @param name
+     * @return
+     */
+    void remove(String name);
 	
 	/**
 	 * 刷新本地缓存和内存缓存
-	 * @param name
 	 * @return
 	 */
 	void refresh();

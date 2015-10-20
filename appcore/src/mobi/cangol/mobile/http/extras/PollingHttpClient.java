@@ -48,7 +48,7 @@ import android.content.Context;
 import android.util.Log;
 
 public class PollingHttpClient {
-	private final static boolean DEBUG=true;
+    public final static boolean DEBUG=true;
 	public final static  String TAG = "PollingHttpClient";
     private DefaultHttpClient httpClient;
     private final HttpContext httpContext;
@@ -116,16 +116,16 @@ public class PollingHttpClient {
     	private HttpContext context;
     	private HttpUriRequest request;
     	private final PollingResponseHandler responseHandler;
-    	private int retryTimes=5;
-    	private long sleeptimes=1000L;
+    	private int retryTimes=3;
+    	private long sleepTimes=20000L;
 		public HttpRequestTask(DefaultHttpClient client,
-				HttpContext context, HttpUriRequest request,PollingResponseHandler responseHandler,int retryTimes,long sleeptimes) {
+				HttpContext context, HttpUriRequest request,PollingResponseHandler responseHandler,int retryTimes,long sleepTimes) {
 			this.client=client;
 			this.context=context;
 			this.request=request;
 			this.responseHandler=responseHandler;
 			this.retryTimes=retryTimes;
-			this.sleeptimes=sleeptimes;
+			this.sleepTimes=sleepTimes;
 		}
 
 		@Override
@@ -137,26 +137,26 @@ public class PollingHttpClient {
 				 boolean isInterrupted=false;
 				 while(exec<retryTimes){
 					 try {
+                            if(DEBUG)Log.d(TAG, "exec="+exec);
 						 	exec++;
-						 	client.execute(request, context);
 							HttpResponse response = client.execute(request, context);
 							if(!Thread.currentThread().isInterrupted()) {
 				                if(responseHandler != null) {
 				                    if(isSuccess=responseHandler.sendResponseMessage(response))
 				                    	break;
-				                }else{
-				                	
 				                }
 				            }else{
 				            	if(DEBUG)Log.d(TAG, "Thread.isInterrupted");
 				            	break;
 				            }
 							if(!Thread.currentThread().isInterrupted()){
-								Thread.sleep(sleeptimes);
+                                Log.d(TAG,"Thread sleepTimes="+sleepTimes);
+								Thread.sleep(sleepTimes);
 							}else break;
+                            Log.d(TAG,"Thread Sleeptimes end");
 						} catch (IOException e) {
+                             responseHandler.sendFailureMessage(e, "IOException");
 							if(exec>=retryTimes){
-								responseHandler.sendFailureMessage(e, "IOException");
 								break;
 							}continue;
 						} catch (InterruptedException e) {

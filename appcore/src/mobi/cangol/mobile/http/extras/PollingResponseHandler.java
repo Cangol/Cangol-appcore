@@ -30,6 +30,7 @@ import android.os.Message;
 import android.util.Log;
 
 public class PollingResponseHandler{
+    private final static String  TAG=PollingHttpClient.TAG;
 	private final static boolean DEBUG=true;
 	protected static final int START_MESSAGE = -1;
 	protected static final int SUCCESS_MESSAGE = 0;
@@ -46,19 +47,20 @@ public class PollingResponseHandler{
         }
     }
     public boolean isFailResponse(String content){
-    	return false;
+        if(DEBUG)Log.d(TAG, "isFailResponse content="+content);
+        return false;
     }
     public void onStart() {
-    	if(DEBUG)Log.d("ResponseHandler", "onStart");
+    	if(DEBUG)Log.d(TAG, "onStart");
     }
     public void onPollingFinish(int execTimes, String content) {
-    	if(DEBUG)Log.d("ResponseHandler", "execTimes="+execTimes+" content:"+content);
+    	if(DEBUG)Log.d(TAG, "onPollingFinish execTimes="+execTimes+" content:"+content);
     }
     public void onSuccess(int statusCode, String content) {
-    	if(DEBUG)Log.d("ResponseHandler", "statusCode="+statusCode+" content:"+content);
+    	if(DEBUG)Log.d(TAG, "onSuccess statusCode="+statusCode+" content:"+content);
     }
     public void onFailure(Throwable error, String content) {
-    	if(DEBUG)Log.d("ResponseHandler", "error="+error+" content:"+content);
+    	if(DEBUG)Log.d(TAG, "onFailure error="+error+" content:"+content);
     }
     public void sendStartMessage() {
     	sendMessage(obtainMessage(START_MESSAGE, new Object[]{new Integer(-1), "exec start"}));
@@ -85,14 +87,17 @@ public class PollingResponseHandler{
             }
         } catch(IOException e) {
             sendFailureMessage(e, (String) null);
+            result=false;
         }
 
         if(status.getStatusCode() >= 300) {
             sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+            result=false;
         } else {
         	if(isFailResponse(responseBody)){
         		sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()),responseBody);
-        	}else{
+                result=false;
+            }else{
         		sendSuccessMessage(status.getStatusCode(), responseBody);
         		result=true;
         	}

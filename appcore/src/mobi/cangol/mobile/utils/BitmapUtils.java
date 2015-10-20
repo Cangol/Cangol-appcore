@@ -58,17 +58,21 @@ public class BitmapUtils {
 	 * @param alpha
 	 * @return
 	 */
-	public static Bitmap addWatermark(Bitmap src,float left,float top,String content,int alpha){
+	public static Bitmap addWatermark(Bitmap src,float left,float top,String content,int color,int size,int alpha){
 		int w = src.getWidth();
 		int h = src.getHeight();
 		Bitmap dst = Bitmap.createBitmap( w, h, Config.ARGB_8888);
 		Canvas canvas = new Canvas(dst);
 		Paint p = new Paint();
+        p.setAntiAlias(true);
+        canvas.drawBitmap(src,0,0,p);
 		String fontName = "sans";
 		Typeface font = Typeface.create(fontName,Typeface.BOLD);
-		p.setColor(Color.RED);
+        p.setAntiAlias(true);
+        p.setTextAlign(Paint.Align.CENTER);
+        p.setColor(color);
 		p.setTypeface(font);
-		p.setTextSize(22);
+		p.setTextSize(size);
 		p.setAlpha(alpha* 255 / 100);
 		canvas.drawText(content,left,top,p);
 		canvas.save(Canvas.ALL_SAVE_FLAG);
@@ -90,6 +94,7 @@ public class BitmapUtils {
 		Bitmap dst = Bitmap.createBitmap( w, h, Config.ARGB_8888);
 		Canvas canvas = new Canvas(dst);
 		Paint p = new Paint();
+        p.setAntiAlias(true);
 		canvas.drawBitmap(src,0,0,p);
 		p.setAlpha(alpha* 255 / 100);
 		canvas.drawBitmap(img,left,top,p);
