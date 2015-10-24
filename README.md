@@ -4,8 +4,8 @@
 >[详细文档](http://cangol.github.io/Cangol-appcore)
 
 引用方式
-`compile(group: 'mobi.cangol.mobile', name: 'appcore', version: '1.0.0', ext: 'jar')`
-`compile 'mobi.cangol.mobile:appcore:1.0.0'`
+`compile(group: 'mobi.cangol.mobile', name: 'appcore', version: '1.0.1', ext: 'jar')`
+`compile 'mobi.cangol.mobile:appcore:1.0.1'`
  
 ##CoreApplication
 >核心Application 提供整个库的初始化和一些方法，
@@ -87,6 +87,7 @@
 * 	[TimeUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/TimeUtils.html) 时间工具类
 * 	[UrlUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/UrlUtils.html) URL工具类
 * 	[ValidatorUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/ValidatorUtils.html) 验证工具类
+*   [RootUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/RootUtils.html) Root工具类
 
 License
 -----------
