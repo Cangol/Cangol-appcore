@@ -11,8 +11,8 @@ mobi.cangol.mobile.service.cache
 mobi.cangol.mobile.service.conf
 mobi.cangol.mobile.service.crash
 mobi.cangol.mobile.service.download
-mobi.cangol.mobile.service.global
 mobi.cangol.mobile.service.location
+mobi.cangol.mobile.service.session
 mobi.cangol.mobile.service.status
 mobi.cangol.mobile.service.upgrade
 mobi.cangol.mobile.soap
