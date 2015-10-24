@@ -34,7 +34,6 @@ import android.os.StrictMode;
 /**
  * 
  * @author Cangol
- * @date 2011-11-28
  */
 
 public class CoreApplication extends Application {

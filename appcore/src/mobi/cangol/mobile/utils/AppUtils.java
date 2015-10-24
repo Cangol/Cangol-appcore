@@ -34,7 +34,7 @@ import android.util.DisplayMetrics;
 public class AppUtils {
 	/**
 	 * 修改locale ,修改后只对新生成activity有效，旧的activity需要重启
-	 * @param resources
+	 * @param context
 	 * @param locale
 	 */
 	public static void changeLocale(Context context, Locale locale) {

@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: 'libs')
 }
 // Bintray
 Properties properties = new Properties()
@@ -15,6 +15,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
+            jniLibs.srcDirs= ['libs']
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
             aidl.srcDirs = ['src']
@@ -63,13 +64,16 @@ task sourcesJar(type: Jar) {
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    options {
-//        links "http://docs.oracle.com/javase/7/docs/api/"
-//        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
-//    }
+    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
+    options {
+        encoding "UTF-8"
+        links "http://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
+    }
     exclude '**/BuildConfig.java'
     exclude '**/R.java'
+    exclude '**/properties.xml'
 
 }
 
@@ -77,9 +81,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
+
 artifacts {
     archives sourcesJar
-    //archives javadocJar
+    archives javadocJar
 }
 
 version = properties.getProperty("LIBRARY_VERSION")

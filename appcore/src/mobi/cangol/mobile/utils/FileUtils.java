@@ -46,8 +46,8 @@ public class FileUtils {
 	
 	/**
 	 * 删除文件，可以是单个文件或文件夹
-	 * 
-	 * @param fileName待删除的文件名
+	 *
+	 * @param fileName 待删除的文件名
 	 * @return 文件删除成功返回true,否则返回false
 	 */
 	public static boolean delete(String fileName) {
@@ -67,7 +67,7 @@ public class FileUtils {
 	/**
 	 * 删除单个文件
 	 * 
-	 * @param fileName被删除文件的文件名
+	 * @param fileName 被删除文件的文件名
 	 * @return 单个文件删除成功返回true,否则返回false
 	 */
 	public static boolean deleteFile(String fileName) {
@@ -85,8 +85,7 @@ public class FileUtils {
 	/**
 	 * 删除目录（文件夹）以及目录下的文件
 	 * 
-	 * @param dir
-	 *            被删除目录的文件路径
+	 * @param dir 被删除目录的文件路径
 	 * @return 目录删除成功返回true,否则返回false
 	 */
 	public static boolean deleteDirectory(String dir) {
@@ -165,9 +164,7 @@ public class FileUtils {
 	/**
 	 * 新建目录
 	 * 
-	 * @param folderPath
-	 *            String 如 c:/fqf
-	 * @return boolean
+	 * @param folderPath String 如 c:/fqf
 	 */
 	public static void newFolder(String folderPath) {
 		try {
@@ -186,11 +183,8 @@ public class FileUtils {
 	/**
 	 * 新建文件
 	 * 
-	 * @param filePathAndName
-	 *            String 文件路径及名称 如c:/fqf.txt
-	 * @param fileContent
-	 *            String 文件内容
-	 * @return boolean
+	 * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
+	 * @param fileContent String 文件内容
 	 */
 	public static void newFile(String filePathAndName, String fileContent) {
 
@@ -218,11 +212,8 @@ public class FileUtils {
 	/**
 	 * 删除文件
 	 * 
-	 * @param filePathAndName
-	 *            String 文件路径及名称 如c:/fqf.txt
-	 * @param fileContent
-	 *            String
-	 * @return boolean
+	 * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
+	 * @param filePathAndName String
 	 */
 	public static void delFile(String filePathAndName) {
 		try {
@@ -242,8 +233,7 @@ public class FileUtils {
 	/**
 	 * 异步删除
 	 * 
-	 * @param filePathAndName
-	 *            String 文件路径及名称 如c:/fqf.txt
+	 * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
 	 */
 	public static void delFileAsync(String filePathAndName) {
 		new FileDeleter().execute(filePathAndName);
@@ -252,12 +242,7 @@ public class FileUtils {
 
 	/**
 	 * 删除文件夹
-	 * 
-	 * @param filePathAndName
-	 *            String 文件夹路径及名称 如c:/fqf
-	 * @param fileContent
-	 *            String
-	 * @return boolean
+	 * @param folderPath String 文件夹路径及名称 如c:/fqf
 	 */
 	public static void delFolder(String folderPath) {
 		try {
@@ -277,9 +262,7 @@ public class FileUtils {
 
 	/**
 	 * 删除文件夹里面的所有文件
-	 * 
-	 * @param path
-	 *            String 文件夹路径 如 c:/fqf
+	 * @param path String 文件夹路径 如 c:/fqf
 	 */
 	public static void delAllFile(String path) {
 		File file = new File(path);
@@ -310,11 +293,8 @@ public class FileUtils {
 	/**
 	 * 复制整个文件夹内容
 	 * 
-	 * @param oldPath
-	 *            String 原文件路径 如：c:/fqf
-	 * @param newPath
-	 *            String 复制后路径 如：f:/fqf/ff
-	 * @return boolean
+	 * @param oldPath String 原文件路径 如：c:/fqf
+	 * @param newPath String 复制后路径 如：f:/fqf/ff
 	 */
 	public static void copyFolder(String oldPath, String newPath) {
 
@@ -359,10 +339,8 @@ public class FileUtils {
 	/**
 	 * 移动文件到指定目录
 	 * 
-	 * @param oldPath
-	 *            String 如：c:/fqf.txt
-	 * @param newPath
-	 *            String 如：d:/fqf.txt
+	 * @param oldPath String 如：c:/fqf.txt
+	 * @param newPath String 如：d:/fqf.txt
 	 */
 	public static void moveFile(String oldPath, String newPath) {
 		copyFile(oldPath, newPath);
@@ -373,10 +351,8 @@ public class FileUtils {
 	/**
 	 * 移动文件到指定目录
 	 * 
-	 * @param oldPath
-	 *            String 如：c:/fqf.txt
-	 * @param newPath
-	 *            String 如：d:/fqf.txt
+	 * @param oldPath String 如：c:/fqf.txt
+	 * @param newPath String 如：d:/fqf.txt
 	 */
 	public static void moveFolder(String oldPath, String newPath) {
 		copyFolder(oldPath, newPath);
@@ -389,7 +365,7 @@ public class FileUtils {
 	 * @param f
 	 * @param fileList
 	 * @param suffix
-	 * @return
+     * @return
 	 */
 	public static List<File> searchBySuffix(File f, List<File> fileList,
 			String... suffix) {
@@ -479,7 +455,7 @@ public class FileUtils {
 	 * 从文件读取object
 	 * 
 	 * @param file
-	 * @return
+     *  @return
 	 */
 	public static Object readObject(File file) {
 		if (!file.exists() || file.length() == 0)
@@ -514,7 +490,6 @@ public class FileUtils {
 
 	/**
 	 * 输入流转string
-	 * 
 	 * @param is
 	 * @return
 	 */
@@ -609,7 +584,6 @@ public class FileUtils {
 	 * 获取文件夹中总文件大小
 	 * @param file
 	 * @return 文件大小 单位字节
-	 * @throws Exception
 	 */
 	public static long getFolderSize(File file) throws Exception {
 		long size = 0;

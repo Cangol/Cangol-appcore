@@ -84,7 +84,8 @@ public class DeleteBuilder {
 	/**
 	 * 添加查询条件
 	 * @param pName 字段名称
-	 * @param pValue 字段值
+	 * @param pValue1 字段值
+     * @param pValue2 字段值
 	 * @param pType 查询类型{}
 	 * @param isOr
 	 */

@@ -44,7 +44,6 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 /**
  * @author Cangol
- * @hide
  */
 @Service("CrashService")
 public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {

@@ -24,7 +24,6 @@ import android.content.Context;
 @Service("ConfigService")
 /**
  * @author Cangol
- * @hide
  */
 public class ConfigServiceImpl implements ConfigService {
 	private final static String TAG="ConfigService";

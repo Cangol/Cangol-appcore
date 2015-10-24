@@ -17,7 +17,6 @@ package mobi.cangol.mobile.logging;
 
 /**
  * 
- * @Description Log.java 
  * @author Cangol
  */
 public class Log {

@@ -31,7 +31,6 @@ import android.os.Message;
 import android.util.Log;
 /**
  * @author Cangol
- * @hide
  */
 @Service("LocationService")
 public class LocationServiceImpl implements LocationService{

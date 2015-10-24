@@ -35,7 +35,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 /**
  * @author Cangol
- * @hide
  */
 @Service("UpgradeService")
 public class UpgradeServiceImpl implements UpgradeService{

@@ -27,7 +27,6 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
 /**
  * @author Cangol
- * @hide
  */
 @Service("DownloadManager")
 public class DownloadManagerImpl implements DownloadManager{

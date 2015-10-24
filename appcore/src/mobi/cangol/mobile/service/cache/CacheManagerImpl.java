@@ -39,7 +39,6 @@ import android.text.TextUtils;
 
 /**
  * @author Cangol
- * @hide
  */
 
 @Service("CacheManager")

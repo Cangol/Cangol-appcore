@@ -32,10 +32,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 /**
- * @Description StatusServiceImpl.java
  * @author Cangol
- * @date 2013-12-28
- * @hide
  */
 @Service("StatusService")
 public class StatusServiceImpl implements StatusService {

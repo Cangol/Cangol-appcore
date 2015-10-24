@@ -128,7 +128,7 @@ public class AsyncHttpClient {
 
     /**
      * Sets an optional CookieStore to use when making requests
-     * @param cookieStore The CookieStore implementation to use, usually an instance of {@link PersistentCookieStore}
+     * @param cookieStore The CookieStore implementation to use, usually an instance of  PersistentCookieStore
      */
     public void setCookieStore(CookieStore cookieStore) {
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
@@ -137,7 +137,7 @@ public class AsyncHttpClient {
     /**
      * Overrides the threadpool implementation used when queuing/pooling
      * requests. By default, Executors.newCachedThreadPool() is used.
-     * @param threadPool an instance of {@link ThreadPoolExecutor} to use for queuing/pooling requests.
+     * @param pool an instance of {@link ThreadPoolExecutor} to use for queuing/pooling requests.
      */
     public void setThreadool(Pool pool) {
         this.threadPool = pool;
@@ -187,9 +187,9 @@ public class AsyncHttpClient {
      * @param username
      * @param password
      */
-    public void setBasicAuth(String user, String pass){
+    public void setBasicAuth(String username, String password){
         AuthScope scope = AuthScope.ANY;
-        setBasicAuth(user, pass, scope);
+        setBasicAuth(username, password, scope);
     }
     
    /**
@@ -200,8 +200,8 @@ public class AsyncHttpClient {
      * @param scope - an AuthScope object
      *
      */
-    public void setBasicAuth( String user, String pass, AuthScope scope){
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(user,pass);
+    public void setBasicAuth(String username, String password, AuthScope scope){
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username,password);
         this.httpClient.getCredentialsProvider().setCredentials(scope, credentials);
     }
 

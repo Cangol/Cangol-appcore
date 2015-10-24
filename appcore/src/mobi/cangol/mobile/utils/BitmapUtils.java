@@ -414,14 +414,12 @@ public class BitmapUtils {
 	}
 	
 	/**
-	 * @Title: createAlbumIcon 
-	 * @Description: 根据数字，创建一张带有数字的图片
-	 * @param @param number
-	 * @param @param bitmap
-	 * @param @param context
-	 * @param @return    设定文件 
-	 * @return Bitmap    返回类型 
-	 * @throws
+	 *  根据数字，创建一张带有数字的图片
+	 * @param number
+     * @param  textSize
+	 * @param  bitmap
+	 * @param  context
+	 * @return Bitmap    返回类型
 	 */
 	public static Bitmap createAlbumIcon(int number, int textSize,Bitmap bitmap, Context context) {
 		if (number == 0) {
@@ -487,8 +485,7 @@ public class BitmapUtils {
 
 	/**
 	 * Bitmap to Bytes
-	 * 
-	 * @param bm
+	 * @param bitmap
 	 * @return
 	 */
 	public static byte[] bitmap2Bytes(Bitmap bitmap) {
@@ -601,7 +598,7 @@ public class BitmapUtils {
 	}
 	/**
 	 * String转成Bitmap
-	 * @param st
+	 * @param string
 	 */
 	public static Bitmap stringToBitmap(String string){
 		Bitmap bitmap = null;

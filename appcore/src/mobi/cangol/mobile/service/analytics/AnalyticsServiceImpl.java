@@ -29,7 +29,7 @@ import android.util.Log;
 
 /**
  * @author Cangol
- * @hide
+ *
  */
 @Service("AnalyticsService")
 public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {

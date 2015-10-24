@@ -59,7 +59,7 @@ public class ValidatorUtils {
 	/**
 	 * 验证昵称格式是否正确(长度5-20,所有单词字符，包括中文，中文算2个字符)
 	 * 
-	 * @param str
+	 * @param view
 	 * @return
 	 */
 	public static boolean validateNickname(TextView view) {

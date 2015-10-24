@@ -65,7 +65,7 @@ public class StringUtils {
 	}
 	/**
 	 * 格式化为中文数量
-	 * @param time
+	 * @param num
 	 * @return
 	 */
 	public static String formatZhNum(long num) {
@@ -185,7 +185,7 @@ public class StringUtils {
 	
 	/**
 	 * check password 6-14 word
-	 * @param pwdStr
+	 * @param str
 	 * @return
 	 */
 	public static boolean checkPassword(String str) {

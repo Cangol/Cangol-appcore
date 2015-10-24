@@ -16,13 +16,14 @@
 package mobi.cangol.mobile.service.upgrade;
 
 import mobi.cangol.mobile.service.AppService;
-
+/**
+ * @author Cangol
+ *
+ */
 public interface UpgradeService extends AppService {
 
 	/**
 	 * 跟新类型枚举
-	 * @author Cangol
-	 *
 	 */
 	public enum UpgradeType {
 		APK, // apk升级
