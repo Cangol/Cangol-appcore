@@ -15,18 +15,8 @@
  */
 package mobi.cangol.mobile.service.download;
 
-import java.lang.ref.WeakReference;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import mobi.cangol.mobile.http.AsyncHttpClient;
-import mobi.cangol.mobile.service.PoolManager;
-import mobi.cangol.mobile.service.PoolManager.Pool;
+import android.content.Context;
+import android.util.Log;
 
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -41,8 +31,15 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.SyncBasicHttpContext;
 
-import android.content.Context;
-import android.util.Log;
+import java.lang.ref.WeakReference;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.Future;
+
+import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.PoolManager.Pool;
 
 public class DownloadHttpClient {
 	private final static boolean DEBUG=false;

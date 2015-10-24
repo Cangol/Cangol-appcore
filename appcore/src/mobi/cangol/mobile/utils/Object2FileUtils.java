@@ -26,8 +26,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.StreamCorruptedException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,17 +62,41 @@ public class Object2FileUtils {
 			}
 		}
 	}
+    /**
+     * 写入json对象到文件
+     * @param jsonArray
+     * @param objPath
+     */
+    public static void writeJSONArray2File(JSONArray jsonArray,String objPath){
+        File file = new File(objPath);
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            writeJSONArray(jsonArray, fileOutputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if(fileOutputStream!=null){
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileOutputStream = null;
+            }
+        }
+    }
 	/**
 	 * 读取文件到json对象
 	 * @param jsonFile
 	 * @return
 	 */
-	public static JSONObject readFile2JSONObject(File jsonFile){
+	public static JSONArray readFile2JSONArray(File jsonFile){
 		FileInputStream fileInputStream = null;
-		JSONObject jsonObject=null;
+        JSONArray jsonArray=null;
 		try {
 			fileInputStream = new FileInputStream(jsonFile);
-			jsonObject=readJSONObject(fileInputStream);
+            jsonArray=readJSONArray(fileInputStream);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally{
@@ -83,8 +109,58 @@ public class Object2FileUtils {
 				fileInputStream = null;
 			}
 		}
-		return jsonObject;	
+		return jsonArray;
 	}
+    /**
+     * 读取文件到json对象
+     * @param jsonFile
+     * @return
+     */
+    public static JSONObject readFile2JSONObject(File jsonFile){
+        FileInputStream fileInputStream = null;
+        JSONObject jsonObject=null;
+        try {
+            fileInputStream = new FileInputStream(jsonFile);
+            jsonObject=readJSONObject(fileInputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally{
+            if(fileInputStream != null){
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileInputStream = null;
+            }
+        }
+        return jsonObject;
+    }
+    /**
+     * 写入json对象到输出流
+     * @param jsonArray
+     * @param os
+     */
+    public static void writeJSONArray(JSONArray jsonArray,OutputStream os){
+        try {
+            byte[] buffer = jsonArray.toString().getBytes("UTF-8");
+            os.write(buffer);
+            os.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(os!=null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                os = null;
+            }
+        }
+    }
 	/**
 	 * 写入json对象到输出流
 	 * @param jsonObject
@@ -142,12 +218,44 @@ public class Object2FileUtils {
 		}
 		return jsonObject;	
 	}
+    /**
+     * 从输入流读取json对象
+     * @param is
+     * @return
+     */
+    public static JSONArray readJSONArray(InputStream is){
+        String content = null;
+        JSONArray jsonArray=null;
+        try {
+            byte[] buffer =new byte[is.available()];
+            if(is.read(buffer) != -1){
+                content = new String(buffer,"UTF-8");
+                if(!TextUtils.isEmpty(content))
+                    jsonArray=new JSONArray(content);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally{
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                is = null;
+            }
+        }
+        return jsonArray;
+    }
 	/**
 	 * 将object对象写入输出流
 	 * @param obj
 	 * @param out
 	 */
-	public static void writeObject(Object obj,OutputStream out) {
+	public static void writeObject(Serializable obj,OutputStream out) {
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new BufferedOutputStream(out));
@@ -169,7 +277,7 @@ public class Object2FileUtils {
 	 * @param is
 	 * @return
 	 */
-	public static Object readObject(InputStream is) {
+	public static Serializable readObject(InputStream is) {
 		Object object = null;
 		ObjectInputStream ois = null;
 		try {
@@ -191,14 +299,14 @@ public class Object2FileUtils {
 				e.printStackTrace();
 			}
 		}
-		return object;
+		return (Serializable) object;
 	}
 	/**
 	 * 将对象写入文件
 	 * @param obj
 	 * @param objPath
 	 */
-	public static void writeObject(Object obj,String objPath) {
+	public static void writeObject(Serializable obj,String objPath) {
 
 		File file = new File(objPath);
 		if (file.exists())file.delete();
@@ -221,7 +329,7 @@ public class Object2FileUtils {
 	 * @param file
 	 * @return
 	 */
-	public static Object readObject(File file) {
+	public static Serializable readObject(File file) {
 		if(!file.exists()||file.length()==0)return null;
 		Object object = null;
 		InputStream is = null;
@@ -239,6 +347,6 @@ public class Object2FileUtils {
 				e.printStackTrace();
 			}
 		}
-		return object;
+		return (Serializable) object;
 	}
 }

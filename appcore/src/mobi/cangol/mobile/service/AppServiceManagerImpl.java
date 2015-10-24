@@ -15,6 +15,16 @@
  */
 package mobi.cangol.mobile.service;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.StrictMode;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -35,21 +45,11 @@ import mobi.cangol.mobile.service.cache.CacheManagerImpl;
 import mobi.cangol.mobile.service.conf.ConfigServiceImpl;
 import mobi.cangol.mobile.service.crash.CrashServiceImpl;
 import mobi.cangol.mobile.service.download.DownloadManagerImpl;
-import mobi.cangol.mobile.service.global.GlobalDataImpl;
 import mobi.cangol.mobile.service.location.LocationServiceImpl;
+import mobi.cangol.mobile.service.session.SessionServiceImpl;
 import mobi.cangol.mobile.service.status.StatusServiceImpl;
 import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
 import mobi.cangol.mobile.utils.ClassUtils;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.StrictMode;
 
 public class AppServiceManagerImpl extends AppServiceManager {
 	private final static String  TAG=" AppServiceManager";
@@ -77,7 +77,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			classList.add(ConfigServiceImpl.class);
 			classList.add(CrashServiceImpl.class);
 			classList.add(DownloadManagerImpl.class);
-			classList.add(GlobalDataImpl.class);
+			classList.add(SessionServiceImpl.class);
 			classList.add(LocationServiceImpl.class);
 			classList.add(AnalyticsServiceImpl.class);
 			classList.add(StatusServiceImpl.class);

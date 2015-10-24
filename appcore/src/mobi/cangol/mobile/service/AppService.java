@@ -51,9 +51,9 @@ public interface AppService {
 	 */
 	public final static String DOWNLOAD_MANAGER = "DownloadManager";
 	/**
-	 * 全局缓存服务
+	 * Session服务
 	 */
-	public final static String GLOBAL_DATA = "GlobalData";
+	public final static String SESSION_SERVICE = "SessionService";
 
 	/**
 	 * 当创建时

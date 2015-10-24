@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class CacheManagerImpl implements CacheManager {
 	private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 20MB
 	private boolean mDebug;
 	private DiskLruCache mDiskLruCache;
-	private HashMap<String, HashMap<String, Object>> mContextMaps = new HashMap<String, HashMap<String, Object>>();
+	private HashMap<String, HashMap<String, Serializable>> mContextMaps = new HashMap<String, HashMap<String, Serializable>>();
 	private final Object mDiskCacheLock = new Object();
 	private boolean mDiskCacheStarting = true;
 	private File mDiskCacheDir;
@@ -113,13 +114,13 @@ public class CacheManagerImpl implements CacheManager {
 	}
 
 	@Override
-	public Object getContent(String context, String id) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+	public Serializable getContent(String context, String id) {
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
-			contextMap = new HashMap<String, Object>();
+			contextMap = new HashMap<String, Serializable>();
 			mContextMaps.put(context, contextMap);
 		}
-		Object obj = contextMap.get(id);
+        Serializable obj = contextMap.get(id);
 		if (obj == null) {
 			obj = getContentFromDiskCache(id);
 			if (obj != null)
@@ -130,14 +131,14 @@ public class CacheManagerImpl implements CacheManager {
 
 	@Override
 	public void getContent(final String context, final String id, final CacheLoader cacheLoader) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
-			contextMap = new HashMap<String, Object>();
+			contextMap = new HashMap<String, Serializable>();
 			mContextMaps.put(context, contextMap);
 		}
 		Object obj = contextMap.get(id);
 		if (obj == null) {
-			new AsyncTask<String, Void, Object>() {
+			new AsyncTask<String, Void, Serializable>() {
 				@Override
 				protected void onPreExecute() {
 					super.onPreExecute();
@@ -146,12 +147,12 @@ public class CacheManagerImpl implements CacheManager {
 				}
 
 				@Override
-				protected Object doInBackground(String... params) {
+				protected Serializable doInBackground(String... params) {
 					return getContentFromDiskCache(params[0]);
 				}
 
 				@Override
-				protected void onPostExecute(Object result) {
+				protected void onPostExecute(Serializable result) {
 					super.onPostExecute(result);
 					if (result != null)
 						addContentToMem(context, id, result);
@@ -166,9 +167,9 @@ public class CacheManagerImpl implements CacheManager {
 
 	@Override
 	public boolean hasContent(String context, String id) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
-			contextMap = new HashMap<String, Object>();
+			contextMap = new HashMap<String, Serializable>();
 			mContextMaps.put(context, contextMap);
 		}
 		Object obj = contextMap.get(id);
@@ -223,7 +224,7 @@ public class CacheManagerImpl implements CacheManager {
 	 * @param id
 	 * @return
 	 */
-	private Object getContentFromDiskCache(String id) {
+	private Serializable getContentFromDiskCache(String id) {
 		final String key = hashKeyForDisk(id);
 		synchronized (mDiskCacheLock) {
 			while (mDiskCacheStarting) {
@@ -264,10 +265,10 @@ public class CacheManagerImpl implements CacheManager {
 	 * @param id
 	 * @param data
 	 */
-	private void addContentToMem(String context, String id, Object data) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+	private void addContentToMem(String context, String id, Serializable data) {
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap) {
-			contextMap = new HashMap<String, Object>();
+			contextMap = new HashMap<String, Serializable>();
 		}
 		contextMap.put(id, data);
 		mContextMaps.put(context, contextMap);
@@ -277,7 +278,7 @@ public class CacheManagerImpl implements CacheManager {
 	 * 添加到磁盘缓存（也添加到内存缓存）
 	 */
 	@Override
-	public void addContent(String context, String id, Object data) {
+	public void addContent(String context, String id, Serializable data) {
 		Log.i(TAG, "addContent:" + id + "," + data);
 		removeContent(context, id);
 		addContentToMem(context, id, data);
@@ -290,7 +291,7 @@ public class CacheManagerImpl implements CacheManager {
 	 * @param context
 	 */
 	private void moveContentToDiskCache(String context) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap || contextMap.isEmpty())
 			return;
 		Iterator<String> iterator = contextMap.keySet().iterator();
@@ -309,7 +310,7 @@ public class CacheManagerImpl implements CacheManager {
 	 * @param id
 	 * @param data
 	 */
-	private void asyncAddContentToDiskCache(final String id, final Object data) {
+	private void asyncAddContentToDiskCache(final String id, final Serializable data) {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
@@ -324,7 +325,7 @@ public class CacheManagerImpl implements CacheManager {
 	 * @param id
 	 * @param data
 	 */
-	private void addContentToDiskCache(String id, Object data) {
+	private void addContentToDiskCache(String id, Serializable data) {
 
 		synchronized (mDiskCacheLock) {
 			// Add to disk cache
@@ -364,7 +365,7 @@ public class CacheManagerImpl implements CacheManager {
 
 	@Override
 	public void removeContext(String context) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap || contextMap.isEmpty())
 			return;
 		Iterator<String> iterator = contextMap.keySet().iterator();
@@ -386,7 +387,7 @@ public class CacheManagerImpl implements CacheManager {
 	}
 	@Override
 	public void removeContent(String context, String id) {
-		HashMap<String, Object> contextMap = mContextMaps.get(context);
+		HashMap<String, Serializable> contextMap = mContextMaps.get(context);
 		if (null == contextMap || contextMap.isEmpty())
 			return;
 		contextMap.remove(id);

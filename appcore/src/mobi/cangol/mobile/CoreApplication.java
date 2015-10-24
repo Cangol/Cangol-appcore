@@ -23,6 +23,8 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
+import mobi.cangol.mobile.service.session.SessionService;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
@@ -38,7 +40,7 @@ import android.os.StrictMode;
 public class CoreApplication extends Application {
 
 	private AppServiceManager mAppServiceManager;
-	public Session mSession;
+	public SessionService mSession;
 	private boolean mDevMode = false;
 	public List<WeakReference<Activity>> mActivityManager;
 	
@@ -55,8 +57,8 @@ public class CoreApplication extends Application {
 		} else {
 			Log.setLogLevelFormat(android.util.Log.WARN, true);
 		}
-		mSession = new Session();
 		initAppServiceManager();
+        mSession = getSession();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
 	}
 
@@ -137,11 +139,11 @@ public class CoreApplication extends Application {
 
 	/**
 	 * 获取session
-	 * 
+	 *
 	 * @return
 	 */
-	public Session getSession() {
-		return mSession;
+	public SessionService getSession() {
+		return (SessionService) getAppService(AppService.SESSION_SERVICE);
 	}
 
 	/**
