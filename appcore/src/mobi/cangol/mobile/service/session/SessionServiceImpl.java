@@ -295,7 +295,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void clear() {
+    public void clearAll() {
         mMap.clear();
         getShared().edit().clear().commit();
         FileUtils.delAllFile(mConfigService.getCacheDir());

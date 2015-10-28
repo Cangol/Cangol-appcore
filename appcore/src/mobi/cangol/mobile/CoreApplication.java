@@ -39,7 +39,6 @@ import android.os.StrictMode;
 public class CoreApplication extends Application {
 
 	private AppServiceManager mAppServiceManager;
-	public SessionService mSession;
 	private boolean mDevMode = false;
 	public List<WeakReference<Activity>> mActivityManager;
 	
@@ -57,7 +56,6 @@ public class CoreApplication extends Application {
 			Log.setLogLevelFormat(android.util.Log.WARN, true);
 		}
 		initAppServiceManager();
-        mSession = getSession();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
 	}
 
@@ -132,6 +130,7 @@ public class CoreApplication extends Application {
 	 * 
 	 * @return
 	 */
+
 	public List<WeakReference<Activity>> getActivityManager() {
 		return mActivityManager;
 	}
@@ -149,7 +148,6 @@ public class CoreApplication extends Application {
 	 * 退出应用
 	 */
 	public void exit() {
-		mSession.clear();
 		if (mAppServiceManager != null) {
 			mAppServiceManager.destory();
 		}

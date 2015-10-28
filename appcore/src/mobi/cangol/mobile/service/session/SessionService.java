@@ -147,8 +147,8 @@ public interface SessionService extends AppService {
     void refresh();
 
     /**
-     * 清除内存缓存
+     * 清除磁盘缓存和内存缓存
      */
-    void clear();
+    void clearAll();
 
 }
