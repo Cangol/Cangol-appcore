@@ -16,11 +16,15 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
         SessionService session=((CoreApplication) this.getApplicationContext()).getSession();
         if(session.containsKey("key")){
-            Log.e(">>",session.getString("key","ddd"));
+            Log.d(">>",session.getString("key","ddd"));
         }else{
             session.saveString("key", "value=" + TimeUtils.getCurrentHoursMinutes());
         }
-
-
-	}
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("app.exit");
+        ((CoreApplication)this.getApplicationContext()).exit();
+    }
 }

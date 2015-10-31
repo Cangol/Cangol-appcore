@@ -24,6 +24,10 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.session.SessionService;
+import mobi.cangol.mobile.stat.StatAgent;
+import mobi.cangol.mobile.utils.Constants;
+import mobi.cangol.mobile.utils.DeviceInfo;
+import mobi.cangol.mobile.utils.TimeUtils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -57,9 +61,11 @@ public class CoreApplication extends Application {
 		}
 		initAppServiceManager();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
+        StatAgent.getInstance(this).sendDevice();
+        StatAgent.getInstance(this).sendLaunch();
 	}
 
-	/**
+    /**
 	 * 初始化应用服务管理器
 	 */
 	private void initAppServiceManager() {
@@ -148,6 +154,8 @@ public class CoreApplication extends Application {
 	 * 退出应用
 	 */
 	public void exit() {
+        getSession().saveString(Constants.KEY_EXIT_CODE, "0");
+        getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));
 		if (mAppServiceManager != null) {
 			mAppServiceManager.destory();
 		}

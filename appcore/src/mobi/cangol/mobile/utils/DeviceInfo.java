@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +46,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Parcelable;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -283,6 +286,24 @@ public class DeviceInfo {
 		}
 		return data;
 	}
+    /**
+     * 获取StringMeta数据
+     * @param context
+     * @param key
+     * @return
+     */
+    public static String getAppStringMetaData(Context context, String key) {
+        String data = null;
+        ApplicationInfo appInfo;
+        try {
+            appInfo = context.getPackageManager().getApplicationInfo(
+                    context.getPackageName(), PackageManager.GET_META_DATA);
+            if(appInfo.metaData!=null)
+            data = appInfo.metaData.getString(key);
+        } catch (NameNotFoundException e) {
+        }
+        return data;
+    }
 	/**
 	 * 获取mac地址
 	 * @param context
@@ -328,6 +349,51 @@ public class DeviceInfo {
 	public static String getCharset() {
 		return System.getProperty("file.encoding");
 	}
+
+    /**
+     * 获取设备openUDID
+     * @param context
+     * @return
+     */
+    public static String getOpenUDID(Context context) {
+        String openUDID=null;
+        try {
+            Class clazz=Class.forName("org.OpenUDID.OpenUDID_manager");
+            Method method = clazz.getDeclaredMethod("getOpenUDID");
+            Object obj= method.invoke(null);
+            if(obj!=null){
+                openUDID=String.valueOf(obj);
+            }else{
+                syncOpenUDID(context);
+                obj= method.invoke(null);
+                openUDID=String.valueOf(obj);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return openUDID;
+    }
+    public static void syncOpenUDID(Context context) {
+        try {
+            Class clazz=Class.forName("org.OpenUDID.OpenUDID_manager");
+            Method method = clazz.getDeclaredMethod("sync",Context.class);
+            method.invoke(null,context);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 	public static String getDeviceId(Context context) {
 		String did="";
 		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

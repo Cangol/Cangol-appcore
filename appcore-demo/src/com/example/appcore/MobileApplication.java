@@ -5,6 +5,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.crash.CrashReportListener;
 import mobi.cangol.mobile.service.crash.CrashService;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.FileUtils;
 
 /**
@@ -26,7 +27,9 @@ public class MobileApplication extends CoreApplication {
 
                 @Override
                 public void report(String path,String error,String position,String context,String timestamp,String fatal) {
-                    Log.d("sendException "+error);
+                    Log.d("sendException " + error);
+                    StatAgent.getInstance(MobileApplication.this)
+                            .send(StatAgent.Builder.createException(error, position, context, timestamp, fatal));
                     FileUtils.delFileAsync(path);
                 }
 

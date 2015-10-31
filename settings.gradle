@@ -1,2 +1,2 @@
-include ':appcore-demo'
+include ':appcore-demo', ':extra'
 include ':appcore'

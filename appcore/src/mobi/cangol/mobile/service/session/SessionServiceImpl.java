@@ -2,6 +2,7 @@ package mobi.cangol.mobile.service.session;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 
 import org.json.JSONArray;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Map;
@@ -268,30 +270,39 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void refresh() {
-        Map<String, ?> map = getShared().getAll();
-        mMap.putAll(map);
         if (debug) Log.d("scan cache file");
-        List<File> list = FileUtils.searchBySuffix(new File(mConfigService.getCacheDir()), null, JSON, JSONA, SER);
-        // 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
-        System.gc();
-        for (File file : list) {
-            if (file.getName().endsWith(JSON)) {
-                JSONObject json = Object2FileUtils.readFile2JSONObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
-                mMap.put(key, json);
-            } else if (file.getName().endsWith(JSONA)) {
-                JSONObject jsona = Object2FileUtils.readFile2JSONObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
-                mMap.put(key, jsona);
-            } else if (file.getName().endsWith(SER)) {
-                Object obj = Object2FileUtils.readObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
-                mMap.put(key, obj);
-            } else {
-                //其他缓存方案
-                Log.e("found cache file");
+        new AsyncTask<String, Void, List<File>>(){
+            @Override
+            protected List<File> doInBackground(String... params) {
+                List<File> files=FileUtils.searchBySuffix(new File(params[0]), null, params[1],params[2],params[3]);
+                System.gc();
+                return files;
             }
-        }
+            @Override
+            protected void onPostExecute(List<File> files) {
+                super.onPostExecute(files);
+                for (File file : files) {
+                    if (file.getName().endsWith(JSON)) {
+                        JSONObject json = Object2FileUtils.readFile2JSONObject(file);
+                        String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
+                        mMap.put(key, json);
+                    } else if (file.getName().endsWith(JSONA)) {
+                        JSONObject jsona = Object2FileUtils.readFile2JSONObject(file);
+                        String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
+                        mMap.put(key, jsona);
+                    } else if (file.getName().endsWith(SER)) {
+                        Object obj = Object2FileUtils.readObject(file);
+                        String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
+                        mMap.put(key, obj);
+                    } else {
+                        //其他缓存方案
+                        Log.e("found cache file");
+                    }
+                }
+                Map<String, ?> map = getShared().getAll();
+                mMap.putAll(map);
+            }
+        }.execute(mConfigService.getCacheDir(), JSON, JSONA, SER);
     }
 
     @Override
@@ -300,5 +311,4 @@ public class SessionServiceImpl implements SessionService {
         getShared().edit().clear().commit();
         FileUtils.delAllFile(mConfigService.getCacheDir());
     }
-
 }

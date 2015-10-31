@@ -21,6 +21,8 @@ import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
 import android.content.Context;
+import android.text.TextUtils;
+
 @Service("ConfigService")
 /**
  * @author Cangol
@@ -30,6 +32,8 @@ public class ConfigServiceImpl implements ConfigService {
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;
+    private String mAppDir=null;
+    private String mCacheDir=null;
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
@@ -74,12 +78,16 @@ public class ConfigServiceImpl implements ConfigService {
 	
 	@Override
 	public String getAppDir() {
-		return StorageUtils.getExternalStorageDir(mContext, mServiceProperty.getString(ConfigService.APP_DIR));
+        if(mAppDir==null)
+		    mAppDir=StorageUtils.getExternalStorageDir(mContext, mServiceProperty.getString(ConfigService.APP_DIR));
+        return mAppDir;
 	}
 
 	@Override
 	public String getCacheDir() {
-		return StorageUtils.getExternalCacheDir(mContext).getAbsolutePath();
+        if(mCacheDir==null)
+            mCacheDir= StorageUtils.getExternalCacheDir(mContext).getAbsolutePath();
+        return mCacheDir;
 	}
 
 	@Override
