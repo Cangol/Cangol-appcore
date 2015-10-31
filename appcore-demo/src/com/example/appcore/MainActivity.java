@@ -7,6 +7,7 @@ import android.os.Bundle;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.session.SessionService;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class MainActivity extends Activity {
@@ -26,5 +27,17 @@ public class MainActivity extends Activity {
         super.onDestroy();
         Log.d("app.exit");
         ((CoreApplication)this.getApplicationContext()).exit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StatAgent.getInstance(this).onActivityResume("MainActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatAgent.getInstance(this).onActivityPause("MainActivity");
     }
 }

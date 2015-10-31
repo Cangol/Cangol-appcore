@@ -18,7 +18,7 @@ public class StatSession
 	private Timer mTimer;
 	private ConnectionQueue mQueue;
 	private long mLastTime;
-	private long unSentSessionLength;
+	private long unSentSessionLength=0;
 	static public StatSession instance(Context context)
 	{
 		if (instance == null)
@@ -29,6 +29,7 @@ public class StatSession
 	
 	private StatSession(Context context)
 	{
+        mLastTime=System.currentTimeMillis() / 1000;
 		mQueue = new ConnectionQueue(StatAgent.getInstance(context));
 		mTimer = new Timer();
 		mTimer.schedule(new TimerTask()
