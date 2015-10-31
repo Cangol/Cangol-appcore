@@ -52,7 +52,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     private SharedPreferences getShared() {
-        return mContext.getSharedPreferences(mConfigService.getSharedName(), Context.MODE_PRIVATE);
+        return mContext.getSharedPreferences(mConfigService.getSharedName(), Context.MODE_MULTI_PROCESS);
     }
 
     @Override
@@ -270,6 +270,8 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void refresh() {
+        Map<String, ?> map = getShared().getAll();
+        mMap.putAll(map);
         if (debug) Log.d("scan cache file");
         new AsyncTask<String, Void, List<File>>(){
             @Override
@@ -299,8 +301,6 @@ public class SessionServiceImpl implements SessionService {
                         Log.e("found cache file");
                     }
                 }
-                Map<String, ?> map = getShared().getAll();
-                mMap.putAll(map);
             }
         }.execute(mConfigService.getCacheDir(), JSON, JSONA, SER);
     }

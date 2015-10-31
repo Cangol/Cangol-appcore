@@ -49,7 +49,7 @@ public class StatAgent {
         this.context = context;
         sessionService = (SessionService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.ANALYTICS_SERVICE);
-
+        analyticsService.setDebug(true);
         itracker = analyticsService.getTracker(STAT_TRACKINGID);
 
         commonParams = this.getCommonParams();
