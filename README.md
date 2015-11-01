@@ -1,19 +1,19 @@
 #Cangol-appcore
 
->这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
->[详细文档](http://cangol.github.io/Cangol-appcore)  
->[ ![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
+这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
+[详细文档](http://cangol.github.io/Cangol-appcore)  
+[ ![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
 
 引用方式
 `compile(group: 'mobi.cangol.mobile', name: 'appcore', version: '1.0.1', ext: 'jar')`
 `compile 'mobi.cangol.mobile:appcore:1.0.1'`
  
 ##CoreApplication
->核心Application 提供整个库的初始化和一些方法，
+核心Application 提供整个库的初始化和一些方法，
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/CoreApplication.html)
 
 ##Session
->一个可以用来做缓存的集合，生命周期随Application，
+一个可以用来做缓存的集合，生命周期随Application，
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/Session.html)
 
 ##AppService
@@ -29,7 +29,7 @@
 * 	[StatusService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/status/StatusService.html) 状态监听服务
 * 	[UpgradeService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/upgrade/UpgradeService.html) 更新服务
 
->使用方式
+使用方式
 	
 	//获取方式类似系统SystemService
 	ConfigService configService = (ConfigService) getAppService(AppService.CONFIG_SERVICE);
@@ -45,18 +45,18 @@
 * 对数据对象的CRUD均无需SQL语句，并支持复杂条件租车查询。
 
 ##日志Log
->封装并重写部分方法，是的日志输出更格式化，并提供可控制“开发”和”发布“模式的开关。
->[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/logging/Log.html)
+封装并重写部分方法，是的日志输出更格式化，并提供可控制“开发”和”发布“模式的开关。
+[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/logging/Log.html)
 
 ##数据解析
->利用注解和反射实现对XML和JSON对象化数据解析
+利用注解和反射实现对XML和JSON对象化数据解析  
  轻量级解析库，无需引入fastjson或gson，比这些更轻量级，而且同样支持xml的解析。
  
 * [JsonUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/parser/JsonUtils.html)
 * [XmlUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/parser/XmlUtils.html)
 
 ##安全模块
->提供三种方式的工具类
+提供三种方式的工具类
 
 * [AESUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/AESUtils.html)
 * [Base64](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/Base64.html)
@@ -64,13 +64,13 @@
 
 ###网络Http请求
 
->修正AsyncHttpClient的部分bug，优化请求参数配置，扩展超时自动重试机制，增加gzip的支持。并扩展：
+修正AsyncHttpClient的部分bug，优化请求参数配置，扩展超时自动重试机制，增加gzip的支持。并扩展：
 
 * [PollingHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/extras/PollingHttpClient.html) 可轮询请求的httpclient
 * [RouteHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/extras/RouteHttpClient.html) 可设置不同host的httpclient
 
 ###WebService请求
->使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar 对Soap进行异步封装。[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/soap/SoapClient.html)
+使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar 对Soap进行异步封装。[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/soap/SoapClient.html)
 
 
 

@@ -152,8 +152,8 @@ public class StatAgent {
 
     public void send(Builder eventBuilder) {
         IMapBuilder builder = IMapBuilder.build();
-        builder.setAll(eventBuilder.build());
         builder.setAll(commonParams);
+        builder.setAll(eventBuilder.build());
         switch (eventBuilder.type) {
             case Device:
                 builder.setAll(getDeviceParams());
