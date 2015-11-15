@@ -1,6 +1,6 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,7 +43,7 @@ import android.text.TextUtils;
 
 public class FileUtils {
 	public static final String TAG="FileUtils";
-	
+
 	/**
 	 * 删除文件，可以是单个文件或文件夹
 	 *
@@ -66,7 +66,7 @@ public class FileUtils {
 
 	/**
 	 * 删除单个文件
-	 * 
+	 *
 	 * @param fileName 被删除文件的文件名
 	 * @return 单个文件删除成功返回true,否则返回false
 	 */
@@ -84,7 +84,7 @@ public class FileUtils {
 
 	/**
 	 * 删除目录（文件夹）以及目录下的文件
-	 * 
+	 *
 	 * @param dir 被删除目录的文件路径
 	 * @return 目录删除成功返回true,否则返回false
 	 */
@@ -136,7 +136,7 @@ public class FileUtils {
 
 	/**
 	 * 拷贝文件oldPath到newPath
-	 * 
+	 *
 	 * @param oldPath
 	 * @param newPath
 	 */
@@ -163,7 +163,7 @@ public class FileUtils {
 
 	/**
 	 * 新建目录
-	 * 
+	 *
 	 * @param folderPath String 如 c:/fqf
 	 */
 	public static void newFolder(String folderPath) {
@@ -182,7 +182,7 @@ public class FileUtils {
 
 	/**
 	 * 新建文件
-	 * 
+	 *
 	 * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
 	 * @param fileContent String 文件内容
 	 */
@@ -211,7 +211,7 @@ public class FileUtils {
 
 	/**
 	 * 删除文件
-	 * 
+	 *
 	 * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
 	 * @param filePathAndName String
 	 */
@@ -232,7 +232,7 @@ public class FileUtils {
 
 	/**
 	 * 异步删除
-	 * 
+	 *
 	 * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
 	 */
 	public static void delFileAsync(String filePathAndName) {
@@ -292,7 +292,7 @@ public class FileUtils {
 
 	/**
 	 * 复制整个文件夹内容
-	 * 
+	 *
 	 * @param oldPath String 原文件路径 如：c:/fqf
 	 * @param newPath String 复制后路径 如：f:/fqf/ff
 	 */
@@ -338,7 +338,7 @@ public class FileUtils {
 
 	/**
 	 * 移动文件到指定目录
-	 * 
+	 *
 	 * @param oldPath String 如：c:/fqf.txt
 	 * @param newPath String 如：d:/fqf.txt
 	 */
@@ -350,7 +350,7 @@ public class FileUtils {
 
 	/**
 	 * 移动文件到指定目录
-	 * 
+	 *
 	 * @param oldPath String 如：c:/fqf.txt
 	 * @param newPath String 如：d:/fqf.txt
 	 */
@@ -361,7 +361,7 @@ public class FileUtils {
 
 	/**
 	 * 按后缀遍历目录
-	 * 
+	 *
 	 * @param f
 	 * @param fileList
 	 * @param suffix
@@ -392,7 +392,7 @@ public class FileUtils {
 
 	/**
 	 * 将字符串写入文件
-	 * 
+	 *
 	 * @param file
 	 * @param content
 	 */
@@ -421,7 +421,7 @@ public class FileUtils {
 
 	/**
 	 * 将object写入文件
-	 * 
+	 *
 	 * @param obj
 	 * @param objPath
 	 */
@@ -453,7 +453,7 @@ public class FileUtils {
 
 	/**
 	 * 从文件读取object
-	 * 
+	 *
 	 * @param file
      *  @return
 	 */
@@ -511,7 +511,7 @@ public class FileUtils {
 
 	/**
 	 * 获取格式化的文件大小
-	 * 
+	 *
 	 * @param length
 	 * @return
 	 */
@@ -601,7 +601,7 @@ public class FileUtils {
 		}
 		return size;
 	}
-	
+
 	static class FileDeleter extends AsyncTask<String, Void, Void> {
 
 		@Override

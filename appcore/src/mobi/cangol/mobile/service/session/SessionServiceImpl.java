@@ -42,7 +42,7 @@ public class SessionServiceImpl implements SessionService {
     private Map<String, Object> mMap = null;
 
     @Override
-    public void onCreate(Context context) {
+    public vo id onCreate(Context context) {
         mContext = context;
         //这里使用application中的session也可实例化一个新的
         CoreApplication app = (CoreApplication) mContext.getApplicationContext();

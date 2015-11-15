@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mobi.cangol.mobile.http.AsyncHttpClient;
+import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
+import mobi.cangol.mobile.http.BinaryHttpResponseHandler;
 import mobi.cangol.mobile.http.JsonHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.logging.Log;
@@ -21,6 +23,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
  * API请求Cient
  */
 class ApiClient {
+
     public enum Method {
         GET,
         POST
@@ -30,7 +33,7 @@ class ApiClient {
     public static final boolean DEBUG = true;
     public static final int MAX_THREAD = 5;
     public static final String ERROR = "-1";
-    public static final String ERROR_CONNECT = "网络无法连接,请检查网络";
+    public static final String ERROR_CONNECT = "network error,Please retry!";
     private AsyncHttpClient mAsyncHttpClient;
     private Context mContext;
     private static ApiClient client = null;
@@ -52,7 +55,7 @@ class ApiClient {
         mAsyncHttpClient.cancelRequests(tag, mayInterruptIfRunning);
     }
 
-    public <E, T> void execute(Object tag, Method method, final String url, HashMap<String, Object> params, String root, final OnResponse onResponse) {
+    public <E, T> void execute(Object tag, Method method,final String url, HashMap<String, Object> params, String root, final OnResponse onResponse) {
         RequestParams requestParams = new RequestParams();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getValue() instanceof File) {
@@ -75,13 +78,29 @@ class ApiClient {
             return;
         }
         if (method == Method.GET) {
-            executeGet(tag, url, requestParams, root, onResponse);
+            if(onResponse instanceof  OnJsonResponse){
+                executeGetJson(tag, url, requestParams, root, (OnJsonResponse) onResponse);
+            }else if(onResponse instanceof  OnBinaryResponse){
+                executeGetBinary(tag, url, requestParams, root, (OnBinaryResponse) onResponse);
+            }else if(onResponse instanceof  OnStringResponse){
+                executeGetString(tag, url, requestParams, root, (OnStringResponse) onResponse);
+            }else{
+
+            }
         } else {
-            executePost(tag, url, requestParams, root, onResponse);
+            if(onResponse instanceof  OnJsonResponse){
+                executePostJson(tag, url, requestParams, root, (OnJsonResponse) onResponse);
+            }else if(onResponse instanceof  OnBinaryResponse){
+                executePostBinary(tag, url, requestParams, root, (OnBinaryResponse) onResponse);
+            }else if(onResponse instanceof  OnStringResponse){
+                executePostString(tag, url, requestParams, root, (OnStringResponse) onResponse);
+            }else{
+
+            }
         }
     }
+    private void executeGetJson(Object tag, final String url, RequestParams params, final String root, final OnJsonResponse onResponse) {
 
-    private void executeGet(Object tag, final String url, RequestParams params, final String root, final OnResponse onResponse) {
         mAsyncHttpClient.get(tag, url, params, new JsonHttpResponseHandler() {
             long lastTime = 0;
 
@@ -111,7 +130,7 @@ class ApiClient {
         });
     }
 
-    private void executePost(Object tag, final String url, RequestParams params, final String root, final OnResponse onResponse) {
+    private void executePostJson(Object tag, final String url, RequestParams params, final String root, final OnJsonResponse onResponse) {
         mAsyncHttpClient.post(tag, url, params, new JsonHttpResponseHandler() {
             long lastTime = 0;
 
@@ -140,11 +159,146 @@ class ApiClient {
         });
     }
 
-    public interface OnResponse {
+    private void executeGetBinary(Object tag, final String url, RequestParams params, final String root, final OnBinaryResponse onResponse) {
+
+        mAsyncHttpClient.get(tag, url, params, new BinaryHttpResponseHandler() {
+            long lastTime = 0;
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                lastTime = System.currentTimeMillis();
+            }
+
+            @Override
+            public void onSuccess(byte[] response) {
+                super.onSuccess(response);
+                if (DEBUG) Log.d("executeGet idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onSuccess(response);
+
+            }
+
+            @Override
+            public void onFailure(Throwable e, String errorResponse) {
+                if (DEBUG) Log.d("executeGet idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onFailure(ERROR, errorResponse);
+            }
+
+
+        });
+    }
+
+    private void executePostBinary(Object tag, final String url, RequestParams params, final String root, final OnBinaryResponse onResponse) {
+        mAsyncHttpClient.post(tag, url, params, new BinaryHttpResponseHandler() {
+            long lastTime = 0;
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                lastTime = System.currentTimeMillis();
+            }
+
+            @Override
+            public void onSuccess(byte[] response) {
+                super.onSuccess(response);
+                if (DEBUG) Log.d("executePost idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onSuccess(response);
+
+            }
+
+            @Override
+            public void onFailure(Throwable e, String errorResponse) {
+                if (DEBUG) Log.d("executePost idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onFailure(ERROR, errorResponse);
+            }
+
+        });
+    }
+    private void executeGetString(Object tag, final String url, RequestParams params, final String root, final OnStringResponse onResponse) {
+
+        mAsyncHttpClient.get(tag, url, params, new AsyncHttpResponseHandler() {
+            long lastTime = 0;
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                lastTime = System.currentTimeMillis();
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                super.onSuccess(response);
+                if (DEBUG) Log.d("executeGet idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onSuccess(response);
+
+            }
+
+            @Override
+            public void onFailure(Throwable e, String errorResponse) {
+                if (DEBUG) Log.d("executeGet idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onFailure(ERROR, errorResponse);
+            }
+
+
+        });
+    }
+
+    private void executePostString(Object tag, final String url, RequestParams params, final String root, final OnStringResponse onResponse) {
+        mAsyncHttpClient.post(tag, url, params, new AsyncHttpResponseHandler() {
+            long lastTime = 0;
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                lastTime = System.currentTimeMillis();
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                super.onSuccess(response);
+                if (DEBUG) Log.d("executePost idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onSuccess(response);
+
+            }
+
+            @Override
+            public void onFailure(Throwable e, String errorResponse) {
+                if (DEBUG) Log.d("executePost idle:" + (System.currentTimeMillis() - lastTime));
+                if (onResponse != null)
+                    onResponse.onFailure(ERROR, errorResponse);
+            }
+
+        });
+    }
+
+    protected interface OnResponse {
+
         void onStart();
 
-        void onSuccess(JSONObject response);
-
         void onFailure(String code, String response);
+    }
+
+    public interface OnJsonResponse extends OnResponse{
+
+        void onSuccess(JSONObject response);
+    }
+
+    public interface OnStringResponse extends OnResponse{
+
+        void onSuccess(String response);
+
+    }
+
+    public interface OnBinaryResponse extends OnResponse{
+
+        void onSuccess(byte[] response);
+
     }
 }
