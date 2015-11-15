@@ -1,7 +1,5 @@
 package mobi.cangol.mobile.api;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 public abstract class Result<T>  {
@@ -65,10 +63,10 @@ public abstract class Result<T>  {
     /**
      * 返回一个解析好的Result对象
      * @param c
-     * @param json
+     * @param response
      * @param root
      * @param <T>
      * @return
      */
-    public abstract <T> Result<T> parserResult(Class<T> c, JSONObject json, String root);
+    public abstract <T> Result<T> parserResult(Class<T> c, Object response, String root);
 }

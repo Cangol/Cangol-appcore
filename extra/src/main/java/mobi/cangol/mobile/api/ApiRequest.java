@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
@@ -161,14 +162,14 @@ public class ApiRequest {
     /**
      * 解析Result
      **/
-    private <T> Result<T> parserResult(Class<? extends Result> clazz, Class<T> c, JSONObject json, String root) {
+    private <T> Result<T> parserResult(Class<? extends Result> clazz, Class<T> c, Object response, String root) {
         if (clazz == null || clazz == Result.class) {
             throw new IllegalArgumentException("must be setResultClass");
         } else {
             Result result = null;
             try {
                 result = clazz.newInstance();
-                return result.parserResult(c, json, root);
+                return result.parserResult(c, response, root);
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -199,7 +200,7 @@ public class ApiRequest {
      * @param onDataLoader
      * @param <T>
      */
-    public <T> void execute(String methodStr, String url, HashMap<String, Object> params, String root, final OnDataLoader<T> onDataLoader) {
+    public <T> void execute(String methodStr, String url, HashMap<String, Object> params, String root, final OnDataLoader<T> onDataLoader) throws IllegalFormatException {
         this.mMethod = methodStr;
         this.mUrl = url;
         this.mParams = params;
@@ -209,6 +210,9 @@ public class ApiRequest {
             method = ApiClient.Method.GET;
         } else {
             method = ApiClient.Method.POST;
+        }
+        if(resultClass==Result.class){
+            throw new IllegalArgumentException("you must set json resultClass ");
         }
         mApiClient.execute(mTag, method, mUrl, mParams, mRoot, new ApiClient.OnJsonResponse() {
             @Override
@@ -256,11 +260,11 @@ public class ApiRequest {
      * @param methodStr
      * @param url
      * @param params
-     * @param onResponse
+     * @param onDataLoader
      * @param <T>
      */
 
-    public <T> void executeResultBinary(String methodStr, String url, HashMap<String, Object> params, final ApiClient.OnBinaryResponse onResponse) {
+    public <T> void executeResultString(String methodStr, String url, HashMap<String, Object> params, final OnDataLoader<T> onDataLoader) {
         this.mMethod = methodStr;
         this.mUrl = url;
         this.mParams = params;
@@ -271,7 +275,47 @@ public class ApiRequest {
         } else {
             method = ApiClient.Method.POST;
         }
-        mApiClient.execute(mTag, method, mUrl, mParams, mRoot, onResponse);
+        if(resultClass==Result.class){
+            throw new IllegalArgumentException("you must set String resultClass ");
+        }
+        mApiClient.execute(mTag, method, mUrl, mParams, mRoot, new ApiClient.OnStringResponse() {
+            @Override
+            public void onStart() {
+                if (onDataLoader != null) onDataLoader.onStart();
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                if (DEBUG) Log.d("onSuccess response=" + response);
+
+                if (DEBUG) Log.d("Parser resultClass:" + resultClass);
+
+                Class<?> c = getGenericClass(onDataLoader.getClass().getGenericSuperclass());
+                if (DEBUG) Log.d("Parser class:" + c);
+
+                Result result = parserResult(resultClass, c, response, mRoot);
+
+                if (onDataLoader != null) onDataLoader.setResult(result);
+
+                if (result.isSuccess()) {
+                    if (result.getObject() != null) {
+                        if (onDataLoader != null) onDataLoader.onSuccess((T) result.getObject());
+                    } else {
+                        if (onDataLoader != null) onDataLoader.onSuccess((T) result.getList());
+                    }
+                } else {
+                    if (onDataLoader != null)
+                        onDataLoader.onFailure(result.getCode(), result.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(String code, String response) {
+                if (DEBUG) Log.d("onFailure code=" + code + ",response=" + response);
+                if (onDataLoader != null) onDataLoader.onFailure(code, response);
+
+            }
+        });
     }
 
     /**
@@ -280,10 +324,10 @@ public class ApiRequest {
      * @param methodStr
      * @param url
      * @param params
-     * @param onResponse
+     * @param onDataLoader
      * @param <T>
      */
-    public <T> void executeResultString(String methodStr, String url, HashMap<String, Object> params, final ApiClient.OnStringResponse onResponse) {
+    public <T> void executeResultBinary(String methodStr, String url, HashMap<String, Object> params, final OnDataLoader<T> onDataLoader) {
         this.mMethod = methodStr;
         this.mUrl = url;
         this.mParams = params;
@@ -294,6 +338,45 @@ public class ApiRequest {
         } else {
             method = ApiClient.Method.POST;
         }
-        mApiClient.execute(mTag, method, mUrl, mParams, null, onResponse);
+        if(resultClass==Result.class){
+            throw new IllegalArgumentException("you must set Binary resultClass ");
+        }
+        mApiClient.execute(mTag, method, mUrl, mParams, mRoot, new ApiClient.OnBinaryResponse() {
+            @Override
+            public void onStart() {
+                if (onDataLoader != null) onDataLoader.onStart();
+            }
+
+            @Override
+            public void onSuccess(byte[] response) {
+                if (DEBUG) Log.d("onSuccess response=" + response);
+
+                if (DEBUG) Log.d("Parser resultClass:" + resultClass);
+
+                Class<?> c = getGenericClass(onDataLoader.getClass().getGenericSuperclass());
+
+                Result result = parserResult(resultClass, c, response, mRoot);
+
+                if (onDataLoader != null) onDataLoader.setResult(result);
+
+                if (result.isSuccess()) {
+                    if (result.getObject() != null) {
+                        if (onDataLoader != null) onDataLoader.onSuccess((T) result.getObject());
+                    } else {
+                        if (onDataLoader != null) onDataLoader.onSuccess((T) result.getList());
+                    }
+                } else {
+                    if (onDataLoader != null)
+                        onDataLoader.onFailure(result.getCode(), result.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(String code, String response) {
+                if (DEBUG) Log.d("onFailure code=" + code + ",response=" + response);
+                if (onDataLoader != null) onDataLoader.onFailure(code, response);
+
+            }
+        });
     }
 }
