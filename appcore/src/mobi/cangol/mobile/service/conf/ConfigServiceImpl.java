@@ -21,6 +21,7 @@ import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 
 @Service("ConfigService")
@@ -32,8 +33,7 @@ public class ConfigServiceImpl implements ConfigService {
 	private Context mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;
-    private String mAppDir=null;
-    private String mCacheDir=null;
+    private boolean mUseInternalStorage=false;
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
@@ -55,8 +55,6 @@ public class ConfigServiceImpl implements ConfigService {
 	@Override
 	public ServiceProperty defaultServiceProperty() {
 		ServiceProperty sp=new ServiceProperty(TAG);
-
-		sp.putString(APP_DIR, "app_ext");
 		sp.putString(IMAGE_DIR, "image");
 		sp.putString(DOWNLOAD_DIR, "download");
 		sp.putString(TEMP_DIR,"temp");
@@ -75,39 +73,46 @@ public class ConfigServiceImpl implements ConfigService {
 	public void onDestory() {
 		
 	}
+
+    public void setUseInternalStorage(boolean useInternalStorage) {
+        this.mUseInternalStorage = useInternalStorage;
+    }
+
+    public File getFileDir(String name) {
+        if(mUseInternalStorage){
+            return  mContext.getFileStreamPath(name);
+        }else{
+            return StorageUtils.getExternalFileDir(mContext,name);
+        }
+    }
+
+	@Override
+	public File getCacheDir() {
+        if(mUseInternalStorage){
+            return  mContext.getCacheDir();
+        }else{
+            return mContext.getExternalCacheDir();
+        }
+	}
+
+	@Override
+	public File getImageDir() {
+		return getFileDir(mServiceProperty.getString(ConfigService.IMAGE_DIR));
+	}
+
+	@Override
+	public File getTempDir() {
+		return getFileDir(mServiceProperty.getString(ConfigService.TEMP_DIR));
+	}
+
+	@Override
+	public File getDownloadDir() {
+		return getFileDir(mServiceProperty.getString(ConfigService.DOWNLOAD_DIR));
+	}
 	
 	@Override
-	public String getAppDir() {
-        if(mAppDir==null)
-		    mAppDir=StorageUtils.getExternalStorageDir(mContext, mServiceProperty.getString(ConfigService.APP_DIR));
-        return mAppDir;
-	}
-
-	@Override
-	public String getCacheDir() {
-        if(mCacheDir==null)
-            mCacheDir= StorageUtils.getExternalCacheDir(mContext).getAbsolutePath();
-        return mCacheDir;
-	}
-
-	@Override
-	public String getImageDir() {
-		return getAppDir()+File.separator+mServiceProperty.getString(ConfigService.IMAGE_DIR);
-	}
-
-	@Override
-	public String getTempDir() {
-		return getAppDir()+File.separator+mServiceProperty.getString(ConfigService.TEMP_DIR);
-	}
-
-	@Override
-	public String getDownloadDir() {
-		return getAppDir()+File.separator+mServiceProperty.getString(ConfigService.DOWNLOAD_DIR);
-	}
-	
-	@Override
-	public String getUpgradeDir() {
-		return getAppDir()+File.separator+mServiceProperty.getString(ConfigService.UPGRADE_DIR);
+	public File getUpgradeDir() {
+		return getFileDir(mServiceProperty.getString(ConfigService.UPGRADE_DIR));
 	}
 	
 	@Override

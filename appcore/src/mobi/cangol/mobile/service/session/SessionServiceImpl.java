@@ -302,13 +302,13 @@ public class SessionServiceImpl implements SessionService {
                     }
                 }
             }
-        }.execute(mConfigService.getCacheDir(), JSON, JSONA, SER);
+        }.execute(mConfigService.getCacheDir().getAbsolutePath(), JSON, JSONA, SER);
     }
 
     @Override
     public void clearAll() {
         mMap.clear();
         getShared().edit().clear().commit();
-        FileUtils.delAllFile(mConfigService.getCacheDir());
+        FileUtils.delAllFile(mConfigService.getCacheDir().getAbsolutePath());
     }
 }

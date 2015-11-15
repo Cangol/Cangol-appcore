@@ -66,7 +66,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
         mSessionService=(SessionService) app.getAppService(AppService.SESSION_SERVICE);
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
-		FileUtils.newFolder(mConfigService.getTempDir());
+		FileUtils.newFolder(mConfigService.getTempDir().getAbsolutePath());
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {
@@ -200,7 +200,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 				}
 			}
 			
-		}.execute(mConfigService.getTempDir());
+		}.execute(mConfigService.getTempDir().getAbsolutePath());
 	}
 	
 	

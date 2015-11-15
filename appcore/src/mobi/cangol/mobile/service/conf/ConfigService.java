@@ -15,11 +15,12 @@
  */
 package mobi.cangol.mobile.service.conf;
 
+import java.io.File;
+
 import mobi.cangol.mobile.service.AppService;
 
 public interface ConfigService extends AppService{
 	
-	public final static String APP_DIR="app_dir";
 	public final static String IMAGE_DIR="image_dir";
 	public final static String DOWNLOAD_DIR="download_dir";
 	public final static String TEMP_DIR="temp_dir";
@@ -27,34 +28,30 @@ public interface ConfigService extends AppService{
 	public final static String DATABASE_NAME="database_name";
 	public final static String SHARED_NAME="shared_name";
 	/**
-	 * 获取应用目录
-	 */
-	String getAppDir();
-	/**
 	 * 获取缓存目录
 	 * @return
 	 */
-	String getCacheDir();
+	File getCacheDir();
 	/**
 	 * 获取图片目录
 	 * @return
 	 */
-	String getImageDir();
+    File getImageDir();
 	/**
 	 * 获取临时目录
 	 * @return
 	 */
-	String getTempDir();
+    File getTempDir();
 	/**
 	 * 获取下载目录
 	 * @return
 	 */
-	String getDownloadDir();
+    File getDownloadDir();
 	/**
 	 * 获取更新目录
 	 * @return
 	 */
-	String getUpgradeDir();
+    File getUpgradeDir();
 	/**
 	 * 获取数据库名称
 	 * @return
@@ -65,4 +62,10 @@ public interface ConfigService extends AppService{
 	 * @return
 	 */
 	String getSharedName();
+
+    /**
+     * 使用内部存储
+     * @param useInternalStorage
+     */
+    void setUseInternalStorage(boolean useInternalStorage);
 }

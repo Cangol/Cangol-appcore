@@ -55,7 +55,18 @@ public class StorageUtils {
 		}
 		return true;
 	}
-
+    @TargetApi(8)
+    public static File getExternalFileDir(Context context, String uniqueName) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO
+                && context.getExternalFilesDir(uniqueName) != null) {
+            return context.getExternalFilesDir(uniqueName);
+        }
+        // Before Froyo we need to construct the external cache dir ourselves
+        final String cacheDir = "/Android/data/" + context.getPackageName()
+                + "/uniqueName/";
+        return new File(Environment.getExternalStorageDirectory().getPath()
+                + uniqueName);
+    }
 	@TargetApi(8)
 	public static File getExternalCacheDir(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO
