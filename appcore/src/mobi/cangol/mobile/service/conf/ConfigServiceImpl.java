@@ -20,7 +20,10 @@ import java.io.File;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
+
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -77,21 +80,28 @@ public class ConfigServiceImpl implements ConfigService {
     public void setUseInternalStorage(boolean useInternalStorage) {
         this.mUseInternalStorage = useInternalStorage;
     }
-
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public File getFileDir(String name) {
         if(mUseInternalStorage){
             return  mContext.getFileStreamPath(name);
         }else{
-            return StorageUtils.getExternalFileDir(mContext,name);
+            if(!Environment.isExternalStorageEmulated())
+                return  mContext.getFileStreamPath(name);
+            else
+                return StorageUtils.getExternalFileDir(mContext, name);
         }
     }
 
-	@Override
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
 	public File getCacheDir() {
         if(mUseInternalStorage){
             return  mContext.getCacheDir();
         }else{
-            return mContext.getExternalCacheDir();
+            if(!Environment.isExternalStorageEmulated())
+                return  mContext.getCacheDir();
+            else
+                return mContext.getExternalCacheDir();
         }
 	}
 
