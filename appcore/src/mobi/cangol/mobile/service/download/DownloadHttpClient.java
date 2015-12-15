@@ -52,17 +52,17 @@ public class DownloadHttpClient {
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
     private Pool threadPool;
     protected DownloadHttpClient(String group) {
-        
-    	httpContext = new SyncBasicHttpContext(new BasicHttpContext());
-		httpClient = new DefaultHttpClient();
-		ClientConnectionManager mgr = httpClient.getConnectionManager();
-		HttpParams params = httpClient.getParams();
-		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_SOCKET_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(params, DEFAULT_SOCKET_TIMEOUT);
-		HttpConnectionParams.setSocketBufferSize(params, DEFAULT_SOCKET_BUFFER_SIZE);
-		HttpClientParams.setRedirecting(params, true);
-		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
-		httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
+
+        httpContext = new SyncBasicHttpContext(new BasicHttpContext());
+        httpClient = new DefaultHttpClient();
+        ClientConnectionManager mgr = httpClient.getConnectionManager();
+        HttpParams params = httpClient.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, DEFAULT_SOCKET_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, DEFAULT_SOCKET_TIMEOUT);
+        HttpConnectionParams.setSocketBufferSize(params, DEFAULT_SOCKET_BUFFER_SIZE);
+        HttpClientParams.setRedirecting(params, true);
+        httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+        httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
 		threadPool = PoolManager.getPool(group);
 
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
@@ -80,22 +80,21 @@ public class DownloadHttpClient {
     public void setThreadool(Pool pool) {
         this.threadPool = pool;
     }
-    public Future<?> send(Context context,String url,DownloadResponseHandler responseHandler,long from,String saveFile) {
+    public Future<?> send(Context context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         HttpUriRequest request = new HttpGet(url);
-        if(DEBUG)Log.d(TAG, "url:"+request.getURI().toString());
-        return sendRequest(httpClient,httpContext,request,null,responseHandler,context,from,saveFile);
+        if (DEBUG) Log.d(TAG, "url:" + request.getURI().toString());
+        return sendRequest(httpClient, httpContext, request, null, responseHandler, context, from, saveFile);
     }
 
-    protected Future<?> sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType,DownloadResponseHandler responseHandler, Context context,long from,String saveFile) {
-        if(contentType != null) {
+    protected Future<?> sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, DownloadResponseHandler responseHandler, Context context, long from, String saveFile) {
+        if (contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }
-
         Future<?> request = threadPool.submit(new DownloadThread(client, httpContext, uriRequest, responseHandler, from, saveFile));
-        if(context != null) {
+        if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
-            if(requestList == null) {
+            if (requestList == null) {
                 requestList = new LinkedList<WeakReference<Future<?>>>();
                 requestMap.put(context, requestList);
             }
@@ -103,19 +102,19 @@ public class DownloadHttpClient {
         }
         return request;
     }
-    
+
     public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
-        if(requestList != null) {
-            for(WeakReference<Future<?>> requestRef : requestList) {
-            	Future<?> request = requestRef.get();
-                if(request != null) {
+        if (requestList != null) {
+            for (WeakReference<Future<?>> requestRef : requestList) {
+                Future<?> request = requestRef.get();
+                if (request != null) {
                     request.cancel(mayInterruptIfRunning);
-                    if(DEBUG)Log.d(TAG, "cancelRequests");
+                    if (DEBUG) Log.d(TAG, "cancelRequests");
                 }
             }
         }
         requestMap.remove(context);
     }
-    
+
 }
