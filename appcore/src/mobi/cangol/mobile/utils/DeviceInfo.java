@@ -269,6 +269,20 @@ public class DeviceInfo {
 		}
 		return result;
 	}
+    /**
+     * 获取app版本号
+     * @param context
+     * @return
+     */
+    public static int getAppVersionCode(Context context) {
+        int result = -1;
+        try {
+            result = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), 0).versionCode;
+        } catch (NameNotFoundException e) {
+        }
+        return result;
+    }
 	/**
 	 * 获取Meta数据
 	 * @param context
