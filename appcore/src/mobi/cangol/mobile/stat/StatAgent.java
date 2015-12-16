@@ -19,7 +19,7 @@ import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
     private final static String SDK_VERSION = "1.0";
-    private final static String STAT_HOST_URL = "http://192.168.1.2:8080/cmweb/";
+    private final static String STAT_HOST_URL = "http://www.cangol.mobi/cmweb/";
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
     private final static String STAT_ACTION_EVENT = "api/countly/event.do";
     private final static String STAT_ACTION_TIMING = "api/countly/qos.do";
@@ -49,7 +49,7 @@ public class StatAgent {
         this.context = context;
         sessionService = (SessionService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.ANALYTICS_SERVICE);
-        analyticsService.setDebug(true);
+        analyticsService.setDebug(false);
         itracker = analyticsService.getTracker(STAT_TRACKINGID);
 
         commonParams = this.getCommonParams();

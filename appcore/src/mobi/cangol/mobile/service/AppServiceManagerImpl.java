@@ -86,7 +86,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		
 		System.gc();
 		initServiceMap(classList);
-		initServiceProperties();
+		//initServiceProperties();
 	}
 	private void initServiceMap(List<Class<? extends AppService>> classList) {	
 		for(Class<? extends AppService> clazz:classList){
