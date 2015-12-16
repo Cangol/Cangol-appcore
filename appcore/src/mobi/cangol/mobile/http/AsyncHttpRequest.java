@@ -18,6 +18,8 @@
 
 package mobi.cangol.mobile.http;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
@@ -78,6 +80,7 @@ class AsyncHttpRequest implements Runnable {
                     responseHandler.sendResponseMessage(response);
                 }
             } else{
+                 Log.d("AsyncHttpRequest", "Thread.isInterrupted");
                 //TODO: should raise InterruptedException? this block is reached whenever the request is cancelled before its response is received
             }
         }

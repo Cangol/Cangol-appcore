@@ -33,6 +33,7 @@ import java.util.HashSet;
 import javax.net.ssl.SSLHandshakeException;
 
 import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.protocol.ExecutionContext;
@@ -49,6 +50,7 @@ private static HashSet<Class<?>> exceptionBlacklist = new HashSet<Class<?>>();
 static {
     // Retry if the server dropped connection on us
     exceptionWhitelist.add(NoHttpResponseException.class);
+    exceptionWhitelist.add(ClientProtocolException.class);
     // retry-this, since it may happens as part of a Wi-Fi to 3G failover
     exceptionWhitelist.add(UnknownHostException.class);
     // retry-this, since it may happens as part of a Wi-Fi to 3G failover
@@ -67,7 +69,6 @@ public RetryHandler(int maxRetries) {
 }
 
 public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
-	 Log.e(">>", "retryRequest:" +exception.getClass()+" executionCount="+executionCount);
     boolean retry = true;
 
     Boolean b = (Boolean) context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
@@ -90,9 +91,9 @@ public boolean retryRequest(IOException exception, int executionCount, HttpConte
     if(retry) {
         // resend all idempotent requests
         HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute( ExecutionContext.HTTP_REQUEST );
-        Log.d(">>", "currentReq="+currentReq);
+        Log.d("RetryHandler", "currentReq="+currentReq);
         String requestType = currentReq.getMethod();
-        retry = !"POST".equals(requestType);
+        //retry = !"POST".equals(requestType);
     }
 
     if(retry) {
@@ -100,7 +101,7 @@ public boolean retryRequest(IOException exception, int executionCount, HttpConte
     } else {
         exception.printStackTrace();
     }
-
+    Log.d("RetryHandler", "retryRequest:" + exception.getClass() + " executionCount=" + executionCount + " retry="+retry);
     return retry;
 }
 }
