@@ -91,7 +91,7 @@ public class HttpClientFactory {
 		HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setUserAgent(httpParams, String.format("android"));
         HttpProtocolParams.setContentCharset(httpParams, HTTP.DEFAULT_CONTENT_CHARSET);
-        HttpProtocolParams.setUseExpectContinue(httpParams, false);
+        HttpProtocolParams.setUseExpectContinue(httpParams, true);
         
 		HttpConnectionParams.setTcpNoDelay(httpParams, true);//no delay
 		HttpConnectionParams.setStaleCheckingEnabled(httpParams, false);//--30ms
