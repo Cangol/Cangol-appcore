@@ -15,19 +15,6 @@
  */
 package mobi.cangol.mobile.utils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.security.MessageDigest;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
-import mobi.cangol.mobile.logging.Log;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
@@ -46,12 +33,26 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Parcelable;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+
+import mobi.cangol.mobile.logging.Log;
 
 public class DeviceInfo {
 	public static final String SPECIAL_IMEI="000000000000000";
@@ -106,46 +107,107 @@ public class DeviceInfo {
 		}
 		return sb.toString();
 	}
-	/**
-	 * 获取设备cpu信息
-	 * @return
-	 */
-	public static String getCPUInfo() {
-		String str1 = "/proc/cpuinfo";
-		String str2 = "";
-		String[] cpuInfo = { "", "" };
-		String[] arrayOfString;
-		try {
-			FileReader fr = new FileReader(str1);
-			BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
-			str2 = localBufferedReader.readLine();
-			arrayOfString = str2.split("\\s+");
-			for (int i = 2; i < arrayOfString.length; i++) {
-				cpuInfo[0] = cpuInfo[0] + arrayOfString[i] + " ";
-			}
-			str2 = localBufferedReader.readLine();
-			arrayOfString = str2.split("\\s+");
-			cpuInfo[1] += arrayOfString[2];
-			localBufferedReader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return cpuInfo[0];
-	}
+    /**
+     * 获取设备mem信息
+     * @return
+     */
+    public static int getMemInfo(){
+        try{
+            Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String str = bufferedReader.readLine();
+            String subMemoryLine = str.substring(str.indexOf("MemTotal:"));
+            bufferedReader.close();
+            int size=Integer.parseInt(subMemoryLine.replaceAll("\\D+", "")) * 1024;
+            return size;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * 获取设备cpu信息
+     * @return
+     */
+    public static String getCPUInfo(){
+        String result = "";
+        try{
+            Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/cpuinfo" }).start();
+            InputStream inputStream = process.getInputStream();
+            byte[] bytes = new byte[1024];
+            int length = 0;
+            while((length = inputStream.read(bytes)) != -1){
+                result += new String(bytes, 0, length);
+            }
+            inputStream.close();
+            return result;
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String getCPUInfo2() {
+        String str1 = "/proc/cpuinfo";
+        String str2 = "";
+        String[] cpuInfo = { "", "" };
+        String[] arrayOfString;
+        try {
+            FileReader fr = new FileReader(str1);
+            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
+            str2 = localBufferedReader.readLine();
+            arrayOfString = str2.split("\\s+");
+            for (int i = 2; i < arrayOfString.length; i++) {
+                cpuInfo[0] = cpuInfo[0] + arrayOfString[i] + " ";
+            }
+            str2 = localBufferedReader.readLine();
+            arrayOfString = str2.split("\\s+");
+            cpuInfo[1] += arrayOfString[2];
+            localBufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cpuInfo[0];
+    }
+
+    /**
+     * 获取CPU架构
+     * @return
+     */
+    public static String getCPUABI(){
+        String cpuABI=null;
+        String str=null;
+        try{
+            Process process=Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
+            InputStreamReader inputStreamReader=new InputStreamReader(process.getInputStream());
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            str = bufferedReader.readLine();
+            if (null!=str&&str.contains("x86")){
+                cpuABI = "x86";
+            }
+            cpuABI = "arm";
+        }catch (Exception e){
+            cpuABI = "arm";
+        }
+        return cpuABI;
+    }
 	/**
 	 * 获取设备分辨率
 	 * @param context
 	 * @return
 	 */
 	public static String getResolution(Context context) {
-		WindowManager wm = (WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE);
-
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		Display display = wm.getDefaultDisplay();
-		Point point = new Point(); 
-		display.getRealSize(point);
-
-		return point.y + "x" + point.x;
+		Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(point);
+            return point.y + "x" + point.x;
+        }else{
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+            return dm.heightPixels + "x" + dm.widthPixels;
+        }
 	}
 	/**
 	 * 获取状态栏高度
