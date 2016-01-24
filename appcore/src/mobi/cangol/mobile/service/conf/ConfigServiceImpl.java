@@ -25,6 +25,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.text.TextUtils;
 
 @Service("ConfigService")
@@ -82,27 +83,35 @@ public class ConfigServiceImpl implements ConfigService {
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public File getFileDir(String name) {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        File file=null;
         if(mUseInternalStorage){
-            return  mContext.getFileStreamPath(name);
+            file=  mContext.getFileStreamPath(name);
         }else{
             if(!Environment.isExternalStorageEmulated())
-                return  mContext.getFileStreamPath(name);
+                file=  mContext.getFileStreamPath(name);
             else
-                return StorageUtils.getExternalFileDir(mContext, name);
+                file= StorageUtils.getExternalFileDir(mContext, name);
         }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return file;
     }
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
 	public File getCacheDir() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        File file=null;
         if(mUseInternalStorage){
-            return  mContext.getCacheDir();
+            file=  mContext.getCacheDir();
         }else{
             if(!Environment.isExternalStorageEmulated())
-                return  mContext.getCacheDir();
+                file=  mContext.getCacheDir();
             else
-                return mContext.getExternalCacheDir();
+                file= mContext.getExternalCacheDir();
         }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return file;
 	}
 
 	@Override

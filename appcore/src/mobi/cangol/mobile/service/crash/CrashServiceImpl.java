@@ -39,8 +39,12 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.Object2FileUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.StrictMode;
 import android.text.TextUtils;
 /**
  * @author Cangol
@@ -58,7 +62,8 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private AsyncHttpClient asyncHttpClient;
 	private String mUrl;
 	private Map<String,String> mParams;
-	@Override
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @Override
 	public void onCreate(Context context) {
 		mContext=context;
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -66,7 +71,9 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
         mSessionService=(SessionService) app.getAppService(AppService.SESSION_SERVICE);
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
 		FileUtils.newFolder(mConfigService.getTempDir().getAbsolutePath());
+        StrictMode.setThreadPolicy(oldPolicy);
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {

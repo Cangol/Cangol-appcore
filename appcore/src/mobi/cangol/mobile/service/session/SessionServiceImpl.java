@@ -1,9 +1,11 @@
 package mobi.cangol.mobile.service.session;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.StrictMode;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -198,6 +200,7 @@ public class SessionServiceImpl implements SessionService {
         mMap.put(key, value);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void saveStringSet(String key, Set<String> value) {
         getShared().edit().putStringSet(key, value).commit();
@@ -268,9 +271,12 @@ public class SessionServiceImpl implements SessionService {
         FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + SER);
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void refresh() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         Map<String, ?> map = getShared().getAll();
+        StrictMode.setThreadPolicy(oldPolicy);
         mMap.putAll(map);
         if (debug) Log.d("scan cache file");
         new AsyncTask<String, Void, List<File>>(){
