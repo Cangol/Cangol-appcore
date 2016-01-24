@@ -168,21 +168,17 @@ public class DeviceInfo {
      * @return
      */
     public static String getCPUABI(){
-        String cpuABI=null;
-        String str=null;
+        String result = "";
         try{
             Process process=Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
             InputStreamReader inputStreamReader=new InputStreamReader(process.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            str = bufferedReader.readLine();
-            if (null!=str&&str.contains("x86")){
-                cpuABI = "x86";
-            }
-            cpuABI = "arm";
+            String str = bufferedReader.readLine();
+            result=str.trim();
         }catch (Exception e){
-            cpuABI = "arm";
+            result = "UNKNOWN";
         }
-        return cpuABI;
+        return result;
     }
 	/**
 	 * 获取设备分辨率

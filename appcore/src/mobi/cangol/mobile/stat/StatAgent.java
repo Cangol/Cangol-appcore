@@ -72,7 +72,7 @@ public class StatAgent {
         this.context = context;
         sessionService = (SessionService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.ANALYTICS_SERVICE);
-        analyticsService.setDebug(true);
+        analyticsService.setDebug(false);
         itracker = analyticsService.getTracker(STAT_TRACKINGID);
 
         commonParams = this.getCommonParams();
@@ -80,6 +80,12 @@ public class StatAgent {
     public void init() {
         sendDevice();
         sendLaunch();
+        StatsSession.instance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
+            @Override
+            public void onTick(String sessionId, String beginSession, String sessionDuration, String endSession, String activityId) {
+                send(Builder.createSession(sessionId,beginSession,sessionDuration,endSession,activityId));
+            }
+        });
         StatsTraffic.instance(context).onCreated();
         sendTraffic();
     }
@@ -152,8 +158,7 @@ public class StatAgent {
         params.put("ip", DeviceInfo.getIpStr(context));
         params.put("mac", DeviceInfo.getMacAddress(context));
         params.put("cpuInfo", DeviceInfo.getCPUInfo());
-        params.put("cpuAbi", DeviceInfo.getCPUABI());
-        params.put("memSize", DeviceInfo.getMemInfo());
+        params.put("memInfo", DeviceInfo.getMemInfo());
         StrictMode.setThreadPolicy(oldPolicy);
         return params;
     }
@@ -249,7 +254,6 @@ public class StatAgent {
         StatsTraffic statsTraffic=StatsTraffic.instance(context);
         List<Map> list=statsTraffic.getUnPostDateTraffic(context.getApplicationInfo().uid,TimeUtils.getCurrentDate());
         for (int i = 0; i <list.size() ; i++) {
-            Log.d("sendTraffic");
             send(Builder.createTraffic(list.get(i)));
         }
     }
@@ -393,7 +397,7 @@ public class StatAgent {
          * @param isNew       是否新用户
          * @return
          */
-        public static Builder createLaunch(String exitCode, String exitVersion, Boolean isNew, String launchTime) {
+        protected static Builder createLaunch(String exitCode, String exitVersion, Boolean isNew, String launchTime) {
             Builder builder = new Builder();
             builder.set("exitCode", exitCode);
             builder.set("exitVersion", exitVersion);
@@ -416,7 +420,7 @@ public class StatAgent {
          * @param activityId
          * @return
          */
-        public static Builder createSession(String sessionId
+        protected static Builder createSession(String sessionId
                 , String beginSession
                 , String sessionDuration
                 , String endSession
@@ -438,7 +442,7 @@ public class StatAgent {
          * @param map
          * @return
          */
-        public static Builder createTraffic(Map<String,String> map) {
+        protected static Builder createTraffic(Map<String,String> map) {
             Builder builder = new Builder();
             builder.set("date", map.get("date"));
             builder.set("totalRx", map.get("totalRx"));

@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.StringUtils;
 
 /**
@@ -34,9 +33,9 @@ class ConnectionQueue
 	private Hashtable<String, SessionEntity> entitys = new Hashtable<String, SessionEntity>();
 
 	private Thread mThread = null;
-	private StatAgent mStatTracker;
-	public ConnectionQueue(StatAgent tracker){
-		mStatTracker=tracker;
+	private StatsSession.OnSessionListener mSessionListener;
+	public ConnectionQueue(StatsSession.OnSessionListener onSessionListener){
+        mSessionListener=onSessionListener;
 	}
 	public void beginSession(String page)
 	{
@@ -109,13 +108,14 @@ class ConnectionQueue
 						break;
 					try{
 						//提交
-						mStatTracker.send(StatAgent.Builder.createSession(
+                        if(mSessionListener!=null)
+                        mSessionListener.onTick(
                                 data.sessionId,
                                 String.valueOf(data.beginSession),
                                 String.valueOf(data.sessionDuration),
                                 String.valueOf(data.endSession),
-                                data.activityId));
-						queue_.poll();
+                                data.activityId);
+                        queue_.poll();
 					}catch (Exception e){
 						Log.d(TAG, e.toString());
 						break;
