@@ -1,95 +1,23 @@
-package mobi.cangol.mobile.stat;
+package mobi.cangol.mobile.stat.session;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.StringUtils;
 
-public class StatSession
-{
-	public static final String TAG="StatSession";
-	private static StatSession instance;
-	private Timer mTimer;
-	private ConnectionQueue mQueue;
-	private long mLastTime;
-	private long unSentSessionLength=0;
-	static public StatSession instance(Context context)
-	{
-		if (instance == null)
-			instance = new StatSession(context);
-		
-		return instance;
-	}
-	
-	private StatSession(Context context)
-	{
-        mLastTime=System.currentTimeMillis() / 1000;
-		mQueue = new ConnectionQueue(StatAgent.getInstance(context));
-		mTimer = new Timer();
-		mTimer.schedule(new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				onTimer();
-			}
-		}, 30 * 1000,  30 * 1000);
-		unSentSessionLength=0;
-	}
-	public void onStart(String page){
-		mQueue.beginSession(page);
-	}
-	public void onStop(String page){
-		long currTime = System.currentTimeMillis() / 1000;
-		unSentSessionLength += currTime - mLastTime;
-		
-		int duration = (int)unSentSessionLength;
-		mQueue.endSession(page,duration);
-		unSentSessionLength -= duration;
-	}
-	
-	private void onTimer(){
-		long currTime = System.currentTimeMillis() / 1000;
-		unSentSessionLength += currTime - mLastTime;
-		mLastTime=currTime;
-		
-		int duration = (int)unSentSessionLength;
-		mQueue.updateSession(duration);
-		unSentSessionLength -= duration;
-	}
-}
-
-class SessionEntity  implements Cloneable{
-	String sessionId;
-	long beginSession;
-	long sessionDuration;
-	long endSession;
-	String activityId;
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		Object o = null;
-		try {
-			o = (SessionEntity) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return o;
-	}
-	
-}
-
+/**
+ * Created by weixuewu on 16/1/23.
+ */
 class ConnectionQueue
 {
 	public static final String TAG="ConnectionQueue";
 	private ConcurrentLinkedQueue<SessionEntity> queue_ = new ConcurrentLinkedQueue<SessionEntity>();
 	private Hashtable<String, SessionEntity> entitys = new Hashtable<String, SessionEntity>();
-	
+
 	private Thread mThread = null;
 	private StatAgent mStatTracker;
 	public ConnectionQueue(StatAgent tracker){
@@ -99,19 +27,19 @@ class ConnectionQueue
 	{
 		//long currTime = System.currentTimeMillis() / 1000;
 		SessionEntity data=new SessionEntity();
-		data.sessionId=StringUtils.md5(String.valueOf(page.hashCode()));
+		data.sessionId= StringUtils.md5(String.valueOf(page.hashCode()));
 		data.beginSession=1;//currTime
 		data.endSession=0;
 		data.activityId=page;
-		
+
 		entitys.put(page, data);
-		
-		queue_.offer(data);	
-		
+
+		queue_.offer(data);
+
 		tick();
-		
+
 	}
-	
+
 	public void updateSession(long duration){
 		SessionEntity data=null;
 		try {
@@ -121,7 +49,7 @@ class ConnectionQueue
 				data.beginSession=0;
 				data.sessionDuration=duration;
 				data.endSession=0;
-				queue_.offer(data);	
+				queue_.offer(data);
 				tick();
 			}
 		} catch (CloneNotSupportedException e) {
@@ -136,24 +64,24 @@ class ConnectionQueue
 			data.beginSession=0;
 			data.sessionDuration=duration;
 			data.endSession=1;//currTime
-			queue_.offer(data);	
-			
+			queue_.offer(data);
+
 			tick();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	private void tick()
 	{
 		if (mThread != null && mThread.isAlive())
 			return;
-		
+
 		if (queue_.isEmpty())
 			return;
-				
-		mThread = new Thread() 
+
+		mThread = new Thread()
 		{
 			@Override
 			public void run()

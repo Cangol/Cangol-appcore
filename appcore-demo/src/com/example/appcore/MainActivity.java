@@ -32,12 +32,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        StatAgent.getInstance(this).onActivityResume("MainActivity");
+        //StatAgent.getInstance(this).onActivityResume("MainActivity");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        StatAgent.getInstance(this).onActivityPause("MainActivity");
+        //StatAgent.getInstance(this).onActivityPause("MainActivity");
     }
 }

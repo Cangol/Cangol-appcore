@@ -15,10 +15,14 @@
  */
 package mobi.cangol.mobile.stat;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
 import android.text.TextUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mobi.cangol.mobile.CoreApplication;
@@ -28,6 +32,8 @@ import mobi.cangol.mobile.service.analytics.AnalyticsService;
 import mobi.cangol.mobile.service.analytics.IMapBuilder;
 import mobi.cangol.mobile.service.analytics.ITracker;
 import mobi.cangol.mobile.service.session.SessionService;
+import mobi.cangol.mobile.stat.session.StatsSession;
+import mobi.cangol.mobile.stat.traffic.StatsTraffic;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
@@ -41,6 +47,7 @@ public class StatAgent {
     private final static String STAT_ACTION_LANUCH = "api/countly/launch.do";
     private final static String STAT_ACTION_DEVICE = "api/countly/device.do";
     private final static String STAT_ACTION_SESSION = "api/countly/session.do";
+    private final static String STAT_ACTION_TRAFFIC  = "api/countly/traffic.do";
     private final static String STAT_TRACKINGID = "stat";
 
     private Context context;
@@ -60,16 +67,25 @@ public class StatAgent {
         return instance;
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private StatAgent(Context context) {
         this.context = context;
         sessionService = (SessionService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.ANALYTICS_SERVICE);
-        analyticsService.setDebug(false);
+        analyticsService.setDebug(true);
         itracker = analyticsService.getTracker(STAT_TRACKINGID);
 
         commonParams = this.getCommonParams();
     }
-
+    public void init() {
+        sendDevice();
+        sendLaunch();
+        StatsTraffic.instance(context).onCreated();
+        sendTraffic();
+    }
+    public void destroy() {
+        StatsTraffic.instance(context).onDestroy();
+    }
     /**
      * 公共参数 osVersion 操作系统版本号 4.2.2 deviceId 设备唯一ID Android|IOS均为open-uuid
      * platform 平台 平台控制使用IOS|Android channelId 渠道
@@ -78,7 +94,9 @@ public class StatAgent {
      *
      * @return
      */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private HashMap<String, String> getCommonParams() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("deviceId", getDeviceId(context));
@@ -88,6 +106,7 @@ public class StatAgent {
         params.put("appVersion", DeviceInfo.getAppVersion(context));
         params.put("sdkVersion", SDK_VERSION);
         params.put("timestamp", TimeUtils.getCurrentTime());
+        StrictMode.setThreadPolicy(oldPolicy);
         return params;
     }
 
@@ -109,10 +128,13 @@ public class StatAgent {
      * ip 设备网络地址 (8.8.8.8)
      * mac mac地址
      * cpuInfo cpuInfo
-     *
+     * cpuAbi  cpuAbi
+     * mem 内存大小
      * @return
      */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private HashMap<String, String> getDeviceParams() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("os", DeviceInfo.getOS());
         params.put("osVersion", DeviceInfo.getOSVersion());
@@ -130,7 +152,9 @@ public class StatAgent {
         params.put("ip", DeviceInfo.getIpStr(context));
         params.put("mac", DeviceInfo.getMacAddress(context));
         params.put("cpuInfo", DeviceInfo.getCPUInfo());
-
+        params.put("cpuAbi", DeviceInfo.getCPUABI());
+        params.put("memSize", DeviceInfo.getMemInfo());
+        StrictMode.setThreadPolicy(oldPolicy);
         return params;
     }
     private String getDeviceId(Context context) {
@@ -192,6 +216,9 @@ public class StatAgent {
                 }
                 builder.setUrl(STAT_HOST_URL + STAT_ACTION_SESSION);
                 break;
+            case Traffic:
+                builder.setUrl(STAT_HOST_URL + STAT_ACTION_TRAFFIC);
+                break;
         }
         itracker.send(builder);
     }
@@ -218,20 +245,29 @@ public class StatAgent {
         send(Builder.createDevice());
     }
 
+    public void sendTraffic() {
+        StatsTraffic statsTraffic=StatsTraffic.instance(context);
+        List<Map> list=statsTraffic.getUnPostDateTraffic(context.getApplicationInfo().uid,TimeUtils.getCurrentDate());
+        for (int i = 0; i <list.size() ; i++) {
+            Log.d("sendTraffic");
+            send(Builder.createTraffic(list.get(i)));
+        }
+    }
+
     public void onActivityResume(String pageName) {
-        StatSession.instance(context).onStart(pageName);
+        StatsSession.instance(context).onStart(pageName);
     }
 
     public void onActivityPause(String pageName) {
-        StatSession.instance(context).onStop(pageName);
+        StatsSession.instance(context).onStop(pageName);
     }
 
     public void onFragmentResume(String pageName) {
-        StatSession.instance(context).onStart(pageName);
+        StatsSession.instance(context).onStart(pageName);
     }
 
     public void onFragmentPause(String pageName) {
-        StatSession.instance(context).onStop(pageName);
+        StatsSession.instance(context).onStop(pageName);
     }
 
     public static class Builder {
@@ -243,7 +279,8 @@ public class StatAgent {
             Timing,
             Exception,
             Launcher,
-            Session
+            Session,
+            Traffic
         }
 
         Type type;
@@ -356,7 +393,7 @@ public class StatAgent {
          * @param isNew       是否新用户
          * @return
          */
-        protected static Builder createLaunch(String exitCode, String exitVersion, Boolean isNew, String launchTime) {
+        public static Builder createLaunch(String exitCode, String exitVersion, Boolean isNew, String launchTime) {
             Builder builder = new Builder();
             builder.set("exitCode", exitCode);
             builder.set("exitVersion", exitVersion);
@@ -379,7 +416,7 @@ public class StatAgent {
          * @param activityId
          * @return
          */
-        protected static Builder createSession(String sessionId
+        public static Builder createSession(String sessionId
                 , String beginSession
                 , String sessionDuration
                 , String endSession
@@ -392,6 +429,26 @@ public class StatAgent {
             builder.set("activityId", activityId);
             builder.set("timestamp", TimeUtils.getCurrentTime());
             builder.type = Type.Session;
+            return builder;
+
+        }
+
+        /**
+         * 流量统计
+         * @param map
+         * @return
+         */
+        public static Builder createTraffic(Map<String,String> map) {
+            Builder builder = new Builder();
+            builder.set("date", map.get("date"));
+            builder.set("totalRx", map.get("totalRx"));
+            builder.set("totalTx", map.get("totalTx"));
+            builder.set("mobileRx", map.get("mobileRx"));
+            builder.set("mobileTx", map.get("mobileTx"));
+            builder.set("wifiRx", map.get("wifiRx"));
+            builder.set("wifiTx", map.get("wifiTx"));
+            builder.set("timestamp", TimeUtils.getCurrentTime());
+            builder.type = Type.Traffic;
             return builder;
 
         }

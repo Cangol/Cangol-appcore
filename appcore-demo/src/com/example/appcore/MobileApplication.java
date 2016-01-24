@@ -20,7 +20,7 @@ public class MobileApplication extends CoreApplication {
     public void init(){
         Log.d("初始化CrashService");
         CrashService crashService = (CrashService) getAppService(AppService.CRASH_SERVICE);
-        crashService.setDebug(false);
+        crashService.setDebug(true);
         Log.d("开发模式 不报告crash");
         if(!this.isDevMode())
             crashService.report(new CrashReportListener(){
