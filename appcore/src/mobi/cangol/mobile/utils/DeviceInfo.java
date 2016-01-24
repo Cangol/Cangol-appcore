@@ -111,7 +111,7 @@ public class DeviceInfo {
      * 获取设备mem信息
      * @return
      */
-    public static int getMemInfo(){
+    public static String getMemInfo(){
         try{
             Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -119,11 +119,11 @@ public class DeviceInfo {
             String subMemoryLine = str.substring(str.indexOf("MemTotal:"));
             bufferedReader.close();
             int size=Integer.parseInt(subMemoryLine.replaceAll("\\D+", "")) * 1024;
-            return size;
+            return size+"B";
         }catch (IOException e){
             e.printStackTrace();
         }
-        return -1;
+        return "";
     }
 
     /**
