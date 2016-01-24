@@ -18,6 +18,7 @@ package mobi.cangol.mobile.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.StrictMode;
 import android.util.Log;
 
 public abstract class CoreSQLiteOpenHelper {
@@ -89,7 +90,11 @@ public abstract class CoreSQLiteOpenHelper {
 	 */
 	public SQLiteDatabase getWritableDatabase() {
 		if(mDbHelper!=null){
-			return mDbHelper.getWritableDatabase();
+            StrictMode.ThreadPolicy oldPolicy = null;
+            if (android.os.Build.VERSION.SDK_INT >= 9) oldPolicy = StrictMode.allowThreadDiskWrites();
+            SQLiteDatabase database=mDbHelper.getWritableDatabase();
+            if (android.os.Build.VERSION.SDK_INT >= 9)StrictMode.setThreadPolicy(oldPolicy);
+            return database;
 		}else{
 			throw new IllegalStateException("mDbHelper==null,please invoke open method");
 		}
@@ -100,7 +105,11 @@ public abstract class CoreSQLiteOpenHelper {
 	 */
 	public SQLiteDatabase getReadableDatabase() {
 		if(mDbHelper!=null){
-			return mDbHelper.getReadableDatabase();
+            StrictMode.ThreadPolicy oldPolicy = null;
+            if (android.os.Build.VERSION.SDK_INT >= 9) oldPolicy = StrictMode.allowThreadDiskReads();
+            SQLiteDatabase database= mDbHelper.getReadableDatabase();
+            if (android.os.Build.VERSION.SDK_INT >= 9)StrictMode.setThreadPolicy(oldPolicy);
+            return database;
 		}else{
 			throw new IllegalStateException("mDbHelper==null,please invoke open method");
 		}
