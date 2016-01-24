@@ -90,31 +90,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	}
 	private void initServiceMap(List<Class<? extends AppService>> classList) {	
 		for(Class<? extends AppService> clazz:classList){
-			try {
-				if(mUseAnnotation){
-					if(clazz.isAnnotationPresent(Service.class)){
-						Service service = clazz.getAnnotation(Service.class);
-						mServiceMap.put(service.value(), clazz);
-					}else{
-						if(debug)Log.d(TAG, clazz+" no Service Annotation");
-					}
-				}else{
-					Method method=clazz.getMethod("getName");
-					Object t=clazz.newInstance();
-					String name=(String) method.invoke(t);
-					mServiceMap.put(name, clazz);	
-				}
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
+            registeService(clazz);
 		}
 	}
 	@Override
@@ -153,6 +129,34 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}
 		return appService;
 	}
+    @Override
+    public void registeService(Class<? extends AppService> clazz) {
+        try {
+            if(mUseAnnotation){
+                if(clazz.isAnnotationPresent(Service.class)){
+                    Service service = clazz.getAnnotation(Service.class);
+                    mServiceMap.put(service.value(), clazz);
+                }else{
+                    if(debug)Log.d(TAG, clazz+" no Service Annotation");
+                }
+            }else{
+                Method method=clazz.getMethod("getName");
+                Object t=clazz.newInstance();
+                String name=(String) method.invoke(t);
+                mServiceMap.put(name, clazz);
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
 	/**
 	 * @deprecated
 	 * @param appService
@@ -185,6 +189,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			e.printStackTrace();
 		}
 	}
+
 	@Override
 	public void destroyService(String name) {
 		AppService appService=null;
@@ -196,7 +201,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			if(debug)Log.d(TAG, name+" Service is not running");
 		}
 	}
-	@Override
+
+    @Override
 	public void destroyAllService() {
 		if(debug)Log.d(TAG, "destoryAllService");
 		AppService appService=null;
@@ -250,8 +256,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			e.printStackTrace();
 		}
 	}
-	
-	public void parser(InputStream is) throws Exception{
+    private void parser(InputStream is) throws Exception{
 		DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document=builder.parse(is);
