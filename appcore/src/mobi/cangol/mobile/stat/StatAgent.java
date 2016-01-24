@@ -223,7 +223,7 @@ public class StatAgent {
         itracker.send(builder);
     }
 
-    public void sendLaunch() {
+    private void sendLaunch() {
         String exitCode = "";
         String exitVersion = "";
         boolean isnew = true;
@@ -241,11 +241,11 @@ public class StatAgent {
         send(Builder.createLaunch(exitCode, exitVersion, isnew, TimeUtils.getCurrentTime()));
     }
 
-    public void sendDevice() {
+    private void sendDevice() {
         send(Builder.createDevice());
     }
 
-    public void sendTraffic() {
+    private void sendTraffic() {
         StatsTraffic statsTraffic=StatsTraffic.instance(context);
         List<Map> list=statsTraffic.getUnPostDateTraffic(context.getApplicationInfo().uid,TimeUtils.getCurrentDate());
         for (int i = 0; i <list.size() ; i++) {

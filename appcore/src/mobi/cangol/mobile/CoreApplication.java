@@ -30,6 +30,7 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.session.SessionService;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
@@ -59,6 +60,7 @@ public class CoreApplication extends Application {
 		}
 		initAppServiceManager();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
+        StatAgent.getInstance(this).init();
 	}
 
     /**
@@ -155,6 +157,7 @@ public class CoreApplication extends Application {
 		if (mAppServiceManager != null) {
 			mAppServiceManager.destroy();
 		}
+        StatAgent.getInstance(this).destroy();
 		// 0 正常推退出
 		System.exit(0);
 	}
