@@ -31,17 +31,17 @@ public abstract class AppServiceManager {
 	 * 销毁一个应用服务
 	 * 
 	 */
-	public abstract void destoryService(String name);
+	public abstract void destroyService(String name);
 
 	/**
 	 * 销毁所有服务
 	 */
-	public abstract void destoryAllService();
+	public abstract void destroyAllService();
 
 	/**
 	 * 销毁
 	 */
-	public abstract void destory();
+	public abstract void destroy();
 
 	/**
 	 * 设置服务扫描包

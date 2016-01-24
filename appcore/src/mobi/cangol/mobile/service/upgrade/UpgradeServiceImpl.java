@@ -62,7 +62,7 @@ public class UpgradeServiceImpl implements UpgradeService{
 	}
 
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		if(debug)Log.d("onDestory");
 		DownloadHttpClient.cancel(TAG, true);
 		NotificationManager notificationManager=(NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

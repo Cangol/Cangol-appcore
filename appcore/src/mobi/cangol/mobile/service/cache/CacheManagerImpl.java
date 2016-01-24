@@ -347,9 +347,9 @@ public class CacheManagerImpl implements CacheManager {
 						snapshot.getInputStream(DISK_CACHE_INDEX).close();
 					}
 				} catch (final IOException e) {
-					Log.e(TAG, "addBitmapToCache - " + e);
+					Log.e(TAG, "addContentToCache - " + e);
 				} catch (Exception e) {
-					Log.e(TAG, "addBitmapToCache - " + e);
+					Log.e(TAG, "addContentToCache - " + e);
 				} finally {
 					try {
 						if (out != null) {
@@ -548,7 +548,7 @@ public class CacheManagerImpl implements CacheManager {
 	}
 
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		this.close();
 	}
 

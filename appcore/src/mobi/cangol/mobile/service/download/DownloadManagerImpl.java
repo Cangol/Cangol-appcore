@@ -105,7 +105,7 @@ public class DownloadManagerImpl implements DownloadManager{
 		}
 	}
 	
-	public  void onDestory() {
+	public  void onDestroy() {
 		if(null==executorMap)return;
 		Enumeration<DownloadExecutor<?>> en = executorMap.elements();
 		while (en.hasMoreElements()) {

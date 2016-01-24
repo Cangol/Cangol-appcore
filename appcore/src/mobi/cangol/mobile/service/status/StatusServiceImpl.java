@@ -69,7 +69,7 @@ public class StatusServiceImpl implements StatusService {
 		return sp;
 	}
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		mContext.unregisterReceiver(networkStatusReceiver);
 		mContext.unregisterReceiver(storageStatusReceiver);
 		mTelephonyManager.listen(null, PhoneStateListener.LISTEN_NONE);

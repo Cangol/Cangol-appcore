@@ -90,7 +90,7 @@ public class LocationServiceImpl implements LocationService{
 	}
 
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		removeLocationUpdates();
 		mServiceLooper.quit();
 	}

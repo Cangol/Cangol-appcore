@@ -74,7 +74,7 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		
 	}
 

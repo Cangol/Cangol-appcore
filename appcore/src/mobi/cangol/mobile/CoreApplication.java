@@ -15,6 +15,12 @@
  */
 package mobi.cangol.mobile;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Application;
+import android.os.Build;
+import android.os.StrictMode;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +30,8 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.session.SessionService;
-import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
-import mobi.cangol.mobile.utils.TimeUtils;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.Application;
-import android.os.Build;
-import android.os.StrictMode;
 
 /**
  * 
@@ -61,8 +59,6 @@ public class CoreApplication extends Application {
 		}
 		initAppServiceManager();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
-        StatAgent.getInstance(this).sendDevice();
-        StatAgent.getInstance(this).sendLaunch();
 	}
 
     /**
@@ -157,7 +153,7 @@ public class CoreApplication extends Application {
         getSession().saveString(Constants.KEY_EXIT_CODE, "0");
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));
 		if (mAppServiceManager != null) {
-			mAppServiceManager.destory();
+			mAppServiceManager.destroy();
 		}
 		// 0 正常推退出
 		System.exit(0);

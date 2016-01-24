@@ -72,7 +72,7 @@ public interface AppService {
 	/**
 	 * 当销毁时
 	 */
-	void onDestory();
+	void onDestroy();
 
 	/**
 	 * 设置debug模式

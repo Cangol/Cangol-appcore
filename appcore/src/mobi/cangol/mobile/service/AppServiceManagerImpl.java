@@ -186,32 +186,32 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}
 	}
 	@Override
-	public void destoryService(String name) {
+	public void destroyService(String name) {
 		AppService appService=null;
 		if(mRunServiceMap.containsKey(name)){
 			appService= mRunServiceMap.get(name);
-			appService.onDestory();
+			appService.onDestroy();
 			mRunServiceMap.remove(name);
 		}else{
 			if(debug)Log.d(TAG, name+" Service is not running");
 		}
 	}
 	@Override
-	public void destoryAllService() {
+	public void destroyAllService() {
 		if(debug)Log.d(TAG, "destoryAllService");
 		AppService appService=null;
 		for(String name:mRunServiceMap.keySet()){
 			appService= mRunServiceMap.get(name);
-			appService.onDestory();
+			appService.onDestroy();
 		}
 		mRunServiceMap.clear();
 		
 	}
 	@Override
-	public void destory() {
-		if(debug)Log.d(TAG, "destory");
+	public void destroy() {
+		if(debug)Log.d(TAG, "destroy");
 		if(mAsyncClassScan!=null)mAsyncClassScan.cancel(true);
-		destoryAllService() ;
+		destroyAllService() ;
 		mProperties.clear();
 		mServiceMap.clear();
 		mPackageNames.clear();

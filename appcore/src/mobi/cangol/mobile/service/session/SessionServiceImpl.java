@@ -63,7 +63,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void onDestory() {
+    public void onDestroy() {
         mMap.clear();
     }
 

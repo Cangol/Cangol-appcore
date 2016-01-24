@@ -21,11 +21,11 @@ import java.util.Map;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import android.content.Context;
-import android.util.Log;
 
 /**
  * @author Cangol
@@ -55,7 +55,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	}
 
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		asyncHttpClient.cancelRequests(mContext, true);
 	}
 	@Override
@@ -73,7 +73,8 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 	@Override
 	public void send(String url, Map<String, String> paramsMap) {
 		RequestParams params=new RequestParams(paramsMap);
-		if(debug)Log.d(TAG, "send "+AsyncHttpClient.getUrlWithQueryString(url, params));
+		if(debug) Log.v(TAG, "send " + AsyncHttpClient.getUrlWithQueryString(url, params));
+        if(debug) Log.v(TAG, "params: \n"+params.toDebugString());
 		asyncHttpClient.get(mContext,url, params,  new AsyncHttpResponseHandler(){
 
 			@Override

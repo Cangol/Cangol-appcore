@@ -88,7 +88,7 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	}
 
 	@Override
-	public void onDestory() {
+	public void onDestroy() {
 		asyncHttpClient.cancelRequests(mContext, true);
 	}
 	@Override
