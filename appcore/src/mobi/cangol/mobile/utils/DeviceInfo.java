@@ -108,22 +108,39 @@ public class DeviceInfo {
 		return sb.toString();
 	}
     /**
-     * 获取设备mem信息
+     * 获取设备mem 大小 单位B
      * @return
      */
-    public static String getMemInfo(){
+    public static long getMemSize(){
+        long result =-1;
         try{
             Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String str = bufferedReader.readLine();
-            String subMemoryLine = str.substring(str.indexOf("MemTotal:"));
+            String resultStr = str.substring(str.indexOf("MemTotal:") + 1, str.indexOf(" KB"));
             bufferedReader.close();
-            int size=Integer.parseInt(subMemoryLine.replaceAll("\\D+", "")) * 1024;
-            return size+"B";
+            result=Long.parseLong(resultStr.trim())*1024;
         }catch (IOException e){
             e.printStackTrace();
         }
-        return "";
+        return result;
+    }
+    /**
+     * 获取设备mem信息
+     * @return
+     */
+    public static String getMemInfo(){
+        String result = "";
+        try{
+            Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String str = bufferedReader.readLine();
+            bufferedReader.close();
+            result = str.substring(str.indexOf("MemTotal:")+"MemTotal:".length()).trim();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     /**
@@ -134,41 +151,16 @@ public class DeviceInfo {
         String result = "";
         try{
             Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/cpuinfo" }).start();
-            InputStream inputStream = process.getInputStream();
-            byte[] bytes = new byte[1024];
-            int length = 0;
-            while((length = inputStream.read(bytes)) != -1){
-                result += new String(bytes, 0, length);
-            }
-            inputStream.close();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String str = bufferedReader.readLine();
+            String title="Processor\t: ";
+            result = str.substring(str.indexOf(title)+title.length());
+            bufferedReader.close();
             return result;
         }catch (IOException e){
             e.printStackTrace();
         }
         return result;
-    }
-
-    public static String getCPUInfo2() {
-        String str1 = "/proc/cpuinfo";
-        String str2 = "";
-        String[] cpuInfo = { "", "" };
-        String[] arrayOfString;
-        try {
-            FileReader fr = new FileReader(str1);
-            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
-            str2 = localBufferedReader.readLine();
-            arrayOfString = str2.split("\\s+");
-            for (int i = 2; i < arrayOfString.length; i++) {
-                cpuInfo[0] = cpuInfo[0] + arrayOfString[i] + " ";
-            }
-            str2 = localBufferedReader.readLine();
-            arrayOfString = str2.split("\\s+");
-            cpuInfo[1] += arrayOfString[2];
-            localBufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return cpuInfo[0];
     }
 
     /**
