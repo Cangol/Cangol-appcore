@@ -17,6 +17,10 @@ package mobi.cangol.mobile.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
@@ -35,6 +39,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -50,6 +55,9 @@ import org.apache.http.protocol.SyncBasicHttpContext;
 
 import android.util.Log;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+
 public class HttpClientFactory {
 	private static final int DEFAULT_MAX_CONNECTIONS = 20;
 	private static final int DEFAULT_MAX_CONNECTIONS_PER_ROUTE = 2;
@@ -61,12 +69,18 @@ public class HttpClientFactory {
     
 	private static DefaultHttpClient httpClient;
 	private static IdleConnectionMonitorThread monitorThread;
+    private static boolean SSL_VERIFIY=false;
 	public  static DefaultHttpClient getDefaultHttpClient() {
 		DefaultHttpClient httpClient = createDefaultHttpClient();
 		return httpClient;
 		
 	}
-	public synchronized static DefaultHttpClient getThreadSafeClient() {
+
+    public static void setSslVerifiy(boolean sslVerifiy) {
+        SSL_VERIFIY = sslVerifiy;
+    }
+
+    public synchronized static DefaultHttpClient getThreadSafeClient() {
 
 		if (httpClient != null)
 			return httpClient;
@@ -101,16 +115,47 @@ public class HttpClientFactory {
 		HttpConnectionParams.setSoTimeout(httpParams, DEFAULT_SOCKET_TIMEOUT);
 		HttpConnectionParams.setSocketBufferSize(httpParams, DEFAULT_SOCKET_BUFFER_SIZE);
 		HttpClientParams.setRedirecting(httpParams, true);
-		
+
+
+        //强安全的ssl 自命名证书无法通过，须使用android信任的证书 Verisign颁发的
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
+        HostnameVerifier hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+        SSLSocketFactory socketFactory=null;
+        if(SSL_VERIFIY){
+            /**
+            KeyStore trustStore = null;
+            InputStream is =null;
+            try {
+                trustStore = KeyStore.getInstance("BKS");
+                is= this.getAssets().open("discretio.bks");
+                trustStore.load(is, "discretio".toCharArray());
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (CertificateException e) {
+                e.printStackTrace();
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            }**/
+
+            hostnameVerifier=SSLSocketFactory.STRICT_HOSTNAME_VERIFIER;
+            socketFactory = SSLSocketFactory.getSocketFactory();
+        }else{
+            hostnameVerifier=SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+            socketFactory=MySSLSocketFactory.getSocketFactory();
+        }
+        socketFactory.setHostnameVerifier((X509HostnameVerifier)hostnameVerifier);
         schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(new Scheme("https", MySSLSocketFactory.getSocketFactory(), 443));
+        schemeRegistry.register(new Scheme("https", socketFactory, 443));
         ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(httpParams, schemeRegistry);
-        
-        
-        DefaultHttpClient httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(
-				httpParams, cm.getSchemeRegistry()), httpParams);
-		
+
+        DefaultHttpClient httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, cm.getSchemeRegistry()), httpParams);
+
+        // Set verifier
+        HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+
 		httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
             public void process(HttpRequest request, HttpContext context) {
                 if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
