@@ -84,7 +84,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 artifacts {
     archives sourcesJar
-    archives javadocJar
+    //archives javadocJar
 }
 
 version = properties.getProperty("LIBRARY_VERSION")

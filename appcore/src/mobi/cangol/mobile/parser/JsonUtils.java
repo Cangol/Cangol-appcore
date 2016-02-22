@@ -46,9 +46,6 @@ public class JsonUtils {
 	 * @param <T>
 	 * @param obj
 	 * @return
-	 * @throws JSONException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
 	 */
 	public static <T> JSONObject toJSONObject(T obj){
 		JSONObject json=new JSONObject();
@@ -98,9 +95,6 @@ public class JsonUtils {
 	 * 转换Object到JSONObject 依赖注解（无注解不转换）
 	 * @param obj
 	 * @return
-	 * @throws JSONException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
 	 */
 	public static JSONObject toJSONObjectByAnnotation(Object obj){
 		JSONObject json=new JSONObject();
@@ -158,7 +152,7 @@ public class JsonUtils {
 	 * @param c
 	 * @param str
 	 * @return
-	 * @throws Exception
+	 * @throws JSONParserException
 	 */
 	public static <T> T parserToObjectByAnnotation(Class<T> c,String str) throws JSONParserException{
 		if(null==str||"".equals(str)){
@@ -178,7 +172,7 @@ public class JsonUtils {
 	 * @param c
 	 * @param str
 	 * @return
-	 * @throws Exception
+	 * @throws JSONParserException
 	 */
 	public static <T> T parserToObject(Class<T> c,String str) throws JSONParserException{
 		if(null==str||"".equals(str)){
@@ -193,6 +187,15 @@ public class JsonUtils {
         }
         return parserToObject(c,jsonObject);
 	}
+
+    /**
+     *
+     * @param c
+     * @param urlStr
+     * @param <T>
+     * @return
+     * @throws JSONParserException
+     */
 	public static <T> T parserToObjectByUrl(Class<T> c,String urlStr) throws JSONParserException{
 		if(null==urlStr||"".equals(urlStr)){
 			throw new IllegalArgumentException("urlStr=null");

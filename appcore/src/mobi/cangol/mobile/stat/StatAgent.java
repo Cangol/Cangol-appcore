@@ -290,7 +290,11 @@ public class StatAgent {
 
         Type type;
 
-        protected Builder set(String paramName, String paramValue) {
+        public Type getType() {
+            return type;
+        }
+
+        public Builder set(String paramName, String paramValue) {
             if (paramName != null) {
                 this.map.put(paramName, paramValue);
             } else {
@@ -299,7 +303,7 @@ public class StatAgent {
             return this;
         }
 
-        protected Builder setAll(Map<String, String> params) {
+        public Builder setAll(Map<String, String> params) {
             if (params == null) {
                 return this;
             }
@@ -307,11 +311,11 @@ public class StatAgent {
             return this;
         }
 
-        protected String get(String paramName) {
+        public String get(String paramName) {
             return (String) this.map.get(paramName);
         }
 
-        protected Map<String, String> build() {
+        public Map<String, String> build() {
             return new HashMap<String, String>(this.map);
         }
 
