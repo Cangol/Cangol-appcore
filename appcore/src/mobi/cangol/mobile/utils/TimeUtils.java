@@ -432,10 +432,19 @@ public class TimeUtils {
 					&& currentTime.getDate() == commentTime.getDate()) {
 				dfs = new SimpleDateFormat("HH:mm");
 				str = dfs.format(commentTime);
-			} else {
-				dfs = new SimpleDateFormat("yyyy-MM-dd");
-				str = dfs.format(commentTime);
-			}
+			} else if (currentTime.getYear() == commentTime.getYear()
+                    && currentTime.getMonth() == commentTime.getMonth()
+                    && currentTime.getDate() != commentTime.getDate()) {
+                dfs = new SimpleDateFormat("MM-dd");
+                str = dfs.format(commentTime);
+            } else if (currentTime.getYear() == commentTime.getYear()
+                    && currentTime.getMonth() != commentTime.getMonth()) {
+                dfs = new SimpleDateFormat("yyyy-MM");
+                str = dfs.format(commentTime);
+            } else  {
+                dfs = new SimpleDateFormat("yyyy-MM-DD");
+                str = dfs.format(commentTime);
+            }
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
