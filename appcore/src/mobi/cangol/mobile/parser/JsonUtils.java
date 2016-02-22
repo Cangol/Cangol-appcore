@@ -15,23 +15,24 @@
  */
 package mobi.cangol.mobile.parser;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Parcelable;
-import android.util.Log;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import mobi.cangol.mobile.logging.Log;
 
 
 /**
@@ -49,40 +50,48 @@ public class JsonUtils {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static <T> JSONObject toJSONObject(T obj) throws JSONException, IllegalArgumentException, IllegalAccessException{
+	public static <T> JSONObject toJSONObject(T obj){
 		JSONObject json=new JSONObject();
 		Field[] fields = obj.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
-			if (!List.class.isAssignableFrom(field.getType())) {
-				//非集合类型
-				if (isBaseClass(field.getType())) {
-					json.put(field.getName(), field.get(obj));
-				}else if(!Modifier.isTransient(field.getModifiers())){
-					json.put(field.getName(), toJSONObject(field.get(obj)));
-				}
-			}else{
-				//集合类型
-				if(field.getGenericType() instanceof ParameterizedType){
-					List<?> list=(List<?>) field.get(obj);
-					JSONArray jsonArray=new JSONArray();
-					if(list!=null){
-						for (int i = 0; i < list.size(); i++) {	
-							if (isBaseClass(list.get(i).getClass())) {
-								jsonArray.put(list.get(i));
-							}else{
-								jsonArray.put(toJSONObject(list.get(i)));
-							}
-						}
-					}
-					json.put(field.getName(), jsonArray);
-				}else{
-					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
-				}
-			}
-			
-		}
+        try{
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
+                if (!List.class.isAssignableFrom(field.getType())) {
+                    //非集合类型
+                    if (isBaseClass(field.getType())) {
+                        json.put(field.getName(), field.get(obj));
+                    }else if(!Modifier.isTransient(field.getModifiers())){
+                        json.put(field.getName(), toJSONObject(field.get(obj)));
+                    }
+                }else{
+                    //集合类型
+                    if(field.getGenericType() instanceof ParameterizedType){
+                        List<?> list=(List<?>) field.get(obj);
+                        JSONArray jsonArray=new JSONArray();
+                        if(list!=null){
+                            for (int i = 0; i < list.size(); i++) {
+                                if (isBaseClass(list.get(i).getClass())) {
+                                    jsonArray.put(list.get(i));
+                                }else{
+                                    jsonArray.put(toJSONObject(list.get(i)));
+                                }
+                            }
+                        }
+                        json.put(field.getName(), jsonArray);
+                    }else{
+                        if(DEBUG) Log.i(TAG, field.getName() + " require have generic");
+                    }
+                }
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }catch (IllegalAccessException e){
+            e.printStackTrace();
+        }
 		return json;
 	}
 	/**
@@ -93,47 +102,55 @@ public class JsonUtils {
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static JSONObject toJSONObjectByAnnotation(Object obj) throws JSONException, IllegalArgumentException, IllegalAccessException{
+	public static JSONObject toJSONObjectByAnnotation(Object obj){
 		JSONObject json=new JSONObject();
 		Field[] fields = obj.getClass().getDeclaredFields();
 		String filedName=null;
-		for (Field field : fields) {
-			field.setAccessible(true);
-			if(field.isEnumConstant())continue;
-			if (field.isAnnotationPresent(Element.class)){
-				//非集合类型
-				Element element = field.getAnnotation(Element.class);
-				filedName="".equals(element.value())?field.getName():element.value();
-				if (isBaseClass(field.getType())) {
-					json.put(filedName, field.get(obj));
-				}else{
-					json.put(filedName, toJSONObjectByAnnotation(field.get(obj)));
-				}
-			}else if (field.isAnnotationPresent(ElementList.class)) {
-				//集合类型
-				ElementList elementList = field.getAnnotation(ElementList.class);
-				filedName="".equals(elementList.value())?field.getName():elementList.value();
-				if(field.getGenericType() instanceof ParameterizedType){
-					List<?> list=(List<?>) field.get(obj);
-					JSONArray jsonArray=new JSONArray();
-					if(list!=null){
-						for (int i = 0; i < list.size(); i++) {	
-							if (isBaseClass(list.get(i).getClass())) {
-								jsonArray.put(list.get(i));
-							}else{
-								jsonArray.put(toJSONObjectByAnnotation(list.get(i)));
-							}
-						}
-					}
-					json.put(filedName, jsonArray);
-				}else{
-					if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
-				}
-			}else{
-				if(DEBUG)Log.i(TAG,"Field:" + field.getName()+ " no Annotation");
-			}
-			
-		}
+        try{
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if(field.isEnumConstant())continue;
+                if (field.isAnnotationPresent(Element.class)){
+                    //非集合类型
+                    Element element = field.getAnnotation(Element.class);
+                    filedName="".equals(element.value())?field.getName():element.value();
+                    if (isBaseClass(field.getType())) {
+                        json.put(filedName, field.get(obj));
+                    }else{
+                        json.put(filedName, toJSONObjectByAnnotation(field.get(obj)));
+                    }
+                }else if (field.isAnnotationPresent(ElementList.class)) {
+                    //集合类型
+                    ElementList elementList = field.getAnnotation(ElementList.class);
+                    filedName="".equals(elementList.value())?field.getName():elementList.value();
+                    if(field.getGenericType() instanceof ParameterizedType){
+                        List<?> list=(List<?>) field.get(obj);
+                        JSONArray jsonArray=new JSONArray();
+                        if(list!=null){
+                            for (int i = 0; i < list.size(); i++) {
+                                if (isBaseClass(list.get(i).getClass())) {
+                                    jsonArray.put(list.get(i));
+                                }else{
+                                    jsonArray.put(toJSONObjectByAnnotation(list.get(i)));
+                                }
+                            }
+                        }
+                        json.put(filedName, jsonArray);
+                    }else{
+                        if(DEBUG)Log.i(TAG,field.getName()+ " require have generic");
+                    }
+                }else{
+                    if(DEBUG)Log.i(TAG,"Field:" + field.getName()+ " no Annotation");
+                }
+
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }catch (IllegalAccessException e){
+            e.printStackTrace();
+        }
 		return json;
 	}
 	/**
@@ -143,13 +160,18 @@ public class JsonUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static <T> T parserToObjectByAnnotation(Class<T> c,String str) throws Exception{
+	public static <T> T parserToObjectByAnnotation(Class<T> c,String str) throws JSONParserException{
 		if(null==str||"".equals(str)){
 			throw new IllegalArgumentException("str=null");
 		}
 		String json=formatJson(str);
-		JSONObject jsonObject=new JSONObject(json);
-		return parserToObjectByAnnotation(c,jsonObject);
+        JSONObject jsonObject= null;
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            throw new JSONParserException(e.getMessage(),e);
+        }
+        return parserToObjectByAnnotation(c,jsonObject);
 	}
 	/**
 	 * 解析JSON格式字符串到 Object
@@ -158,25 +180,39 @@ public class JsonUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static <T> T parserToObject(Class<T> c,String str) throws Exception{
+	public static <T> T parserToObject(Class<T> c,String str) throws JSONParserException{
 		if(null==str||"".equals(str)){
 			throw new IllegalArgumentException("str=null");
 		}
 		String json=formatJson(str);
-		JSONObject jsonObject=new JSONObject(json);
-		return parserToObject(c,jsonObject);
+        JSONObject jsonObject= null;
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            throw new JSONParserException(e.getMessage(),e);
+        }
+        return parserToObject(c,jsonObject);
 	}
-	public static <T> T parserToObjectByUrl(Class<T> c,String urlStr) throws Exception{
+	public static <T> T parserToObjectByUrl(Class<T> c,String urlStr) throws JSONParserException{
 		if(null==urlStr||"".equals(urlStr)){
 			throw new IllegalArgumentException("urlStr=null");
 		}
-		URL url = new URL(urlStr);
-		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		String json=formatJson(inputStreamTOString(urlConnection.getInputStream()));
-		JSONObject jsonObject=new JSONObject(json);
-		return parserToObject(c,jsonObject);
+        URL url = null;
+        HttpURLConnection urlConnection = null;
+        String json= null;
+        JSONObject jsonObject= null;
+        try {
+            url = new URL(urlStr);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            json = formatJson(inputStreamTOString(urlConnection.getInputStream()));
+            jsonObject = new JSONObject(json);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new JSONParserException(e.getMessage(),e);
+        }
+        return parserToObject(c,jsonObject);
 	}
-	public static String inputStreamTOString(InputStream in) throws Exception{  
+	private static String inputStreamTOString(InputStream in) throws Exception{
 		int BUFFER_SIZE = 4096;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();  
         byte[] data = new byte[BUFFER_SIZE];  
