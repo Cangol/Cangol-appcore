@@ -71,7 +71,7 @@ public class StatsTraffic {
         endCalcAppTraffic();
         context.unregisterReceiver(statsTrafficReceiver);
     }
-    public void addAppTrafficStats(int uid,String packageName){
+    private void addAppTrafficStats(int uid,String packageName){
         AppTraffic appTraffic = new AppTraffic();
         appTraffic.uid = uid;
         appTraffic.packageName = packageName;
@@ -83,7 +83,7 @@ public class StatsTraffic {
         appTraffic.wifiTx = 0;
         trafficDbService.saveAppTraffic(appTraffic);
     }
-    public void calcDateTraffic(AppTraffic appTraffic,String date,boolean wifi){
+    private void calcDateTraffic(AppTraffic appTraffic,String date,boolean wifi){
         DateTraffic dateTraffic=trafficDbService.getDateTrafficByDate(appTraffic.uid, date);
         if(dateTraffic==null){
             dateTraffic=new DateTraffic();
@@ -136,8 +136,18 @@ public class StatsTraffic {
             trafficDbService.saveAppTraffic(appTraffic);
         }
     }
+    public void resetAppTraffic(String date){
+        List<AppTraffic> list =trafficDbService.getAppTrafficList();
+        AppTraffic appTraffic =null;
+        for (int i = 0; i < list.size(); i++) {
+            appTraffic=list.get(i);
+            appTraffic.totalRx=TrafficStats.getUidRxBytes(appTraffic.uid);
+            appTraffic.totalTx=TrafficStats.getUidTxBytes(appTraffic.uid);
+            trafficDbService.saveAppTraffic(appTraffic);
+        }
+    }
     public List<Map> getUnPostDateTraffic(int uid,String date) {
-        List<DateTraffic> list=trafficDbService.getDateTrafficByStatus(uid,date, 0);
+        List<DateTraffic> list=trafficDbService.getDateTrafficByStatus(uid, date, 0);
         Map<String,String> map=null;
         DateTraffic dateTraffic=null;
         List<Map> maps=new ArrayList<Map>();
@@ -155,6 +165,17 @@ public class StatsTraffic {
         }
         return maps;
     }
+
+    public void saveUnPostDateTraffic(int uid, String currentDate) {
+        List<DateTraffic> list=trafficDbService.getDateTrafficByStatus(uid, currentDate, 0);
+        for (int i = 0; i <list.size() ; i++) {
+            DateTraffic traffic=list.get(i);
+            traffic.status=1;
+            trafficDbService.saveDateTraffic(traffic);
+        }
+
+    }
+
     //day end|| app exit
     private void endCalcAppTraffic(){
         String date=TimeUtils.getCurrentDate();
@@ -182,7 +203,7 @@ public class StatsTraffic {
             TrafficDbService trafficDbService=new TrafficDbService(context);
             if (BOOT_ACTION.equals(intent.getAction())) {
                 // 开机启动
-
+                resetAppTraffic(TimeUtils.getCurrentDate());
             } else if (NETWORK_ACTION.equals(intent.getAction()))  {
                 NetworkInfo.State wifiState = null;
                 NetworkInfo.State mobileState = null;

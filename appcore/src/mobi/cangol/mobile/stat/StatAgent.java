@@ -256,6 +256,7 @@ public class StatAgent {
         for (int i = 0; i <list.size() ; i++) {
             send(Builder.createTraffic(list.get(i)));
         }
+        statsTraffic.saveUnPostDateTraffic(context.getApplicationInfo().uid, TimeUtils.getCurrentDate());
     }
 
     public void onActivityResume(String pageName) {

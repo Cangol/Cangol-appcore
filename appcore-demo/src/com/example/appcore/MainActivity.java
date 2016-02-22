@@ -3,6 +3,9 @@ package com.example.appcore;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.widget.TextView;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
