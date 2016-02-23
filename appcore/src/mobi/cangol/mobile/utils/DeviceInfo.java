@@ -18,6 +18,7 @@ package mobi.cangol.mobile.utils;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -35,6 +36,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -595,24 +597,48 @@ public class DeviceInfo {
 	    }
 		return null;
 	}
-	/**
-	* return application is background
-	* @param context
-	* @return
-	*/
-	public static boolean isBackground(Context context) {
-	
-		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-		for (RunningAppProcessInfo appProcess : appProcesses) {
-			if (appProcess.processName.equals(context.getPackageName())) {
-				if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
+    /**
+     * return activity is foreground
+     * @param activityName
+     * @param context
+     * @return
+     */
+    public static boolean isForegroundActivity(String activityName,Context context) {
+        if (context == null || TextUtils.isEmpty(activityName)) {
+            return false;
+        }
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
+        if (list != null && list.size() > 0) {
+            ComponentName cpn = list.get(0).topActivity;
+            if (activityName.equals(cpn.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * return applcation is foreground
+     * @param packageName
+     * @param context
+     * @return
+     */
+    public  boolean isForegroundApplication(String packageName,Context context) {
+        boolean result = false;
+        ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
+        if (appProcesses != null) {
+            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
+                if (runningAppProcessInfo.processName.equals(packageName)) {
+                    int status = runningAppProcessInfo.importance;
+                    if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
+                            || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
+    }
 }
