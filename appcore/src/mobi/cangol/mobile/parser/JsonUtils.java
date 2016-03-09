@@ -48,6 +48,9 @@ public class JsonUtils {
 	 * @return
 	 */
 	public static <T> JSONObject toJSONObject(T obj){
+        if(obj==null){
+            return null;
+        }
 		JSONObject json=new JSONObject();
 		Field[] fields = obj.getClass().getDeclaredFields();
         try{
@@ -97,6 +100,9 @@ public class JsonUtils {
 	 * @return
 	 */
 	public static JSONObject toJSONObjectByAnnotation(Object obj){
+        if(obj==null){
+            return null;
+        }
 		JSONObject json=new JSONObject();
 		Field[] fields = obj.getClass().getDeclaredFields();
 		String filedName=null;
