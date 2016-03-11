@@ -269,8 +269,43 @@ public class BitmapUtils {
 	        paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));    
 	        canvas.drawRect(0, height, width, bitmapWithReflection.getHeight() + reflectionGap, paint);    
 	        return bitmapWithReflection;     
-	    }  
- 
+	    }
+
+	/**
+	 * 获取宽度
+	 * @param filepath
+	 * @return
+     */
+	public static int getWidth(String filepath){
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filepath, options);
+		return options.outWidth;
+	}
+
+	/**
+	 * 获取高度
+	 * @param filepath
+	 * @return
+     */
+	public static int getHeight(String filepath){
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filepath, options);
+		return options.outHeight;
+	}
+
+	/**
+	 *获取宽度,高度
+	 * @param filepath
+	 * @return
+     */
+	public static int[] getSize(String filepath){
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filepath, options);
+		return new int[]{options.outWidth,options.outHeight};
+	}
 	/**
 	 * 缩放图片文件
 	 * @param filepath
