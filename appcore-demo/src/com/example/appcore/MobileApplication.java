@@ -3,6 +3,7 @@ package com.example.appcore;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.service.crash.CrashReportListener;
 import mobi.cangol.mobile.service.crash.CrashService;
 import mobi.cangol.mobile.stat.StatAgent;
@@ -18,11 +19,12 @@ public class MobileApplication extends CoreApplication {
         init();
     }
     public void init(){
-        Log.d("初始化CrashService");
+        //ConfigService
+        Log.d("--------------CrashService begin---------------");
         CrashService crashService = (CrashService) getAppService(AppService.CRASH_SERVICE);
         crashService.setDebug(true);
-        Log.d("开发模式 不报告crash");
-        if(!this.isDevMode())
+        if(!this.isDevMode()){
+            Log.d("report crash");
             crashService.report(new CrashReportListener(){
 
                 @Override
@@ -34,6 +36,31 @@ public class MobileApplication extends CoreApplication {
                 }
 
             });
+        }else{
+            Log.d("DevMode="+this.isDevMode()+",don't report crash");
+        }
+        Log.d("--------------CrashService begin---------------");
+
+        //ConfigService
+        Log.d("--------------ConfigService begin---------------");
+        ConfigService configService= (ConfigService) getAppService(AppService.CONFIG_SERVICE);
+        Log.d("getAppDir="+configService.getAppDir());
+        Log.d("getCacheDir="+configService.getCacheDir());
+        Log.d("getDownloadDir="+configService.getDownloadDir());
+        Log.d("getUpgradeDir="+configService.getUpgradeDir());
+        Log.d("getTempDir="+configService.getTempDir());
+        Log.d("getImageDir="+configService.getImageDir());
+        Log.d(" ");
+        boolean result=configService.setAppDir("/sdcard/appcore");
+        Log.d("setAppDir="+result);
+        Log.d("getAppDir exists="+configService.getAppDir().exists());
+        Log.d("getAppDir="+configService.getAppDir());
+        Log.d("getCacheDir="+configService.getCacheDir());
+        Log.d("getDownloadDir="+configService.getDownloadDir());
+        Log.d("getUpgradeDir="+configService.getUpgradeDir());
+        Log.d("getTempDir="+configService.getTempDir());
+        Log.d("getImageDir="+configService.getImageDir());
+        Log.d("--------------ConfigService end---------------");
     }
 
 }

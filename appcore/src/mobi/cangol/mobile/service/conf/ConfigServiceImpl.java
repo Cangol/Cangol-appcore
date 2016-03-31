@@ -38,9 +38,12 @@ public class ConfigServiceImpl implements ConfigService {
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;
     private boolean mUseInternalStorage=false;
+	private boolean mIsCustomAppDir=false;
+	private File mAppDir;
 	@Override
 	public void onCreate(Context context) {
 		mContext=context;
+		mAppDir=initAppDir();
 	}
 	@Override
 	public void setDebug(boolean debug) {
@@ -81,18 +84,63 @@ public class ConfigServiceImpl implements ConfigService {
     public void setUseInternalStorage(boolean useInternalStorage) {
         this.mUseInternalStorage = useInternalStorage;
     }
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+
+	@Override
+	public File getAppDir() {
+		return mAppDir;
+	}
+
+	@Override
+	public boolean setAppDir(String path) {
+		File file=new File(path);
+		if(file.exists()){
+			mAppDir=file;
+			mIsCustomAppDir=true;
+			return true;
+		}else{
+			boolean mkdirs= file.mkdirs();
+			if(mkdirs){
+				mAppDir=file;
+				mIsCustomAppDir=true;
+				return true;
+			}else
+				throw new IllegalArgumentException("mkdirs fail. path="+path);
+		}
+	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private File initAppDir(){
+		StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+		File file=null;
+		if(mUseInternalStorage){
+			file=  mContext.getFilesDir().getParentFile();
+		}else{
+			if(!Environment.isExternalStorageEmulated())
+				file=  mContext.getFilesDir().getParentFile();
+			else
+				file= new File(StorageUtils.getExternalStorageDir(mContext,mContext.getPackageName()));
+		}
+		StrictMode.setThreadPolicy(oldPolicy);
+		return file;
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public File getFileDir(String name) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         File file=null;
-        if(mUseInternalStorage){
-            file=  mContext.getFileStreamPath(name);
-        }else{
-            if(!Environment.isExternalStorageEmulated())
-                file=  mContext.getFileStreamPath(name);
-            else
-                file= StorageUtils.getExternalFileDir(mContext, name);
-        }
+		if(mIsCustomAppDir){
+			file=new File(mAppDir,name);
+		}else{
+			if(mUseInternalStorage){
+				file=  mContext.getFileStreamPath(name);
+			}else{
+				if(!Environment.isExternalStorageEmulated())
+					file=  mContext.getFileStreamPath(name);
+				else
+					file= StorageUtils.getExternalFileDir(mContext, name);
+			}
+		}
+		if(!file.exists())
+			file.mkdirs();
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
     }
@@ -102,14 +150,20 @@ public class ConfigServiceImpl implements ConfigService {
 	public File getCacheDir() {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         File file=null;
-        if(mUseInternalStorage){
-            file=  mContext.getCacheDir();
-        }else{
-            if(!Environment.isExternalStorageEmulated())
-                file=  mContext.getCacheDir();
-            else
-                file= mContext.getExternalCacheDir();
-        }
+		if(mIsCustomAppDir){
+			file=new File(mAppDir,"cache");
+		}else{
+			if(mUseInternalStorage){
+				file=  mContext.getCacheDir();
+			}else{
+				if(!Environment.isExternalStorageEmulated())
+					file=  mContext.getCacheDir();
+				else
+					file= mContext.getExternalCacheDir();
+			}
+		}
+		if(!file.exists())
+			file.mkdirs();
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
 	}

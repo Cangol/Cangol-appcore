@@ -20,7 +20,8 @@ import java.io.File;
 import mobi.cangol.mobile.service.AppService;
 
 public interface ConfigService extends AppService{
-	
+
+	public final static String APP_DIR="app_dir";
 	public final static String IMAGE_DIR="image_dir";
 	public final static String DOWNLOAD_DIR="download_dir";
 	public final static String TEMP_DIR="temp_dir";
@@ -68,4 +69,16 @@ public interface ConfigService extends AppService{
      * @param useInternalStorage
      */
     void setUseInternalStorage(boolean useInternalStorage);
+
+	/**
+	 * 获取app目录
+	 * @return
+	 */
+	File getAppDir();
+	/**
+	 * 获取共享文件名称
+	 * @return
+	 */
+	boolean setAppDir(String path);
+
 }
