@@ -29,6 +29,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
+import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.service.session.SessionService;
 import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.Constants;
@@ -60,7 +61,9 @@ public class CoreApplication extends Application {
 		}
 		initAppServiceManager();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
-        StatAgent.getInstance(this).init();
+        ConfigService configService= (ConfigService) getAppService(AppService.CONFIG_SERVICE);
+        configService.getTempDir();
+        //StatAgent.getInstance(this).init();
 	}
 
     /**

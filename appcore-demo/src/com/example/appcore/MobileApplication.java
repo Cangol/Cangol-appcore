@@ -53,7 +53,7 @@ public class MobileApplication extends CoreApplication {
         Log.d(" ");
         boolean result=configService.setAppDir("/sdcard/appcore");
         Log.d("setAppDir="+result);
-        Log.d("getAppDir exists="+configService.getAppDir().exists());
+        //Log.d("getAppDir exists="+configService.getAppDir().exists());
         Log.d("getAppDir="+configService.getAppDir());
         Log.d("getCacheDir="+configService.getCacheDir());
         Log.d("getDownloadDir="+configService.getDownloadDir());

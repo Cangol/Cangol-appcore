@@ -15,25 +15,15 @@
  */
 package mobi.cangol.mobile.utils;
 
+import android.content.Context;
+
 import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 import dalvik.system.DexFile;
-import android.content.Context;
-import android.util.Log;
+import mobi.cangol.mobile.logging.Log;
 
 public class ClassUtils {
 	
@@ -56,6 +46,8 @@ public class ClassUtils {
 			}
 			allClass=null;
 			System.gc();
+		}else{
+			Log.e("class "+c+" is not Interface");
 		}
 		return returnClassList;
 	}
@@ -81,7 +73,7 @@ public class ClassUtils {
 	        list=null;
 	        System.gc();
         } catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Log.e("ClassNotFoundException "+e.getMessage());
 		}
 		return classList;
 	}
@@ -96,11 +88,13 @@ public class ClassUtils {
 	        DexFile df = new DexFile(context.getPackageCodePath());
 	        if(df!=null) for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
             	classList.add(iter.nextElement());
-	        }
+	        }else{
+				Log.e("DexFile "+context.getPackageCodePath()+" is null");
+            }
 	        df.close();
 	        System.gc();
 	    } catch (IOException e) {
-	        e.printStackTrace();
+			Log.e("IOException "+e.getMessage());
 	    }
 		return classList;
 	}
@@ -118,13 +112,15 @@ public class ClassUtils {
             	clazz=(Class<?>) context.getClassLoader().loadClass(iter.nextElement());
             	classList.add(clazz);
             	clazz=null;
-	        }
+	        }else{
+                Log.e("DexFile "+context.getPackageCodePath()+" is null");
+            }
 	        df.close();
 	        System.gc();
 	    } catch (IOException e) {
-	        e.printStackTrace();
+			Log.e("IOException "+e.getMessage());
 	    } catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Log.e("ClassNotFoundException "+e.getMessage());
 		}
 		return classList;
 	}

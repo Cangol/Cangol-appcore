@@ -52,7 +52,7 @@ import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 public class AppServiceManagerImpl extends AppServiceManager {
-	private final static String  TAG=" AppServiceManager";
+	private final static String  TAG="AppServiceManager";
 	private Map<String, AppService> mRunServiceMap = new Hashtable<String, AppService>();
 	private Map<String,Class<? extends AppService>> mServiceMap = new Hashtable<String,Class<? extends AppService>>();
 	public Context mContext;
@@ -72,19 +72,22 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
 			// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
 		}else{
-			classList=new ArrayList<Class<? extends AppService>>();
-			classList.add(CacheManagerImpl.class);
-			classList.add(ConfigServiceImpl.class);
-			classList.add(CrashServiceImpl.class);
-			classList.add(DownloadManagerImpl.class);
-			classList.add(SessionServiceImpl.class);
-			classList.add(LocationServiceImpl.class);
-			classList.add(AnalyticsServiceImpl.class);
-			classList.add(StatusServiceImpl.class);
-			classList.add(UpgradeServiceImpl.class);
-		}
-		
-		System.gc();
+            classList=new ArrayList<Class<? extends AppService>>();
+            classList.add(CacheManagerImpl.class);
+            classList.add(ConfigServiceImpl.class);
+            classList.add(CrashServiceImpl.class);
+            classList.add(DownloadManagerImpl.class);
+            classList.add(SessionServiceImpl.class);
+            classList.add(LocationServiceImpl.class);
+            classList.add(AnalyticsServiceImpl.class);
+            classList.add(StatusServiceImpl.class);
+            classList.add(UpgradeServiceImpl.class);
+        }
+        Log.d("classList="+classList.size());
+        for (int i = 0; i < classList.size(); i++) {
+            Log.d("name="+classList.get(i).getSimpleName());
+        }
+        System.gc();
 		initServiceMap(classList);
 		//initServiceProperties();
 	}
