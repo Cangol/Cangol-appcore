@@ -90,15 +90,19 @@ public class ConfigServiceImpl implements ConfigService {
 		return mAppDir;
 	}
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
 	public boolean setAppDir(String path) {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
 		File file=new File(path);
 		if(file.exists()){
+            StrictMode.setThreadPolicy(oldPolicy);
 			mAppDir=file;
 			mIsCustomAppDir=true;
 			return true;
 		}else{
 			boolean mkdirs= file.mkdirs();
+            StrictMode.setThreadPolicy(oldPolicy);
 			if(mkdirs){
 				mAppDir=file;
 				mIsCustomAppDir=true;
@@ -139,9 +143,11 @@ public class ConfigServiceImpl implements ConfigService {
 					file= StorageUtils.getExternalFileDir(mContext, name);
 			}
 		}
+        StrictMode.setThreadPolicy(oldPolicy);
+        StrictMode.ThreadPolicy oldPolicy1 = StrictMode.allowThreadDiskWrites();
 		if(!file.exists())
 			file.mkdirs();
-        StrictMode.setThreadPolicy(oldPolicy);
+        StrictMode.setThreadPolicy(oldPolicy1);
         return file;
     }
 
