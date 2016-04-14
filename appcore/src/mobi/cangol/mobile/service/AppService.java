@@ -54,6 +54,10 @@ public interface AppService {
 	 * Session服务
 	 */
 	public final static String SESSION_SERVICE = "SessionService";
+	/**
+	 * PluginManager
+	 */
+	public final static String PLUGIN_MANAGER = "PluginManager";
 
 	/**
 	 * 当创建时

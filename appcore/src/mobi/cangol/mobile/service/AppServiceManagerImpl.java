@@ -46,6 +46,7 @@ import mobi.cangol.mobile.service.conf.ConfigServiceImpl;
 import mobi.cangol.mobile.service.crash.CrashServiceImpl;
 import mobi.cangol.mobile.service.download.DownloadManagerImpl;
 import mobi.cangol.mobile.service.location.LocationServiceImpl;
+import mobi.cangol.mobile.service.plugin.PluginManagerImpl;
 import mobi.cangol.mobile.service.session.SessionServiceImpl;
 import mobi.cangol.mobile.service.status.StatusServiceImpl;
 import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
@@ -85,7 +86,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
             classList.add(LocationServiceImpl.class);
             classList.add(AnalyticsServiceImpl.class);
             classList.add(StatusServiceImpl.class);
-            classList.add(UpgradeServiceImpl.class);
+			classList.add(UpgradeServiceImpl.class);
+			classList.add(PluginManagerImpl.class);
         }
         Log.d(TAG,"classList size="+classList.size());
         for (int i = 0; i < classList.size(); i++) {

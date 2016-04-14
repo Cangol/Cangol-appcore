@@ -15,11 +15,40 @@
  *  limitations under the License.
  */
 
-package mobi.cangol.mobile.plugin;
+package mobi.cangol.mobile.service.plugin;
+
+import mobi.cangol.mobile.plugin.PluginInfo;
+import mobi.cangol.mobile.service.AppService;
 
 /**
- * Created by weixuewu on 15/10/30.
+ * @author Cangol
+ *
  */
-public class IActivity {
+public interface PluginManager extends AppService {
+
+    /**
+     *
+     * @param name
+     */
+    void loadPlugin(String name) throws IllegalAccessException;
+    /**
+     *
+     * @param name
+     * @param path
+     */
+    void addPlugin(String name, String path,int flag);
+
+    /**
+     *
+     * @param name
+     */
+    void removePlugin(String name);
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    PluginInfo getPlugin(String name);
 
 }
