@@ -60,7 +60,7 @@ public class ClassUtils {
 	 */
 	public  static  List<Class<?>> getAllClassByPackage(String packageName,Context context){
 		List<Class<?>> classList = new ArrayList<Class<?>>(); 
-        List<String> list =getAllClassNameFromDexFile(context);
+        List<String> list =getAllClassNameFromDexFile(context,packageName);
         Class<?> clazz=null;
         try {
 	        for (String classNane: list) {
@@ -82,12 +82,18 @@ public class ClassUtils {
 	 * @param context
 	 * @return
 	 */
-	public  static  List<String> getAllClassNameFromDexFile(Context context){
+	public  static  List<String> getAllClassNameFromDexFile(Context context,String packageName){
 		List<String> classList = new ArrayList<String>(); 
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
+			String str=null;
 	        if(df!=null) for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
-            	classList.add(iter.nextElement());
+				str=iter.nextElement();
+				if(packageName!=null&&str.startsWith(packageName)){
+					classList.add(str);
+				}else if(packageName==null||"".equals(packageName)){
+					classList.add(str);
+				}
 	        }else{
 				Log.e("DexFile "+context.getPackageCodePath()+" is null");
             }
@@ -103,14 +109,21 @@ public class ClassUtils {
 	 * @param context
 	 * @return
 	 */
-	public  static  List<Class<?>> getAllClassFromDexFile(Context context){
+	public  static  List<Class<?>> getAllClassFromDexFile(Context context,String packageName){
 		List<Class<?>> classList = new ArrayList<Class<?>>(); 
 		try {
 	        DexFile df = new DexFile(context.getPackageCodePath());
 	        Class<?> clazz=null;
+			String str=null;
 	        if(df!=null)for (Enumeration<String> iter = df.entries(); iter.hasMoreElements();) {
-            	clazz=(Class<?>) context.getClassLoader().loadClass(iter.nextElement());
-            	classList.add(clazz);
+				str=iter.nextElement();
+				if(packageName!=null&&str.startsWith(packageName)){
+					clazz=(Class<?>) context.getClassLoader().loadClass(str);
+					classList.add(clazz);
+				}else if(packageName==null||"".equals(packageName)){
+					clazz=(Class<?>) context.getClassLoader().loadClass(str);
+					classList.add(clazz);
+				}
             	clazz=null;
 	        }else{
                 Log.e("DexFile "+context.getPackageCodePath()+" is null");

@@ -67,11 +67,15 @@ public class AppServiceManagerImpl extends AppServiceManager {
 	}
 	private void initClass(){
 		List<Class<? extends AppService>> classList=null;
+		Log.d(TAG,"SDK_INT="+Build.VERSION.SDK_INT);
+		/** mulit dex not used
 		if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			Log.d(TAG,"Class Scan");
 			classList=ClassUtils.getAllClassByInterface(AppService.class, mContext, this.getClass().getPackage().getName());
 			classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
-			// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
-		}else{
+			//2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
+		}else**/
+		{
             classList=new ArrayList<Class<? extends AppService>>();
             classList.add(CacheManagerImpl.class);
             classList.add(ConfigServiceImpl.class);
@@ -83,9 +87,9 @@ public class AppServiceManagerImpl extends AppServiceManager {
             classList.add(StatusServiceImpl.class);
             classList.add(UpgradeServiceImpl.class);
         }
-        Log.d("classList="+classList.size());
+        Log.d(TAG,"classList size="+classList.size());
         for (int i = 0; i < classList.size(); i++) {
-            Log.d("name="+classList.get(i).getSimpleName());
+            Log.d(TAG,"classname="+classList.get(i).getSimpleName());
         }
         System.gc();
 		initServiceMap(classList);
@@ -238,6 +242,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			initServiceMap(classList);
 		}
 	}
+	@Deprecated
 	public void initServiceProperties(){
 		if(Build.VERSION.SDK_INT>=9){
 			// Temporarily disable logging of disk reads on the Looper thread
