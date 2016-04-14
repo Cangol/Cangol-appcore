@@ -9,12 +9,12 @@ android:
     - extra-android-m2repository
     - extra-android-support
     - sys-img-armeabi-v7a-android-19
-#before_install:
-#    # Gradle
-#    - wget http://services.gradle.org/distributions/gradle-2.10-all.zip
-#    - unzip gradle-2.10-all.zip
-#    - export GRADLE_HOME=$PWD/gradle-2.10
-#    - export PATH=$GRADLE_HOME/bin:$PATH
+before_install:
+    # Gradle
+    - wget http://services.gradle.org/distributions/gradle-2.10-all.zip
+    - unzip gradle-2.10-all.zip
+    - export GRADLE_HOME=$PWD/gradle-2.10
+    - export PATH=$GRADLE_HOME/bin:$PATH
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
