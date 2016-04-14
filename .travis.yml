@@ -1,0 +1,29 @@
+language: android
+jdk:
+  - oraclejdk7
+sudo: false
+android:
+  components:
+    - build-tools-22.0.0
+    - android-22
+    - extra-android-m2repository
+    - extra-android-support
+    - sys-img-armeabi-v7a-android-19
+#before_install:
+#    # Gradle
+#    - wget http://services.gradle.org/distributions/gradle-2.10-all.zip
+#    - unzip gradle-2.10-all.zip
+#    - export GRADLE_HOME=$PWD/gradle-2.10
+#    - export PATH=$GRADLE_HOME/bin:$PATH
+# Emulator Management: Create, Start and Wait
+before_script:
+  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+#before_cache:
+#  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
