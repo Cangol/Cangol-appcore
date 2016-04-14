@@ -129,7 +129,7 @@ public class ConfigServiceImpl implements ConfigService {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public File getFileDir(String name) {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file=null;
 		if(mIsCustomAppDir){
 			file=new File(mAppDir,name);
@@ -143,11 +143,9 @@ public class ConfigServiceImpl implements ConfigService {
 					file= StorageUtils.getExternalFileDir(mContext, name);
 			}
 		}
-        StrictMode.setThreadPolicy(oldPolicy);
-        StrictMode.ThreadPolicy oldPolicy1 = StrictMode.allowThreadDiskWrites();
 		if(!file.exists())
 			file.mkdirs();
-        StrictMode.setThreadPolicy(oldPolicy1);
+        StrictMode.setThreadPolicy(oldPolicy);
         return file;
     }
 
