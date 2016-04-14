@@ -45,8 +45,6 @@ android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
         return; // Skip debug builds.
-    }else {
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
     task.dependsOn variant.javaCompile
@@ -93,6 +91,7 @@ version = properties.getProperty("LIBRARY_VERSION")
 group= properties.getProperty("GROUP_ID")
 
 bintray (){
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
     user = properties.getProperty("BINTRAY.USER")
     key = properties.getProperty("BINTRAY.APIKEY")
 
