@@ -11,8 +11,8 @@ android:
     - sys-img-armeabi-v7a-android-19
 before_install:
     # Gradle
-    - wget http://services.gradle.org/distributions/gradle-2.10-all.zip
-    - unzip gradle-2.10-all.zip
+    - wget -q http://services.gradle.org/distributions/gradle-2.10-all.zip
+    - unzip -q gradle-2.10-all.zip
     - export GRADLE_HOME=$PWD/gradle-2.10
     - export PATH=$GRADLE_HOME/bin:$PATH
 # Emulator Management: Create, Start and Wait
