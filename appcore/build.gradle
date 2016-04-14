@@ -5,9 +5,6 @@ apply plugin: 'com.jfrog.bintray'
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 }
-// Bintray
-Properties properties = new Properties()
-//properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     compileSdkVersion 22
@@ -41,10 +38,15 @@ android {
     }
 
 }
+// Bintray
+Properties properties = new Properties()
+
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
         return; // Skip debug builds.
+    }else {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
     task.dependsOn variant.javaCompile
