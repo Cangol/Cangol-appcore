@@ -2,7 +2,8 @@
 
 这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
 [详细文档](http://cangol.github.io/Cangol-appcore)  
-[ ![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
+
+[![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
 [![Build Status](https://travis-ci.org/Cangol/Cangol-appcore.svg?branch=master)](https://travis-ci.org/Cangol/Cangol-appcore)
 
 ##引用方式
@@ -12,7 +13,7 @@ Maven
          <groupId>mobi.cangol.mobile</groupId>
          <artifactId>appcore</artifactId>
          <version>1.0.3/version>
-         <type>jar</type>
+         <type>pom</type>
      </dependency>
 Gradle
  
