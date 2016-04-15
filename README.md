@@ -6,7 +6,6 @@
 [![Build Status](https://travis-ci.org/Cangol/Cangol-appcore.svg?branch=master)](https://travis-ci.org/Cangol/Cangol-appcore)
 
 ##引用方式
--
 Maven
 
      <dependency>
