@@ -12,7 +12,7 @@ Maven
          <groupId>mobi.cangol.mobile</groupId>
          <artifactId>appcore</artifactId>
          <version>1.0.3/version>
-         <type>aar</type>
+         <type>jar</type>
      </dependency>
 Gradle
  
