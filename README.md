@@ -5,9 +5,19 @@
 [ ![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
 [![Build Status](https://travis-ci.org/Cangol/Cangol-appcore.svg?branch=master)](https://travis-ci.org/Cangol/Cangol-appcore)
 
-引用方式
-`compile(group: 'mobi.cangol.mobile', name: 'appcore', version: '1.0.3', ext: 'jar')`
-`compile 'mobi.cangol.mobile:appcore:1.0.3'`
+##引用方式
+-
+Maven
+
+     <dependency>
+         <groupId>mobi.cangol.mobile</groupId>
+         <artifactId>appcore</artifactId>
+         <version>1.0.3/version>
+         <type>aar</type>
+     </dependency>
+Gradle
+ 
+    compile 'mobi.cangol.mobile:appcore:1.0.3'
  
 ##CoreApplication
 核心Application 提供整个库的初始化和一些方法，
