@@ -6,6 +6,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar','*.so'])
     compile 'com.android.support:support-v13:22.0.0'
 }
+// Bintray
+Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 
 android {
     compileSdkVersion 22
@@ -35,10 +39,6 @@ android.libraryVariants.all { variant ->
     artifacts.add('archives', task);
 }
 
-// Bintray
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 // build a jar with source files
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -48,6 +48,7 @@ task sourcesJar(type: Jar) {
 }
 //
 task javadoc(type: Javadoc) {
+    failOnError  false
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
@@ -67,6 +68,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+
 artifacts {
     archives sourcesJar
     archives javadocJar
@@ -79,6 +81,7 @@ bintray (){
 
     user = properties.getProperty("BINTRAY.USER")
     key = properties.getProperty("BINTRAY.APIKEY")
+
 
     configurations = ['archives']
     pkg {
