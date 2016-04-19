@@ -447,15 +447,14 @@ public class BitmapUtils {
 	        return upperBound;
 	    }
 	}
-	
 	/**
-	 *  根据数字，创建一张带有数字的图片
-	 * @param number
-     * @param  textSize
-	 * @param  bitmap
-	 * @param  context
-	 * @return Bitmap    返回类型
-	 */
+	 * 根据数字，创建一张带有数字的图片
+	 * @param number 数字
+	 * @param textSize 字体大小
+	 * @param bitmap 图片
+	 * @param context 上下文
+     * @return
+     */
 	public static Bitmap createAlbumIcon(int number, int textSize,Bitmap bitmap, Context context) {
 		if (number == 0) {
 			return bitmap;
@@ -496,12 +495,11 @@ public class BitmapUtils {
 		}
 		return count;
 	}
-	
 	/**
 	 * bitmap To File
-	 * @param bm
-	 * @param path
-	 */
+	 * @param bm 图片
+	 * @param path 路径
+     */
 	public static void bitmap2File(Bitmap bm,String path){
 		File file=new File(path);
         try {
