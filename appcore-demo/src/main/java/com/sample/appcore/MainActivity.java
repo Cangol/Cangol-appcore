@@ -3,6 +3,7 @@ package com.sample.appcore;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.appcore.R;
 
@@ -26,6 +27,16 @@ public class MainActivity extends Activity {
         }else{
             session.saveString("key", "value=" + TimeUtils.getCurrentHoursMinutes());
         }
+
+        this.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgrade();
+            }
+        });
+
+    }
+    private void upgrade(){
         UpgradeService upgradeService= (UpgradeService) ((CoreApplication) this.getApplicationContext()).getAppService(AppService.UPGRADE_SERVICE);
         upgradeService.upgradeApk("QQ",url,false);
         upgradeService.setOnUpgradeListener(new UpgradeListener(){
