@@ -63,7 +63,7 @@ public class CoreApplication extends Application {
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
         ConfigService configService= (ConfigService) getAppService(AppService.CONFIG_SERVICE);
         configService.getTempDir();
-        //StatAgent.getInstance(this).init();
+        StatAgent.getInstance(this).init();
 	}
 
     /**
@@ -155,12 +155,12 @@ public class CoreApplication extends Application {
 	 * 退出应用
 	 */
 	public void exit() {
+		StatAgent.getInstance(this).destroy();
         getSession().saveString(Constants.KEY_EXIT_CODE, "0");
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));
 		if (mAppServiceManager != null) {
 			mAppServiceManager.destroy();
 		}
-        StatAgent.getInstance(this).destroy();
 		// 0 正常推退出
 		System.exit(0);
 	}
