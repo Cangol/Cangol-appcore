@@ -1,26 +1,21 @@
-/** 
- * Copyright (c) 2013 Cangol
- * 
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+/*
  *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Copyright (c) 2013 Cangol
+ *   <p/>
+ *   Licensed under the Apache License, Version 2.0 (the "License")
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package mobi.cangol.mobile.service.download;
 
-import java.io.File;
-import java.util.Random;
-
-import mobi.cangol.mobile.utils.AppUtils;
-import mobi.cangol.mobile.utils.FileUtils;
-import mobi.cangol.mobile.utils.TimeUtils;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -32,7 +27,14 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
 
-public class DownloadNotification {
+import java.io.File;
+import java.util.Random;
+
+import mobi.cangol.mobile.utils.AppUtils;
+import mobi.cangol.mobile.utils.FileUtils;
+import mobi.cangol.mobile.utils.TimeUtils;
+
+public class CustomDownloadNotification {
 	private NotificationManager notificationManager;
 	private Notification notificaion;
 	private int id;
@@ -40,7 +42,7 @@ public class DownloadNotification {
 	private String savePath;
 	private Context context;
 	private Download.DownloadType downloadType;
-	public DownloadNotification(Context context,String title,String savePath,Download.DownloadType downloadType){
+	public CustomDownloadNotification(Context context, String title, String savePath, Download.DownloadType downloadType){
 		this.context=context;
 		this.title=title;
 		this.savePath=savePath;

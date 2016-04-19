@@ -13,8 +13,5 @@ allprojects {
 
     repositories {
         jcenter()
-        maven {
-            url  "http://dl.bintray.com/cangol/maven"
-        }
     }
 }
