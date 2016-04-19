@@ -46,7 +46,7 @@ public class DownloadNotification {
     private Context context;
     private Download.DownloadType downloadType;
 
-    public DownloadNotification(Context context, String savePath, String title, String successText, String failureText, Download.DownloadType downloadType) {
+    public DownloadNotification(Context context, String title, String savePath, Download.DownloadType downloadType,String successText, String failureText) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
@@ -57,7 +57,7 @@ public class DownloadNotification {
         notificationManager.cancelAll();
 
     }
-    public DownloadNotification(Context context, String savePath, String title, Download.DownloadType downloadType) {
+    public DownloadNotification(Context context, String title, String savePath, Download.DownloadType downloadType) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
@@ -95,8 +95,8 @@ public class DownloadNotification {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(titleText)
                 .setContentText(FileUtils.formatSize(speed) + "/s")
-                .setContentInfo(progress + "% ")
-                .setProgress(progress, 0, false)
+                .setContentInfo(progress + "%")
+                .setProgress(100, progress, false)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
                 .setOngoing(true)

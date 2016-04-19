@@ -56,7 +56,6 @@ public class UpgradeServiceImpl implements UpgradeService{
 		mContext=context;
 		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
-		FileUtils.newFolder(mConfigService.getUpgradeDir().getAbsolutePath());
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {
