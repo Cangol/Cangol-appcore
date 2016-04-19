@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.appcore.R;
-
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
