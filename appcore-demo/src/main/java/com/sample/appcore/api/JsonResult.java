@@ -1,4 +1,4 @@
-package com.example.appcore.api;
+package com.sample.appcore.api;
 
 import mobi.cangol.mobile.api.Result;
 
