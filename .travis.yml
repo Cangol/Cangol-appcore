@@ -4,8 +4,7 @@ jdk:
 sudo: false
 env:
   global:
-    - secure: abcdefghijklmnopqrstuvwxyz
-    - TIMEOUT=1000
+    - secure: "abcdefghijklmnopqrstuvwxy"
 android:
   components:
     - build-tools-22.0.0
