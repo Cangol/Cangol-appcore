@@ -3,13 +3,9 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar','*.so'])
+    compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v13:22.0.0'
 }
-// Bintray
-Properties properties = new Properties()
-//properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 
 android {
     compileSdkVersion 22
@@ -48,14 +44,13 @@ task sourcesJar(type: Jar) {
 }
 //
 task javadoc(type: Javadoc) {
-    failOnError  false
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
     options {
         encoding "UTF-8"
         links "http://docs.oracle.com/javase/7/docs/api/"
-        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
+        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
     }
     exclude '**/BuildConfig.java'
     exclude '**/R.java'
@@ -74,72 +69,4 @@ artifacts {
     archives javadocJar
 }
 
-version = properties.getProperty("LIBRARY_VERSION")
-group= properties.getProperty("GROUP_ID")
-
-bintray (){
-
-    user = properties.getProperty("BINTRAY.USER")
-    key = properties.getProperty("BINTRAY.APIKEY")
-
-
-    configurations = ['archives']
-    pkg {
-        repo = 'maven'
-        name = properties.getProperty("LIBRARY_NAME")
-        desc = properties.getProperty("LIBRARY_DESCRIPTION")
-        websiteUrl = properties.getProperty("SITE_URL")
-        vcsUrl = properties.getProperty("GIT_URL")
-        licenses = ["Apache-2.0"]
-        labels = ['android','core']
-        publish = true
-        publicDownloadNumbers = true
-        version {
-            desc = properties.getProperty("LIBRARY_DESCRIPTION")
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = properties.getProperty("BINTRAY.GPG.PASSWORD")
-                //Optional. The passphrase for GPG signing'
-            }
-        }
-    }
-}
-
-install {
-    repositories.mavenInstaller {
-        //This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'jar'
-                groupId properties.getProperty("GROUP_ID")
-                artifactId properties.getProperty("ARTIFACT_NAME")
-
-                // Add your description here
-                name properties.getProperty("LIBRARY_NAME")
-                description properties.getProperty("LIBRARY_DESCRIPTION")
-                url properties.getProperty("SITE_URL")
-
-                // Set your license
-                licenses {
-                    license {
-                        name properties.getProperty("LICENSE_NAME")
-                        url properties.getProperty("LICENSE_URL")
-                    }
-                }
-                developers {
-                    developer {
-                        id properties.getProperty("DEVELOPER_ID")
-                        name properties.getProperty("DEVELOPER_NAME")
-                        email properties.getProperty("DEVELOPER_EMAIL")
-                    }
-                }
-                scm {
-                    connection properties.getProperty("GIT_URL")
-                    developerConnection properties.getProperty("GIT_URL")
-                    url properties.getProperty("SITE_URL")
-
-                }
-            }
-        }
-    }
-}
+apply from: '../maven_push.gradle'

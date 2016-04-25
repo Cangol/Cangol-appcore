@@ -17,25 +17,17 @@
 
 package mobi.cangol.mobile.service.download;
 
-import java.io.File;
-import java.util.Random;
-
-import mobi.cangol.mobile.service.download.Download;
-import mobi.cangol.mobile.utils.AppUtils;
-import mobi.cangol.mobile.utils.FileUtils;
-import mobi.cangol.mobile.utils.TimeUtils;
-
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.view.View;
-import android.widget.RemoteViews;
+
+import java.io.File;
+import java.util.Random;
+
+import mobi.cangol.mobile.utils.FileUtils;
 
 
 public class DownloadNotification {
