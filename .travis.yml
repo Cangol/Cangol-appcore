@@ -2,6 +2,9 @@ language: android
 jdk:
   - oraclejdk7
 sudo: false
+env:
+  global:
+    - secure: "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4GIgqXdPOkehPwITfExrH+NrT q3uJlNS0ZWeEd/QCVLayVGTScAzYrJZcC3hw09rHe9fQv0VRtvfGN1O4Zh4Q1cTI 1DBswD5F68SFxWN/DbPafCmu+wuCEr767iCqw8JwxynChyRYMOcdf22VQz8QUbfb CKwHayMOtCC8XiPLBQIDAQAB"
 android:
   components:
     - build-tools-22.0.0
