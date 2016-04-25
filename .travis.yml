@@ -2,9 +2,6 @@ language: android
 jdk:
   - oraclejdk7
 sudo: false
-env:
-  global:
-    - secure: "abcdefghijklmnopqrstuvwxy"
 android:
   components:
     - build-tools-22.0.0
