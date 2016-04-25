@@ -7,9 +7,8 @@ group= POM_GROUP_ID
 
 bintray (){
 
-    user = "$BINTRAY_USER"
-    key = "$BINTRAY_APIKEY"
-
+    user = $BINTRAY_USER
+    key = $BINTRAY_APIKEY
 
     configurations = ['archives']
     pkg {
