@@ -1,4 +1,4 @@
-package com.sample.appcore;
+package mobi.cangol.mobile.appcore.demo;
 
 
 import android.app.Activity;

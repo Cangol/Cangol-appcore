@@ -1,4 +1,4 @@
-package com.sample.appcore;
+package mobi.cangol.mobile.appcore.demo;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
