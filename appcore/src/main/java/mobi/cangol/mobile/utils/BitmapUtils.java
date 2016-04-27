@@ -19,6 +19,7 @@ package mobi.cangol.mobile.utils;
  * @author Cangol
  */
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -138,36 +139,6 @@ public class BitmapUtils {
 				.getHeight(), Config.ARGB_8888);
 
 		return sourceImg;
-	}
-	/**
-	 * 缩放图片
-	 * @param bitmap
-	 * @param scaleWidth
-	 * @param scaleHeight
-	 * @return
-	 */
-	public static Bitmap scale(Bitmap bitmap,float scaleWidth, float scaleHeight){
-		int width = bitmap.getWidth();  
-        int height = bitmap.getHeight();  
-        Matrix matrix = new Matrix();  
-        matrix.postScale(scaleWidth, scaleHeight); 
-      	return Bitmap.createBitmap(bitmap, 0, 0, width,height, matrix, true);  
-	}
-	/**
-	 * 缩放图片
-	 * @param bitmap
-	 * @param newWidth
-	 * @param newHeight
-	 * @return
-	 */
-	public static Bitmap scale(Bitmap bitmap,int newWidth, int newHeight){
-		int width = bitmap.getWidth();  
-        int height = bitmap.getHeight();  
-        float scaleWidth = ((float) newWidth) / width;  
-        float scaleHeight = ((float) newHeight) / height;  
-        Matrix matrix = new Matrix();  
-        matrix.postScale(scaleWidth, scaleHeight); 
-      	return Bitmap.createBitmap(bitmap, 0, 0, width,height, matrix, true);  
 	}
 	/**
 	 * 转为图片
@@ -296,7 +267,7 @@ public class BitmapUtils {
 	}
 
 	/**
-	 *获取宽度,高度
+	 * 获取宽度,高度
 	 * @param filepath
 	 * @return
      */
@@ -307,7 +278,23 @@ public class BitmapUtils {
 		return new int[]{options.outWidth,options.outHeight};
 	}
 	/**
-	 * 缩放图片文件
+	 * 缩放图片到新大小(无损)
+	 * @param bitmap
+	 * @param newWidth
+	 * @param newHeight
+	 * @return
+	 */
+	public static Bitmap scale(Bitmap bitmap,int newWidth, int newHeight){
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeight) / height;
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		return Bitmap.createBitmap(bitmap, 0, 0, width,height, matrix, true);
+	}
+	/**
+	 * 缩放图片按最大宽高(无损)
 	 * @param filepath
 	 * @param maxWidth
 	 * @param maxHeight
@@ -316,12 +303,42 @@ public class BitmapUtils {
 	public static Bitmap scaleFile(String filepath,int maxWidth, int maxHeight){
 		BitmapFactory.Options options = new BitmapFactory.Options();  
         options.inJustDecodeBounds = true;  
-        Bitmap bitmap = BitmapFactory.decodeFile(filepath, options); //此时返回bm为空  
+        BitmapFactory.decodeFile(filepath, options);
         options.inJustDecodeBounds = false;  
-        options.inSampleSize = computeSampleSize(options,-1,maxWidth*maxHeight);  
-        //重新读入图片，注意这次要把options.inJustDecodeBounds 设为 false
-        bitmap=BitmapFactory.decodeFile(filepath,options);  
-        return bitmap;
+        options.inSampleSize = computeSampleSize(options,-1,maxWidth*maxHeight);
+		return BitmapFactory.decodeFile(filepath,options);
+	}
+	/**
+	 * 压缩图片按指定精度
+	 * @param image 图片
+	 * @param quality 精度 推荐>65
+	 * @return
+	 */
+	public static Bitmap compressImage(Bitmap image,int quality) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+		return BitmapFactory.decodeByteArray(baos.toByteArray(),0,baos.toByteArray().length);
+	}
+
+	/**
+	 * 压缩图片 按最大图片存储大小
+	 * @param image
+	 * @param maxSize 最大图片存储大小 (单位b)
+     * @return
+     */
+	public static Bitmap compressImage(Bitmap image,long maxSize) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		int quality = 100;
+		while (baos.toByteArray().length > maxSize) {
+			baos.reset();
+			image.compress(Bitmap.CompressFormat.JPEG, quality, baos);
+			quality -= 10;
+			if (quality <= 10) {
+				break;
+			}
+		}
+		return BitmapFactory.decodeByteArray(baos.toByteArray(),0,baos.toByteArray().length);
 	}
 	/**
 	 * 重置图片文件大小
@@ -331,32 +348,29 @@ public class BitmapUtils {
 	 * @return
 	 */
 	public static Bitmap resizeBitmap(String filepath,int maxWidth, int maxHeight){
-		BitmapFactory.Options options = new BitmapFactory.Options();  
+		BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;  
-        Bitmap bitmap = BitmapFactory.decodeFile(filepath, options); 
-        options.inJustDecodeBounds = false;  
+        BitmapFactory.decodeFile(filepath, options);
         int originWidth  = options.outWidth;
         int originHeight =options.outHeight;
         // no need to resize
         if (originWidth < maxWidth && originHeight < maxHeight) {
-            return bitmap;
-        }
-        float wb=originWidth/maxWidth;
-        float hb=originHeight/maxHeight;
-        // 若图片过宽, 则保持长宽比缩放图片
-        if (originWidth > maxWidth||originHeight>maxHeight) {
-        	if(wb>=hb){
-	            int i =(int) Math.floor(originWidth * 1.0 / maxWidth);
-	            options.inSampleSize = i;  
-	            
-        	}else{
-        		int i = (int) Math.floor(originHeight * 1.0 / maxHeight);
-	            options.inSampleSize = i;  
-        	}
-        }
-        System.out.println("inSampleSize "+ options.inSampleSize);
-        bitmap=BitmapFactory.decodeFile(filepath,options); 
-        return bitmap;
+
+        }else{
+			float wb=originWidth/maxWidth;
+			float hb=originHeight/maxHeight;
+			if (originWidth > maxWidth||originHeight>maxHeight) {
+				if(wb>=hb){
+					int i =(int) Math.floor(originWidth * 1.0 / maxWidth);
+					options.inSampleSize = i;
+
+				}else{
+					int i = (int) Math.floor(originHeight * 1.0 / maxHeight);
+					options.inSampleSize = i;
+				}
+			}
+		}
+        return BitmapFactory.decodeFile(filepath,options);
 	}
 	/**
 	 * 重置图片大小
