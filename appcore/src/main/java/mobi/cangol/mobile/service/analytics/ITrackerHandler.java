@@ -22,5 +22,5 @@ import java.util.Map;
  */
 
 abstract class ITrackerHandler {
-	abstract void send(String url, Map<String, String> paramMap);
+	abstract void send(ITracker iTracker, String url, Map<String, String> paramMap);
 }

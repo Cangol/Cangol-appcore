@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol.
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,66 +15,61 @@
  */
 package mobi.cangol.mobile.service.analytics;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import mobi.cangol.mobile.logging.Log;
 
 /**
  * @author Cangol
  */
 public class ITracker {
-	private final String mTrackingId;
-	private final Map<String, String> mParams = new HashMap<String, String>();
-	private long mStartTime;
-	private ITrackerHandler mHandler;
+    private final String mTrackingId;
+    private ITrackerHandler mHandler;
+    private boolean isClosed;
 
-	public ITracker(String trackingId, ITrackerHandler handler) {
-		super();
-		this.mTrackingId = trackingId;
-		this.mHandler = handler;
-	}
+    public ITracker(String trackingId, ITrackerHandler handler) {
+        super();
+        this.mTrackingId = trackingId;
+        this.mHandler = handler;
+    }
 
-	public void sendTiming(String url) {
-		mHandler.send(url, mParams);
-		mStartTime = 0;
-		mParams.clear();
-	}
+    public boolean send(IMapBuilder statBuilder) {
+        if (!isClosed) {
+            if (statBuilder != null) {
+                mHandler.send(this, statBuilder.getUrl(), statBuilder.getParams());
+                return true;
+            }
+            Log.e("statBuilder is null ");
+            return false;
+        } else {
+            Log.e("ITracker is closed ");
+            return false;
+        }
+    }
 
-	public void send(IMapBuilder statBuilder) {
-		if (statBuilder != null) {
-			mHandler.send(statBuilder.getUrl(), statBuilder.getParams());
-		}
-	}
+    public boolean send(String url, Map<String, String> params) {
+        if (!isClosed) {
+            if (url != null) {
+                mHandler.send(this, url, params);
+                return true;
+            }
+            Log.e("url is null ");
+            return false;
+        } else {
+            Log.e("ITracker is closed ");
+            return false;
+        }
+    }
 
-	public void send(String url, Map<String, String> params) {
-		if (params != null) {
-			mHandler.send(url, params);
-		}
-	}
+    public String getTrackingId() {
+        return mTrackingId;
+    }
 
-	public String get(String key) {
-		return mParams.get(key);
-	}
+    public boolean isClosed() {
+        return isClosed;
+    }
 
-	public void set(String key, String value) {
-		mParams.put(key, value);
-	}
-
-	public void setAll(Map<String, String> params) {
-		if (params != null) {
-			mParams.putAll(params);
-		}
-	}
-
-	public String getTrackingId() {
-		return mTrackingId;
-	}
-
-	public long start() {
-		mStartTime = System.currentTimeMillis();
-		return mStartTime;
-	}
-
-	public long end() {
-		return System.currentTimeMillis() - mStartTime;
-	}
+    protected void setClosed(boolean closed) {
+        isClosed = closed;
+    }
 }

@@ -1,72 +1,93 @@
 package mobi.cangol.mobile.appcore.demo;
 
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.session.SessionService;
-import mobi.cangol.mobile.service.upgrade.UpgradeListener;
-import mobi.cangol.mobile.service.upgrade.UpgradeService;
-import mobi.cangol.mobile.utils.TimeUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import mobi.cangol.mobile.appcore.demo.fragment.AnalyticsServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.CacheManagerFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.ConfigServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.CrashServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.DownloadManagerFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.LocationServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.SessionServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.StatusServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.UpgradeServiceFragment;
 
 public class MainActivity extends FragmentActivity {
-    private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-        SessionService session=((CoreApplication) this.getApplicationContext()).getSession();
-        if(session.containsKey("key")){
-            Log.d(">>",session.getString("key","ddd"));
-        }else{
-            session.saveString("key", "value=" + TimeUtils.getCurrentHoursMinutes());
+    private static List<Class<? extends Fragment>> fragments=new ArrayList<Class<? extends Fragment>>();
+    static {
+        fragments.add(AnalyticsServiceFragment.class);
+        fragments.add(CacheManagerFragment.class);
+        fragments.add(ConfigServiceFragment.class);
+        fragments.add(CrashServiceFragment.class);
+        fragments.add(DownloadManagerFragment.class);
+        fragments.add(LocationServiceFragment.class);
+        fragments.add(SessionServiceFragment.class);
+        fragments.add(StatusServiceFragment.class);
+        fragments.add(UpgradeServiceFragment.class);
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
+        if (savedInstanceState == null) {
+            FragmentManager fm = this.getSupportFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.framelayout, new DemoListFragment(), null)
+                    .addToBackStack("DemoListFragment")
+                    .commit();
         }
 
-        this.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                upgrade();
+    }
+
+
+    class DemoListFragment extends ListFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            List<String> list=new ArrayList<String>();
+            for (int i = 0; i < fragments.size(); i++) {
+                list.add(fragments.get(i).getSimpleName().replace("Fragment",""));
             }
-        });
+            setListAdapter(new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, list));
+        }
 
-    }
-    private void upgrade(){
-        UpgradeService upgradeService= (UpgradeService) ((CoreApplication) this.getApplicationContext()).getAppService(AppService.UPGRADE_SERVICE);
-        upgradeService.upgradeApk("QQ",url,false);
-        upgradeService.setOnUpgradeListener(new UpgradeListener(){
+        @Override
+        public void onListItemClick(ListView l, View v, int position, long id) {
+            super.onListItemClick(l, v, position, id);
+            getActivity().setTitle((String)getListAdapter().getItem(position));
+            toFragment(fragments.get(position));
+        }
 
-            @Override
-            public void upgrade(boolean constraint) {
+        private void toFragment(Class<? extends Fragment> fragmentClass) {
+            FragmentManager fm = this.getFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.framelayout, Fragment.instantiate(this.getActivity(), fragmentClass.getName(), null))
+                    .addToBackStack(fragmentClass.getName())
+                    .commit();
+        }
 
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        });
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("app.exit");
-        ((CoreApplication)this.getApplicationContext()).exit();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //StatAgent.getInstance(this).onActivityResume("MainActivity");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //StatAgent.getInstance(this).onActivityPause("MainActivity");
+        @Override
+        public void onStart() {
+            super.onStart();
+            getActivity().setTitle(R.string.app_name);
+        }
     }
 }
+
