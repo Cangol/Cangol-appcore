@@ -253,6 +253,14 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    public Object get(String key) {
+        if(mMap.containsKey(key)){
+            return mMap.get(key);
+        }
+        return null;
+    }
+
+    @Override
     public void put(String key, Object value) {
         mMap.put(key,value);
     }

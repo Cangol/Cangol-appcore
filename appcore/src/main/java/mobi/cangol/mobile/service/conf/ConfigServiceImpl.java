@@ -82,8 +82,16 @@ public class ConfigServiceImpl implements ConfigService {
 	}
 
     public void setUseInternalStorage(boolean useInternalStorage) {
-        this.mUseInternalStorage = useInternalStorage;
+		if(!mIsCustomAppDir){
+			this.mUseInternalStorage = useInternalStorage;
+			mAppDir=initAppDir();
+		}
     }
+
+	@Override
+	public boolean isUseInternalStorage() {
+		return mUseInternalStorage;
+	}
 
 	@Override
 	public File getAppDir() {
@@ -92,7 +100,7 @@ public class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	@Override
-	public boolean setAppDir(String path) {
+	public boolean setCustomAppDir(String path) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
 		File file=new File(path);
 		if(file.exists()){
@@ -110,6 +118,17 @@ public class ConfigServiceImpl implements ConfigService {
 			}else
 				throw new IllegalArgumentException("mkdirs fail. path="+path);
 		}
+	}
+
+	@Override
+	public boolean isCustomAppDir() {
+		return mIsCustomAppDir;
+	}
+
+	@Override
+	public void resetAppDir() {
+		mIsCustomAppDir=false;
+		mAppDir=initAppDir();
 	}
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private File initAppDir(){

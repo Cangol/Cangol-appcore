@@ -23,10 +23,6 @@ Gradle
 核心Application 提供整个库的初始化和一些方法，
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/CoreApplication.html)
 
-##Session
-一个可以用来做缓存的集合，生命周期随Application，
-[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/Session.html)
-
 ##AppService
 应用服务:实现方式为依赖注入，这是整个框架的核心内容
 
