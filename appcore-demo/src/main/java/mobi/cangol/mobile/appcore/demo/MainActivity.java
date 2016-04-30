@@ -3,6 +3,7 @@ package mobi.cangol.mobile.appcore.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 import mobi.cangol.mobile.CoreApplication;
@@ -13,7 +14,7 @@ import mobi.cangol.mobile.service.upgrade.UpgradeListener;
 import mobi.cangol.mobile.service.upgrade.UpgradeService;
 import mobi.cangol.mobile.utils.TimeUtils;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

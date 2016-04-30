@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.download;
+package mobi.cangol.mobile.http.download;
 
 import android.util.Log;
 
@@ -24,7 +24,6 @@ import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
 public class DownloadThread implements Runnable {
     private final static boolean DEBUG=false;

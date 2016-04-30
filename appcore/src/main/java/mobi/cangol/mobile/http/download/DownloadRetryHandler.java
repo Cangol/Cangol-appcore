@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.download;
+package mobi.cangol.mobile.http.download;
 
 import android.os.SystemClock;
 import android.util.Log;

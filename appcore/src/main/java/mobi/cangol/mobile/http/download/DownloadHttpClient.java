@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.service.download;
+package mobi.cangol.mobile.http.download;
 
 import android.content.Context;
 import android.util.Log;
@@ -36,22 +36,26 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import mobi.cangol.mobile.service.PoolManager;
-import mobi.cangol.mobile.service.PoolManager.Pool;
 
 public class DownloadHttpClient {
 	private final static boolean DEBUG=false;
-	public final static  String TAG = "PollingHttpClient";
+	public final static  String TAG = "DownloadHttpClient";
     private DefaultHttpClient httpClient;
     private final HttpContext httpContext;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
     private final static int DEFAULT_RETRYTIMES=10;
     private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-    private Pool threadPool;
-    protected DownloadHttpClient(String group) {
+    private final static int DEFAULT_MAX=5;
+    private ExecutorService threadPool;
+    protected DownloadHttpClient(final String name) {
 
         httpContext = new SyncBasicHttpContext(new BasicHttpContext());
         httpClient = new DefaultHttpClient();
@@ -63,7 +67,13 @@ public class DownloadHttpClient {
         HttpClientParams.setRedirecting(params, true);
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
         httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-		threadPool = PoolManager.getPool(group);
+		threadPool = Executors.newFixedThreadPool(DEFAULT_MAX,new ThreadFactory() {
+            private final AtomicInteger mCount = new AtomicInteger(1);
+
+            public Thread newThread(final Runnable r) {
+                return new Thread(r, name+"$WorkThread #" + mCount.getAndIncrement());
+            }
+        });
 
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
     }
@@ -77,8 +87,8 @@ public class DownloadHttpClient {
     public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
     	httpClient.setHttpRequestRetryHandler(retryHandler);
     }
-    public void setThreadool(Pool pool) {
-        this.threadPool = pool;
+    public void setThreadPool(ExecutorService executorService) {
+        this.threadPool = executorService;
     }
     public Future<?> send(Context context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         HttpUriRequest request = new HttpGet(url);

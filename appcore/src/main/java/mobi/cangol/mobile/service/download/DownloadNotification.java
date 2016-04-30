@@ -27,6 +27,7 @@ import android.support.v4.app.NotificationCompat;
 import java.io.File;
 import java.util.Random;
 
+import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
 
 
@@ -67,7 +68,7 @@ public class DownloadNotification {
     public void createNotification() {
         id = new Random().nextInt(10000);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
 
         builder.setContentTitle(titleText)
                 .setContentText("")

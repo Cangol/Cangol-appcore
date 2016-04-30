@@ -18,26 +18,21 @@ package mobi.cangol.mobile.service.upgrade;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.http.download.DownloadHttpClient;
+import mobi.cangol.mobile.http.download.DownloadResponseHandler;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.service.download.Download;
-import mobi.cangol.mobile.service.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.download.DownloadNotification;
-import mobi.cangol.mobile.service.download.DownloadResponseHandler;
 import mobi.cangol.mobile.utils.AppUtils;
-import mobi.cangol.mobile.utils.FileUtils;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 
 /**
  * @author Cangol
