@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo.fragment;
+package mobi.cangol.mobile.appcore.demo.service;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,7 +17,6 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.status.StatusListener;
 import mobi.cangol.mobile.service.status.StatusService;
-import mobi.cangol.mobile.service.upgrade.UpgradeService;
 
 /**
  * Created by weixuewu on 16/4/30.

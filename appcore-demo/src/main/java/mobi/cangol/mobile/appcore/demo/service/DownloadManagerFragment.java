@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo.fragment;
+package mobi.cangol.mobile.appcore.demo.service;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.download.Download;
 import mobi.cangol.mobile.service.download.DownloadExecutor;
 import mobi.cangol.mobile.service.download.DownloadManager;
 import mobi.cangol.mobile.service.download.DownloadNotification;
@@ -30,7 +29,7 @@ import mobi.cangol.mobile.service.download.DownloadStatusListener;
  * Created by weixuewu on 16/4/30.
  */
 public class DownloadManagerFragment extends Fragment {
-    private String url = "http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
+    private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
 
     private DownloadManager downloadManager;
     private TextView textView1;
@@ -72,7 +71,7 @@ public class DownloadManagerFragment extends Fragment {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadExecutor.add(new App("qq", url));
+                downloadExecutor.add(downloadExecutor.getResource(new App("qq", url)));
             }
         });
         button1.setOnClickListener(new View.OnClickListener() {

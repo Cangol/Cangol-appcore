@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo.fragment;
+package mobi.cangol.mobile.appcore.demo.service;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,11 +14,8 @@ import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.service.crash.CrashReportListener;
 import mobi.cangol.mobile.service.crash.CrashService;
-import mobi.cangol.mobile.stat.StatAgent;
-import mobi.cangol.mobile.utils.FileUtils;
 
 /**
  * Created by weixuewu on 16/4/30.

@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo.fragment;
+package mobi.cangol.mobile.appcore.demo.service;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

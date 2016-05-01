@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo.fragment;
+package mobi.cangol.mobile.appcore.demo.service;
 
 import android.location.Location;
 import android.os.Bundle;

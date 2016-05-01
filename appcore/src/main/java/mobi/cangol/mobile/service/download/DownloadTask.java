@@ -97,7 +97,7 @@ public class DownloadTask {
 	}
 
 	protected Future<?> exec(DownloadResource downloadResource,DownloadResponseHandler responseHandler){
-		return downloadHttpClient.send(null, downloadResource.getUrl(), responseHandler, downloadResource.getCompleteSize(), downloadResource.getSourceFile());
+		return downloadHttpClient.send(downloadResource.getKey(), downloadResource.getUrl(), responseHandler, downloadResource.getCompleteSize(), downloadResource.getSourceFile());
 	}
 	
 	protected void start(){
