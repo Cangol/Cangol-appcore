@@ -22,11 +22,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
 
 import java.io.File;
 import java.util.Random;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
 
@@ -37,26 +39,26 @@ public class DownloadNotification {
     private String titleText, successText, failureText;
     private String savePath;
     private Context context;
-    private Download.DownloadType downloadType;
+    private Intent finishIntent;
 
-    public DownloadNotification(Context context, String title, String savePath, Download.DownloadType downloadType,String successText, String failureText) {
+    public DownloadNotification(Context context, String title, String savePath, Intent finishIntent,String successText, String failureText) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
         this.successText = successText;
         this.failureText = failureText;
-        this.downloadType = downloadType;
+        this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
     }
-    public DownloadNotification(Context context, String title, String savePath, Download.DownloadType downloadType) {
+    public DownloadNotification(Context context, String title, String savePath,Intent finishIntent) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
         this.successText = "下载成功!";
         this.failureText = "下载失败!";
-        this.downloadType = downloadType;
+        this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
@@ -99,15 +101,7 @@ public class DownloadNotification {
     }
 
     public void finishNotification() {
-        PendingIntent pendingIntent = null;
-        if (Download.DownloadType.APK == downloadType) {
-            Uri uri = Uri.fromFile(new File(savePath));
-            Intent installIntent = new Intent(Intent.ACTION_VIEW);
-            installIntent.setDataAndType(uri, "application/vnd.android.package-archive");
-            pendingIntent = PendingIntent.getActivity(context, 0, installIntent, 0);
-        } else {
-            pendingIntent = null;
-        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(titleText)

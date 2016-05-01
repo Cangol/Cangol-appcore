@@ -24,7 +24,7 @@ import android.os.Handler;
 import android.os.Message;
 
 public abstract class DownloadExecutor<T> {
-	private ArrayList<DownloadResource> mDownloadRes=new ArrayList<DownloadResource>();
+	protected ArrayList<DownloadResource> mDownloadRes=new ArrayList<DownloadResource>();
 	private ArrayList<WeakReference<DownloadStatusListener>> listeners=new  ArrayList<WeakReference<DownloadStatusListener>>();
 	private Pool mPool;
 	private Context mContext;

@@ -1,6 +1,8 @@
 package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import mobi.cangol.mobile.CoreApplication;
@@ -26,19 +29,21 @@ import mobi.cangol.mobile.service.download.DownloadStatusListener;
 /**
  * Created by weixuewu on 16/4/30.
  */
-public class DownloadManagerFragment extends Fragment{
-    private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
+public class DownloadManagerFragment extends Fragment {
+    private String url = "http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
 
     private DownloadManager downloadManager;
     private TextView textView1;
-    private Button button1, button2,button3,button4;
+    private Button button1, button2, button3, button4;
     private AppDownloadExecutor downloadExecutor;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         downloadManager = (DownloadManager) ((CoreApplication) this.getActivity().getApplicationContext()).getAppService(AppService.DOWNLOAD_MANAGER);
-        downloadManager.registerExecutor("app",AppDownloadExecutor.class,5);
-        downloadExecutor= (AppDownloadExecutor) downloadManager.getDownloadExecutor("app");
+        downloadManager.setDebug(true);
+        downloadManager.registerExecutor("app", AppDownloadExecutor.class, 5);
+        downloadExecutor = (AppDownloadExecutor) downloadManager.getDownloadExecutor("app");
     }
 
     @Override
@@ -46,14 +51,17 @@ public class DownloadManagerFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_download_manager, container, false);
         return v;
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initViews();
         updateViews();
     }
+
     private DownloadResource downloadResource;
-    private void initViews(){
+
+    private void initViews() {
         textView1 = (TextView) this.getView().findViewById(R.id.textView1);
         button1 = (Button) this.getView().findViewById(R.id.button1);
         button2 = (Button) this.getView().findViewById(R.id.button2);
@@ -64,7 +72,7 @@ public class DownloadManagerFragment extends Fragment{
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadExecutor.add(new App("qq",url));
+                downloadExecutor.add(new App("qq", url));
             }
         });
         button1.setOnClickListener(new View.OnClickListener() {
@@ -93,19 +101,21 @@ public class DownloadManagerFragment extends Fragment{
         });
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
-    private void updateViews(){
+
+    private void updateViews() {
         textView1.setText("--------------Download---------------");
-        if(downloadResource!=null){
-            textView1.append("\ngetFileName="+downloadResource.getFileName());
-            textView1.append("\ngetLocalPath="+downloadResource.getLocalPath());
-            textView1.append("\ngetStatus="+downloadResource.getStatus());
-            textView1.append("\ngetCompleteSize=" + downloadResource.getCompleteSize()+"/"+downloadResource.getFileLength());
+        if (downloadResource != null) {
+            textView1.append("\ngetFileName=" + downloadResource.getFileName());
+            textView1.append("\ngetLocalPath=" + downloadResource.getLocalPath());
+            textView1.append("\ngetStatus=" + downloadResource.getStatus());
+            textView1.append("\ngetCompleteSize=" + downloadResource.getCompleteSize() + "/" + downloadResource.getFileLength());
             textView1.append("\ngetProgress=" + downloadResource.getProgress());
             textView1.append("\ngetSpeed=" + downloadResource.getSpeed());
         }
     }
 }
-class AppDownloadExecutor extends DownloadExecutor<App>{
+
+class AppDownloadExecutor extends DownloadExecutor<App> {
 
 
     public AppDownloadExecutor(String name) {
@@ -119,12 +129,12 @@ class AppDownloadExecutor extends DownloadExecutor<App>{
 
     @Override
     protected DownloadResource getResource(App app) {
-        return new DownloadResource(app.url,app.name+".apk");
+        return new DownloadResource(app.url, app.name + ".apk");
     }
 
     @Override
     protected App getDownloadModel(DownloadResource resource) {
-        return new App(resource.getUrl(),resource.getFileName().replace(".apk",""));
+        return new App(resource.getUrl(), resource.getFileName().replace(".apk", ""));
     }
 
     @Override
@@ -144,14 +154,21 @@ class AppDownloadExecutor extends DownloadExecutor<App>{
 
     @Override
     public DownloadNotification notification(Context context, DownloadResource resource) {
-        return new DownloadNotification(context,resource.getFileName(),resource.getLocalPath(), Download.DownloadType.APK);
+        Uri uri = Uri.fromFile(new File(resource.getLocalPath()));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        return new DownloadNotification(context, resource.getFileName(), resource.getLocalPath(), intent);
     }
+
 }
-class App  {
+
+class App {
     String url;
     String name;
+
     public App() {
     }
+
     public App(String name, String url) {
         this.name = name;
         this.url = url;

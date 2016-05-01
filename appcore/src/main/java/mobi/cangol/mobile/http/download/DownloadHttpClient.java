@@ -15,7 +15,6 @@
  */
 package mobi.cangol.mobile.http.download;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -49,7 +48,7 @@ public class DownloadHttpClient {
 	public final static  String TAG = "DownloadHttpClient";
     private DefaultHttpClient httpClient;
     private final HttpContext httpContext;
-    private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
+    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
     private final static int DEFAULT_RETRYTIMES=10;
     private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
@@ -75,7 +74,7 @@ public class DownloadHttpClient {
             }
         });
 
-        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
+        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
     public  static DownloadHttpClient build(String group) {
     	DownloadHttpClient asyncHttpClient=new DownloadHttpClient(group);
@@ -90,13 +89,13 @@ public class DownloadHttpClient {
     public void setThreadPool(ExecutorService executorService) {
         this.threadPool = executorService;
     }
-    public Future<?> send(Context context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
+    public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         HttpUriRequest request = new HttpGet(url);
         if (DEBUG) Log.d(TAG, "url:" + request.getURI().toString());
         return sendRequest(httpClient, httpContext, request, null, responseHandler, context, from, saveFile);
     }
 
-    protected Future<?> sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, DownloadResponseHandler responseHandler, Context context, long from, String saveFile) {
+    protected Future<?> sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, DownloadResponseHandler responseHandler, Object context, long from, String saveFile) {
         if (contentType != null) {
             uriRequest.addHeader("Content-Type", contentType);
         }
@@ -113,7 +112,7 @@ public class DownloadHttpClient {
         return request;
     }
 
-    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
+    public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {

@@ -21,66 +21,66 @@ import mobi.cangol.mobile.service.AppService;
  *
  */
 public interface UpgradeService extends AppService {
-
-	/**
-	 * 跟新类型枚举
-	 */
-	public enum UpgradeType {
-		APK, // apk升级
-		DEX, // dex升级
-		RES, // res升级
-		SO// so库升级
-	}
+//	/**
+//	 * 更新资源
+//	 *
+//	 * @param filename 文件名 包含后缀，且是唯一的
+//	 * @param url 下载地址
+//	 * @param notification 是否通知栏显示
+//	 * @param load
+//	 */
+//	void upgradeRes(String filename, String url,boolean notification, boolean load);
+//
+//	/**
+//	 * 更新dex
+//	 *
+//	 * @param filename 文件名 包含后缀，且是唯一的
+//	 * @param url 下载地址
+//	 * @param notification 是否通知栏显示
+//	 * @param load
+//	 */
+//	void upgradeDex(String filename, String url,boolean notification, boolean load);
+//
+//	/**
+//	 * 更新so
+//	 *
+//	 * @param filename 文件名 包含后缀，且是唯一的
+//	 * @param url 下载地址
+//	 * @param notification 是否通知栏显示
+//	 * @param load
+//	 */
+//	 void upgradeSo(String filename, String url,boolean notification, boolean load);
+//
+//	/**
+//	 * 更新插件apk
+//	 *
+//	 * @param filename 文件名 包含后缀，且是唯一的
+//	 * @param url 下载地址
+//	 * @param notification 是否通知栏显示
+//	 * @param install
+//	 * @hide
+//	 */
+//	void upgradeApk(String filename, String url,boolean notification, boolean install);
 
 	/**
 	 * 更新资源
 	 * 
-	 * @param name
-	 * @param url
-	 * @param load
+	 * @param filename 文件名 包含后缀，且是唯一的
+	 * @param url 下载地址
+	 * @param notification 是否通知栏显示
 	 */
-	void upgradeRes(String name, String url, boolean load);
+	void upgrade(String filename, String url,boolean notification);
 
 	/**
-	 * 更新dex
-	 * 
-	 * @param name
-	 * @param url
-	 * @param launch
-	 */
-	void upgradeDex(String name, String url, boolean launch);
-
-	/**
-	 * 更新so
-	 * 
-	 * @param name
-	 * @param url
-	 * @param load
-	 */
-	void upgradeSo(String name, String url, boolean load);
-
-	/**
-	 * 更新插件apk
-	 * 
-	 * @param name
-	 * @param url
-	 * @param install
-	 */
-	void upgradeApk(String name, String url, boolean install);
-
-	/**
-	 * 更新主程序
-	 * 
-	 * @param name
-	 * @param url
-	 * @param constraint
-	 */
-	void upgrade(String name, String url, boolean constraint);
+	 * 取消更新
+	 * @param filename 文件名 包含后缀，且是唯一的
+     */
+	void cancel(String filename);
 
 	/**
 	 * 设置更新监听接口
-	 * 
+	 * @param filename 文件名 包含后缀，且是唯一的
 	 * @param upgradeListener
 	 */
-	void setOnUpgradeListener(UpgradeListener upgradeListener);
+	void setOnUpgradeListener(String filename, OnUpgradeListener upgradeListener);
 }

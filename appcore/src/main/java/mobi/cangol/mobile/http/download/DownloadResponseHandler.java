@@ -30,7 +30,7 @@ import java.io.RandomAccessFile;
 
 public class DownloadResponseHandler {
     public final static  String TAG = "DownloadResponseHandler";
-    private final static boolean DEBUG=false;
+    private final static boolean DEBUG=true;
     protected static final int WAIT_MESSAGE = 0;
     protected static final int START_MESSAGE = 1;
     protected static final int PROGRESS_MESSAGE = 2;
@@ -44,8 +44,6 @@ public class DownloadResponseHandler {
         if(Looper.myLooper() != null) {
             handler = new Handler(){
                 public void handleMessage(Message msg){
-
-
                     DownloadResponseHandler.this.handleMessage(msg);
                 }
             };
@@ -109,19 +107,23 @@ public class DownloadResponseHandler {
                     oldLength += readCount;
                     startLength+=readCount;
                     if((System.currentTimeMillis()-starTime)>1000L) {
-                        int progres=(int) (oldLength*1.0f/length*100);
+                        int progress=(int) (oldLength*1.0f/length*100);
                         int speed=(int) (startLength*1000.0f/(System.currentTimeMillis()-starTime));
-                        sendProgressMessage(oldLength,progres,speed);
+                        sendProgressMessage(oldLength,progress,speed);
                         starTime=System.currentTimeMillis();
                         startLength=0;
                     }
                 }
                 if(threadfile!=null)threadfile.close();
-                if(oldLength==length){
-                    sendProgressMessage(oldLength,100,0);
-                    sendFinishMessage(length);
+                if(Thread.currentThread().isInterrupted()) {
+                    sendStopMessage(length);
                 }else{
-                    sendFinishMessage(length);
+                    if(oldLength==length){
+                        sendProgressMessage(oldLength,100,0);
+                        sendFinishMessage(length);
+                    }else{
+                        sendFinishMessage(length);
+                    }
                 }
             }else if(oldLength==length){
                 sendProgressMessage(oldLength,100,0);

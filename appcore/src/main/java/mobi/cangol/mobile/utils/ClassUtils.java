@@ -26,7 +26,23 @@ import dalvik.system.DexFile;
 import mobi.cangol.mobile.logging.Log;
 
 public class ClassUtils {
-	
+
+	/**
+	 * 加载类
+	 * @param context
+	 * @param className
+     * @return
+     */
+	public static Class loadClass(Context context,String className){
+		Class clazz=null;
+		try {
+			clazz=context.getClassLoader().loadClass(className);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return clazz;
+	}
+
 	/**
 	 *  获取接口的所有实现类
 	 * @param c

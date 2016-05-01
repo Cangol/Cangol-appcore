@@ -15,14 +15,14 @@
  */
 package mobi.cangol.mobile.service.download;
 
+import android.os.Handler;
+import android.os.Message;
+
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
 import mobi.cangol.mobile.service.PoolManager.Pool;
-import android.os.Handler;
-import android.os.Message;
 
 public class DownloadTask {
 	private Pool pool;

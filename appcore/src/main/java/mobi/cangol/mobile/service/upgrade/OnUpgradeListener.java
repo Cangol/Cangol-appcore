@@ -21,18 +21,28 @@ package mobi.cangol.mobile.service.upgrade;
  * @author cangol
  *
  */
-public interface UpgradeListener {
+public interface OnUpgradeListener {
 	/**
 	 * 更新
 	 * 
-	 * @param constraint
+	 * @param force
 	 *            是否强制更新
 	 */
-	void upgrade(boolean constraint);
+	void upgrade(boolean force);
 
 	/**
-	 * 更新完成
+	 * @param speed 更新速度
+	 * @param progress 更新进度
 	 */
-	void onFinish();
+	void progress(int speed,int progress);
 
+	/**
+	 * @param filePath 更新文件地址
+	 */
+	void onFinish(String filePath);
+
+	/**
+	 * @param error 更新失败原因
+	 */
+	void onFailure(String error);
 }

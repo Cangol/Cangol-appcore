@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.upgrade.UpgradeListener;
+import mobi.cangol.mobile.service.upgrade.OnUpgradeListener;
 import mobi.cangol.mobile.service.upgrade.UpgradeService;
 
 /**
@@ -23,6 +23,7 @@ public class UpgradeServiceFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         upgradeService= (UpgradeService) ((CoreApplication) this.getActivity().getApplicationContext()).getAppService(AppService.UPGRADE_SERVICE);
+        upgradeService.setDebug(true);
     }
 
     @Override
@@ -39,27 +40,34 @@ public class UpgradeServiceFragment extends Fragment{
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upgradeService.upgradeApk("QQ",url,false);
+                upgradeService.upgrade("QQ.apk",url,true);
             }
         });
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //upgradeService.cancel(url);
+                upgradeService.cancel("QQ.apk");
             }
         });
-        upgrade();
-    }
-    private void upgrade(){
-        upgradeService.setOnUpgradeListener(new UpgradeListener(){
+        upgradeService.setOnUpgradeListener("QQ.apk",new OnUpgradeListener(){
 
             @Override
-            public void upgrade(boolean constraint) {
+            public void upgrade(boolean focue) {
 
             }
 
             @Override
-            public void onFinish() {
+            public void progress(int speed, int progress) {
+
+            }
+
+            @Override
+            public void onFinish(String filePath) {
+
+            }
+
+            @Override
+            public void onFailure(String error) {
 
             }
         });

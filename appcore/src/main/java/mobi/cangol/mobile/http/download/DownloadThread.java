@@ -24,9 +24,10 @@ import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 
 public class DownloadThread implements Runnable {
-    private final static boolean DEBUG=false;
+    private final static boolean DEBUG=true;
     public final static  String TAG = "DownloadThread";
     private AbstractHttpClient client;
     private HttpContext context;
@@ -58,7 +59,7 @@ public class DownloadThread implements Runnable {
         }
     }
 
-    private void makeRequest() throws IOException {
+    private void makeRequest() throws IOException,InterruptedException {
         if(!Thread.currentThread().isInterrupted()) {
             request.addHeader("Range", "bytes="+from+"-");
             HttpResponse response = client.execute(request, context);
@@ -68,10 +69,11 @@ public class DownloadThread implements Runnable {
                 }
             } else{
                 if(DEBUG)Log.d(TAG, "Thread.isInterrupted");
-                //TODO: should raise InterruptedException? this block is reached whenever the request is cancelled before its response is received
+                responseHandler.sendStopMessage(from);
             }
         }else{
             if(DEBUG)Log.d(TAG, "Thread.isInterrupted");
+            responseHandler.sendStopMessage(from);
         }
     }
 
@@ -79,9 +81,15 @@ public class DownloadThread implements Runnable {
         boolean retry = true;
         Exception cause = null;
         HttpRequestRetryHandler retryHandler = this.client.getHttpRequestRetryHandler();
-        while (retry&&!Thread.currentThread().isInterrupted()) {
+        while (retry) {
             try {
                 makeRequest();
+                return;
+            } catch (InterruptedIOException e){
+                responseHandler.sendStopMessage(from);
+                return;
+            } catch (InterruptedException e){
+                responseHandler.sendStopMessage(from);
                 return;
             } catch (IOException e) {
                 cause = e;
@@ -91,6 +99,7 @@ public class DownloadThread implements Runnable {
                 retry=false;
             }
         }
+
         Exception ex = new Exception();
         ex.initCause(cause);
         throw ex;

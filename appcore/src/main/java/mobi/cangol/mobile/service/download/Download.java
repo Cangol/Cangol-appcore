@@ -16,10 +16,6 @@
 package mobi.cangol.mobile.service.download;
 
 public interface Download {
-	enum DownloadType{
-		APK,//下载完会提示安装
-		OTHER,
-	}
 	//下载文件后缀
 	public static final String SUFFIX_SOURCE=".tmp";
 	//配置文件后缀
