@@ -61,8 +61,6 @@ public class CoreApplication extends Application {
 		}
 		initAppServiceManager();
 		mActivityManager = new ArrayList<WeakReference<Activity>>();
-        ConfigService configService= (ConfigService) getAppService(AppService.CONFIG_SERVICE);
-        configService.getTempDir();
         StatAgent.getInstance(this).init();
 	}
 

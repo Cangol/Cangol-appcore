@@ -49,7 +49,9 @@ public class StatsSession {
         }, 30 * 1000, 30 * 1000);
         unSentSessionLength = 0;
     }
-
+    public void onDestroy() {
+        mTimer.cancel();
+    }
     public void setOnSessionListener(OnSessionListener onSessionListener) {
         this.onSessionListener = onSessionListener;
     }

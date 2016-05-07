@@ -47,7 +47,7 @@ public class LocationServiceFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initViews();
-        updateViews();
+        //updateViews();
         toast=Toast.makeText(getActivity(),"定位中...",Toast.LENGTH_LONG);
     }
     private void showToast() {
@@ -88,6 +88,7 @@ public class LocationServiceFragment extends Fragment{
         locationService.setBetterLocationListener(new BetterLocationListener() {
             @Override
             public void onBetterLocation(Location location) {
+                Log.d("onBetterLocation");
                 if(getActivity()!=null){
                     updateViews();
                     hideToast();
@@ -96,6 +97,7 @@ public class LocationServiceFragment extends Fragment{
 
             @Override
             public void timeout(Location location) {
+                Log.d("timeout");
                 if(getActivity()!=null){
                     updateViews();
                     hideToast();

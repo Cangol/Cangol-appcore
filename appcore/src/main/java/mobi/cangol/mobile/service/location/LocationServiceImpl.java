@@ -72,10 +72,10 @@ public class LocationServiceImpl implements LocationService{
 	@Override
 	public void onCreate(Context context) {
 		this.mContext=context;
-		HandlerThread thread = new HandlerThread("LocationService");
-        thread.start();
-        mServiceLooper = thread.getLooper();
-        mServiceHandler = new ServiceHandler(mServiceLooper);
+//		HandlerThread thread = new HandlerThread("LocationService");
+//        thread.start();
+//        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler( Looper.getMainLooper ());
 		mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 		mLocation=mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	}

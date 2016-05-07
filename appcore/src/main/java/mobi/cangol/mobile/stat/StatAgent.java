@@ -44,11 +44,11 @@ public class StatAgent {
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
     private final static String STAT_ACTION_EVENT = "api/countly/event.do";
     private final static String STAT_ACTION_TIMING = "api/countly/qos.do";
-    private final static String STAT_ACTION_LANUCH = "api/countly/launch.do";
+    private final static String STAT_ACTION_LAUNCH = "api/countly/launch.do";
     private final static String STAT_ACTION_DEVICE = "api/countly/device.do";
     private final static String STAT_ACTION_SESSION = "api/countly/session.do";
     private final static String STAT_ACTION_TRAFFIC  = "api/countly/traffic.do";
-    private final static String STAT_TRACKINGID = "stat";
+    private final static String STAT_TRACKING_ID = "stat";
 
     private Context context;
 
@@ -73,13 +73,14 @@ public class StatAgent {
         sessionService = (SessionService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.ANALYTICS_SERVICE);
         analyticsService.setDebug(false);
-        itracker = analyticsService.getTracker(STAT_TRACKINGID);
+        itracker = analyticsService.getTracker(STAT_TRACKING_ID);
 
         commonParams = this.getCommonParams();
     }
     public void init() {
         sendDevice();
         sendLaunch();
+        sendTraffic();
         StatsSession.instance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
             @Override
             public void onTick(String sessionId, String beginSession, String sessionDuration, String endSession, String activityId) {
@@ -87,9 +88,9 @@ public class StatAgent {
             }
         });
         StatsTraffic.instance(context).onCreated();
-        sendTraffic();
     }
     public void destroy() {
+        StatsSession.instance(context).onDestroy();
         StatsTraffic.instance(context).onDestroy();
     }
     /**
@@ -213,7 +214,7 @@ public class StatAgent {
                 builder.setUrl(STAT_HOST_URL + STAT_ACTION_EXCEPTION);
                 break;
             case Launcher:
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_LANUCH);
+                builder.setUrl(STAT_HOST_URL + STAT_ACTION_LAUNCH);
                 break;
             case Session:
                 if ("1".equals(eventBuilder.get("beginSession"))) {
@@ -228,7 +229,7 @@ public class StatAgent {
         itracker.send(builder);
     }
 
-    private void sendLaunch() {
+    public void sendLaunch() {
         String exitCode = "";
         String exitVersion = "";
         boolean isnew = true;
@@ -246,11 +247,11 @@ public class StatAgent {
         send(Builder.createLaunch(exitCode, exitVersion, isnew, TimeUtils.getCurrentTime()));
     }
 
-    private void sendDevice() {
+    public void sendDevice() {
         send(Builder.createDevice());
     }
 
-    private void sendTraffic() {
+    public void sendTraffic() {
         StatsTraffic statsTraffic=StatsTraffic.instance(context);
         List<Map> list=statsTraffic.getUnPostDateTraffic(context.getApplicationInfo().uid,TimeUtils.getCurrentDate());
         for (int i = 0; i <list.size() ; i++) {
