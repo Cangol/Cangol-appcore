@@ -123,7 +123,6 @@ public class StatsTraffic {
             long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
             long rxDelta=rx-appTraffic.totalRx;
             long txDelta=tx-appTraffic.totalTx;
-            Log.e("rxDelta="+rxDelta+",txDelta="+txDelta);
             appTraffic.totalRx=rx;
             appTraffic.totalTx=tx;
             if(!wifi){

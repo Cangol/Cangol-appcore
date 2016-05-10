@@ -57,7 +57,7 @@ public interface AppService {
 	/**
 	 * PluginManager
 	 */
-	public final static String PLUGIN_MANAGER = "PluginManager";
+	//public final static String PLUGIN_MANAGER = "PluginManager";
 
 	/**
 	 * 当创建时

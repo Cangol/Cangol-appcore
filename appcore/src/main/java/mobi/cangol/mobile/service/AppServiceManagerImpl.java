@@ -87,7 +87,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
             classList.add(AnalyticsServiceImpl.class);
             classList.add(StatusServiceImpl.class);
 			classList.add(UpgradeServiceImpl.class);
-			classList.add(PluginManagerImpl.class);
+			//classList.add(PluginManagerImpl.class);
         }
         Log.d(TAG,"classList size="+classList.size());
         for (int i = 0; i < classList.size(); i++) {

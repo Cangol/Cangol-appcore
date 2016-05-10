@@ -10,14 +10,14 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobi.cangol.mobile.appcore.demo.service.AnalyticsServiceFragment;
-import mobi.cangol.mobile.appcore.demo.service.CacheManagerFragment;
-import mobi.cangol.mobile.appcore.demo.service.ConfigServiceFragment;
-import mobi.cangol.mobile.appcore.demo.service.CrashServiceFragment;
-import mobi.cangol.mobile.appcore.demo.service.LocationServiceFragment;
-import mobi.cangol.mobile.appcore.demo.service.SessionServiceFragment;
-import mobi.cangol.mobile.appcore.demo.service.StatusServiceFragment;
-import mobi.cangol.mobile.appcore.demo.service.UpgradeServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.AnalyticsServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.CacheManagerFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.ConfigServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.CrashServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.LocationServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.SessionServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.StatusServiceFragment;
+import mobi.cangol.mobile.appcore.demo.appservice.UpgradeServiceFragment;
 
 /**
  * Created by weixuewu on 16/4/30.

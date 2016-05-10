@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo.service;
+package mobi.cangol.mobile.appcore.demo.appservice;
 
 import android.content.Context;
 import android.content.Intent;

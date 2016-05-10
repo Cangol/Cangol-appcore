@@ -80,7 +80,6 @@ public class StatAgent {
     public void init() {
         sendDevice();
         sendLaunch();
-        sendTraffic();
         StatsSession.instance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
             @Override
             public void onTick(String sessionId, String beginSession, String sessionDuration, String endSession, String activityId) {
