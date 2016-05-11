@@ -109,7 +109,7 @@ public class JsonUtils {
         try{
             for (Field field : fields) {
                 field.setAccessible(true);
-                if(field.isEnumConstant())continue;
+				if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
                 if (field.isAnnotationPresent(Element.class)){
                     //非集合类型
                     Element element = field.getAnnotation(Element.class);
@@ -258,7 +258,7 @@ public class JsonUtils {
 		Field[] fields = c.getDeclaredFields();
 		String filedName=null;
 		for (Field field : fields) {
-			if(field.isEnumConstant())continue;
+			if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
 			field.setAccessible(true);
 			filedName=getFieldName(field);
 			if (!List.class.isAssignableFrom(field.getType())) {
@@ -298,7 +298,7 @@ public class JsonUtils {
 		String filedName=null;
 		for (Field field : fields) {
 			field.setAccessible(true);
-			if(field.isEnumConstant())continue;
+			if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
 			if (!List.class.isAssignableFrom(field.getType())) {
 				filedName=field.getName();
 				setField(t,field,filedName,jsonObject,false);
@@ -400,7 +400,7 @@ public class JsonUtils {
 		}
 		return new JSONObject(json);
 	}
-	private static boolean isBaseClass(Class<?> clz){  
+	private static boolean isBaseClass(Class<?> clz){
 	    return isWrapClass(clz)||clz.isPrimitive()||clz==String.class;
 	} 
 	
