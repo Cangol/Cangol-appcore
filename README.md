@@ -3,7 +3,7 @@
 [![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
 [![Build Status](https://travis-ci.org/Cangol/Cangol-appcore.svg?branch=master)](https://travis-ci.org/Cangol/Cangol-appcore)
 [![Gitter](https://badges.gitter.im/Cangol/Cangol-appcore.svg)](https://gitter.im/Cangol/Cangol-appcore?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Software License](https://rawgit.com/Cangol/Cangol-appcore/master/images/license.svg)](LICENSE)
+[![Software License](https://rawgit.com/Cangol/Cangol-appcore/master/LICENSE.svg)](LICENSE)
 
 这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
 [详细文档](http://cangol.github.io/Cangol-appcore)  
