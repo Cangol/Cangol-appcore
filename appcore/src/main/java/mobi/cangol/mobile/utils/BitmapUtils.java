@@ -311,7 +311,7 @@ public class BitmapUtils {
 	/**
 	 * 压缩图片按指定精度
 	 * @param image 图片
-	 * @param quality 精度 推荐>65
+	 * @param quality 精度 推荐大于65
 	 * @return
 	 */
 	public static Bitmap compressImage(Bitmap image,int quality) {
