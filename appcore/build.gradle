@@ -70,3 +70,4 @@ artifacts {
 }
 
 apply from: '../maven_push.gradle'
+apply from: '../jacoco.gradle'
