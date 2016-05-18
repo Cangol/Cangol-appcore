@@ -5,8 +5,6 @@ apply plugin: 'com.jfrog.bintray'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v13:22.0.0'
-    compile 'org.eluder.coveralls:coveralls-maven-plugin:4.1.0'
-    compile 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
 }
 
 android {
