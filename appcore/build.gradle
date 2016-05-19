@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'net.saliman.cobertura'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
@@ -69,5 +71,11 @@ artifacts {
     archives javadocJar
 }
 
+cobertura.coverageFormats = ['html', 'xml']
+
+tasks.coveralls {
+    dependsOn 'check'
+}
+
 apply from: '../maven_push.gradle'
-apply from: '../jacoco.gradle'
+//apply from: '../jacoco.gradle'

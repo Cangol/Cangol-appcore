@@ -78,6 +78,3 @@ task jacocoTestReportAndroidTest( type: JacocoReport, dependsOn: "connectedAndro
     }
 
 }
-tasks.coveralls {
-    dependsOn 'check'
-}
