@@ -12,6 +12,7 @@
 
 ##引用方式
 Maven
+
      <dependency>
          <groupId>mobi.cangol.mobile</groupId>
          <artifactId>appcore</artifactId>
