@@ -52,11 +52,6 @@ task jacocoTestReportAndroidTest( type: JacocoReport, dependsOn: "connectedAndro
                     '**/Manifest*.*',
                     '**/*Activity*.*',
                     '**/*Fragment*.*',
-                    '**/*$InjectAdapter.class',
-                    '**/*$ModuleAdapter.class',
-                    '**/*$ViewInjector*.class',
-                    '**/RestServiceFactory*.class',
-                    '**/ActivityModule*.class',
                     '**/preference/*.class',
                     '**/*Entity.class',
                     '**/*Model.class'
