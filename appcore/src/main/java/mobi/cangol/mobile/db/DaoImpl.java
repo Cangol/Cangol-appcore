@@ -253,7 +253,19 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		}
 		return result;
 	}
-
+	@Override
+	public int deleteAll() throws SQLException {
+		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
+		int result = 0;
+		try {
+			result = db.delete(mTableName,null,null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+		}
+		return result;
+	}
 	@Override
 	public Class<T> getEntityClass() {
 		return mClazz;

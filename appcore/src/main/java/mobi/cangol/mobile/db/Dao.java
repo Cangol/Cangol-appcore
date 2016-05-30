@@ -130,6 +130,13 @@ public abstract interface Dao<T, ID> {
 	public abstract int deleteByIds(Collection<ID> paramCollection) throws SQLException;
 
 	/**
+	 * 清空表删
+	 *
+	 * @throws SQLException
+	 */
+	public abstract int deleteAll() throws SQLException;
+
+	/**
 	 * 获取实体类
 	 * 
 	 * @return
