@@ -111,7 +111,6 @@ public class StatsTraffic {
             dateTraffic.wifiTx = dateTraffic.wifiTx+txDelta;
         }
         trafficDbService.saveDateTraffic(dateTraffic);
-        Log.e(dateTraffic.toString());
     }
     public void calcAppTraffic(String date,boolean wifi){
         List<AppTraffic> list =trafficDbService.getAppTrafficList();

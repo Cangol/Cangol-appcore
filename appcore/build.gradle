@@ -19,11 +19,11 @@ android {
         versionCode 4
         versionName "1.0.4"
     }
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-    }
+//    buildTypes {
+//        debug {
+//            testCoverageEnabled true
+//        }
+//    }
     lintOptions {
         abortOnError false
     }

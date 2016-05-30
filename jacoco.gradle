@@ -33,14 +33,8 @@ task jacocoTestReportAndroidTest( type: JacocoReport, dependsOn: "connectedAndro
 
     reports {
         csv.enabled false
-        xml {
-            enabled true
-            destination "${ buildDir }/reports/jacoco/test/jacocoTestReport.xml"
-        }
-        html {
-            enabled true
-            destination "${ buildDir }/reports/jacocoHtml"
-        }
+        xml.enabled true
+        html.enabled true
     }
 
     classDirectories = fileTree(
