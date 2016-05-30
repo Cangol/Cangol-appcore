@@ -414,21 +414,30 @@ public class JsonUtils {
 	} 
 	public static int getInt(JSONObject obj, String key, int defaultValue) {
 		try {
-			return obj.getInt(key);
+			if(obj.isNull(key)){
+				return defaultValue;
+			}else
+				return obj.getInt(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
 	public static long getLong(JSONObject obj, String key, long defaultValue) {
 		try {
-			return obj.getLong(key);
+			if(obj.isNull(key)){
+				return defaultValue;
+			}else
+				return obj.getLong(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
 	}
 	public static boolean getBoolean(JSONObject obj, String key, boolean defaultValue) {
 		try {
-			return obj.getBoolean(key);
+			if(obj.isNull(key)){
+				return defaultValue;
+			}else
+				return obj.getBoolean(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
@@ -444,7 +453,10 @@ public class JsonUtils {
 	}
 	public static double getDouble(JSONObject obj, String key, double defaultValue) {
 		try {
-			return obj.getDouble(key);
+			if(obj.isNull(key)){
+				return defaultValue;
+			}else
+				return obj.getDouble(key);
 		} catch (JSONException e) {
 			return defaultValue;
 		}
@@ -474,7 +486,10 @@ public class JsonUtils {
 	}
 	public static Object getObject(JSONObject obj, String key) {
 		try {
-			return obj.get(key);
+			if(obj.isNull(key)){
+				return null;
+			}else
+				return obj.get(key);
 		} catch (JSONException e) {
 			return null;
 		}
@@ -488,13 +503,19 @@ public class JsonUtils {
 	}
 	public static JSONObject getJSONObject(JSONObject obj, String key) {
 		try {
-			return obj.getJSONObject(key);
+			if(obj.isNull(key)){
+				return null;
+			}else
+				return obj.getJSONObject(key);
 		} catch (JSONException e) {
 			return null;
 		}
 	}
 	public static JSONArray getJSONArray(JSONObject obj, String key) {
 		try {
+			if(obj.isNull(key)){
+				return null;
+			}else
 			return obj.getJSONArray(key);
 		} catch (JSONException e) {
 			return null;
