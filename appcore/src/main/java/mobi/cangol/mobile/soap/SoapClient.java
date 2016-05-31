@@ -77,11 +77,16 @@ public class SoapClient {
 		
 		if (params != null) {
 			StringBuilder paramsStr = new StringBuilder(url);
-			paramsStr.append('/'+action+'?');
+			paramsStr.append('/'+action);
+			if(params.size()>0)
+				paramsStr.append('?');
 			SoapObject rpc = new SoapObject(namespace, action);
 			for (Map.Entry<String, String> entry : params.entrySet()) {
 				rpc.addProperty(entry.getKey(), entry.getValue());
-				paramsStr.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+				paramsStr.append(entry.getKey())
+						.append("=")
+						.append(entry.getValue())
+						.append("&");
 			}
 			Log.d(TAG, "sendRequest "+paramsStr.toString());
 			envelope.bodyOut = rpc;

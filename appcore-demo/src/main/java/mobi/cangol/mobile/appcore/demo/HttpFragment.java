@@ -72,7 +72,7 @@ public class HttpFragment extends Fragment {
             public void onStart() {
                 super.onStart();
                 progressDialog=ProgressDialog.show(getActivity(),null,"loading...");
-                printLog("onStart");
+                printLog("onStart\n");
             }
 
             @Override
