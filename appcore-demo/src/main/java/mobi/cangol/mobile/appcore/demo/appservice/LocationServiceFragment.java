@@ -40,7 +40,7 @@ public class LocationServiceFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_location_service, container, false);
+        View v = inflater.inflate(R.layout.fragment_service_location, container, false);
         return v;
     }
     @Override

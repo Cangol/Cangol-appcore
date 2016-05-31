@@ -37,7 +37,7 @@ public class SessionServiceFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_session_service, container, false);
+        View v = inflater.inflate(R.layout.fragment_service_session, container, false);
         return v;
     }
     @Override
