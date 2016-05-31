@@ -36,7 +36,7 @@ public class CacheManagerFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_cache_manager, container, false);
+        View v = inflater.inflate(R.layout.fragment_manager_cache, container, false);
         return v;
     }
     @Override

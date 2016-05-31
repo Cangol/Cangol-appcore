@@ -224,10 +224,10 @@ public class ApiRequest {
             public void onSuccess(JSONObject response) {
                 if (DEBUG) Log.d("onSuccess response=" + response);
 
-                if (DEBUG) Log.d("Parser resultClass:" + resultClass);
+                if (DEBUG) Log.d("Converter resultClass:" + resultClass);
 
                 Class<?> c = getGenericClass(onDataLoader.getClass().getGenericSuperclass());
-                if (DEBUG) Log.d("Parser class:" + c);
+                if (DEBUG) Log.d("Converter class:" + c);
 
                 Result result = parserResult(resultClass, c, response, mRoot);
 
@@ -288,10 +288,10 @@ public class ApiRequest {
             public void onSuccess(String response) {
                 if (DEBUG) Log.d("onSuccess response=" + response);
 
-                if (DEBUG) Log.d("Parser resultClass:" + resultClass);
+                if (DEBUG) Log.d("Converter resultClass:" + resultClass);
 
                 Class<?> c = getGenericClass(onDataLoader.getClass().getGenericSuperclass());
-                if (DEBUG) Log.d("Parser class:" + c);
+                if (DEBUG) Log.d("Converter class:" + c);
 
                 Result result = parserResult(resultClass, c, response, mRoot);
 
@@ -351,7 +351,7 @@ public class ApiRequest {
             public void onSuccess(byte[] response) {
                 if (DEBUG) Log.d("onSuccess response=" + response);
 
-                if (DEBUG) Log.d("Parser resultClass:" + resultClass);
+                if (DEBUG) Log.d("Converter resultClass:" + resultClass);
 
                 Class<?> c = getGenericClass(onDataLoader.getClass().getGenericSuperclass());
 
