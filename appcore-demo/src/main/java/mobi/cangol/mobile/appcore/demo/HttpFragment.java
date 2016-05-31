@@ -1,30 +1,32 @@
 package mobi.cangol.mobile.appcore.demo;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.appcore.demo.R;
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.status.StatusListener;
-import mobi.cangol.mobile.service.status.StatusService;
+import org.json.JSONArray;
+
+import mobi.cangol.mobile.http.AsyncHttpClient;
+import mobi.cangol.mobile.http.JsonHttpResponseHandler;
+import mobi.cangol.mobile.service.PoolManager;
 
 /**
  * Created by weixuewu on 16/4/30.
  */
 public class HttpFragment extends Fragment {
+    private static final String TAG="HttpFragment";
+    private AsyncHttpClient mAsyncHttpClient;
+    private String url="";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAsyncHttpClient = AsyncHttpClient.build(TAG);
+        mAsyncHttpClient.setThreadool(PoolManager.buildPool(TAG, 5));
+        mAsyncHttpClient.setUserAgent("android");
     }
 
     @Override
@@ -36,5 +38,20 @@ public class HttpFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    private void request(){
+        mAsyncHttpClient.get(getActivity(),url,new JsonHttpResponseHandler(){
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, JSONArray response) {
+                super.onSuccess(statusCode, response);
+            }
+        });
     }
 }
