@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.parser.Element;
 import mobi.cangol.mobile.parser.JSONParserException;
 import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.parser.XMLParserException;
@@ -79,7 +80,7 @@ public class ParserFragment extends Fragment {
             public void onClick(View v) {
                 String str=editText1.getText().toString();
                 if(!TextUtils.isEmpty(str)){
-                    parser(str,isJson,true);
+                    parser(str,isJson,false);
                  }else{
                     Toast.makeText(getActivity(),"解析内容不能为空!",Toast.LENGTH_SHORT).show();
                 }
@@ -153,5 +154,62 @@ public class ParserFragment extends Fragment {
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.append(message);
         Log.d(message);
+    }
+}
+class ParserObject {
+    @Element("id")
+    private int id;
+    @Element("name")
+    private String name;
+    @Element("_HEIGHT")
+    private double height;
+    @Element("_IS_CHILD")
+    private boolean isChild;
+
+    public ParserObject() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    public boolean isChild() {
+        return isChild;
+    }
+
+    public void setChild(boolean child) {
+        isChild = child;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ParserObject{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", height=").append(height);
+        sb.append(", isChild=").append(isChild);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -15,11 +15,15 @@
  */
 package mobi.cangol.mobile.db;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import mobi.cangol.mobile.utils.ClassUtils;
 
 public class DatabaseUtils {
 	/**
@@ -183,8 +187,10 @@ public class DatabaseUtils {
 		return obj;
 	}
 	
-	public static <T> T cursorToObject(Class<T> clazz,Cursor cursor) throws InstantiationException, IllegalAccessException {
-		T obj=clazz.newInstance();
+	public static <T> T cursorToObject(Class<T> clazz,Cursor cursor) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		Constructor constructor= clazz.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		T obj= (T) constructor.newInstance();
 		Field[] fields = clazz.getDeclaredFields();
 		String columnName=null;
 		for (Field field : fields) {

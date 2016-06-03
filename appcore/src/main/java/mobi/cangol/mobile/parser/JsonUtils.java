@@ -22,7 +22,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
@@ -181,17 +183,18 @@ public class JsonUtils extends Converter{
 		if(jsonObject==null)return null;
 		T t=null;
 		try {
-			t = c.newInstance();
+			Constructor constructor= c.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			t= (T) constructor.newInstance();
 			Field[] fields = c.getDeclaredFields();
 			String filedName=null;
 			for (Field field : fields) {
 				field.setAccessible(true);
 				if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
+				filedName = getFieldName(field, useAnnotation);
 				if (!List.class.isAssignableFrom(field.getType())) {
-					filedName=field.getName();
 					setField(t,field,filedName,jsonObject,false);
 				}else{
-					filedName=field.getName();
 					if(field.getGenericType() instanceof ParameterizedType){
 						ParameterizedType pt = (ParameterizedType) field.getGenericType();
 						Class<?> genericClazz = (Class<?>)pt.getActualTypeArguments()[0];
@@ -212,6 +215,10 @@ public class JsonUtils extends Converter{
 			throw new JSONParserException(c,"must have zero-argument constructor",e);
 		} catch (IllegalAccessException e) {
 			throw new JSONParserException(c,"constructor is not accessible",e);
+		} catch (NoSuchMethodException e) {
+			throw new JSONParserException(c,"must have zero-argument constructor",e);
+		} catch (InvocationTargetException e) {
+			throw new JSONParserException(c,"must have zero-argument constructor",e);
 		}
 		return t;
 	}
