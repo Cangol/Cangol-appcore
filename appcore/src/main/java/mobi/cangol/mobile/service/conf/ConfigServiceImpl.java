@@ -137,10 +137,10 @@ public class ConfigServiceImpl implements ConfigService {
 		if(mUseInternalStorage){
 			file=  mContext.getFilesDir().getParentFile();
 		}else{
-			if(!Environment.isExternalStorageEmulated())
-				file=  mContext.getFilesDir().getParentFile();
-			else
+			if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
 				file= new File(StorageUtils.getExternalStorageDir(mContext,mContext.getPackageName()));
+			else
+				file=  mContext.getFilesDir().getParentFile();
 		}
 		StrictMode.setThreadPolicy(oldPolicy);
 		return file;
@@ -156,10 +156,11 @@ public class ConfigServiceImpl implements ConfigService {
 			if(mUseInternalStorage){
 				file=  mContext.getFileStreamPath(name);
 			}else{
-				if(!Environment.isExternalStorageEmulated())
-					file=  mContext.getFileStreamPath(name);
-				else
+				if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
 					file= StorageUtils.getExternalFileDir(mContext, name);
+				else
+					file=  mContext.getFileStreamPath(name);
+
 			}
 		}
 		if(!file.exists())
@@ -179,10 +180,10 @@ public class ConfigServiceImpl implements ConfigService {
 			if(mUseInternalStorage){
 				file=  mContext.getCacheDir();
 			}else{
-				if(!Environment.isExternalStorageEmulated())
-					file=  mContext.getCacheDir();
+				if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+					file= StorageUtils.getExternalCacheDir(mContext);
 				else
-					file= mContext.getExternalCacheDir();
+					file=  mContext.getCacheDir();
 			}
 		}
 		if(!file.exists())
