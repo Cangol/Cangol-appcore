@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,118 +16,75 @@
 package mobi.cangol.mobile.security;
 
 /**
- * Base64编码说明
- * Base64编码要求把3个8位字节（3*8=24）转化为4个6位的字节（4*6=24），之后在6位的前面补两个0，形成8位一个字节的形式。
- * 如果剩下的字符不足3个字节，则用0填充，输出字符使用'='，因此编码后输出的文本末尾可能会出现1或2个'='。
- * <p>
- * 　为了保证所输出的编码位可读字符，Base64制定了一个编码表，以便进行统一转换。编码表的大小为2^6=64，这也是Base64名称的由来。
- *
+ *  base64加密解密类
  * @author Cangol
  */
 
 public class Base64 {
 
-    private static final char[] encodeTable = new char[]{'A', 'B', 'C', 'D',
-            'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
-            'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-            'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
-            '4', '5', '6', '7', '8', '9', '+', '/'};
+    final static String encodingChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    static private byte[] codes = new byte[256];
-
-    static {
-        for (int i = 0; i < 256; i++)
-            codes[i] = -1;
-        for (int i = 'A'; i <= 'Z'; i++)
-            codes[i] = (byte) (i - 'A');
-        for (int i = 'a'; i <= 'z'; i++)
-            codes[i] = (byte) (26 + i - 'a');
-        for (int i = '0'; i <= '9'; i++)
-            codes[i] = (byte) (52 + i - '0');
-        codes['+'] = 62;
-        codes['/'] = 63;
-    }
-    /**
-     * 将原始数据编码为base64编码
-     * @param data
-     * @return
-     */
-    public static  char[] encode(byte[] data) {
-        char[] out = new char[((data.length + 2) / 3) * 4];
-
-        for (int i = 0, index = 0; i < data.length; i += 3, index += 4) {
-            boolean quad = false;
-            boolean trip = false;
-            int val = (0xFF & (int) data[i]);
-            val <<= 8;
-            if ((i + 1) < data.length) {
-                val |= (0xFF & (int) data[i + 1]);
-                trip = true;
-            }
-            val <<= 8;
-            if ((i + 2) < data.length) {
-                val |= (0xFF & (int) data[i + 2]);
-                quad = true;
-            }
-            out[index + 3] = encodeTable[(quad ? (val & 0x3F) : 64)];
-            val >>= 6;
-            out[index + 2] = encodeTable[(trip ? (val & 0x3F) : 64)];
-            val >>= 6;
-            out[index + 1] = encodeTable[val & 0x3F];
-            val >>= 6;
-            out[index + 0] = encodeTable[val & 0x3F];
-        }
-        return out;
-    }
-
-    /**
-     * 将base64编码的数据解码成原始数据
-     * @param data
-     * @return
-     */
-    public static byte[] decode(char[] data) {
-        int len = ((data.length + 3) / 4) * 3;
-        if (data.length > 0 && data[data.length - 1] == '=')
-            --len;
-        if (data.length > 1 && data[data.length - 2] == '=')
-            --len;
-        byte[] out = new byte[len];
-        int shift = 0;
-        int accum = 0;
-        int index = 0;
-        for (int ix = 0; ix < data.length; ix++) {
-            int value = codes[data[ix] & 0xFF];
-            if (value >= 0) {
-                accum <<= 6;
-                shift += 6;
-                accum |= value;
-                if (shift >= 8) {
-                    shift -= 8;
-                    out[index++] = (byte) ((accum >> shift) & 0xff);
-                }
+    public static String encode(String source) {
+        char[] sourceBytes = getPaddedBytes(source);
+        int numGroups = (sourceBytes.length + 2) / 3;
+        char[] targetBytes = new char[4];
+        char[] target = new char[4 * numGroups];
+        for (int group = 0; group < numGroups; group++) {
+            convert3To4(sourceBytes, group * 3, targetBytes);
+            for (int i = 0; i < targetBytes.length; i++) {
+                target[i + 4 * group] = encodingChar.charAt(targetBytes[i]);
             }
         }
-        if (index != out.length)
-            throw new Error("miscalculated data length!");
-        return out;
+        int numPadBytes = sourceBytes.length - source.length();
+        for (int i = target.length - numPadBytes; i < target.length; i++) target[i] = '=';
+        return new String(target);
     }
 
-    /**
-     * 将原始数据编码为base64编码
-     * @param src
-     * @return
-     */
-    public static  String encode(String src) {
-        return new String(encode(src.getBytes()));
+    private static char[] getPaddedBytes(String source) {
+        char[] converted = source.toCharArray();
+        int requiredLength = 3 * ((converted.length + 2) / 3);
+        char[] result = new char[requiredLength];
+        System.arraycopy(converted, 0, result, 0, converted.length);
+        return result;
     }
 
-    /**
-     * 将base64编码的数据解码成原始数据
-     * @param src
-     * @return
-     */
-    public static  String decode(String src) {
-        return new String(decode(src.toCharArray()));
+    private static void convert3To4(char[] source, int sourceIndex, char[] target) {
+        target[0] = (char) (source[sourceIndex] >>> 2);
+        target[1] = (char) (((source[sourceIndex] & 0x03) << 4) | (source[sourceIndex + 1] >>> 4));
+        target[2] = (char) (((source[sourceIndex + 1] & 0x0f) << 2) | (source[sourceIndex + 2] >>> 6));
+        target[3] = (char) (source[sourceIndex + 2] & 0x3f);
+    }
+
+    public static String decode(String source) {
+        if (source.length() % 4 != 0)
+            throw new RuntimeException("valid Base64 codes have a multiple of 4 characters");
+        int numGroups = source.length() / 4;
+        int numExtraBytes = source.endsWith("==") ? 2 : (source.endsWith("=") ? 1 : 0);
+        byte[] targetBytes = new byte[3 * numGroups];
+        byte[] sourceBytes = new byte[4];
+        for (int group = 0; group < numGroups; group++) {
+            for (int i = 0; i < sourceBytes.length; i++) {
+                sourceBytes[i] = (byte) Math.max(0, encodingChar.indexOf(source.charAt(4 * group + i)));
+            }
+            convert4To3(sourceBytes, targetBytes, group * 3);
+        }
+        return new String(targetBytes, 0, targetBytes.length - numExtraBytes);
+    }
+
+    private static void convert4To3(byte[] source, byte[] target, int targetIndex) {
+        target[targetIndex] = (byte) ((source[0] << 2) | (source[1] >>> 4));
+        target[targetIndex + 1] = (byte) (((source[1] & 0x0f) << 4) | (source[2] >>> 2));
+        target[targetIndex + 2] = (byte) (((source[2] & 0x03) << 6) | (source[3]));
+    }
+
+    public static void main(String[] args) throws Exception {
+        //明文
+        String ming = "123456789";
+        System.err.println("明文 " + ming);
+        //加密后的密文
+        String min = Base64.encode(ming);
+        System.err.println("密文 " + min);
+        //解密后的明文
+        System.err.println("原文 " + Base64.decode(min));
     }
 }
