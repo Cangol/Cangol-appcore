@@ -20,8 +20,6 @@ package mobi.cangol.mobile.security;
  */
 
 import java.security.SecureRandom;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -107,10 +105,10 @@ public class AESUtils {
 
     public static void main(String[] args) throws Exception {
         //明文
-        String ming = "123456789";
+        String ming = "test";
         System.err.println("明文 " + ming);
         //key
-        String key = "1111111";
+        String key = "12345678";
         System.err.println("秘钥 " + key);
         //加密后的密文
         String min = AESUtils.encrypt(key, ming);

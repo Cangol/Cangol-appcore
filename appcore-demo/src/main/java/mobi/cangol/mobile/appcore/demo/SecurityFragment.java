@@ -12,6 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.HashMap;
+
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.security.AESUtils;
 import mobi.cangol.mobile.security.Base64;
@@ -25,7 +30,6 @@ public class SecurityFragment extends Fragment {
     private TextView textView1,textView2;
     private Button button1,button2,button3,button4,button5,button6,button7,button8;
 
-    String seed="12345678";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,61 +121,95 @@ public class SecurityFragment extends Fragment {
         Log.d(message);
     }
     private void aesEncode(String str) {
-        String content=str;
+        String content=""+str;
         try {
-            String result=AESUtils.encrypt(seed,content);
+            String result=AESUtils.encrypt("12345678",content);
             editText2.setText(result);
-            printLog(str+" -->> "+result);
+            printLog(content+" -->> "+result);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
     private void aesDecode(String str) {
+        String content=""+str;
         try {
-            String result=AESUtils.decrypt(seed,str);
+            String result=AESUtils.decrypt("12345678",content);
             editText1.setText(result);
-            printLog(str+" -->> "+result);
+            printLog(content+" -->> "+result);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void base64Encode(String str) {
+        String content=""+str;
         try {
-            String result=Base64.encode(str);
+            String result=Base64.encode(content);
             editText2.setText(result);
-            printLog(str+" -->> "+result);
+            printLog(content+" -->> "+result);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
     private void base64Decode(String str) {
+        String content=""+str;
         try {
-            String result=Base64.decode(str);
+            String result=Base64.decode(content);
             editText1.setText(result);
-            printLog(str+" -->> "+result);
+            printLog(content+" -->> "+result);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    private void rsaDecode(String str) {
+    static{
+        HashMap<String, Object> map = null;
         try {
-            editText2.setText(RSAUtils.encryptByPublicKey(str,RSAUtils.getPublicKey("RSA/None/NoPadding",null)));
-        } catch (Exception e) {
+            map = RSAUtils.getKeys();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-    }
+        //生成公钥和私钥
+        RSAPublicKey publicKey = (RSAPublicKey) map.get("public");
+        RSAPrivateKey privateKey = (RSAPrivateKey) map.get("private");
 
+        //模
+        String modulus = publicKey.getModulus().toString();
+        //公钥指数
+        String public_exponent = publicKey.getPublicExponent().toString();
+        //私钥指数
+        String private_exponent = privateKey.getPrivateExponent().toString();
+        //明文
+        String ming = "123456789";
+        //使用模和指数生成公钥和私钥
+         pubKey = RSAUtils.getPublicKey(modulus, public_exponent);
+         priKey = RSAUtils.getPrivateKey(modulus, private_exponent);
+    }
+    static RSAPublicKey pubKey;
+    static RSAPrivateKey priKey;
     private void rsaEncode(String str) {
+        String content=""+str;
         try {
-            editText1.setText(RSAUtils.decryptByPrivateKey(str,RSAUtils.getPrivateKey("RSA/None/NoPadding",null)));
+            String result=RSAUtils.encryptByPublicKey(content,pubKey);
+            editText2.setText(result);
+            printLog(content+" -->> "+result);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    private void rsaDecode(String str) {
+        String content=""+str;
+        try {
+            String result=RSAUtils.decryptByPrivateKey(content,priKey);
+            editText1.setText(result);
+            printLog(content+" -->> "+result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 
