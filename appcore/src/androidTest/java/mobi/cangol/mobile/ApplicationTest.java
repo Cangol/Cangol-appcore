@@ -21,11 +21,7 @@ public class ApplicationTest extends ApplicationTestCase<CoreApplication> {
         this.setContext(getSystemContext());
     }
     @SmallTest
-    public void testPreconditions() {
-        assertNotNull(coreApplication);
-    }
-    @MediumTest
-    public void testEnable() {
-        this.createApplication();
+    public void testIsCorrect() throws Exception {
+        assertEquals(4, 2 + 2);
     }
 }
