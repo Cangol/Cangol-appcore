@@ -8,11 +8,12 @@ import android.test.InstrumentationTestCase;
 public class AESUtilsTest extends InstrumentationTestCase {
 
     public void testEncrypt() throws Exception {
-
+        assertNotNull(AESUtils.encrypt("12345678", "test"));
     }
 
     public void testDecrypt() throws Exception {
-
+        assertNotNull(AESUtils.decrypt("12345678", "test"));
+        assertEquals(AESUtils.decrypt("12345678", AESUtils.encrypt("12345678", "test")), "test");
     }
 
     public void testToByte() throws Exception {
