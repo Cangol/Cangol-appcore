@@ -13,7 +13,6 @@ public class Base64Test extends InstrumentationTestCase{
     }
 
     public void testDecode() throws Exception {
-        assertNotNull(Base64.encode("123456789"));
         assertEquals(Base64.decode(Base64.encode("123456789")),"123456789");
     }
 }

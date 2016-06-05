@@ -12,7 +12,6 @@ public class AESUtilsTest extends InstrumentationTestCase {
     }
 
     public void testDecrypt() throws Exception {
-        assertNotNull(AESUtils.decrypt("12345678", "test"));
         assertEquals(AESUtils.decrypt("12345678", AESUtils.encrypt("12345678", "test")), "test");
     }
 
