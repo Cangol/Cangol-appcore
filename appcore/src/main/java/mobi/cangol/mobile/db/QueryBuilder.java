@@ -131,10 +131,9 @@ public class QueryBuilder {
         if (paraKey != null) {
             for (int i = 0; i < paraKey.size(); i++) {
                 if (i == 0)
-                    //sql.append(" where ");
                     ;
                 else
-                    sql.append(" and ");
+                    sql.append(condList.get(i));
                 sql.append(paraKey.get(i));
             }
             return sql.toString();

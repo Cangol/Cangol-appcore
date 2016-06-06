@@ -1,8 +1,10 @@
 package mobi.cangol.mobile.appcore.demo;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mobi.cangol.mobile.db.CoreSQLiteOpenHelper;
@@ -82,13 +85,15 @@ public class DatabaseFragment extends Fragment {
         listView.setAdapter(simpleAdapter);
 
     }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadData() {
         simpleAdapter.clear();
-        List<Data> list=dataService.getAllList();
+        List<Data> list=dataService.findListByName("1");
         simpleAdapter.addAll(list);
     }
     private void addData() {
         Data data=new Data("name_" + atomicInteger.addAndGet(1));
+        data.setNickname("nickname_"+new Random().nextInt(100));
         dataService.save(data);
         dataService.refresh(data);
         simpleAdapter.add(data);
@@ -198,6 +203,13 @@ class DataService implements BaseService<Data> {
         return dao.query(queryBuilder);
     }
 
+    public List<Data> findListByName(String name) {
+        QueryBuilder queryBuilder = new QueryBuilder(Data.class);
+        queryBuilder.addQuery("name", name, "like",true);
+        queryBuilder.addQuery("nickname", name, "like",true);
+        return dao.query(queryBuilder);
+    }
+
 }
 
 class DatabaseHelper extends CoreSQLiteOpenHelper {
@@ -244,7 +256,8 @@ class Data {
     private int id;
     @DatabaseField
     private String name;
-
+    @DatabaseField
+    private String nickname;
     public Data() {
     }
 
@@ -268,11 +281,20 @@ class Data {
         this.name = name;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Data{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
+        sb.append(", nickname='").append(nickname).append('\'');
         sb.append('}');
         return sb.toString();
     }

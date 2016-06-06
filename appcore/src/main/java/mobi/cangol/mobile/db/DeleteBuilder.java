@@ -120,7 +120,7 @@ public class DeleteBuilder {
 	    			//sql.append(" where ");
 	    			;
 	    		else
-	    			sql.append(" and ");
+					sql.append(condList.get(i));
 	    		sql.append(paraKey.get(i));
 	    	}
 	    	return sql.toString();
