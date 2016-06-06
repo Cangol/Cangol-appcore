@@ -104,16 +104,6 @@ public class AESUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        //明文
-        String ming = "test";
-        System.err.println("明文 " + ming);
-        //key
-        String key = "12345678";
-        System.err.println("秘钥 " + key);
-        //加密后的密文
-        String min = AESUtils.encrypt(key, ming);
-        System.err.println("密文 " + min);
-        //解密后的明文
-        System.err.println("原文 " + AESUtils.decrypt(key, min));
+
     }
 }
