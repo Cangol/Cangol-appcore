@@ -68,7 +68,7 @@ public class AESUtils {
         return decrypted;
     }
 
-    public static byte[] toByte(String hexString) {
+    private static byte[] toByte(String hexString) {
         int len = hexString.length() / 2;
         byte[] result = new byte[len];
         for (int i = 0; i < len; i++)
@@ -76,7 +76,7 @@ public class AESUtils {
         return result;
     }
 
-    public static String toHex(byte[] buf) {
+    private static String toHex(byte[] buf) {
         String HEX = "0123456789ABCDEF";
         if (buf == null)
             return "";
@@ -86,24 +86,5 @@ public class AESUtils {
                     .append(HEX.charAt(buf[i] & 0x0f));
         }
         return result.toString();
-    }
-
-    static private byte[] codes = new byte[256];
-
-    static {
-        for (int i = 0; i < 256; i++)
-            codes[i] = -1;
-        for (int i = 'A'; i <= 'Z'; i++)
-            codes[i] = (byte) (i - 'A');
-        for (int i = 'a'; i <= 'z'; i++)
-            codes[i] = (byte) (26 + i - 'a');
-        for (int i = '0'; i <= '9'; i++)
-            codes[i] = (byte) (52 + i - '0');
-        codes['+'] = 62;
-        codes['/'] = 63;
-    }
-
-    public static void main(String[] args) throws Exception {
-
     }
 }

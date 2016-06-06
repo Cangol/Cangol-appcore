@@ -152,7 +152,7 @@ public class RSAUtils {
      * ASCII码转BCD码
      *
      */
-    public static byte[] ASCII_To_BCD(byte[] ascii, int asc_len) {
+    protected static byte[] ASCII_To_BCD(byte[] ascii, int asc_len) {
         byte[] bcd = new byte[asc_len / 2];
         int j = 0;
         for (int i = 0; i < (asc_len + 1) / 2; i++) {
@@ -162,7 +162,7 @@ public class RSAUtils {
         return bcd;
     }
 
-    public static byte asc_to_bcd(byte asc) {
+    protected static byte asc_to_bcd(byte asc) {
         byte bcd;
 
         if ((asc >= '0') && (asc <= '9'))
@@ -179,7 +179,7 @@ public class RSAUtils {
     /**
      * BCD转字符串
      */
-    public static String bcd2Str(byte[] bytes) {
+    protected static String bcd2Str(byte[] bytes) {
         char temp[] = new char[bytes.length * 2], val;
 
         for (int i = 0; i < bytes.length; i++) {
@@ -195,7 +195,7 @@ public class RSAUtils {
     /**
      * 拆分字符串
      */
-    public static String[] splitString(String string, int len) {
+    protected static String[] splitString(String string, int len) {
         int x = string.length() / len;
         int y = string.length() % len;
         int z = 0;
@@ -218,7 +218,7 @@ public class RSAUtils {
     /**
      *拆分数组
      */
-    public static byte[][] splitArray(byte[] data, int len) {
+    protected static byte[][] splitArray(byte[] data, int len) {
         int x = data.length / len;
         int y = data.length % len;
         int z = 0;

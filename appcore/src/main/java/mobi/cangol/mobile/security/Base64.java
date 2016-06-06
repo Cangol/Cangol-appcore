@@ -76,15 +76,4 @@ public class Base64 {
         target[targetIndex + 1] = (byte) (((source[1] & 0x0f) << 4) | (source[2] >>> 2));
         target[targetIndex + 2] = (byte) (((source[2] & 0x03) << 6) | (source[3]));
     }
-
-//    public static void main(String[] args) throws Exception {
-//        //明文
-//        String ming = "123456789";
-//        System.err.println("明文 " + ming);
-//        //加密后的密文
-//        String min = Base64.encode(ming);
-//        System.err.println("密文 " + min);
-//        //解密后的明文
-//        System.err.println("原文 " + Base64.decode(min));
-//    }
 }
