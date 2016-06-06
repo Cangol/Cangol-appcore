@@ -6,7 +6,7 @@ apply plugin: 'net.saliman.cobertura'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    compile 'com.android.support:support-v13:22.0.0'
+    compile 'com.android.support:support-v4:23.0.0+'
     testCompile 'junit:junit:4.12'
 }
 
@@ -15,8 +15,7 @@ android {
     buildToolsVersion "22.0.0"
 
     defaultConfig {
-        minSdkVersion 13
-        targetSdkVersion 22
+        minSdkVersion 8
         versionCode 4
         versionName "1.0.4"
     }
