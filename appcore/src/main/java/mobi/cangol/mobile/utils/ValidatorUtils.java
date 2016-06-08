@@ -34,7 +34,7 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validateNull(String str) {
-		if (TextUtils.isEmpty(str)) {
+		if (str == null || "".equals(str)){
 			return false;
 		}
 		return true;
@@ -47,7 +47,7 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validateContent(String str) {
-		if (TextUtils.isEmpty(str)) {
+		if (str == null || "".equals(str)){
 			return false;
 		} else if (str.length() >= 5 && str.length() <= 140) {
 			return true;
@@ -59,16 +59,17 @@ public class ValidatorUtils {
 	/**
 	 * 验证昵称格式是否正确(长度5-20,所有单词字符，包括中文，中文算2个字符)
 	 * 
-	 * @param view
+	 * @param str
 	 * @return
 	 */
-	public static boolean validateNickname(TextView view) {
-		String rx = "[\\w]";
+	public static boolean validateNickname(String str) {
+		if (str == null || "".equals(str))
+			return false;
+
+		String rx = "[a-zA-Z0-9]";
 		String rx2 = "[\u4e00-\u9fa5]";
-		final int MAXCOUNT = 20;
 		int num = 0;
-		boolean flag = true;
-		String str = view.getText().toString();
+		boolean flag = false;
 		for (int i = 0; i < str.length(); i++) {
 			char c = str.charAt(i);
 			if (Pattern.compile(rx).matcher(c + "").matches()) {
@@ -81,8 +82,8 @@ public class ValidatorUtils {
 			}
 		}
 
-		if (num <= MAXCOUNT && num > 5)
-			flag = false;
+		if (num <= 20 && num > 5)
+			flag = true;
 
 		return flag;
 	}
@@ -104,6 +105,8 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validatePassword(String str) {
+		if (str == null || "".equals(str))
+			return false;
 		Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
 		Matcher m = p.matcher(str);
 		if (m.matches()) {
@@ -120,6 +123,8 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validatePhone(String str) {
+		if (str == null || "".equals(str))
+			return false;
 		Pattern p = Patterns.PHONE;
 		Matcher m = p.matcher(str);
 		if (m.matches()) {
@@ -136,6 +141,8 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validateMobile(String str) {
+		if (str == null || "".equals(str))
+			return false;
 		Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
 		Matcher m = p.matcher(str);
 		if (m.matches()) {
@@ -152,6 +159,8 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validateEmail(String str) {
+		if (str == null || "".equals(str))
+			return false;
 		Pattern p = Patterns.EMAIL_ADDRESS;
 		Matcher m = p.matcher(str);
 		if (m.matches()) {
@@ -168,6 +177,8 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validateURL(String str) {
+		if (str == null || "".equals(str))
+			return false;
 		Pattern p = Patterns.WEB_URL;
 		Matcher m = p.matcher(str);
 		if (m.matches()) {
@@ -184,6 +195,8 @@ public class ValidatorUtils {
 	 * @return
 	 */
 	public static boolean validateIP(String str) {
+		if (str == null || "".equals(str))
+			return false;
 		Pattern p = Patterns.IP_ADDRESS;
 		Matcher m = p.matcher(str);
 		if (m.matches()) {
