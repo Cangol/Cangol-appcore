@@ -34,51 +34,11 @@ public class UrlUtils {
 	 * @return
 	 */
 	public static boolean isUrl(String value) {
-		if (value != null) {
+		if (value != null&&!"".equals(value)) {
 			return value
 					.matches("(((http|ftp|https|file)://)?([\\w\\-]+\\.)+[\\w\\-]+(/[\\w\\u4e00-\\u9fa5\\-\\./?\\@\\%\\!\\&=\\+\\~\\:\\#\\;\\,]*)?)");
 		} else
 			return false;
-	}
-
-	/**
-	 * url encode
-	 * 
-	 * @param url
-	 * @return
-	 */
-	public static String encode(String url) {
-		return URLEncoder.encode(url);
-	}
-
-	/**
-	 * url decode
-	 * 
-	 * @param url
-	 * @return
-	 */
-	public static String decode(String url) {
-		return URLDecoder.decode(url);
-	}
-
-	/**
-	 * 主机和method组合url
-	 * 
-	 * @param host
-	 * @param method
-	 * @return
-	 */
-	public static String getUrl(String host, String method) {
-
-		try {
-			URL u = new URL(host);
-			return new URL(u.getProtocol(), u.getHost(), method).toString();
-		} catch (MalformedURLException e) {
-			return "";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
 	}
 
 	/**
@@ -98,32 +58,6 @@ public class UrlUtils {
 			return "";
 		}
 	}
-
-	/**
-	 * 从url获取域名
-	 * 
-	 * @param url
-	 * @return
-	 */
-	public static String getDomain(String url) {
-
-		String host = getHost(url);
-		int index = host.lastIndexOf('.');
-		if (index == -1) {
-			return "";
-		}
-		String str = host.substring(0, index);
-		index = str.lastIndexOf('.');
-		if (index == -1) {
-			return "";
-		}
-		str = host.substring(index + 1);
-		if (str.endsWith("/")) {
-			str = str.substring(0, str.length() - 1);
-		}
-		return str;
-	}
-
 	/**
 	 * 从url获取参数map
 	 * 

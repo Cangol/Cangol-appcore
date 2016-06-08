@@ -2,6 +2,8 @@ package mobi.cangol.mobile;
 
 import org.junit.Test;
 
+import mobi.cangol.mobile.utils.UrlUtils;
+
 import static junit.framework.Assert.assertEquals;
 
 
