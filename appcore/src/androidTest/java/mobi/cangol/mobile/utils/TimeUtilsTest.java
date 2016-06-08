@@ -87,7 +87,7 @@ public class TimeUtilsTest extends InstrumentationTestCase {
     }
 
     public void testAddDay() throws Exception {
-
+        assertNotNull(TimeUtils.addDay(TimeUtils.getCurrentDate(),1));
     }
 
     public void testGetStartDateInPeriod() throws Exception {
