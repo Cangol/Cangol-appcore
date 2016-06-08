@@ -190,7 +190,7 @@ public class LocationServiceImpl implements LocationService{
 	public boolean isBetterLocation(Location location) {
 		if(null==location)return false;
 		long timeDelta=System.currentTimeMillis()-location.getTime();
-		if(mDebug)Log.d(TAG, "location time :"+TimeUtils.convert(location.getTime()));
+		if(mDebug)Log.d(TAG, "location time :"+TimeUtils.convertString(location.getTime()));
 		return (timeDelta<mBetterTime);
 	}
 	@Override

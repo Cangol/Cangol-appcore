@@ -28,8 +28,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class TimeUtils {
-	private static String CurrentTime;
-	private static String CurrentDate;
 
 	/**
 	 * 得到当前的年份 返回格式:yyyy
@@ -84,10 +82,10 @@ public class TimeUtils {
 	 * @return String
 	 */
 	public static String getCurrentTime() {
-		Date NowDate = new Date();
+		Date nowDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		CurrentTime = formatter.format(NowDate);
-		return CurrentTime;
+		String currentTime = formatter.format(nowDate);
+		return currentTime;
 	}
 
 	/**
@@ -96,10 +94,10 @@ public class TimeUtils {
 	 * @return String
 	 */
 	public static String getCurrentTime2() {
-		Date NowDate = new Date();
+		Date nowDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-		CurrentTime = formatter.format(NowDate);
-		return CurrentTime;
+		String currentTime = formatter.format(nowDate);
+		return currentTime;
 	}
 
 	/**
@@ -140,16 +138,15 @@ public class TimeUtils {
 	 * @return String
 	 */
 	public static String getCurrentTimeAddYear(int addyear) {
-		String currentYear = "";
-		Date NowDate = new Date();
+		Date nowDate = new Date();
 
-		currentYear = TimeUtils.getCurrentYear();
+		String currentYear = TimeUtils.getCurrentYear();
 		currentYear = String.valueOf(Integer.parseInt(TimeUtils
 				.getCurrentYear()) + addyear);
 
 		SimpleDateFormat formatter = new SimpleDateFormat("-MM-dd:HH:mm:ss");
-		CurrentTime = formatter.format(NowDate);
-		return currentYear + CurrentTime;
+		String currentTime = formatter.format(nowDate);
+		return currentYear + currentTime;
 	}
 
 	/**
@@ -158,10 +155,10 @@ public class TimeUtils {
 	 * @return String
 	 */
 	public static String getCurrentDate() {
-		Date NowDate = new Date();
+		Date nowDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		CurrentDate = formatter.format(NowDate);
-		return CurrentDate;
+		String currentDate = formatter.format(nowDate);
+		return currentDate;
 	}
 
 	/**
@@ -170,10 +167,10 @@ public class TimeUtils {
 	 * @return String
 	 */
 	public static String getDate8Bit() {
-		Date NowDate = new Date();
+		Date nowDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		CurrentDate = formatter.format(NowDate);
-		return CurrentDate;
+		String currentDate = formatter.format(nowDate);
+		return currentDate;
 	}
 
 	/**
@@ -208,69 +205,97 @@ public class TimeUtils {
 	/**
 	 * 得到当前月份的第一天日期
 	 * 
-	 * @param period
+	 * @param period yyyy-MM
 	 */
 	public static String getStartDateInPeriod(String period) {
-		StringBuffer str = new StringBuffer(period);
-		return str.append("01").toString();
+		java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM");
+		try {
+			if(df.parse(period)==null){
+				return null;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+		int year = Integer.parseInt(period.substring(0, 4));
+		int month = Integer.parseInt(period.substring(5, 7));
+		Calendar cl = Calendar.getInstance();
+		cl.set(year, month - 1, 1);
+		return df.format(cl.getTime());
 
 	}
 
 	/**
 	 * 得到当前月份的最后一天
 	 * 
-	 * @param period
+	 * @param period yyyy-MM
 	 * @return
 	 */
 	public static String getEndDateInPeriod(String period) {
-		String date = "";
-		java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM");
+		try {
+			if(df.parse(period)==null){
+                return null;
+            }
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
 		int year = Integer.parseInt(period.substring(0, 4));
 		int month = Integer.parseInt(period.substring(5, 7));
-		System.err.println(month);
 		Calendar cl = Calendar.getInstance();
 		cl.set(year, month - 1, 1);
 		cl.add(Calendar.MONTH, 1);
 		cl.add(Calendar.DATE, -1);
-		date = df.format(cl.getTime());
-		return date;
+		return df.format(cl.getTime());
 	}
 
 	/**
 	 * 将YYYYMMDD形式改成YYYY-MM-DD
 	 * 
-	 * @param str1
+	 * @param str
 	 * @return
 	 */
-	public static String convertStr(String str1) {
-		if (str1 == null || str1.equals("")) {
-			return "";
-		} else {
-			String result = "";
-			result += str1.substring(0, 4) + "-";
-			result += str1.substring(4, 6) + "-";
-			result += str1.substring(6, 8);
-			return result;
+	public static String convertStandard(String str) {
+		String timeStr =null;
+		if (str == null || str.equals("")) {
+			timeStr= null;
+		}else{
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMDD");
+			try {
+				Date date =format.parse(str);
+				format = new SimpleDateFormat("yyyy-MM-dd");
+				timeStr=format.format(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				timeStr=null;
+			}
 		}
+		return timeStr;
 	}
 
 	/**
 	 * 将YYYY-MM-DD形式改成YYYYMMDD
 	 * 
-	 * @param str1
+	 * @param str
 	 * @return
 	 */
-	public static String convert(String str1) {
-		if (str1 == null || str1.equals("")) {
-			return "";
-		} else {
-			String temp[] = str1.split("-");
-			String result = "";
-			for (int i = 0; i < temp.length; i++) {
-				result = result + temp[i];
+	public static String convert8Bit(String str) {
+		String timeStr =null;
+		if (str == null || str.equals("")) {
+			timeStr= null;
+		}else{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date date =format.parse(str);
+				format = new SimpleDateFormat("yyyyMMDD");
+				timeStr=format.format(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				timeStr=null;
 			}
-			return result;
 		}
+		return timeStr;
 	}
 
 	/**
@@ -279,12 +304,29 @@ public class TimeUtils {
 	 * @param time
 	 * @return
 	 */
-	public static String convert(long time) {
+	public static String convertString(long time) {
 		Date date = new Date(time);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return formatter.format(date);
 	}
 
+	/**
+	 * 转换时间yyyy-MM-dd HH:mm:ss到毫秒数
+	 * @param str
+	 * @return
+	 */
+	public static long convertLong(String str) {
+		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date currentTime = null;
+		long time = -1;
+		try {
+			currentTime = dfs.parse(str);
+			time = currentTime.getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return time;
+	}
 	/**
 	 * 计算距今的时间
 	 * 
@@ -302,6 +344,7 @@ public class TimeUtils {
 			currentTime = Calendar.getInstance().getTime();
 		} catch (ParseException e) {
 			e.printStackTrace();
+			return null;
 		}
 		long between = (currentTime.getTime() - commentTime.getTime()) / 1000;// 除以1000是为了转换成秒
 
@@ -349,8 +392,7 @@ public class TimeUtils {
 	/**
 	 * 转化为中文时间格式
 	 * 
-	 * @param time
-	 *            HH:mm:ss
+	 * @param time HH:mm:ss
 	 * @return
 	 */
 	public static String getZhTimeString(String time) {
@@ -364,25 +406,6 @@ public class TimeUtils {
 		} else {
 			return Integer.valueOf(str[0]) + "秒";
 		}
-	}
-
-	/**
-	 * 转换时间yyyy-MM-dd HH:mm:ss到毫秒数
-	 * 
-	 * @param strTime
-	 * @return
-	 */
-	public static long getTimeMillis(String strTime) {
-		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date currentTime = null;
-		long time = -1;
-		try {
-			currentTime = dfs.parse(strTime);
-			time = currentTime.getTime();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return time;
 	}
 
 	/**
@@ -414,7 +437,7 @@ public class TimeUtils {
 	/**
 	 * 格式化为应用 常见显示格式 当前天显示时间，其他显示年月日
 	 * 
-	 * @param strTime
+	 * @param strTime yyyy-MM-dd HH:mm:ss
 	 * @return
 	 */
 	public static String formatLatelyTime(String strTime) {
