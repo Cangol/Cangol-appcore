@@ -119,7 +119,7 @@ public class DeviceInfo {
             Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String str = bufferedReader.readLine();
-            String resultStr = str.substring(str.indexOf("MemTotal:") + 1, str.indexOf(" KB"));
+            String resultStr = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length(), str.indexOf(" kB"));
             bufferedReader.close();
             result=Long.parseLong(resultStr.trim())*1024;
         }catch (IOException e){
@@ -623,7 +623,7 @@ public class DeviceInfo {
      * @param context
      * @return
      */
-    public  boolean isForegroundApplication(String packageName,Context context) {
+    public static boolean isForegroundApplication(String packageName,Context context) {
         boolean result = false;
         ActivityManager am = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
