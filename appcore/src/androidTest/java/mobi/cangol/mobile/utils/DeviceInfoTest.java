@@ -126,7 +126,7 @@ public class DeviceInfoTest extends AndroidTestCase {
     }
 
     public void testGetMacAddress() throws Exception {
-        assertNotNull(DeviceInfo.getMacAddress(getContext()));
+        DeviceInfo.getMacAddress(getContext());
     }
 
     public void testGetIpAddress() throws Exception {
