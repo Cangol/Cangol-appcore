@@ -1,6 +1,7 @@
 package mobi.cangol.mobile.service.session;
 
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -12,8 +13,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,24 +31,23 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
  * Created by weixuewu on 15/10/24.
  */
 @Service("SessionService")
-public class SessionServiceImpl implements SessionService {
+ class SessionServiceImpl implements SessionService {
     private final static String TAG = "SessionService";
     private final static String JSON = ".json";
     private final static String JSONA = ".jsona";
     private final static String SER = ".ser";
-    private Context mContext = null;
+    private Application mContext = null;
     private ConfigService mConfigService = null;
     private ServiceProperty mServiceProperty = null;
     private boolean debug = false;
     private Map<String, Object> mMap = null;
 
     @Override
-    public void onCreate(Context context) {
+    public void onCreate(Application context) {
         mContext = context;
         //这里使用application中的session也可实例化一个新的
-        CoreApplication app = (CoreApplication) mContext.getApplicationContext();
         mMap = new ConcurrentHashMap<String, Object>();
-        mConfigService = (ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+        mConfigService = (ConfigService) ((CoreApplication) mContext).getAppService(AppService.CONFIG_SERVICE);
         refresh();
     }
 

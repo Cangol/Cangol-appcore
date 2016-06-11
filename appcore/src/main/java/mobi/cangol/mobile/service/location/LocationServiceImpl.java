@@ -15,32 +15,33 @@
  */
 package mobi.cangol.mobile.service.location;
 
-import mobi.cangol.mobile.service.Service;
-import mobi.cangol.mobile.service.ServiceProperty;
-import mobi.cangol.mobile.utils.LocationUtils;
-import mobi.cangol.mobile.utils.TimeUtils;
+import android.app.Application;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+
+import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.utils.LocationUtils;
+import mobi.cangol.mobile.utils.TimeUtils;
 /**
  * @author Cangol
  */
 @Service("LocationService")
-public class LocationServiceImpl implements LocationService{
+ class LocationServiceImpl implements LocationService{
 	private final static String TAG="LocationService";
 	private final static int FLAG_TIMEOUT=1;
 	private final static int FLAG_BETTER_LOCATION=2;
 	private boolean mDebug=false;
 	private int mBetterTime = 1000 * 60 * 2;
 	private int mTimeOut = 1000 * 60 * 5;
-	private Context mContext = null;
+	private Application mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private LocationListener mLocationListener;
 	private LocationManager mLocationManager;
@@ -70,7 +71,7 @@ public class LocationServiceImpl implements LocationService{
         }
     }
 	@Override
-	public void onCreate(Context context) {
+	public void onCreate(Application context) {
 		this.mContext=context;
 //		HandlerThread thread = new HandlerThread("LocationService");
 //        thread.start();

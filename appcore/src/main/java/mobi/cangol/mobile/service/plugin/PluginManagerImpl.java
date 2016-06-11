@@ -17,7 +17,7 @@
 
 package mobi.cangol.mobile.service.plugin;
 
-import android.content.Context;
+import android.app.Application;
 
 import java.util.HashMap;
 
@@ -31,15 +31,15 @@ import mobi.cangol.mobile.utils.UrlUtils;
  * Created by xuewu.wei on 2016/4/14.
  */
 @Service("PluginManager")
-public class PluginManagerImpl implements PluginManager {
+ class PluginManagerImpl implements PluginManager {
     private final static String TAG = "PluginManager";
-    private Context context = null;
+    private Application context = null;
     private boolean debug = false;
     private HashMap<String, PluginInfo> pluginMap = new HashMap<String, PluginInfo>();
     private ServiceProperty serviceProperty = null;
 
     @Override
-    public void onCreate(Context context) {
+    public void onCreate(Application context) {
         this.context = context;
     }
 

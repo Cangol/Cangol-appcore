@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service;
 
+import android.app.Application;
 import android.content.Context;
 
 public interface AppService {
@@ -64,7 +65,7 @@ public interface AppService {
 	 * 
 	 * @param context
 	 */
-	void onCreate(Context context);
+	void onCreate(Application context);
 
 	/**
 	 * 获取应用服务名称

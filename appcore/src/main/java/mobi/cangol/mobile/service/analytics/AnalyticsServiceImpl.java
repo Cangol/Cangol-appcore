@@ -15,6 +15,8 @@
  */
 package mobi.cangol.mobile.service.analytics;
 
+import android.app.Application;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,23 +28,21 @@ import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 
-import android.content.Context;
-
 /**
  * @author Cangol
  *
  */
 @Service("AnalyticsService")
-public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
+ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     private final static String TAG = "AnalyticsService";
-    private boolean debug = false;
-    private Context mContext = null;
-    private AsyncHttpClient asyncHttpClient = null;
+    private boolean mDebug = false;
+    private Application mContext = null;
+    private AsyncHttpClient mAsyncHttpClient = null;
     private ServiceProperty mServiceProperty = null;
     private Map<String, ITracker> mTrackers = new HashMap<String, ITracker>();
 
     @Override
-    public void onCreate(Context context) {
+    public void onCreate(Application context) {
         mContext = context;
     }
 
@@ -50,7 +50,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
     public void init(ServiceProperty serviceProperty) {
         this.mServiceProperty = serviceProperty;
         PoolManager.buildPool(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME), mServiceProperty.getInt(ANALYTICSSERVICE_THREAD_MAX));
-        asyncHttpClient = AsyncHttpClient.build(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME));
+        mAsyncHttpClient = AsyncHttpClient.build(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 
     @Override
     public void onDestroy() {
-        asyncHttpClient.cancelRequests(mContext, true);
+        mAsyncHttpClient.cancelRequests(mContext, true);
     }
 
     @Override
@@ -79,9 +79,9 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
     @Override
     public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
         RequestParams params = new RequestParams(paramsMap);
-        if (debug) Log.v(TAG, "send " + AsyncHttpClient.getUrlWithQueryString(url, params));
-        if (debug) Log.v(TAG, "params: \n" + params.toDebugString());
-        asyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
+        if (mDebug) Log.v(TAG, "send " + AsyncHttpClient.getUrlWithQueryString(url, params));
+        if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
+        mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -91,13 +91,13 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                if (debug) Log.d(TAG, iTracker.getTrackingId() + " send Success :" + content);
+                if (mDebug) Log.d(TAG, iTracker.getTrackingId() + " send Success :" + content);
             }
 
             @Override
             public void onFailure(Throwable error, String content) {
                 super.onFailure(error, content);
-                if (debug) Log.d(TAG, iTracker.getTrackingId() + " send Failure :" + content);
+                if (mDebug) Log.d(TAG, iTracker.getTrackingId() + " send Failure :" + content);
             }
 
         });
@@ -105,7 +105,7 @@ public class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsSe
 
     @Override
     public void setDebug(boolean debug) {
-        this.debug = debug;
+        this.mDebug = debug;
     }
 
     @Override
