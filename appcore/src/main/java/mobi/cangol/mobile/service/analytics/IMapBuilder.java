@@ -42,16 +42,15 @@ final public class IMapBuilder {
 		if (paramName != null)
 			mParams.put(paramName, paramValue);
 		else {
-			Log.w(" StatBuilder.set() called with a null paramName.");
+			Log.w(" IMapBuilder.set() called with a null paramName.");
 		}
 		return this;
 	}
 
 	public IMapBuilder setAll(Map<String, String> params) {
-		if (params == null) {
-			return this;
+		if (params!= null) {
+			mParams.putAll(params);
 		}
-		mParams.putAll(params);
 		return this;
 	}
 

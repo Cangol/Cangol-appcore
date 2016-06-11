@@ -33,7 +33,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
  *
  */
 @Service("AnalyticsService")
- class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
+class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     private final static String TAG = "AnalyticsService";
     private boolean mDebug = false;
     private Application mContext = null;
