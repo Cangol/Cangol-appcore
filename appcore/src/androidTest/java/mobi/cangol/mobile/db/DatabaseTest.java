@@ -11,7 +11,6 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.utils.DeviceInfo;
 
 /**
  * Created by weixuewu on 16/6/11.
