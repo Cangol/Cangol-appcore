@@ -68,7 +68,7 @@ import mobi.cangol.mobile.utils.TimeUtils;
 		mContext=context;
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
-		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		CoreApplication app=(CoreApplication) mContext;
         mSessionService=(SessionService) app.getAppService(AppService.SESSION_SERVICE);
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
