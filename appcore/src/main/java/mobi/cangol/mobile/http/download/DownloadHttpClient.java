@@ -53,7 +53,7 @@ public class DownloadHttpClient {
     private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
     private final static int DEFAULT_MAX=5;
-    private ExecutorService threadPool;
+    private PoolManager.Pool threadPool;
     protected DownloadHttpClient(final String name) {
 
         httpContext = new SyncBasicHttpContext(new BasicHttpContext());
@@ -66,13 +66,7 @@ public class DownloadHttpClient {
         HttpClientParams.setRedirecting(params, true);
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
         httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-		threadPool = Executors.newFixedThreadPool(DEFAULT_MAX,new ThreadFactory() {
-            private final AtomicInteger mCount = new AtomicInteger(1);
-
-            public Thread newThread(final Runnable r) {
-                return new Thread(r, name+"$WorkThread #" + mCount.getAndIncrement());
-            }
-        });
+		threadPool  = PoolManager.buildPool(TAG,3);
 
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
@@ -86,8 +80,8 @@ public class DownloadHttpClient {
     public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
     	httpClient.setHttpRequestRetryHandler(retryHandler);
     }
-    public void setThreadPool(ExecutorService executorService) {
-        this.threadPool = executorService;
+    public void setThreadPool(PoolManager.Pool pool) {
+        this.threadPool = pool;
     }
     public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         HttpUriRequest request = new HttpGet(url);
