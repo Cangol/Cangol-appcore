@@ -91,12 +91,12 @@ public interface ConfigService extends AppService {
 
     /**
      * 自定义设置AppDir
-     * @return
+     * @return 是否设置成功
      */
     boolean setCustomAppDir(String path);
     /**
      * 返回是否使用自定义AppDir
-     * @return
+     * @return 是否使用自定义AppDir
      */
     boolean isCustomAppDir();
     /**

@@ -74,12 +74,13 @@ class ConnectionQueue
 		//long currTime = System.currentTimeMillis() / 1000;
 		SessionEntity data=null;
 		try {
-			data = (SessionEntity) entitys.get(page).clone();
-			data.beginSession=0;
-			data.sessionDuration=duration;
-			data.endSession=1;//currTime
-			queue_.offer(data);
-
+			if(entitys.containsKey(page)){
+				data = (SessionEntity) entitys.get(page).clone();
+				data.beginSession=0;
+				data.sessionDuration=duration;
+				data.endSession=1;//currTime
+				queue_.offer(data);
+			}
 			tick();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();

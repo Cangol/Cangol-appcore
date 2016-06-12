@@ -20,6 +20,8 @@ package mobi.cangol.mobile.utils;
 import android.test.AndroidTestCase;
 import android.test.mock.MockContext;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * Created by xuewu.wei on 2016/6/8.

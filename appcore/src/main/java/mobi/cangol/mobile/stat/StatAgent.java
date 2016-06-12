@@ -16,6 +16,7 @@
 package mobi.cangol.mobile.stat;
 
 import android.annotation.TargetApi;
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
@@ -50,7 +51,7 @@ public class StatAgent {
     private final static String STAT_ACTION_TRAFFIC  = "api/countly/traffic.do";
     private final static String STAT_TRACKING_ID = "stat";
 
-    private Context context;
+    private Application context;
 
     private ITracker itracker;
 
@@ -60,7 +61,7 @@ public class StatAgent {
     private SessionService sessionService;
     private static StatAgent instance;
 
-    public static StatAgent getInstance(Context context) {
+    public static StatAgent getInstance(CoreApplication context) {
         if (instance == null) {
             instance = new StatAgent(context);
         }
@@ -68,10 +69,10 @@ public class StatAgent {
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private StatAgent(Context context) {
+    private StatAgent(Application context) {
         this.context = context;
-        sessionService = (SessionService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
-        analyticsService = (AnalyticsService) ((CoreApplication) context.getApplicationContext()).getAppService(AppService.ANALYTICS_SERVICE);
+        sessionService = (SessionService) ((CoreApplication) context).getAppService(AppService.SESSION_SERVICE);
+        analyticsService = (AnalyticsService) ((CoreApplication) context).getAppService(AppService.ANALYTICS_SERVICE);
         analyticsService.setDebug(false);
         itracker = analyticsService.getTracker(STAT_TRACKING_ID);
 

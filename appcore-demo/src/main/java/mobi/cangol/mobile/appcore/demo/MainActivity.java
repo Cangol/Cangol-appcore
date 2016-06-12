@@ -1,6 +1,8 @@
 package mobi.cangol.mobile.appcore.demo;
 
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -57,6 +59,7 @@ public class MainActivity extends FragmentActivity {
                 .commit();
     }
 
+    @SuppressLint("ValidFragment")
     class DemoListFragment extends ListFragment {
         private List<Class<? extends Fragment>> list;
         public DemoListFragment(List<Class<? extends Fragment>> list){
@@ -81,14 +84,18 @@ public class MainActivity extends FragmentActivity {
             super.onListItemClick(l, v, position, id);
             getActivity().setTitle((String)getListAdapter().getItem(position));
             toFragment(list.get(position));
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+            }
         }
         @Override
         public void onStart() {
             super.onStart();
             if(this.getFragmentManager().getBackStackEntryCount()==0){
                 getActivity().setTitle(R.string.app_name);
-                getActionBar().setDisplayHomeAsUpEnabled(false);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    getActionBar().setDisplayHomeAsUpEnabled(false);
+                }
             }
         }
     }

@@ -15,6 +15,13 @@
  */
 package mobi.cangol.mobile.service.crash;
 
+import android.annotation.TargetApi;
+import android.app.Application;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.StrictMode;
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -39,23 +46,16 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.Object2FileUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
-
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.StrictMode;
-import android.text.TextUtils;
 /**
  * @author Cangol
  */
 @Service("CrashService")
-public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
+ class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private final static String TAG="CrashService";
 	private final static  String _CRASH = ".crash";
 	private static boolean debug=true;
 	private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
-	private Context mContext;
+	private Application mContext;
 	private SessionService mSessionService;
 	private ConfigService mConfigService;
 	private ServiceProperty mServiceProperty=null;
@@ -64,11 +64,11 @@ public class CrashServiceImpl implements CrashService,UncaughtExceptionHandler {
 	private Map<String,String> mParams;
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
-	public void onCreate(Context context) {
+	public void onCreate(Application context) {
 		mContext=context;
 		mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 		Thread.setDefaultUncaughtExceptionHandler(this);
-		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
+		CoreApplication app=(CoreApplication) mContext;
         mSessionService=(SessionService) app.getAppService(AppService.SESSION_SERVICE);
 		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();

@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service.upgrade;
 
+import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dalvik.system.DexClassLoader;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
@@ -42,20 +42,19 @@ import mobi.cangol.mobile.utils.AppUtils;
  * @author Cangol
  */
 @Service("UpgradeService")
-public class UpgradeServiceImpl implements UpgradeService{
+ class UpgradeServiceImpl implements UpgradeService{
 	private final static String TAG="UpgradeService";
 	private boolean debug=false;
-	private Context mContext = null;
+	private Application mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private ConfigService mConfigService;
 	private List<Integer> mIds=new ArrayList<Integer>();
 	private Map<String,OnUpgradeListener> mOnUpgradeListeners;
 	private DownloadHttpClient mDownloadHttpClient;
 	@Override
-	public void onCreate(Context context) {
+	public void onCreate(Application context) {
 		mContext=context;
-		CoreApplication app=(CoreApplication) mContext.getApplicationContext();
-		mConfigService=(ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+		mConfigService=(ConfigService) ((CoreApplication) mContext).getAppService(AppService.CONFIG_SERVICE);
 		mDownloadHttpClient=DownloadHttpClient.build(TAG);
 		mOnUpgradeListeners=new HashMap<String,OnUpgradeListener>();
 	}

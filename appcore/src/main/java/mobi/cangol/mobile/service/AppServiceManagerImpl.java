@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,30 +40,21 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl;
-import mobi.cangol.mobile.service.cache.CacheManagerImpl;
-import mobi.cangol.mobile.service.conf.ConfigServiceImpl;
-import mobi.cangol.mobile.service.crash.CrashServiceImpl;
-import mobi.cangol.mobile.service.download.DownloadManagerImpl;
-import mobi.cangol.mobile.service.location.LocationServiceImpl;
-import mobi.cangol.mobile.service.plugin.PluginManagerImpl;
-import mobi.cangol.mobile.service.session.SessionServiceImpl;
-import mobi.cangol.mobile.service.status.StatusServiceImpl;
-import mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 public class AppServiceManagerImpl extends AppServiceManager {
 	private final static String  TAG="AppServiceManager";
 	private Map<String, AppService> mRunServiceMap = new Hashtable<String, AppService>();
 	private Map<String,Class<? extends AppService>> mServiceMap = new Hashtable<String,Class<? extends AppService>>();
-	public Context mContext;
+	public Application mContext;
 	private boolean mUseAnnotation=true;
 	private List<String> mPackageNames=new ArrayList<String>();
 	private Map<String,ServiceProperty> mProperties=new HashMap<String,ServiceProperty>();
 	private boolean debug=false;
 	private AsyncClassScan mAsyncClassScan;
-	public AppServiceManagerImpl(Context context){
+	public AppServiceManagerImpl(CoreApplication context){
 		this.mContext=context;
     	initClass();
 	}
@@ -78,16 +70,16 @@ public class AppServiceManagerImpl extends AppServiceManager {
 		}else**/
 		{
             classList=new ArrayList<Class<? extends AppService>>();
-            classList.add(CacheManagerImpl.class);
-            classList.add(ConfigServiceImpl.class);
-            classList.add(CrashServiceImpl.class);
-            classList.add(DownloadManagerImpl.class);
-            classList.add(SessionServiceImpl.class);
-            classList.add(LocationServiceImpl.class);
-            classList.add(AnalyticsServiceImpl.class);
-            classList.add(StatusServiceImpl.class);
-			classList.add(UpgradeServiceImpl.class);
-			//classList.add(PluginManagerImpl.class);
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl"));
+            classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.cache.CacheManagerImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.conf.ConfigServiceImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.crash.CrashServiceImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.download.DownloadManagerImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.location.LocationServiceImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.session.SessionServiceImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.status.StatusServiceImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.plugin.PluginManagerImpl"));
         }
         Log.d(TAG,"classList size="+classList.size());
         for (int i = 0; i < classList.size(); i++) {

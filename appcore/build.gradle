@@ -21,6 +21,7 @@ android {
     }
     buildTypes {
         debug {
+            versionNameSuffix "123"
             testCoverageEnabled true
         }
     }

@@ -29,7 +29,9 @@ public class AsyncHttpClientTest extends AndroidTestCase {
 
     public void testGet() throws Exception {
         AsyncHttpClient httpClient = AsyncHttpClient.build("test");
-        httpClient.get(getContext(), url, null, new JsonHttpResponseHandler() {
+        RequestParams params=new RequestParams();
+        params.put("deviceId","111");
+        httpClient.get(getContext(), url, params, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 super.onStart();

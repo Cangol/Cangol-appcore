@@ -15,33 +15,32 @@
  */
 package mobi.cangol.mobile.service.conf;
 
+import android.annotation.TargetApi;
+import android.app.Application;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StrictMode;
+
 import java.io.File;
 
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.Build;
-import android.os.Environment;
-import android.os.StrictMode;
-import android.text.TextUtils;
-
 @Service("ConfigService")
 /**
  * @author Cangol
  */
-public class ConfigServiceImpl implements ConfigService {
+ class ConfigServiceImpl implements ConfigService {
 	private final static String TAG="ConfigService";
-	private Context mContext = null;
+	private Application mContext = null;
 	private ServiceProperty mServiceProperty=null;
 	private boolean mDebug=false;
     private boolean mUseInternalStorage=false;
 	private boolean mIsCustomAppDir=false;
 	private File mAppDir;
 	@Override
-	public void onCreate(Context context) {
+	public void onCreate(Application context) {
 		mContext=context;
 		mAppDir=initAppDir();
 	}

@@ -15,12 +15,7 @@
  */
 package mobi.cangol.mobile.service.status;
 
-import java.util.ArrayList;
-
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.Service;
-import mobi.cangol.mobile.service.ServiceProperty;
-import mobi.cangol.mobile.utils.DeviceInfo;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,21 +26,28 @@ import android.net.NetworkInfo.State;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
+import java.util.ArrayList;
+
+import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.Service;
+import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.utils.DeviceInfo;
+
 /**
  * @author Cangol
  */
 @Service("StatusService")
-public class StatusServiceImpl implements StatusService {
+ class StatusServiceImpl implements StatusService {
 	private final static String TAG = "StatusService";
 	private boolean debug = false;
-	private Context mContext = null;
+	private Application mContext = null;
 	private TelephonyManager mTelephonyManager;
 	private boolean mCallingState = true;
 	protected ArrayList<StatusListener> listeners = new ArrayList<StatusListener>();
 	private ServiceProperty mServiceProperty = null;
 
 	@Override
-	public void onCreate(Context context) {
+	public void onCreate(Application context) {
 		mContext = context;
 
 		IntentFilter intentFileter1 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");

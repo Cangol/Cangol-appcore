@@ -15,31 +15,30 @@
  */
 package mobi.cangol.mobile.service.download;
 
+import android.app.Application;
+
 import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
-import android.content.Context;
 /**
  * @author Cangol
  */
 @Service("DownloadManager")
-public class DownloadManagerImpl implements DownloadManager{
+ class DownloadManagerImpl implements DownloadManager{
 	private final static String TAG="DownloadManager";
 	protected static final int DEFAULT_MAX_THREAD = 2;
 	protected boolean debug=false;
 	protected ConcurrentHashMap<String, DownloadExecutor<?>> executorMap = null;
-	private Context mContext = null;
+	private Application mContext = null;
 	private ServiceProperty mServiceProperty;
 	private DownloadManagerImpl() {
 		
 	}
-	public void  onCreate(Context context){
+	public void  onCreate(Application context){
 		this.mContext=context;
 	}
 	@Override

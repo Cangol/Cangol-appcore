@@ -15,6 +15,15 @@
  */
 package mobi.cangol.mobile.service.cache;
 
+import android.annotation.TargetApi;
+import android.app.Application;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,20 +38,13 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.Object2FileUtils;
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
-import android.text.TextUtils;
 
 /**
  * @author Cangol
  */
 
 @Service("CacheManager")
-public class CacheManagerImpl implements CacheManager {
+ class CacheManagerImpl implements CacheManager {
 	private static final String TAG = "CacheManager";
 	private static final int DISK_CACHE_INDEX = 0;
 	private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 20MB
@@ -54,9 +56,9 @@ public class CacheManagerImpl implements CacheManager {
 	private File mDiskCacheDir;
 	private long mDiskCacheSize;
 	private ServiceProperty mServiceProperty;
-	private Context mContext;
+	private Application mContext;
 	@Override
-	public void onCreate(Context context) {
+	public void onCreate(Application context) {
 		this.mContext = context;
 	}
 	@Override

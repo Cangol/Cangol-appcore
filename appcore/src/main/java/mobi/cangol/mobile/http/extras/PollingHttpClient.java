@@ -47,12 +47,14 @@ import org.apache.http.protocol.SyncBasicHttpContext;
 import android.content.Context;
 import android.util.Log;
 
+import mobi.cangol.mobile.service.PoolManager;
+
 public class PollingHttpClient {
     public final static boolean DEBUG=true;
 	public final static  String TAG = "PollingHttpClient";
     private DefaultHttpClient httpClient;
     private final HttpContext httpContext;
-    private ThreadPoolExecutor threadPool;
+    private PoolManager.Pool threadPool;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
     public PollingHttpClient() {
         
@@ -66,7 +68,7 @@ public class PollingHttpClient {
 		HttpClientParams.setRedirecting(params, false);
 		httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
       
-		threadPool = (ThreadPoolExecutor)Executors.newCachedThreadPool();
+		threadPool  = PoolManager.buildPool(TAG,3);;
 
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
     }

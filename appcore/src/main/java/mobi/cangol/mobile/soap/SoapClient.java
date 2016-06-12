@@ -35,6 +35,8 @@ import org.kxml2.kdom.Node;
 import android.content.Context;
 import android.util.Log;
 
+import mobi.cangol.mobile.service.PoolManager;
+
 /**
  *  SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
  * @author Cangol
@@ -43,11 +45,11 @@ public class SoapClient {
 	private static final String TAG = "SoapRequest";
 	private SoapSerializationEnvelope envelope;
 	private HttpTransportSE  ht;
-	private ThreadPoolExecutor threadPool;
+	private PoolManager.Pool threadPool;
 	private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
 	private final static int TIMEOUT=20*1000;
 	public SoapClient() {
-		threadPool = (ThreadPoolExecutor)Executors.newCachedThreadPool();
+		threadPool = PoolManager.buildPool(TAG,3);
 		requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
 		envelope.dotNet = true;
