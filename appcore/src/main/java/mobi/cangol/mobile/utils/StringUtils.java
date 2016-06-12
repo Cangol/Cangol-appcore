@@ -30,7 +30,7 @@ public class StringUtils {
 	 * @param value
 	 * @return
 	 */
-	public static String bytes2String(byte[] value) {
+	public static String byte2String(byte[] value) {
 		return (value == null) ? "" : new String(value);
 	}
 	
@@ -139,71 +139,6 @@ public class StringUtils {
 			return String.format("%02d:%02d", mm, ss);
 		}
 	}
-	/**
-	 * check account valid(email or phone)
-	 * @param str
-	 * @return
-	 */
-	public static boolean checkAccount(String str) {
-		if(checkEmail(str)){
-			return true;
-		}else
-			return checkPhone(str);
-		
-	}
-	
-	/**
-	 * check  phone 
-	 * @param str
-	 * @return
-	 */
-	public static boolean checkPhone(String str) {
-		Pattern p = Pattern.compile("^\\d{3}-?\\d{7}$");
-		Matcher m = p.matcher(str);
-		return m.matches();
-	}
-	/**
-	 * check ZipCode
-	 * @param str
-	 * @return
-	 */
-	public static boolean checkZipCode(String str) {
-		Pattern p = Pattern.compile("^\\d{5}$");
-		Matcher m = p.matcher(str);
-		return m.matches();
-	}
-	/**
-	 * check nick valid
-	 * @param str
-	 * @return
-	 */
-	public static boolean checkNickName(String str) {
-		Pattern p = Pattern.compile("^[\\w+$\u4e00-\u9fa5]+$");
-		Matcher m = p.matcher(str);
-		return m.matches();
-	}
-	
-	/**
-	 * check password 6-14 word
-	 * @param str
-	 * @return
-	 */
-	public static boolean checkPassword(String str) {
-		Pattern p = Pattern.compile("^[\\w+$]{6,14}+$");
-		Matcher m = p.matcher(str);
-		return m.matches();
-	}
-	
-	/**
-	 * check email
-	 * @param emailStr
-	 * @return
-	 */
-	public static boolean checkEmail(String emailStr) {
-		Pattern p = Pattern.compile("\\w+(\\.\\w+)*@\\w+(\\.\\w+)+");
-    	Matcher m = p.matcher(emailStr);
-    	return m.matches();
-	}
 	
 	/**
 	 * MD5 s
@@ -234,16 +169,16 @@ public class StringUtils {
 	}
 	/**
 	 * MD5 byte[]
-	 * @param strTemp
+	 * @param bytes
 	 * @return
 	 */
-	public  static String md5(byte[] strTemp) {
+	public  static String md5(byte[] bytes) {
 		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 				'a', 'b', 'c', 'd', 'e', 'f' };
 		try {
 			//MessageDigest md5
 			MessageDigest mdTemp = MessageDigest.getInstance("MD5");
-			mdTemp.update(strTemp);
+			mdTemp.update(bytes);
 			byte[] md = mdTemp.digest();
 			int j = md.length;
 			char str[] = new char[j * 2];
