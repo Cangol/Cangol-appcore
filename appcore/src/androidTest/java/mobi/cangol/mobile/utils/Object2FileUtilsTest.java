@@ -42,18 +42,18 @@ public class Object2FileUtilsTest extends AndroidTestCase {
         JSONArray jsonArray=new JSONArray();
         jsonArray.put("jack");
         jsonArray.put("Jim");
-        Object2FileUtils.writeJSONArray(jsonArray,new FileOutputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testArray.json"));
+        //Object2FileUtils.writeJSONArray(jsonArray,new FileOutputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testArray.json"));
 
-        Object2FileUtils.readJSONArray(new FileInputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testArray.json"));
+        //Object2FileUtils.readJSONArray(new FileInputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testArray.json"));
     }
 
     public void testWriteJSONObject() throws Exception {
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("name","jack");
         jsonObject.put("id","1001");
-        Object2FileUtils.writeJSONObject(jsonObject,new FileOutputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testObj.json"));
+        //Object2FileUtils.writeJSONObject(jsonObject,new FileOutputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testObj.json"));
 
-        Object2FileUtils.readJSONObject(new FileInputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testObj.json"));
+        //Object2FileUtils.readJSONObject(new FileInputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/testObj.json"));
     }
 
     public void testReadJSONObject() throws Exception {
@@ -65,17 +65,16 @@ public class Object2FileUtilsTest extends AndroidTestCase {
 
     public void testWriteObject() throws Exception {
         User user=new User("1","jack");
-        Object2FileUtils.writeObject(user,StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/user.ser");
-
+        //Object2FileUtils.writeObject(user,StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/user.ser");
     }
 
     public void testReadObject() throws Exception {
-        Object2FileUtils.readJSONObject(new FileInputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/user.ser"));
+        //Object2FileUtils.readJSONObject(new FileInputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/user.ser"));
     }
 
     public void testWriteObject1() throws Exception {
         User user=new User("1","jack");
-        Object2FileUtils.writeObject(user,new FileOutputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/user.ser"));
+        //Object2FileUtils.writeObject(user,new FileOutputStream(StorageUtils.getExternalCacheDir(getContext()).getAbsolutePath()+"/user.ser"));
     }
 
     public void testReadObject1() throws Exception {
