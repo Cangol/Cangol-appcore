@@ -18,9 +18,11 @@ package mobi.cangol.mobile.service;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 /**
  * TheadPool manager by name
@@ -29,15 +31,20 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class PoolManager {
 	private static ConcurrentHashMap<String,Pool> poolMap=null;
-	private static  final int DEFAULT_MAX=2;
+	private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
+	private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
+	private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
+	private static final int KEEP_ALIVE = 1;
 	private static ExecutorService generateExecutorService(final String name,int max){
-		ExecutorService executorService= Executors.newFixedThreadPool(max,new ThreadFactory() {
-	        private final AtomicInteger mCount = new AtomicInteger(1);
 
-	        public Thread newThread(final Runnable r) {
-	            return new Thread(r, name+"$WorkThread #" + mCount.getAndIncrement());
-	        }
-	    });
+		ExecutorService executorService=new ThreadPoolExecutor(CORE_POOL_SIZE, max, KEEP_ALIVE,
+				TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), new ThreadFactory() {
+			private final AtomicInteger mCount = new AtomicInteger(1);
+
+			public Thread newThread(final Runnable r) {
+				return new Thread(r, name+"$WorkThread #" + mCount.getAndIncrement());
+			}
+		});
 	    return executorService;
 	}
 	/**
@@ -48,7 +55,7 @@ public class PoolManager {
 	public  static Pool getPool(String name){
 		if(null==poolMap)poolMap=new ConcurrentHashMap<String,Pool>();
 		if(!poolMap.containsKey(name)){
-			poolMap.put(name, new Pool(name,DEFAULT_MAX));
+			poolMap.put(name, new Pool(name,MAXIMUM_POOL_SIZE));
 		}
 		return poolMap.get(name);
 	}

@@ -16,6 +16,7 @@
 package mobi.cangol.mobile.db;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 
@@ -24,40 +25,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import mobi.cangol.mobile.service.PoolManager;
 
 public abstract class DbTask<Params, Result> {
 
 	private static final String TAG = "DbTask";
 
-	private static final int CORE_POOL_SIZE = 1;
-	private static final int MAXIMUM_POOL_SIZE = 10;
-	private static final int KEEP_ALIVE = 10;
 
 	private static final InternalHandler sHandler = new InternalHandler();
-	
-	private static final BlockingQueue<Runnable> sWorkQueue = new LinkedBlockingQueue<Runnable>(
-			MAXIMUM_POOL_SIZE);
 
-	private static final ThreadFactory sThreadFactory = new ThreadFactory() {
-		private final AtomicInteger mCount = new AtomicInteger(1);
+	private static final ExecutorService sExecutor = PoolManager.buildPool(TAG,5).getExecutorService();
 
-		public Thread newThread(Runnable r) {
-			return new Thread(r, "DbTask #" + mCount.getAndIncrement());
-		}
-	};
-
-	private static final ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(
-			CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS,
-			sWorkQueue, sThreadFactory);
-	
     private static final int MESSAGE_POST_RESULT = 0x1;
     private static final int MESSAGE_POST_CANCEL = 0x3;
     
@@ -143,7 +125,9 @@ public abstract class DbTask<Params, Result> {
 	}
 
 	private static class InternalHandler extends Handler {
-		
+		public InternalHandler() {
+			super(Looper.getMainLooper());
+		}
 		@Override
 		public void handleMessage(Message msg) {
 			 AsyncTaskResult result = (AsyncTaskResult) msg.obj;

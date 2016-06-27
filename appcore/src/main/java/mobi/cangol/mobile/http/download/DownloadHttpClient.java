@@ -66,7 +66,7 @@ public class DownloadHttpClient {
         HttpClientParams.setRedirecting(params, true);
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
         httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-		threadPool  = PoolManager.buildPool(TAG,3);
+		threadPool  = PoolManager.buildPool(TAG,5);
 
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
