@@ -132,8 +132,8 @@ import mobi.cangol.mobile.utils.AppUtils;
 				if (notification)downloadNotification.createNotification();
 			}
 			@Override
-			public void onStart(long from) {
-				super.onStart(from);
+			public void onStart(long start,long length) {
+				super.onStart(start,length);
 			}
 			@Override
 			public void onStop(long end) {

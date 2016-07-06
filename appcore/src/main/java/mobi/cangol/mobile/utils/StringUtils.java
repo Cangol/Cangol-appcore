@@ -95,7 +95,7 @@ public class StringUtils {
 	 * @param value
 	 * @return
 	 */
-	public static String formatSpeed(int value) {
+	public static String formatSpeed(long value) {
 		return formatSize(value) + "/s";
 	}
 	/**

@@ -40,7 +40,7 @@ public interface DownloadManager extends AppService {
 	 * 
 	 * @param name
 	 * @param clazz
-	 * @param max
+	 * @param max 同时之心的下载数
 	 */
 	void registerExecutor(String name, Class<? extends DownloadExecutor<?>> clazz, int max);
 

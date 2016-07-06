@@ -15,13 +15,15 @@
  */
 package mobi.cangol.mobile.service.download;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import mobi.cangol.mobile.logging.Log;
 
 
 
-public class DownloadResource {
+public class DownloadResource implements Serializable{
 	//下载的URL
 	protected String url;
 	//下载的文件名
@@ -52,13 +54,16 @@ public class DownloadResource {
 	protected transient DownloadTask downloadTask;
 
 	protected transient HashMap<Object,BaseViewHolder> viewHolders=new HashMap<Object,BaseViewHolder>();
-	
-	public DownloadResource() {
+
+	public DownloadResource(){
 	}
-	
-	public DownloadResource(String url, String fileName) {
+	public DownloadResource(String localPath,String url, String fileName) {
 		this.url = url;
 		this.fileName = fileName;
+		this.key=url;
+		this.localPath=localPath;
+		this.sourceFile=localPath+File.separator+fileName+Download.SUFFIX_SOURCE;
+		this.confFile=localPath+File.separator+fileName+Download.SUFFIX_CONFIG;
 	}
 	public BaseViewHolder getViewHolder(Object obj) {
 		return viewHolders.get(obj);

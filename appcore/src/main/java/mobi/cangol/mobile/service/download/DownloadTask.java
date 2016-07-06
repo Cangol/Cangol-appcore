@@ -39,8 +39,8 @@ public class DownloadTask {
 		}
 		
 		@Override
-		public void onStart(long length) {
-			super.onStart(length);
+		public void onStart(long start,long length) {
+			super.onStart(start,length);
 			downloadResource.setStatus(Download.STATUS_START);
 			downloadResource.setFileLength(length);
 			sendDownloadMessage(Download.TYPE_DOWNLOAD_START,downloadResource);

@@ -18,6 +18,7 @@
 package mobi.cangol.mobile.parser;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 /**
@@ -125,6 +126,9 @@ public class Converter {
         } catch (NumberFormatException e) {
             return defaultValue;
         }
+    }
+    protected static boolean isTransient(Class clz) {
+        return Modifier.isTransient(clz.getModifiers());
     }
 
     /**

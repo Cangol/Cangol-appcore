@@ -3,34 +3,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="add" />
+   <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal" >
+      <TextView
+          android:layout_width="100dp"
+          android:layout_height="wrap_content"
+          android:text="QQ"/>
+   <Button
+       android:id="@+id/button11"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="add" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start" />
+   <Button
+       android:id="@+id/button12"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="start" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="stop" />
+   <Button
+       android:id="@+id/button13"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="stop" />
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="remove" />
+   <Button
+       android:id="@+id/button14"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="remove" />
+
+   </LinearLayout>
+   <TextView
+       android:id="@+id/textView1"
+       android:layout_width="match_parent"
+       android:layout_height="200dp"
+       android:scrollbars="vertical" />
 
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical" />
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal" >
+      <TextView
+          android:layout_width="100dp"
+          android:layout_height="wrap_content"
+          android:text="Wechat"/>
+      <Button
+          android:id="@+id/button21"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="add" />
+
+      <Button
+          android:id="@+id/button22"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="start" />
+
+      <Button
+          android:id="@+id/button23"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="stop" />
+
+      <Button
+          android:id="@+id/button24"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="remove" />
+
+   </LinearLayout>
+   <TextView
+       android:id="@+id/textView2"
+       android:layout_width="match_parent"
+       android:layout_height="200dp"
+       android:scrollbars="vertical" />
 </LinearLayout>

@@ -56,7 +56,7 @@ public class JsonUtils extends Converter{
         try{
             for (Field field : fields) {
                 field.setAccessible(true);
-                if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
+                if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 				String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
@@ -190,7 +190,7 @@ public class JsonUtils extends Converter{
 			String filedName=null;
 			for (Field field : fields) {
 				field.setAccessible(true);
-				if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers()))continue;
+				if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 				filedName = getFieldName(field, useAnnotation);
 				if (!List.class.isAssignableFrom(field.getType())) {
 					setField(t,field,filedName,jsonObject,false);

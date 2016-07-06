@@ -17,13 +17,18 @@ package mobi.cangol.mobile.service.download;
 
 import android.app.Application;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
+import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.service.conf.ConfigService;
+
 /**
  * @author Cangol
  */
@@ -35,11 +40,11 @@ import mobi.cangol.mobile.service.ServiceProperty;
 	protected ConcurrentHashMap<String, DownloadExecutor<?>> executorMap = null;
 	private Application mContext = null;
 	private ServiceProperty mServiceProperty;
-	private DownloadManagerImpl() {
-		
-	}
+	private ConfigService mConfigService;
 	public void  onCreate(Application context){
 		this.mContext=context;
+		mConfigService=(ConfigService) ((CoreApplication) mContext).getAppService(AppService.CONFIG_SERVICE);
+
 	}
 	@Override
 	public void init(ServiceProperty serviceProperty) {
@@ -48,7 +53,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 			executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
 		}
 	}
-	
+	@Override
 	public  synchronized DownloadExecutor<?> getDownloadExecutor(String name) {
 		DownloadExecutor<?> downloadExecutor = null;
 		if (executorMap == null) {
@@ -61,6 +66,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 	}
 	
 	//提前注册各个下载器 减少需要用时再初始化造成的时间消耗（初始化扫描耗时较多）
+	@Override
 	public  void registerExecutor(String name,Class<? extends DownloadExecutor<?>> clazz,int max){
 		DownloadExecutor<?> downloadExecutor=null;
 		if (executorMap == null) {
@@ -69,21 +75,26 @@ import mobi.cangol.mobile.service.ServiceProperty;
 		if (executorMap.containsKey(name)) {
 			downloadExecutor = executorMap.get(name);
 		} else {
-			try {
-				Constructor<? extends DownloadExecutor<?>> c=clazz.getDeclaredConstructor(String.class);
-				c.setAccessible(true);
-				downloadExecutor = c.newInstance(name);
-				downloadExecutor.init();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			downloadExecutor.setContext(mContext);
-			downloadExecutor.setPool(PoolManager.buildPool(name, max));
+			downloadExecutor=createDownloadExecutor(name,clazz,max);
 			executorMap.put(name, downloadExecutor);
 		}
-		
 	}
-	
+	private DownloadExecutor<?> createDownloadExecutor(String name,Class<? extends DownloadExecutor<?>> clazz,int max){
+		DownloadExecutor<?> downloadExecutor=null;
+		try {
+			Constructor<? extends DownloadExecutor<?>> c=clazz.getDeclaredConstructor(String.class);
+			c.setAccessible(true);
+			downloadExecutor = c.newInstance(name);
+			downloadExecutor.setContext(mContext);
+			downloadExecutor.setPool(PoolManager.buildPool(name, max));
+			downloadExecutor.setDownloadDir(new File(mConfigService.getDownloadDir(),name));
+			downloadExecutor.init();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return downloadExecutor;
+	}
+	@Override
 	public  void recoverAllAllDownloadExecutor() {
 		if(null==executorMap)return;
 		Enumeration<DownloadExecutor<?>> en = executorMap.elements();
@@ -93,7 +104,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 			downloadExecutor.recoverAll();
 		}
 	}
-	
+	@Override
 	public  void interruptAllDownloadExecutor() {
 		if(null==executorMap)return;
 		Enumeration<DownloadExecutor<?>> en = executorMap.elements();
@@ -103,7 +114,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 			downloadExecutor.interruptAll();
 		}
 	}
-	
+	@Override
 	public  void onDestroy() {
 		if(null==executorMap)return;
 		Enumeration<DownloadExecutor<?>> en = executorMap.elements();

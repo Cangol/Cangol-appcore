@@ -26,6 +26,7 @@ import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.RandomAccessFile;
 
 public class DownloadResponseHandler {
@@ -53,8 +54,8 @@ public class DownloadResponseHandler {
     public void onWait() {
         if(DEBUG) Log.d(TAG, "onWait...");
     }
-    public void onStart(long length) {
-        if(DEBUG)Log.d(TAG, "onStart length="+length);
+    public void onStart(long start,long length) {
+        if(DEBUG)Log.d(TAG, "onStart start="+start);
     }
     public void onStop(long end) {
         if(DEBUG)Log.d(TAG, "onStop end="+end);
@@ -71,8 +72,8 @@ public class DownloadResponseHandler {
     public void sendWaitMessage() {
         sendMessage(obtainMessage(WAIT_MESSAGE, null));
     }
-    public void sendStartMessage(long length) {
-        sendMessage(obtainMessage(START_MESSAGE, new Object[]{length}));
+    public void sendStartMessage(long start,long length) {
+        sendMessage(obtainMessage(START_MESSAGE, new Object[]{start,length}));
     }
     public void sendStopMessage(long end) {
         sendMessage(obtainMessage(STOP_MESSAGE, new Object[]{end}));
@@ -95,7 +96,7 @@ public class DownloadResponseHandler {
             RandomAccessFile threadfile= new RandomAccessFile(saveFile, "rwd");
             InputStream inputStream = entity.getContent();
             long oldLength=threadfile.length();
-            sendStartMessage(oldLength);
+            sendStartMessage(oldLength,length);
             if(oldLength<length){
                 threadfile.seek(oldLength);
                 byte[] block = new byte[BUFF_SIZE];
@@ -131,6 +132,8 @@ public class DownloadResponseHandler {
             }else{
                 sendFailureMessage(new IOException(),"oldfile error oldLength>length");
             }
+            if(entity!=null)
+                entity.consumeContent();
         } else {
             sendFailureMessage(new IOException(), "StatusCode " + response.getStatusLine().getStatusCode());
         }
@@ -152,7 +155,7 @@ public class DownloadResponseHandler {
                 break;
             case START_MESSAGE:
                 response = (Object[])msg.obj;
-                handleStartMessage(((Long) response[0]).longValue());
+                handleStartMessage(((Long) response[0]).longValue(),((Long) response[1]).longValue());
                 break;
             case WAIT_MESSAGE:
                 handleWaitMessage();
@@ -168,8 +171,8 @@ public class DownloadResponseHandler {
         onWait();
     }
 
-    protected void handleStartMessage(long length) {
-        onStart(length);
+    protected void handleStartMessage(long start,long length) {
+        onStart(start,length);
     }
 
     protected void handleFinishMessage(long end) {

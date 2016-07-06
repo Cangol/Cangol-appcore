@@ -18,6 +18,7 @@ package mobi.cangol.mobile.db;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -42,7 +43,7 @@ public class DatabaseUtils {
 			boolean isFirst=true;
 			for (Field field : fields) {
 				field.setAccessible(true);
-				if(field.isEnumConstant())continue;
+				if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 				if (field.isAnnotationPresent(DatabaseField.class)){
 					
 					if(!isFirst){
@@ -115,7 +116,7 @@ public class DatabaseUtils {
 		String columnName=null;
 		for (Field field : clazz.getDeclaredFields()) {
 			field.setAccessible(true);
-			if(field.isEnumConstant())continue;
+			if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 			if (field.isAnnotationPresent(DatabaseField.class)) {
 				DatabaseField dbField = field.getAnnotation(DatabaseField.class);
 				if(dbField.primaryKey()==true){
@@ -137,7 +138,7 @@ public class DatabaseUtils {
 		Object value=null;
 		for (Field field : obj.getClass().getDeclaredFields()) {
 			field.setAccessible(true);
-			if(field.isEnumConstant())continue;
+			if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 			if (field.isAnnotationPresent(DatabaseField.class)) {
 				DatabaseField dbField = field.getAnnotation(DatabaseField.class);
 				if(dbField.primaryKey()==true){
@@ -176,7 +177,7 @@ public class DatabaseUtils {
 			String columnName=null;
 			for (Field field : fields) {
 				field.setAccessible(true);
-				if(field.isEnumConstant())continue;
+				if(field.isEnumConstant()||Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 				if (field.isAnnotationPresent(DatabaseField.class)) {
 					DatabaseField dbField = field.getAnnotation(DatabaseField.class);
 					columnName="".equals(dbField.value())?field.getName():dbField.value();
@@ -195,7 +196,7 @@ public class DatabaseUtils {
 		String columnName=null;
 		for (Field field : fields) {
 			field.setAccessible(true);
-			if(field.isEnumConstant())continue;
+			if(field.isEnumConstant()|| Modifier.isFinal(field.getModifiers())||Modifier.isTransient(field.getModifiers()))continue;
 			if (field.isAnnotationPresent(DatabaseField.class)) {
 				DatabaseField dbField = field.getAnnotation(DatabaseField.class);
 				columnName="".equals(dbField.value())?field.getName():dbField.value();
