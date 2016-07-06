@@ -38,7 +38,7 @@ public abstract class DbTask<Params, Result> {
 
 	private static final InternalHandler sHandler = new InternalHandler();
 
-	private static final ExecutorService sExecutor = PoolManager.buildPool(TAG,5).getExecutorService();
+	private static final ExecutorService sExecutor = PoolManager.buildPool(TAG,2).getExecutorService();
 
     private static final int MESSAGE_POST_RESULT = 0x1;
     private static final int MESSAGE_POST_CANCEL = 0x3;

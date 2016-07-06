@@ -52,7 +52,7 @@ public class DownloadHttpClient {
     private final static int DEFAULT_RETRYTIMES=10;
     private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-    private final static int DEFAULT_MAX=5;
+    private final static int DEFAULT_MAX=3;
     private PoolManager.Pool threadPool;
     protected DownloadHttpClient(final String name) {
 
@@ -66,7 +66,7 @@ public class DownloadHttpClient {
         HttpClientParams.setRedirecting(params, true);
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
         httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-		threadPool  = PoolManager.buildPool(TAG,5);
+		threadPool  = PoolManager.buildPool(TAG,DEFAULT_MAX);
 
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }

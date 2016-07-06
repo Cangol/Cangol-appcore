@@ -15,6 +15,8 @@
  */
 package mobi.cangol.mobile.service;
 
+import android.os.AsyncTask;
+
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -35,9 +37,9 @@ public class PoolManager {
 	private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
 	private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
 	private static final int KEEP_ALIVE = 1;
-	private static ExecutorService generateExecutorService(final String name,int max){
+	private static ExecutorService generateExecutorService(final String name,int core){
 
-		ExecutorService executorService=new ThreadPoolExecutor(CORE_POOL_SIZE, max, KEEP_ALIVE,
+		ExecutorService executorService=new ThreadPoolExecutor(core, core*2+1, KEEP_ALIVE,
 				TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), new ThreadFactory() {
 			private final AtomicInteger mCount = new AtomicInteger(1);
 
@@ -46,6 +48,17 @@ public class PoolManager {
 			}
 		});
 	    return executorService;
+	}
+	private static ExecutorService generateExecutorService(final String name){
+		ExecutorService executorService=new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+				TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), new ThreadFactory() {
+			private final AtomicInteger mCount = new AtomicInteger(1);
+
+			public Thread newThread(final Runnable r) {
+				return new Thread(r, name+"$WorkThread #" + mCount.getAndIncrement());
+			}
+		});
+		return executorService;
 	}
 	/**
 	 * 获取一个线程池
@@ -62,10 +75,10 @@ public class PoolManager {
 	/**
 	 * 创建一个线程池
 	 */
-	public  static Pool buildPool(String name,int max){
+	public  static Pool buildPool(String name,int core){
 		if(null==poolMap)poolMap=new ConcurrentHashMap<String,Pool>();
 		if(!poolMap.containsKey(name)){
-			poolMap.put(name, new Pool(name,max));
+			poolMap.put(name, new Pool(name,core));
 		}
 		return poolMap.get(name);
 	}
@@ -84,10 +97,17 @@ public class PoolManager {
 		private ExecutorService executorService =null;
 		private boolean isThreadPoolClose= false;
 		private String name=null;
-		Pool(String name,int max){
+		Pool(String name,int core){
 			this.name=name;
-			this.executorService=PoolManager.generateExecutorService(name,max);
+			this.executorService=PoolManager.generateExecutorService(name,core);
 			
+			this.futureTasks=new ArrayList<Future<?>>();
+			this.isThreadPoolClose=false;
+		}
+		Pool(String name){
+			this.name=name;
+			this.executorService=PoolManager.generateExecutorService(name);
+
 			this.futureTasks=new ArrayList<Future<?>>();
 			this.isThreadPoolClose=false;
 		}
