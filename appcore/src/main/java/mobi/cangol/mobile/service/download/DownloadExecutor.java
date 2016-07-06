@@ -337,15 +337,15 @@ public abstract class DownloadExecutor<T> {
 	private void _handleMessage(Message msg) {
 		DownloadResource resource=(DownloadResource) msg.obj;
 		switch (msg.what) {
-			case Download.TYPE_DOWNLOAD_START:
+			case Download.ACTION_DOWNLOAD_START:
 				if(null!=mDownloadEvent)mDownloadEvent.onStart(resource);
 				writeResource(resource);
-			case Download.TYPE_DOWNLOAD_STOP:
+			case Download.ACTION_DOWNLOAD_STOP:
 				writeResource(resource);
-			case Download.TYPE_DOWNLOAD_FINISH:
+			case Download.ACTION_DOWNLOAD_FINISH:
 				if(null!=mDownloadEvent)mDownloadEvent.onFinish(resource);
 				writeResource(resource);
-			case Download.TYPE_DOWNLOAD_FAILED:
+			case Download.ACTION_DOWNLOAD_FAILED:
 				if(null!=mDownloadEvent)mDownloadEvent.onFailure(resource);
 				writeResource(resource);
 			default:

@@ -70,7 +70,7 @@ public class DownloadNotification {
     public void createNotification() {
         id = new Random().nextInt(10000);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentTitle(titleText)
                 .setContentText("")
@@ -96,12 +96,11 @@ public class DownloadNotification {
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setSmallIcon(android.R.drawable.stat_sys_download);
-
         notificationManager.notify(id, builder.build());
     }
 
     public void finishNotification() {
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(titleText)

@@ -43,14 +43,14 @@ public class DownloadTask {
 			super.onStart(start,length);
 			downloadResource.setStatus(Download.STATUS_START);
 			downloadResource.setFileLength(length);
-			sendDownloadMessage(Download.TYPE_DOWNLOAD_START,downloadResource);
+			sendDownloadMessage(Download.ACTION_DOWNLOAD_START,downloadResource);
 		}
 
 		@Override
 		public void onStop(long end) {
 			super.onStop(end);
 			downloadResource.setCompleteSize(end);
-			sendDownloadMessage(Download.TYPE_DOWNLOAD_STOP,downloadResource);
+			sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
 			if(downloadNotification!=null)downloadNotification.cancelNotification();
 			
 		}
@@ -60,7 +60,7 @@ public class DownloadTask {
 			super.onFinish(end);
 			downloadResource.setStatus(Download.STATUS_FINISH);
 			downloadResource.setCompleteSize(end);
-			sendDownloadMessage(Download.TYPE_DOWNLOAD_FINISH,downloadResource);
+			sendDownloadMessage(Download.ACTION_DOWNLOAD_FINISH,downloadResource);
 			if(downloadNotification!=null)downloadNotification.finishNotification();
 		}
 
@@ -70,7 +70,7 @@ public class DownloadTask {
 			downloadResource.setSpeed(speed);
 			downloadResource.setProgress(progress);
 			downloadResource.setCompleteSize(end);
-			sendDownloadMessage(Download.TYPE_DOWNLOAD_UPDATE,downloadResource);
+			sendDownloadMessage(Download.ACTION_DOWNLOAD_UPDATE,downloadResource);
 			if(downloadNotification!=null)downloadNotification.updateNotification(progress,speed);//speed 转换
 		}
 		
@@ -79,7 +79,7 @@ public class DownloadTask {
 			super.onFailure(error, content);
 			downloadResource.setException(content);
 			downloadResource.setStatus(Download.STATUS_FAILURE);
-			sendDownloadMessage(Download.TYPE_DOWNLOAD_FAILED,downloadResource);
+			sendDownloadMessage(Download.ACTION_DOWNLOAD_FAILED,downloadResource);
 			if(downloadNotification!=null)downloadNotification.failureNotification();
 		}
 		
@@ -107,35 +107,38 @@ public class DownloadTask {
 	}
 
 	protected void stop(){
-		future.cancel(true);
+		if(future!=null&&!future.isCancelled())
 		future=null;
 		downloadResource.setStatus(Download.STATUS_STOP);
-		sendDownloadMessage(Download.TYPE_DOWNLOAD_STOP,downloadResource);
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
 	}
 	public void interrupt() {
-		future.cancel(true);
+		if(future!=null&&!future.isCancelled())
 		future=null;
 		downloadResource.setStatus(Download.STATUS_RERUN);
-		sendDownloadMessage(Download.TYPE_DOWNLOAD_STOP,downloadResource);
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
 		
 	}
 	protected void restart(){
+		if(future!=null&&!future.isCancelled())
 		future.cancel(true);
 		downloadResource.reset();
 		start();
-		sendDownloadMessage(Download.TYPE_DOWNLOAD_CONTINUE,downloadResource);
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
 	}
 	
 	public void resume() {
 		downloadResource.setStatus(Download.STATUS_WAIT);
 		future=exec(downloadResource,responseHandler);
 		pool.getFutureTasks().add(future);
-		sendDownloadMessage(Download.TYPE_DOWNLOAD_CONTINUE,downloadResource);
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
 	}
 	
 	protected void remove() {
-		future.cancel(true);
-		sendDownloadMessage(Download.TYPE_DOWNLOAD_DELETE,downloadResource);
+		if(future!=null&&!future.isCancelled())
+			future.cancel(true);
+		future=null;
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_DELETE,downloadResource);
 		
 	}
 	

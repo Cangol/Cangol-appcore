@@ -34,22 +34,22 @@ public interface Download {
 	public static final int STATUS_FAILURE 	= 5;
 	
 	
-	public final static int TYPE_DOWNLOAD_START= 0;
-	
-	public final static int TYPE_DOWNLOAD_FINISH= 1;
-	
-	public final static int TYPE_DOWNLOAD_FAILED = 2;
-	
-	public final static int TYPE_DOWNLOAD_UPDATE = 3;
-	
-	public final static int TYPE_DOWNLOAD_DELETE = 5;
-	
-	//public final static int TYPE_DOWNLOAD_UPDATEFILE = 6;
-	
-	public final static int TYPE_DOWNLOAD_STOP = 7;
-	
-	//public final static int TYPE_DOWNLOAD_INSTALL = 8;
-	
-	public final static int TYPE_DOWNLOAD_CONTINUE = 9;
-	
+	public final static int ACTION_DOWNLOAD_START = 0;
+
+	public final static int ACTION_DOWNLOAD_FINISH = 1;
+
+	public final static int ACTION_DOWNLOAD_FAILED = 2;
+
+	public final static int ACTION_DOWNLOAD_UPDATE = 3;
+
+	public final static int ACTION_DOWNLOAD_DELETE = 5;
+
+	//public final static int ACTION_DOWNLOAD_UPDATEFILE = 6;
+
+	public final static int ACTION_DOWNLOAD_STOP = 7;
+
+	//public final static int ACTION_DOWNLOAD_INSTALL = 8;
+
+	public final static int ACTION_DOWNLOAD_CONTINUE = 9;
+
 }
