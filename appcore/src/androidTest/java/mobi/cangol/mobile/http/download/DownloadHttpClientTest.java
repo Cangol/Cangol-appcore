@@ -37,8 +37,8 @@ public class DownloadHttpClientTest extends AndroidTestCase {
             }
 
             @Override
-            public void onStart(long length) {
-                super.onStart(length);
+            public void onStart(long start,long length) {
+                super.onStart(start,length);
             }
 
             @Override
