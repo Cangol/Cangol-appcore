@@ -150,32 +150,6 @@ public abstract class DownloadExecutor<T> {
 		}
 		return null;
 	}
-
-	/**
-	 * 添加下载资源到队列
-	 * @param resource
-     */
-	public void add(DownloadResource resource) {
-		if(resource==null){
-			Log.e(TAG,"resource isn't null");
-			return;
-		}
-		if(mDownloadRes.contains(resource)){
-			Log.e(TAG,"resource is exist!");
-			return;
-		}else{
-			DownloadTask downloadTask=new DownloadTask(resource,mPool,mHandler);
-			resource.setDownloadTask(downloadTask);
-			downloadTask.setDownloadNotification(notification(mContext,resource));
-			Log.d(TAG,"add and start");
-			downloadTask.start();
-			synchronized(mDownloadRes){
-				mDownloadRes.add(resource);
-			}
-		}
-		
-	}
-
 	/**
 	 * 开始下载
 	 * @param resource
@@ -192,9 +166,16 @@ public abstract class DownloadExecutor<T> {
 				resource.setDownloadTask(downloadTask);
 				downloadTask.setDownloadNotification(notification(mContext,resource));
 			}
-			downloadTask.start();
+			if(!downloadTask.isRunning())
+				downloadTask.start();
 		}else{
-			Log.d(TAG,"resource isn't exist!,please add");
+			DownloadTask downloadTask=new DownloadTask(resource,mPool,mHandler);
+			resource.setDownloadTask(downloadTask);
+			downloadTask.setDownloadNotification(notification(mContext,resource));
+			downloadTask.start();
+			synchronized(mDownloadRes){
+				mDownloadRes.add(resource);
+			}
 		}
 	}
 
@@ -209,7 +190,10 @@ public abstract class DownloadExecutor<T> {
 		}
 		if(mDownloadRes.contains(resource)){
 			DownloadTask downloadTask=resource.getDownloadTask();
-			downloadTask.stop();
+			if(downloadTask.isRunning())
+				downloadTask.stop();
+		}else{
+			Log.e(TAG,"resource isn't exist");
 		}
 	}
 	/**
@@ -240,8 +224,28 @@ public abstract class DownloadExecutor<T> {
 			downloadTask.restart();
 		}
 	}
+
 	/**
-	 * 移除下载
+	 * 添加下载任务
+	 * @param resource
+     */
+	public void add(DownloadResource resource) {
+		if(resource==null){
+			Log.e(TAG,"resource isn't null");
+			return;
+		}
+		if(!mDownloadRes.contains(resource)){
+			DownloadTask downloadTask=new DownloadTask(resource,mPool,mHandler);
+			resource.setDownloadTask(downloadTask);
+			downloadTask.setDownloadNotification(notification(mContext,resource));
+			downloadTask.start();
+			synchronized(mDownloadRes){
+				mDownloadRes.add(resource);
+			}
+		}
+	}
+	/**
+	 * 移除下载任务
 	 * @param resource
 	 */
 	public void remove(DownloadResource resource) {
@@ -254,6 +258,8 @@ public abstract class DownloadExecutor<T> {
 				DownloadTask downloadTask=resource.getDownloadTask();
 				downloadTask.remove();
 				mDownloadRes.remove(resource);
+			}else{
+				Log.e(TAG,"resource isn't exist");
 			}
 		}
 	}

@@ -30,6 +30,7 @@ public class DownloadTask {
 	private DownloadHttpClient downloadHttpClient;
 	private Future<?> future;
 	private Handler handler;
+	private boolean isRunning;
 	private DownloadNotification downloadNotification;
 	private DownloadResponseHandler responseHandler=new DownloadResponseHandler(){
 		@Override
@@ -104,22 +105,7 @@ public class DownloadTask {
 		downloadResource.setStatus(Download.STATUS_WAIT);
 		future=exec(downloadResource,responseHandler);
 		pool.getFutureTasks().add(future);
-	}
-
-	protected void stop(){
-		if(future!=null&&!future.isCancelled())
-			future.cancel(true);
-		future=null;
-		downloadResource.setStatus(Download.STATUS_STOP);
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
-	}
-	public void interrupt() {
-		if(future!=null&&!future.isCancelled())
-			future.cancel(true);
-		future=null;
-		downloadResource.setStatus(Download.STATUS_RERUN);
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
-		
+		isRunning=true;
 	}
 	protected void restart(){
 		if(future!=null&&!future.isCancelled())
@@ -128,23 +114,44 @@ public class DownloadTask {
 		start();
 		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
 	}
-	
+
 	public void resume() {
 		downloadResource.setStatus(Download.STATUS_WAIT);
 		future=exec(downloadResource,responseHandler);
 		pool.getFutureTasks().add(future);
 		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
+		isRunning=true;
 	}
-	
+
+	protected void stop(){
+		if(future!=null&&!future.isCancelled())
+			future.cancel(true);
+		future=null;
+		downloadResource.setStatus(Download.STATUS_STOP);
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
+		isRunning=false;
+	}
+	public void interrupt() {
+		if(future!=null&&!future.isCancelled())
+			future.cancel(true);
+		future=null;
+		downloadResource.setStatus(Download.STATUS_RERUN);
+		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
+		isRunning=false;
+	}
 	protected void remove() {
 		if(future!=null&&!future.isCancelled())
 			future.cancel(true);
 		future=null;
 		sendDownloadMessage(Download.ACTION_DOWNLOAD_DELETE,downloadResource);
-		
+		isRunning=false;
 	}
-	
-	public void sendDownloadMessage(int what,DownloadResource obj){
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void sendDownloadMessage(int what, DownloadResource obj){
 		  Message msg =handler.obtainMessage(what);
 		  msg.obj = obj;
 		  msg.sendToTarget();
