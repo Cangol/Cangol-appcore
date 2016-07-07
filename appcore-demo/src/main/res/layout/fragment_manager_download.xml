@@ -8,7 +8,7 @@
                  android:layout_height="wrap_content"
                  android:orientation="horizontal" >
       <TextView
-          android:layout_width="100dp"
+          android:layout_width="60dp"
           android:layout_height="wrap_content"
           android:text="QQ"/>
    <Button
@@ -48,7 +48,7 @@
        android:layout_height="wrap_content"
        android:orientation="horizontal" >
       <TextView
-          android:layout_width="100dp"
+          android:layout_width="60dp"
           android:layout_height="wrap_content"
           android:text="Wechat"/>
       <Button

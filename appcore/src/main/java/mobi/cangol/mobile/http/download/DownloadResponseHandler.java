@@ -39,7 +39,7 @@ public class DownloadResponseHandler {
     protected static final int FAILURE_MESSAGE = 4;
     protected static final int FINISH_MESSAGE = 5;
 
-    private final int BUFF_SIZE=1024;
+    private final int BUFF_SIZE=8192;
     private Handler handler;
     public DownloadResponseHandler() {
         if(Looper.myLooper() != null) {
@@ -107,7 +107,7 @@ public class DownloadResponseHandler {
                     threadfile.write(block, 0, readCount);
                     oldLength += readCount;
                     startLength+=readCount;
-                    if((System.currentTimeMillis()-starTime)>1000L) {
+                    if((System.currentTimeMillis()-starTime)>500L) {
                         int progress=(int) (oldLength*1.0f/length*100);
                         int speed=(int) (startLength*1000.0f/(System.currentTimeMillis()-starTime));
                         sendProgressMessage(oldLength,progress,speed);
@@ -117,18 +117,18 @@ public class DownloadResponseHandler {
                 }
                 if(threadfile!=null)threadfile.close();
                 if(Thread.currentThread().isInterrupted()) {
-                    sendStopMessage(length);
+                    sendStopMessage(oldLength);
                 }else{
                     if(oldLength==length){
                         sendProgressMessage(oldLength,100,0);
                         sendFinishMessage(length);
                     }else{
-                        sendFinishMessage(length);
+                        sendFinishMessage(oldLength);
                     }
                 }
             }else if(oldLength==length){
                 sendProgressMessage(oldLength,100,0);
-                sendFinishMessage(threadfile.length());
+                sendFinishMessage(oldLength);
             }else{
                 sendFailureMessage(new IOException(),"oldfile error oldLength>length");
             }
