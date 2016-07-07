@@ -108,12 +108,14 @@ public class DownloadTask {
 
 	protected void stop(){
 		if(future!=null&&!future.isCancelled())
+			future.cancel(true);
 		future=null;
 		downloadResource.setStatus(Download.STATUS_STOP);
 		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
 	}
 	public void interrupt() {
 		if(future!=null&&!future.isCancelled())
+			future.cancel(true);
 		future=null;
 		downloadResource.setStatus(Download.STATUS_RERUN);
 		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
@@ -121,7 +123,7 @@ public class DownloadTask {
 	}
 	protected void restart(){
 		if(future!=null&&!future.isCancelled())
-		future.cancel(true);
+			future.cancel(true);
 		downloadResource.reset();
 		start();
 		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
