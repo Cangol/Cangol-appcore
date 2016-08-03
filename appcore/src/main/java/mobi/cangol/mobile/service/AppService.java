@@ -61,6 +61,11 @@ public interface AppService {
 	//public final static String PLUGIN_MANAGER = "PluginManager";
 
 	/**
+	 * ObserverManager
+	 */
+	public final static String OBSERVER_MANAGER = "ObserverManager";
+
+	/**
 	 * 当创建时
 	 * 
 	 * @param context

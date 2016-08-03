@@ -80,6 +80,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.status.StatusServiceImpl"));
 			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl"));
 			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.plugin.PluginManagerImpl"));
+			classList.add(ClassUtils.loadClass(mContext,"mobi.cangol.mobile.service.event.ObserverManagerImpl"));
         }
         Log.d(TAG,"classList size="+classList.size());
         for (int i = 0; i < classList.size(); i++) {
