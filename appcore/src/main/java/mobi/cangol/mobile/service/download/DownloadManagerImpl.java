@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
@@ -94,14 +95,16 @@ class DownloadManagerImpl implements DownloadManager {
             downloadExecutor.setDownloadDir(new File(mConfigService.getDownloadDir(), name));
             downloadExecutor.init();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
         return downloadExecutor;
     }
 
     @Override
     public void recoverAllAllDownloadExecutor() {
-        if (null == executorMap) return;
+        if (null == executorMap) {
+            return;
+        }
         Enumeration<DownloadExecutor<?>> en = executorMap.elements();
         DownloadExecutor<?> downloadExecutor = null;
         while (en.hasMoreElements()) {
@@ -112,7 +115,9 @@ class DownloadManagerImpl implements DownloadManager {
 
     @Override
     public void interruptAllDownloadExecutor() {
-        if (null == executorMap) return;
+        if (null == executorMap) {
+            return;
+        }
         Enumeration<DownloadExecutor<?>> en = executorMap.elements();
         DownloadExecutor<?> downloadExecutor = null;
         while (en.hasMoreElements()) {
@@ -123,7 +128,9 @@ class DownloadManagerImpl implements DownloadManager {
 
     @Override
     public void onDestroy() {
-        if (null == executorMap) return;
+        if (null == executorMap) {
+            return;
+        }
         Enumeration<DownloadExecutor<?>> en = executorMap.elements();
         while (en.hasMoreElements()) {
             en.nextElement().close();

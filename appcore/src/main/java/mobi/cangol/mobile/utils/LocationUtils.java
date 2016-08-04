@@ -89,7 +89,7 @@ public class LocationUtils {
             }
             return response;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
             return null;
         } finally {
             httpClient.close();
@@ -185,7 +185,7 @@ public class LocationUtils {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 String response = EntityUtils.toString(httpEntity, "UTF-8");
                 int start = "renderReverse&&renderReverse(".length();
-                int end = response.lastIndexOf(")");
+                int end = response.lastIndexOf(')');
                 JSONObject json = new JSONObject(response.substring(start, end));
                 address = json.getJSONObject("result").getString("formatted_address");
             } else {
@@ -193,10 +193,10 @@ public class LocationUtils {
             }
             return address;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
             return null;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
             return null;
         } finally {
             httpClient.close();
@@ -230,10 +230,10 @@ public class LocationUtils {
             }
             return address;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
             return null;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
             return null;
         } finally {
             httpClient.close();

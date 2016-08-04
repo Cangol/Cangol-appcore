@@ -117,8 +117,9 @@ class ConfigServiceImpl implements ConfigService {
                 mAppDir = file;
                 mIsCustomAppDir = true;
                 return true;
-            } else
+            } else {
                 throw new IllegalArgumentException("mkdirs fail. path=" + path);
+            }
         }
     }
 
@@ -140,10 +141,11 @@ class ConfigServiceImpl implements ConfigService {
         if (mUseInternalStorage) {
             file = mContext.getFilesDir().getParentFile();
         } else {
-            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable()) {
                 file = new File(StorageUtils.getExternalStorageDir(mContext, mContext.getPackageName()));
-            else
+            } else {
                 file = mContext.getFilesDir().getParentFile();
+            }
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
@@ -159,15 +161,17 @@ class ConfigServiceImpl implements ConfigService {
             if (mUseInternalStorage) {
                 file = mContext.getFileStreamPath(name);
             } else {
-                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable()) {
                     file = StorageUtils.getExternalFileDir(mContext, name);
-                else
+                } else {
                     file = mContext.getFileStreamPath(name);
+                }
 
             }
         }
-        if (!file.exists())
+        if (!file.exists()) {
             file.mkdirs();
+        }
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
     }
@@ -183,14 +187,16 @@ class ConfigServiceImpl implements ConfigService {
             if (mUseInternalStorage) {
                 file = mContext.getCacheDir();
             } else {
-                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable()) {
                     file = StorageUtils.getExternalCacheDir(mContext);
-                else
+                } else {
                     file = mContext.getCacheDir();
+                }
             }
         }
-        if (!file.exists())
+        if (!file.exists()){
             file.mkdirs();
+        }
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
     }

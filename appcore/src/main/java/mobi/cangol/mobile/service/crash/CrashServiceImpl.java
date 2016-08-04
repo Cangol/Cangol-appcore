@@ -201,14 +201,17 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
             protected void onPostExecute(List<ReportError> result) {
                 super.onPostExecute(result);
                 for (final ReportError errorReport : result) {
-                    if (!TextUtils.isEmpty(mUrl)) report(errorReport);
-                    if (crashReportListener != null)
+                    if (!TextUtils.isEmpty(mUrl)) {
+                        report(errorReport);
+                    }
+                    if (crashReportListener != null){
                         crashReportListener.report(errorReport.path,
                                 errorReport.error,
                                 errorReport.position,
                                 errorReport.context,
                                 errorReport.timestamp,
                                 errorReport.fatal);
+                    }
                 }
             }
 

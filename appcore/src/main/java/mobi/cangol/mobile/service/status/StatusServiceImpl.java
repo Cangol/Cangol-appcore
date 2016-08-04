@@ -49,48 +49,48 @@ class StatusServiceImpl implements StatusService {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (debug)
-                Log.d(TAG, "Action " + intent.getAction());
             State wifiState = null;
             State mobileState = null;
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if (networkInfoWifi != null)
+            if (networkInfoWifi != null) {
                 wifiState = networkInfoWifi.getState();
+            }
+
             NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-            if (networkInfo != null)
+            if (networkInfo != null) {
                 mobileState = networkInfo.getState();
+            }
 
             if (wifiState != null && mobileState != null && State.CONNECTED != wifiState
                     && State.CONNECTED == mobileState) {
                 // 手机网络连接成功
-                if (debug)
-                    Log.d(TAG, "手机网络连接成功 ");
-                if (listeners.size() > 0)
+                Log.d(TAG, "手机网络连接成功 ");
+                if (listeners.size() > 0) {
                     notifyNetworkTo3G(context);
+                }
             } else if (wifiState != null && mobileState != null && State.CONNECTED != wifiState
                     && State.CONNECTED != mobileState) {
                 // 手机没有任何的网络
-                if (debug)
-                    Log.d(TAG, "手机没有任何的网络,网络中断 ");
-                if (listeners.size() > 0)
+                Log.d(TAG, "手机没有任何的网络,网络中断 ");
+                if (listeners.size() > 0) {
                     notifyNetworkDisconnect(context);
+                }
             } else if (wifiState != null && State.CONNECTED == wifiState) {
                 // 无线网络连接成功
-                if (debug)
-                    Log.d(TAG, " 无线网络连接成功");
-                if (listeners.size() > 0)
+                Log.d(TAG, " 无线网络连接成功");
+                if (listeners.size() > 0) {
                     notifyNetworkConnect(context);
+                }
             }
 
         }
 
     };
     /**
-     *
      * ACTION_MEDIA_MOUNTED 扩展介质被插入，而且已经被挂载。 ACTION_MEDIA_UNMOUNTED
      * 扩展介质存在，但是还没有被挂载 (mount)。
-     *
+     * <p/>
      * ACTION_MEDIA_EJECT 用户想要移除扩展介质(拔掉扩展卡)。 ACTION_MEDIA_SHARED 扩展介质的挂载被解除
      * (unmount)，因为它已经作为 USB 大容量存储被共享。 ACTION_MEDIA_BAD_REMOVAL 扩展介质(扩展卡)已经从 SD
      * 卡插槽拔出，但是挂载点 (mount point) 还没解除 (unmount)。 ACTION_MEDIA_REMOVED 扩展介质被移除。
@@ -98,8 +98,6 @@ class StatusServiceImpl implements StatusService {
     private BroadcastReceiver storageStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (debug)
-                Log.d(TAG, "Action " + intent.getAction());
             if (intent.getAction() == Intent.ACTION_MEDIA_EJECT) {
 
             } else if (intent.getAction() == Intent.ACTION_MEDIA_SHARED) {
@@ -107,11 +105,15 @@ class StatusServiceImpl implements StatusService {
             } else if (intent.getAction() == Intent.ACTION_MEDIA_BAD_REMOVAL) {
 
             } else if (intent.getAction() == Intent.ACTION_MEDIA_REMOVED) {
-                if (listeners.size() > 0)
+                if (listeners.size() > 0) {
                     notifyStorageRemove(context);
+                }
             } else if (intent.getAction() == Intent.ACTION_MEDIA_MOUNTED) {
-                if (listeners.size() > 0)
+                if (listeners.size() > 0) {
                     notifyStorageMount(context);
+                } else {
+                    //
+                }
             }
 
         }
@@ -124,27 +126,27 @@ class StatusServiceImpl implements StatusService {
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE:
                     // 闲置 挂起
-                    if (debug)
-                        Log.d(TAG, "CALL_STATE_IDLE");
+                    Log.d(TAG, "CALL_STATE_IDLE");
                     mCallingState = false;
-                    if (listeners.size() > 0)
+                    if (listeners.size() > 0) {
                         notifyCallStateIdle();
+                    }
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     // 摘机
-                    if (debug)
-                        Log.d(TAG, "CALL_STATE_OFFHOOK");
+                    Log.d(TAG, "CALL_STATE_OFFHOOK");
                     mCallingState = true;
-                    if (listeners.size() > 0)
+                    if (listeners.size() > 0) {
                         notifyCallStateOffhook();
+                    }
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
                     // 响铃
-                    if (debug)
-                        Log.d(TAG, "CALL_STATE_RINGING");
+                    Log.d(TAG, "CALL_STATE_RINGING");
                     mCallingState = true;
-                    if (listeners.size() > 0)
+                    if (listeners.size() > 0) {
                         notifyCallStateRinging();
+                    }
                     break;
             }
         }
@@ -249,8 +251,9 @@ class StatusServiceImpl implements StatusService {
 
     private void notifyNetworkConnect(Context context) {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.networkConnect(context);
+            }
         }
     }
 
@@ -266,43 +269,49 @@ class StatusServiceImpl implements StatusService {
 
     private void notifyNetworkTo3G(Context context) {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.networkTo3G(context);
+            }
         }
     }
 
     private void notifyStorageRemove(Context context) {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.storageRemove(context);
+            }
         }
     }
 
     private void notifyStorageMount(Context context) {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.storageMount(context);
+            }
         }
     }
 
     private void notifyCallStateIdle() {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.callStateIdle();
+            }
         }
     }
 
     private void notifyCallStateOffhook() {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.callStateOffhook();
+            }
         }
     }
 
     private void notifyCallStateRinging() {
         for (StatusListener listener : listeners) {
-            if (listener != null)
+            if (listener != null) {
                 listener.callStateRinging();
+            }
         }
     }
 

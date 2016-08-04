@@ -22,11 +22,14 @@ package mobi.cangol.mobile.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 
+import mobi.cangol.mobile.logging.Log;
+
 public class StringUtils {
     public static final int INDEX_NOT_FOUND = -1;
 
     /**
      * bytes to String
+     *
      * @param value
      * @return
      */
@@ -35,13 +38,14 @@ public class StringUtils {
         try {
             result = (value == null) ? "" : new String(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
         return result;
     }
 
     /**
      * byte to hex
+     *
      * @param b
      * @return
      */
@@ -50,16 +54,19 @@ public class StringUtils {
         String stmp = "";
         for (int n = 0; n < b.length; n++) {
             stmp = Integer.toHexString(b[n] & 0XFF);
-            if (stmp.length() == 1)
+            if (stmp.length() == 1) {
                 hs = hs + "0" + stmp;
-            else
+            } else {
                 hs = hs + stmp;
+            }
+
         }
         return hs.toUpperCase();
     }
 
     /**
      * 反转
+     *
      * @param value
      * @return
      */
@@ -73,6 +80,7 @@ public class StringUtils {
 
     /**
      * 格式化为中文数量
+     *
      * @param num
      * @return
      */
@@ -101,6 +109,7 @@ public class StringUtils {
 
     /**
      * format speed   /s
+     *
      * @param value
      * @return
      */
@@ -110,6 +119,7 @@ public class StringUtils {
 
     /**
      * format size
+     *
      * @param value
      * @return
      */
@@ -135,6 +145,7 @@ public class StringUtils {
 
     /**
      * format time
+     *
      * @param second
      * @return
      */
@@ -153,6 +164,7 @@ public class StringUtils {
 
     /**
      * MD5 s
+     *
      * @param s
      * @return
      */
@@ -175,12 +187,14 @@ public class StringUtils {
             }
             return new String(str);
         } catch (Exception e) {
+            Log.d(e.getMessage());
             return null;
         }
     }
 
     /**
      * MD5 byte[]
+     *
      * @param bytes
      * @return
      */
@@ -202,12 +216,14 @@ public class StringUtils {
             }
             return new String(str);
         } catch (Exception e) {
+            Log.d(e.getMessage());
             return null;
         }
     }
 
     /**
-     *  Returns true if the string is null or 0-length.
+     * Returns true if the string is null or 0-length.
+     *
      * @param str
      * @return
      */
@@ -226,6 +242,7 @@ public class StringUtils {
 
     /**
      * Returns true if the string is null or 0-length.
+     *
      * @param str
      * @return
      */
@@ -235,6 +252,7 @@ public class StringUtils {
 
     /**
      * Returns false if the string is null or 0-length.
+     *
      * @param str
      * @return
      */
@@ -244,6 +262,7 @@ public class StringUtils {
 
     /**
      * Returns true if the string is null or ''.
+     *
      * @param str
      * @return
      */
@@ -253,6 +272,7 @@ public class StringUtils {
 
     /**
      * Returns string if the string is null or ''.
+     *
      * @return
      */
     public static String null2Zero(String str) {
@@ -265,6 +285,7 @@ public class StringUtils {
 
     /**
      * remove TableSpace
+     *
      * @param str
      * @return
      */
@@ -274,6 +295,7 @@ public class StringUtils {
 
     /**
      * remove TableSpace
+     *
      * @param str
      * @return
      */
@@ -283,6 +305,7 @@ public class StringUtils {
 
     /**
      * remove front Whitespace
+     *
      * @param str
      * @return
      */
@@ -304,6 +327,7 @@ public class StringUtils {
 
     /**
      * str  the String to be trimmed, may be null
+     *
      * @param str
      * @return
      */
@@ -313,6 +337,7 @@ public class StringUtils {
 
     /**
      * repalce all Whitespace
+     *
      * @param str
      * @return
      */
@@ -322,6 +347,7 @@ public class StringUtils {
 
     /**
      * strip
+     *
      * @param str
      * @return
      */
@@ -331,6 +357,7 @@ public class StringUtils {
 
     /**
      * strip Start
+     *
      * @param str
      * @param stripChars
      * @return
@@ -356,7 +383,6 @@ public class StringUtils {
     }
 
     /**
-     *
      * @param str
      * @param stripChars
      * @return
@@ -383,6 +409,7 @@ public class StringUtils {
 
     /**
      * strip start|end
+     *
      * @param str
      * @param stripChars
      * @return
@@ -397,6 +424,7 @@ public class StringUtils {
 
     /**
      * isNumeric
+     *
      * @param str
      * @return
      */
@@ -415,6 +443,7 @@ public class StringUtils {
 
     /**
      * isNumericSpace
+     *
      * @param str
      * @return
      */
@@ -433,6 +462,7 @@ public class StringUtils {
 
     /**
      * byte[] xor int
+     *
      * @param data
      * @param xor
      * @return
@@ -455,6 +485,7 @@ public class StringUtils {
 
     /**
      * byte[] to int
+     *
      * @param b
      * @return
      */
@@ -462,10 +493,12 @@ public class StringUtils {
         byte[] a = new byte[4];
         int i = a.length - 1, j = b.length - 1;
         for (; i >= 0; i--, j--) {//从b的尾部(即int值的低位)开始copy数据
-            if (j >= 0)
+            if (j >= 0) {
                 a[i] = b[j];
-            else
+            } else {
                 a[i] = 0;//如果b.length不足4,则将高位补0
+            }
+
         }
         int v0 = (a[0] & 0xff) << 24;//&0xff将byte值无差异转成int,避免Java自动类型提升后,会保留高位的符号位
         int v1 = (a[1] & 0xff) << 16;
@@ -476,6 +509,7 @@ public class StringUtils {
 
     /**
      * int to byte[]
+     *
      * @param num
      * @return
      */
@@ -489,7 +523,6 @@ public class StringUtils {
     }
 
     /**
-     *
      * @param str
      * @return
      */

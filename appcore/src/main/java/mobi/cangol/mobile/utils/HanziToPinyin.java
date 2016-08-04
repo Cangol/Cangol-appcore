@@ -432,7 +432,7 @@ public class HanziToPinyin {
             if (token.type == Token.PINYIN) {
                 result.append(token.target.charAt(0));
             } else {
-                result.append("#");
+                result.append('#');
             }
         }
         return result.toString();

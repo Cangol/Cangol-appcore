@@ -38,7 +38,7 @@ public class ClassUtils {
         try {
             clazz = context.getClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+           Log.d(e.getMessage());
         }
         return clazz;
     }

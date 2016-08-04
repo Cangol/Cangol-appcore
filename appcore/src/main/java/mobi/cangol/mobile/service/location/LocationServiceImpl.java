@@ -101,14 +101,18 @@ class LocationServiceImpl implements LocationService {
 
     private void handleBetterLocation() {
         removeLocationUpdates();
-        if (mMyLocationListener != null)
+        if (mMyLocationListener != null){
             mMyLocationListener.onBetterLocation(mLocation);
+        }
         getLocationAddress(mLocation);
     }
 
     @Override
     public void requestLocationUpdates() {
-        if (null != mLocationListener) return;
+        if (null != mLocationListener) {
+            return;
+        }
+
         mLocationListener = new LocationListener() {
 
             @Override
@@ -175,9 +179,11 @@ class LocationServiceImpl implements LocationService {
 
     @Override
     public boolean isBetterLocation(Location location) {
-        if (null == location) return false;
+        if (null == location) {
+            return false;
+        }
         long timeDelta = System.currentTimeMillis() - location.getTime();
-        if (mDebug) Log.d(TAG, "location time :" + TimeUtils.convertString(location.getTime()));
+        Log.d(TAG, "location time :" + TimeUtils.convertString(location.getTime()));
         return (timeDelta < mBetterTime);
     }
 
@@ -190,7 +196,11 @@ class LocationServiceImpl implements LocationService {
     public void setBetterLocationListener(BetterLocationListener locationListener) {
         this.mMyLocationListener = locationListener;
         if (mLocation != null && !isBetterLocation(mLocation)) {
-            if (mMyLocationListener != null) mMyLocationListener.onBetterLocation(mLocation);
+            if (mMyLocationListener != null) {
+                mMyLocationListener.onBetterLocation(mLocation);
+            }else{
+                //
+            }
         }
     }
 
@@ -209,8 +219,9 @@ class LocationServiceImpl implements LocationService {
             switch (msg.what) {
                 case FLAG_TIMEOUT:
                     removeLocationUpdates();
-                    if (mMyLocationListener != null)
+                    if (mMyLocationListener != null){
                         mMyLocationListener.timeout(mLocation);
+                    }
                     break;
                 case FLAG_BETTER_LOCATION:
                     handleBetterLocation();

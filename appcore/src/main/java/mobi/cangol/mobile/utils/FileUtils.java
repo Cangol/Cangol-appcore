@@ -149,7 +149,7 @@ public class FileUtils {
             if (oldfile.exists()) { // 文件存在时
                 InputStream inStream = new FileInputStream(oldPath); // 读入原文件
                 FileOutputStream fs = new FileOutputStream(newPath);
-                byte[] buffer = new byte[1444];
+                byte[] buffer = new byte[4094];
                 while ((byteread = inStream.read(buffer)) != -1) {
                     bytesum += byteread; // 字节数 文件大小
                     fs.write(buffer, 0, byteread);
@@ -157,8 +157,7 @@ public class FileUtils {
                 inStream.close();
             }
         } catch (Exception e) {
-            Log.d(TAG, "copy file error!");
-            e.printStackTrace();
+            Log.d("copy file error!" +e.getMessage());
         }
     }
 
@@ -176,8 +175,7 @@ public class FileUtils {
                 myFilePath.mkdirs();
             }
         } catch (Exception e) {
-            Log.d(TAG, "新建目录操作出错 ");
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
     }
 
@@ -203,8 +201,7 @@ public class FileUtils {
             outWrite.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
-
+            Log.d(e.getMessage());
         }
 
     }
@@ -223,9 +220,7 @@ public class FileUtils {
             myDelFile.delete();
 
         } catch (Exception e) {
-            Log.d(TAG, "删除文件操作出错 ");
-            e.printStackTrace();
-
+            Log.d(e.getMessage());
         }
 
     }
@@ -253,9 +248,7 @@ public class FileUtils {
             myFilePath.delete(); // 删除空文件夹
 
         } catch (Exception e) {
-            Log.d(TAG, "删除文件夹操作出错 ");
-            e.printStackTrace();
-
+            Log.d(e.getMessage());
         }
 
     }
@@ -329,9 +322,7 @@ public class FileUtils {
                 }
             }
         } catch (Exception e) {
-            Log.d(TAG, "复制整个文件夹内容操作出错 ");
-            e.printStackTrace();
-
+            Log.d(e.getMessage());
         }
 
     }
@@ -404,15 +395,15 @@ public class FileUtils {
             os.write(buffer);
             os.flush();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 os = null;
             }
@@ -436,17 +427,21 @@ public class FileUtils {
             oos = new ObjectOutputStream(os);
             oos.writeObject(obj);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             try {
-                if (oos != null)
+                if (oos != null){
                     oos.close();
-                if (os != null)
+                }
+
+                if (os != null){
                     os.close();
+                }
+
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
     }
@@ -467,22 +462,26 @@ public class FileUtils {
             is = new FileInputStream(file);
             ois = new ObjectInputStream(is);
             object = ois.readObject();
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+        } catch (FileNotFoundException e) {
+            Log.d(e.getMessage());
         } catch (StreamCorruptedException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             try {
-                if (ois != null)
+                if (ois != null){
                     ois.close();
-                if (is != null)
+                }
+
+                if (is != null){
                     is.close();
+                }
+
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
         return object;
@@ -559,8 +558,10 @@ public class FileUtils {
             String unit = sizeStr
                     .replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
             String size = sizeStr.substring(0, sizeStr.indexOf(unit));
-            if (TextUtils.isEmpty(size))
+            if (TextUtils.isEmpty(size)){
                 return -1;
+            }
+
             float s = Float.parseFloat(size);
             if ("B".equals(unit.toLowerCase())) {
                 return (long) s;
@@ -598,7 +599,7 @@ public class FileUtils {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           Log.d(e.getMessage());
         }
         return size;
     }

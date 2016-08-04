@@ -59,8 +59,9 @@ public abstract class DownloadExecutor<T> {
 
     protected void setDownloadDir(File directory) {
         mDownloadDir = directory;
-        if (!directory.exists())
+        if (!directory.exists()){
             directory.mkdirs();
+        }
     }
 
     protected void setPool(Pool pool) {
@@ -173,8 +174,9 @@ public abstract class DownloadExecutor<T> {
                 resource.setDownloadTask(downloadTask);
                 downloadTask.setDownloadNotification(notification(mContext, resource));
             }
-            if (!downloadTask.isRunning())
+            if (!downloadTask.isRunning()){
                 downloadTask.start();
+            }
         } else {
             DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler);
             resource.setDownloadTask(downloadTask);
@@ -197,8 +199,9 @@ public abstract class DownloadExecutor<T> {
         }
         if (mDownloadRes.contains(resource)) {
             DownloadTask downloadTask = resource.getDownloadTask();
-            if (downloadTask.isRunning())
+            if (downloadTask.isRunning()){
                 downloadTask.stop();
+            }
         } else {
             Log.e(mTag, "resource isn't exist");
         }
@@ -312,8 +315,9 @@ public abstract class DownloadExecutor<T> {
             DownloadTask downloadTask = null;
             for (DownloadResource resource : mDownloadRes) {
                 downloadTask = resource.getDownloadTask();
-                if (downloadTask != null)
+                if (downloadTask != null){
                     downloadTask.stop();
+                }
             }
         }
         mDownloadRes.clear();
@@ -324,8 +328,9 @@ public abstract class DownloadExecutor<T> {
      * 注册下载状态监听
      */
     public void registerDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
-        if (null == downloadStatusListener)
+        if (null == downloadStatusListener){
             throw new IllegalArgumentException("downloadStatusListener is null!");
+        }
         boolean isExist = false;
         for (WeakReference<DownloadStatusListener> listener : listeners) {
             if (downloadStatusListener.equals(listener.get())) {
@@ -333,16 +338,18 @@ public abstract class DownloadExecutor<T> {
                 break;
             }
         }
-        if (!isExist)
+        if (!isExist){
             listeners.add(new WeakReference<DownloadStatusListener>(downloadStatusListener));
+        }
     }
 
     /**
      * 移除下载状态监听
      */
     public void unregisterDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
-        if (null == downloadStatusListener)
+        if (null == downloadStatusListener){
             throw new IllegalArgumentException("downloadStatusListener is null!");
+        }
         for (WeakReference<DownloadStatusListener> listener : listeners) {
             if (downloadStatusListener.equals(listener.get())) {
                 listeners.remove(listener);

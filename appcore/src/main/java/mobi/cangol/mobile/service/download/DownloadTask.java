@@ -36,7 +36,9 @@ public class DownloadTask {
         @Override
         public void onWait() {
             super.onWait();
-            if (downloadNotification != null) downloadNotification.createNotification();
+            if (downloadNotification != null) {
+                downloadNotification.createNotification();
+            }
         }
 
         @Override
@@ -52,7 +54,9 @@ public class DownloadTask {
             super.onStop(end);
             downloadResource.setCompleteSize(end);
             sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
-            if (downloadNotification != null) downloadNotification.cancelNotification();
+            if (downloadNotification != null) {
+                downloadNotification.cancelNotification();
+            }
 
         }
 
@@ -62,7 +66,10 @@ public class DownloadTask {
             downloadResource.setStatus(Download.STATUS_FINISH);
             downloadResource.setCompleteSize(end);
             sendDownloadMessage(Download.ACTION_DOWNLOAD_FINISH, downloadResource);
-            if (downloadNotification != null) downloadNotification.finishNotification();
+            if (downloadNotification != null) {
+                downloadNotification.finishNotification();
+            }
+
         }
 
         @Override
@@ -72,8 +79,9 @@ public class DownloadTask {
             downloadResource.setProgress(progress);
             downloadResource.setCompleteSize(end);
             sendDownloadMessage(Download.ACTION_DOWNLOAD_UPDATE, downloadResource);
-            if (downloadNotification != null)
+            if (downloadNotification != null){
                 downloadNotification.updateNotification(progress, speed);//speed 转换
+            }
         }
 
         @Override
@@ -82,7 +90,10 @@ public class DownloadTask {
             downloadResource.setException(content);
             downloadResource.setStatus(Download.STATUS_FAILURE);
             sendDownloadMessage(Download.ACTION_DOWNLOAD_FAILED, downloadResource);
-            if (downloadNotification != null) downloadNotification.failureNotification();
+            if (downloadNotification != null) {
+                downloadNotification.failureNotification();
+            }
+
         }
 
     };
@@ -111,8 +122,9 @@ public class DownloadTask {
     }
 
     protected void restart() {
-        if (future != null && !future.isCancelled())
+        if (future != null && !future.isCancelled()){
             future.cancel(true);
+        }
         downloadResource.reset();
         start();
         sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE, downloadResource);
@@ -127,8 +139,9 @@ public class DownloadTask {
     }
 
     protected void stop() {
-        if (future != null && !future.isCancelled())
+        if (future != null && !future.isCancelled()){
             future.cancel(true);
+        }
         future = null;
         downloadResource.setStatus(Download.STATUS_STOP);
         sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
@@ -136,8 +149,9 @@ public class DownloadTask {
     }
 
     public void interrupt() {
-        if (future != null && !future.isCancelled())
+        if (future != null && !future.isCancelled()){
             future.cancel(true);
+        }
         future = null;
         downloadResource.setStatus(Download.STATUS_RERUN);
         sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
@@ -145,8 +159,9 @@ public class DownloadTask {
     }
 
     protected void remove() {
-        if (future != null && !future.isCancelled())
+        if (future != null && !future.isCancelled()){
             future.cancel(true);
+        }
         future = null;
         sendDownloadMessage(Download.ACTION_DOWNLOAD_DELETE, downloadResource);
         isRunning = false;

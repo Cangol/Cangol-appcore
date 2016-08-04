@@ -35,10 +35,13 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 
+import mobi.cangol.mobile.logging.Log;
+
 /**
  * @author Cangol
  */
 public class Object2FileUtils {
+    private final static String CHARSET="UTF-8";
     /**
      * 写入json对象到文件
      * @param jsonObject
@@ -51,13 +54,13 @@ public class Object2FileUtils {
             fileOutputStream = new FileOutputStream(file);
             writeJSONObject(jsonObject, fileOutputStream);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 fileOutputStream = null;
             }
@@ -76,13 +79,13 @@ public class Object2FileUtils {
             fileOutputStream = new FileOutputStream(file);
             writeJSONArray(jsonArray, fileOutputStream);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 fileOutputStream = null;
             }
@@ -101,13 +104,13 @@ public class Object2FileUtils {
             fileInputStream = new FileInputStream(jsonFile);
             jsonArray = readJSONArray(fileInputStream);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 fileInputStream = null;
             }
@@ -127,13 +130,13 @@ public class Object2FileUtils {
             fileInputStream = new FileInputStream(jsonFile);
             jsonObject = readJSONObject(fileInputStream);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 fileInputStream = null;
             }
@@ -148,19 +151,19 @@ public class Object2FileUtils {
      */
     public static void writeJSONArray(JSONArray jsonArray, OutputStream os) {
         try {
-            byte[] buffer = jsonArray.toString().getBytes("UTF-8");
+            byte[] buffer = jsonArray.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 os = null;
             }
@@ -174,19 +177,19 @@ public class Object2FileUtils {
      */
     public static void writeJSONObject(JSONObject jsonObject, OutputStream os) {
         try {
-            byte[] buffer = jsonObject.toString().getBytes("UTF-8");
+            byte[] buffer = jsonObject.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 os = null;
             }
@@ -204,21 +207,22 @@ public class Object2FileUtils {
         try {
             byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
-                content = new String(buffer, "UTF-8");
-                if (!TextUtils.isEmpty(content))
+                content = new String(buffer, CHARSET);
+                if (!TextUtils.isEmpty(content)){
                     jsonObject = new JSONObject(content);
+                }
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 is = null;
             }
@@ -237,21 +241,22 @@ public class Object2FileUtils {
         try {
             byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
-                content = new String(buffer, "UTF-8");
-                if (!TextUtils.isEmpty(content))
+                content = new String(buffer,CHARSET);
+                if (!TextUtils.isEmpty(content)){
                     jsonArray = new JSONArray(content);
+                }
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.d(e.getMessage());
                 }
                 is = null;
             }
@@ -270,14 +275,16 @@ public class Object2FileUtils {
             oos = new ObjectOutputStream(new BufferedOutputStream(out));
             oos.writeObject(obj);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             try {
-                if (oos != null) oos.close();
+                if (oos != null) {
+                    oos.close();
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
     }
@@ -293,20 +300,25 @@ public class Object2FileUtils {
         try {
             ois = new ObjectInputStream(new BufferedInputStream(is));
             object = ois.readObject();
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+        } catch (FileNotFoundException e) {
+            Log.d(e.getMessage());
         } catch (StreamCorruptedException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             try {
-                if (ois != null) ois.close();
-                if (is != null) is.close();
+                if (ois != null) {
+                    ois.close();
+                }
+
+                if (is != null) {
+                    is.close();
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
         return (Serializable) object;
@@ -320,18 +332,22 @@ public class Object2FileUtils {
     public static void writeObject(Serializable obj, String objPath) {
 
         File file = new File(objPath);
-        if (file.exists()) file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
         FileOutputStream os = null;
         try {
             os = new FileOutputStream(file);
             writeObject(obj, os);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             try {
-                if (os != null) os.close();
+                if (os != null) {
+                    os.close();
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
     }
@@ -342,21 +358,28 @@ public class Object2FileUtils {
      * @return
      */
     public static Serializable readObject(File file) {
-        if (!file.exists() || file.length() == 0) return null;
+        if (!file.exists() || file.length() == 0) {
+            return null;
+        }
         Object object = null;
         InputStream is = null;
         ObjectInputStream ois = null;
         try {
             is = new FileInputStream(file);
             object = readObject(is);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
+        } catch (FileNotFoundException e) {
+            Log.d(e.getMessage());
         } finally {
             try {
-                if (ois != null) ois.close();
-                if (is != null) is.close();
+                if (ois != null) {
+                    ois.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
         return (Serializable) object;

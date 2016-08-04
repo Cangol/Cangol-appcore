@@ -1,11 +1,12 @@
 package mobi.cangol.mobile.utils;
 
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import mobi.cangol.mobile.logging.Log;
 
 /**
  * @author Kevin Kowalewski
@@ -67,7 +68,7 @@ public class RootUtils {
                     fullResponse.add(line);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d(getClass().getName(),e.getMessage());
             }
             Log.d(getClass().getName(), "--> Full response was: " + fullResponse);
             return fullResponse;

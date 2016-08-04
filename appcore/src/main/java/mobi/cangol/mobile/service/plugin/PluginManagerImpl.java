@@ -50,7 +50,7 @@ class PluginManagerImpl implements PluginManager {
 
     @Override
     public void onDestroy() {
-        if (debug) Log.d(TAG, "destroyAllPlugin");
+        Log.d(TAG, "destroyAllPlugin");
         PluginInfo pluginInfo = null;
         for (String name : pluginMap.keySet()) {
             pluginInfo = pluginMap.get(name);

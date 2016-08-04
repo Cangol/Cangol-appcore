@@ -30,7 +30,6 @@ import java.util.Map;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
-import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -72,12 +71,10 @@ class UpgradeServiceImpl implements UpgradeService {
 
     @Override
     public void onDestroy() {
-        if (debug) Log.d("onDestory");
         DownloadHttpClient.cancel(TAG, true);
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         for (Integer id : mIds) {
             notificationManager.cancel(id);
-            if (debug) Log.d("notification cancel " + id);
         }
     }
 
@@ -123,9 +120,10 @@ class UpgradeServiceImpl implements UpgradeService {
 
     private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean load) {
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
-        if (debug) Log.d("upgrade savePath:" + savePath);
         File saveFile = new File(savePath);
-        if (saveFile.exists()) saveFile.delete();
+        if (saveFile.exists()) {
+            saveFile.delete();
+        }
         final DownloadNotification downloadNotification = new DownloadNotification(mContext, filename, savePath, createFinishIntent(savePath, upgradeType));
         if (notification) {
             mIds.add(downloadNotification.getId());
@@ -134,7 +132,9 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onWait() {
                 super.onWait();
-                if (notification) downloadNotification.createNotification();
+                if (notification) {
+                    downloadNotification.createNotification();
+                }
             }
 
             @Override
@@ -155,10 +155,12 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onFinish(long end) {
                 super.onFinish(end);
-                if (notification)
+                if (notification){
                     downloadNotification.finishNotification();
-                if (load)
+                }
+                if (load){
                     makeLoad(savePath, upgradeType);
+                }
 
                 notifyUpgradeFinish(filename, savePath);
             }
@@ -166,8 +168,9 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onProgressUpdate(long end, int progress, int speed) {
                 super.onProgressUpdate(end, progress, speed);
-                if (notification)
+                if (notification){
                     downloadNotification.updateNotification(progress, speed);
+                }
 
                 notifyUpgradeProgress(filename, speed, progress);
             }
@@ -175,8 +178,9 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onFailure(Throwable error, String content) {
                 super.onFailure(error, content);
-                if (notification)
+                if (notification){
                     downloadNotification.failureNotification();
+                }
                 notifyUpgradeFailure(filename, content);
             }
 

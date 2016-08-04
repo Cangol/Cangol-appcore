@@ -111,7 +111,7 @@ public class DeviceInfo {
                 sb.append("\n");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
         return sb.toString();
     }
@@ -150,7 +150,7 @@ public class DeviceInfo {
             bufferedReader.close();
             result = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length()).trim();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
         return result;
     }
@@ -171,7 +171,7 @@ public class DeviceInfo {
             bufferedReader.close();
             return result;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
         return result;
     }
@@ -405,9 +405,11 @@ public class DeviceInfo {
         try {
             appInfo = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
-            if (appInfo.metaData != null)
+            if (appInfo.metaData != null){
                 data = appInfo.metaData.getString(key);
+            }
         } catch (NameNotFoundException e) {
+            Log.d(e.getMessage());
         }
         return data;
     }

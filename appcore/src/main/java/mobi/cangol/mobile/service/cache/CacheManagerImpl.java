@@ -127,8 +127,9 @@ class CacheManagerImpl implements CacheManager {
         Serializable obj = contextMap.get(id);
         if (obj == null) {
             obj = getContentFromDiskCache(id);
-            if (obj != null)
+            if (obj != null){
                 contextMap.put(id, obj);
+            }
         }
         return obj;
     }
@@ -146,8 +147,9 @@ class CacheManagerImpl implements CacheManager {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    if (cacheLoader != null)
+                    if (cacheLoader != null){
                         cacheLoader.loading();
+                    }
                 }
 
                 @Override
@@ -158,10 +160,12 @@ class CacheManagerImpl implements CacheManager {
                 @Override
                 protected void onPostExecute(Serializable result) {
                     super.onPostExecute(result);
-                    if (result != null)
+                    if (result != null){
                         addContentToMem(context, id, result);
-                    if (cacheLoader != null)
+                    }
+                    if (cacheLoader != null){
                         cacheLoader.returnContent(result);
+                    }
                 }
             }.execute(id);
 
@@ -196,6 +200,7 @@ class CacheManagerImpl implements CacheManager {
                 try {
                     mDiskCacheLock.wait();
                 } catch (InterruptedException e) {
+                    Log.d(e.getMessage());
                 }
             }
             if (mDiskLruCache != null) {
@@ -216,6 +221,7 @@ class CacheManagerImpl implements CacheManager {
                             inputStream.close();
                         }
                     } catch (IOException e) {
+                        Log.d(e.getMessage());
                     }
                 }
             }
@@ -235,6 +241,7 @@ class CacheManagerImpl implements CacheManager {
                 try {
                     mDiskCacheLock.wait();
                 } catch (InterruptedException e) {
+                    Log.d(e.getMessage());
                 }
             }
             if (mDiskLruCache != null) {
@@ -255,6 +262,7 @@ class CacheManagerImpl implements CacheManager {
                             inputStream.close();
                         }
                     } catch (IOException e) {
+                        Log.d(e.getMessage());
                     }
                 }
             }
@@ -296,8 +304,9 @@ class CacheManagerImpl implements CacheManager {
      */
     private void moveContentToDiskCache(String context) {
         HashMap<String, Serializable> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty())
+        if (null == contextMap || contextMap.isEmpty()){
             return;
+        }
         Iterator<String> iterator = contextMap.keySet().iterator();
         String id = null;
         while (iterator.hasNext()) {
@@ -361,6 +370,7 @@ class CacheManagerImpl implements CacheManager {
                             out.close();
                         }
                     } catch (IOException e) {
+                        Log.d(e.getMessage());
                     }
                 }
             }
@@ -370,8 +380,9 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void removeContext(String context) {
         HashMap<String, Serializable> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty())
+        if (null == contextMap || contextMap.isEmpty()){
             return;
+        }
         Iterator<String> iterator = contextMap.keySet().iterator();
         String id = null;
         while (iterator.hasNext()) {
@@ -382,8 +393,9 @@ class CacheManagerImpl implements CacheManager {
                     mDiskLruCache.remove(key);
                 }
             } catch (IOException e) {
-                if (mDebug)
+                if (mDebug){
                     Log.d(TAG, "cache remove" + key, e);
+                }
             }
         }
         contextMap.clear();
@@ -393,8 +405,9 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void removeContent(String context, String id) {
         HashMap<String, Serializable> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty())
+        if (null == contextMap || contextMap.isEmpty()){
             return;
+        }
         contextMap.remove(id);
         String key = hashKeyForDisk(id);
         try {
@@ -402,8 +415,9 @@ class CacheManagerImpl implements CacheManager {
                 mDiskLruCache.remove(key);
             }
         } catch (IOException e) {
-            if (mDebug)
+            if (mDebug){
                 Log.d(TAG, "cache remove" + key, e);
+            }
         }
     }
 
