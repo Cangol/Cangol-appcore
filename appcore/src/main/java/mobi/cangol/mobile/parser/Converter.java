@@ -17,6 +17,8 @@
 
 package mobi.cangol.mobile.parser;
 
+import android.text.TextUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -168,13 +170,13 @@ public class Converter {
         if (useAnnotation) {
             if (field.isAnnotationPresent(Attribute.class)) {
                 Attribute attr = field.getAnnotation(Attribute.class);
-                filedName = "".equals(attr.value()) ? field.getName() : attr.value();
+                filedName = TextUtils.isEmpty(attr.value()) ? field.getName() : attr.value();
             } else if (field.isAnnotationPresent(Element.class)) {
                 Element element = field.getAnnotation(Element.class);
-                filedName = "".equals(element.value()) ? field.getName() : element.value();
+                filedName = TextUtils.isEmpty(element.value()) ? field.getName() : element.value();
             } else if (field.isAnnotationPresent(ElementList.class)) {
                 ElementList elementList = field.getAnnotation(ElementList.class);
-                filedName = "".equals(elementList.value()) ? field.getName() : elementList.value();
+                filedName =TextUtils.isEmpty(elementList.value())? field.getName() : elementList.value();
             } else {
                 //do nothing
                 filedName = field.getName();
