@@ -198,7 +198,6 @@ public class StatsTraffic {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.v("getAction=" + intent.getAction());
-            TrafficDbService trafficDbService=new TrafficDbService(context);
             if (BOOT_ACTION.equals(intent.getAction())) {
                 // 开机启动
                 resetAppTraffic(TimeUtils.getCurrentDate());

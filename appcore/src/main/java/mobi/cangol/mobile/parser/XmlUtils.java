@@ -26,7 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -49,16 +49,20 @@ public class XmlUtils extends Converter {
     public static String toXml(Object obj, boolean useAnnotation) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XmlSerializer serializer = Xml.newSerializer();
+        String result = null;
         try {
             serializer.setOutput(baos, "utf-8");
             serializer.startDocument("utf-8", true);
             toXml(serializer, obj, useAnnotation);
             serializer.endDocument();
             baos.close();
+            result = baos.toString("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return baos.toString();
+        return result;
     }
 
     private static void toXml(XmlSerializer serializer, Object obj, boolean useAnnotation) {
@@ -108,22 +112,29 @@ public class XmlUtils extends Converter {
     /*************以下开始是解析XML**************/
     /**
      * 解析xml流串到c的实例
-     * @param c 解析目标类
-     * @param str 解析字符串
+     *
+     * @param c             解析目标类
+     * @param str           解析字符串
      * @param useAnnotation 是否使用注解
      * @param <T>
      * @return
      * @throws XMLParserException
      */
     public static <T> T parserToObject(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
-        InputStream inputSteam = new ByteArrayInputStream(str.getBytes());
+        InputStream inputSteam = null;
+        try {
+            inputSteam = new ByteArrayInputStream(str.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return parserToObject(c, inputSteam, useAnnotation);
     }
 
     /**
      * 解析xml流串到c的实例
-     * @param c 解析目标类
-     * @param inputSteam 输入流
+     *
+     * @param c             解析目标类
+     * @param inputSteam    输入流
      * @param useAnnotation 是否使用注解
      * @param <T>
      * @return
@@ -137,22 +148,29 @@ public class XmlUtils extends Converter {
 
     /**
      * 解析xml流串到c的实例list
-     * @param c 解析目标类
-     * @param str 解析字符串
+     *
+     * @param c             解析目标类
+     * @param str           解析字符串
      * @param useAnnotation 是否使用注解
      * @param <T>
      * @return
      * @throws XMLParserException
      */
     public static <T> ArrayList<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
-        InputStream inputSteam = new ByteArrayInputStream(str.getBytes());
+        InputStream inputSteam = null;
+        try {
+            inputSteam = new ByteArrayInputStream(str.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return parserToList(c, inputSteam, useAnnotation);
     }
 
     /**
      * 解析xml流串到c的实例list
-     * @param c 解析目标类
-     * @param inputSteam 输入流
+     *
+     * @param c             解析目标类
+     * @param inputSteam    输入流
      * @param useAnnotation 是否使用注解
      * @param <T>
      * @return
@@ -170,9 +188,9 @@ public class XmlUtils extends Converter {
             return null;
         T t = null;
         try {
-            Constructor constructor= c.getDeclaredConstructor();
+            Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
-            t= (T) constructor.newInstance();
+            t = (T) constructor.newInstance();
             Field[] fields = c.getDeclaredFields();
             String filedName = null;
             for (Field field : fields) {

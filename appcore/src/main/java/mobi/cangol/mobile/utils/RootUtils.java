@@ -54,9 +54,10 @@ public class RootUtils {
       } catch (Exception e) {
         return null;
       }
-      BufferedReader in = new BufferedReader(new InputStreamReader(
-          localProcess.getInputStream()));
+      BufferedReader in;
       try {
+        in = new BufferedReader(new InputStreamReader(
+                localProcess.getInputStream(),"UTF-8"));
         while ((line = in.readLine()) != null) {
           Log.d(getClass().getName(), "--> Line received: " + line);
           fullResponse.add(line);

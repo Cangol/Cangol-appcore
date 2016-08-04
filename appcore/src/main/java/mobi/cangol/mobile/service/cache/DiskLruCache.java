@@ -319,7 +319,8 @@ public final class DiskLruCache implements Closeable {
             try {
                 cache.readJournal();
                 cache.processJournal();
-                cache.journalWriter = new BufferedWriter(new FileWriter(cache.journalFile, true),
+                ;
+                cache.journalWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cache.journalFile,true),"UTF-8"),
                         IO_BUFFER_SIZE);
                 return cache;
             } catch (IOException journalIsCorrupt) {
@@ -428,7 +429,7 @@ public final class DiskLruCache implements Closeable {
             journalWriter.close();
         }
 
-        Writer writer = new BufferedWriter(new FileWriter(journalFileTmp), IO_BUFFER_SIZE);
+        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(journalFileTmp,true),"UTF-8"), IO_BUFFER_SIZE);
         writer.write(MAGIC);
         writer.write("\n");
         writer.write(VERSION_1);
@@ -449,7 +450,7 @@ public final class DiskLruCache implements Closeable {
 
         writer.close();
         journalFileTmp.renameTo(journalFile);
-        journalWriter = new BufferedWriter(new FileWriter(journalFile, true), IO_BUFFER_SIZE);
+        journalWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(journalFile,true),"UTF-8"), IO_BUFFER_SIZE);
     }
 
     private static void deleteIfExists(File file) throws IOException {

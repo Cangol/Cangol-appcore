@@ -33,7 +33,7 @@ import android.os.Message;
 import org.json.JSONObject;
 
 public abstract class DownloadExecutor<T> {
-	private static String TAG="DownloadExecutor";
+	private String mTag="DownloadExecutor";
 	protected ArrayList<DownloadResource> mDownloadRes=new ArrayList<DownloadResource>();
 	private ArrayList<WeakReference<DownloadStatusListener>> listeners=new  ArrayList<WeakReference<DownloadStatusListener>>();
 	private Pool mPool;
@@ -45,7 +45,7 @@ public abstract class DownloadExecutor<T> {
 	public DownloadExecutor(String name) {
 		this.name=name;
 		this.mHandler=new ExecutorHandler(this);
-		TAG="DownloadExecutor_"+name;
+		this.mTag="DownloadExecutor_"+name;
 	}
 	protected void setContext(Context context) {
 		this.mContext = context;
@@ -112,7 +112,7 @@ public abstract class DownloadExecutor<T> {
 	 * @return
 	 */
 	protected  DownloadResource readResource(String filePath){
-		Log.d(TAG,"read DownloadResource <"+filePath);
+		Log.d(mTag,"read DownloadResource <"+filePath);
 		//使用json格式存储
 		DownloadResource downloadResource= null;
 		try {
@@ -130,7 +130,7 @@ public abstract class DownloadExecutor<T> {
 	 * @param resource
 	 */
 	protected  void writeResource(DownloadResource resource){
-		Log.d(TAG,"write DownloadResource >"+resource.getConfFile());
+		Log.d(mTag,"write DownloadResource >"+resource.getConfFile());
 		//使用json格式存储
 		JSONObject jsonObject=JsonUtils.toJSONObject(resource,false);
 		Object2FileUtils.writeJSONObject2File(jsonObject,resource.getConfFile());
@@ -156,7 +156,7 @@ public abstract class DownloadExecutor<T> {
      */
 	public void start(DownloadResource resource) {
 		if(resource==null){
-			Log.e(TAG,"resource isn't null");
+			Log.e(mTag,"resource isn't null");
 			return;
 		}
 		if(mDownloadRes.contains(resource)){
@@ -185,7 +185,7 @@ public abstract class DownloadExecutor<T> {
      */
 	public void stop(DownloadResource resource) {
 		if(resource==null){
-			Log.e(TAG,"resource isn't null");
+			Log.e(mTag,"resource isn't null");
 			return;
 		}
 		if(mDownloadRes.contains(resource)){
@@ -193,7 +193,7 @@ public abstract class DownloadExecutor<T> {
 			if(downloadTask.isRunning())
 				downloadTask.stop();
 		}else{
-			Log.e(TAG,"resource isn't exist");
+			Log.e(mTag,"resource isn't exist");
 		}
 	}
 	/**
@@ -202,7 +202,7 @@ public abstract class DownloadExecutor<T> {
 	 */
 	public  void resume(DownloadResource resource) {
 		if(resource==null){
-			Log.e(TAG,"resource isn't null");
+			Log.e(mTag,"resource isn't null");
 			return;
 		}
 		if(mDownloadRes.contains(resource)){
@@ -216,7 +216,7 @@ public abstract class DownloadExecutor<T> {
 	 */
 	public void restart(DownloadResource resource) {
 		if(resource==null){
-			Log.e(TAG,"resource isn't null");
+			Log.e(mTag,"resource isn't null");
 			return;
 		}
 		if(mDownloadRes.contains(resource)){
@@ -231,7 +231,7 @@ public abstract class DownloadExecutor<T> {
      */
 	public void add(DownloadResource resource) {
 		if(resource==null){
-			Log.e(TAG,"resource isn't null");
+			Log.e(mTag,"resource isn't null");
 			return;
 		}
 		if(!mDownloadRes.contains(resource)){
@@ -250,7 +250,7 @@ public abstract class DownloadExecutor<T> {
 	 */
 	public void remove(DownloadResource resource) {
 		if(resource==null){
-			Log.e(TAG,"resource isn't null");
+			Log.e(mTag,"resource isn't null");
 			return;
 		}
 		synchronized(mDownloadRes){
@@ -259,7 +259,7 @@ public abstract class DownloadExecutor<T> {
 				downloadTask.remove();
 				mDownloadRes.remove(resource);
 			}else{
-				Log.e(TAG,"resource isn't exist");
+				Log.e(mTag,"resource isn't exist");
 			}
 		}
 	}

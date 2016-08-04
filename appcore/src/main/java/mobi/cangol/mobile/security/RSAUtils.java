@@ -34,6 +34,7 @@ import java.util.HashMap;
 import javax.crypto.Cipher;
 
 public class RSAUtils {
+    private final static String CHARSET="utf-8";
     /**
      * 生成公钥和私钥
      * @throws NoSuchAlgorithmException
@@ -118,7 +119,7 @@ public class RSAUtils {
         String mi = "";
         //如果明文长度大于模长-11则要分组加密   
         for (String s : datas) {
-            mi += bcd2Str(cipher.doFinal(s.getBytes()));
+            mi += bcd2Str(cipher.doFinal(s.getBytes(CHARSET)));
         }
         return mi;
     }
@@ -137,13 +138,13 @@ public class RSAUtils {
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         //模长   
         int key_len = privateKey.getModulus().bitLength() / 8;
-        byte[] bytes = data.getBytes();
+        byte[] bytes = data.getBytes(CHARSET);
         byte[] bcd = ASCII_To_BCD(bytes, bytes.length);
         //如果密文长度大于模长则要分组解密
         String ming = "";
         byte[][] arrays = splitArray(bcd, key_len);
         for (byte[] arr : arrays) {
-            ming += new String(cipher.doFinal(arr));
+            ming += new String(cipher.doFinal(arr),CHARSET);
         }
         return ming;
     }

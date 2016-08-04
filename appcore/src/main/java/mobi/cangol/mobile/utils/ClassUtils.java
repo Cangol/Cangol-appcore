@@ -61,7 +61,7 @@ public class ClassUtils {
 				}
 			}
 			allClass=null;
-			System.gc();
+			//System.gc();
 		}else{
 			Log.e("class "+c+" is not Interface");
 		}
@@ -87,7 +87,7 @@ public class ClassUtils {
 	            }
 	        }
 	        list=null;
-	        System.gc();
+	        //System.gc();
         } catch (ClassNotFoundException e) {
 			Log.e("ClassNotFoundException "+e.getMessage());
 		}
@@ -114,7 +114,7 @@ public class ClassUtils {
 				Log.e("DexFile "+context.getPackageCodePath()+" is null");
             }
 	        df.close();
-	        System.gc();
+	        //System.gc();
 	    } catch (IOException e) {
 			Log.e("IOException "+e.getMessage());
 	    }
@@ -145,7 +145,7 @@ public class ClassUtils {
                 Log.e("DexFile "+context.getPackageCodePath()+" is null");
             }
 	        df.close();
-	        System.gc();
+	        //System.gc();
 	    } catch (IOException e) {
 			Log.e("IOException "+e.getMessage());
 	    } catch (ClassNotFoundException e) {

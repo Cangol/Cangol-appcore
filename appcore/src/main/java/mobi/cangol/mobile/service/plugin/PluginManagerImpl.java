@@ -31,7 +31,7 @@ import mobi.cangol.mobile.utils.UrlUtils;
  * Created by xuewu.wei on 2016/4/14.
  */
 @Service("PluginManager")
- class PluginManagerImpl implements PluginManager {
+class PluginManagerImpl implements PluginManager {
     private final static String TAG = "PluginManager";
     private Application context = null;
     private boolean debug = false;

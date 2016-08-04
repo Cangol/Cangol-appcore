@@ -64,7 +64,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return Integer.valueOf(String.valueOf(o));
+			return Integer.parseInt(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}
@@ -118,7 +118,7 @@ public class ServiceProperty {
 			return defaultValue;
 		}
 		try {
-			return Long.valueOf(String.valueOf(o));
+			return Long.parseLong(String.valueOf(o));
 		} catch (ClassCastException e) {
 			return defaultValue;
 		}

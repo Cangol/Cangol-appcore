@@ -63,7 +63,7 @@ public abstract interface Dao<T, ID> {
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract int refresh(T paramT) throws SQLException;
+	public abstract T refresh(T paramT) throws SQLException;
 
 	/**
 	 * 更新数据对象
@@ -73,6 +73,15 @@ public abstract interface Dao<T, ID> {
 	 * @throws SQLException
 	 */
 	public abstract int update(T paramT) throws SQLException;
+
+	/**
+	 * 更新数据对象
+	 *
+	 * @param paramTs
+	 * @return
+	 * @throws SQLException
+	 */
+	public abstract int update(Collection<T> paramTs) throws SQLException;
 
 	/**
 	 * 更新数据对象根据

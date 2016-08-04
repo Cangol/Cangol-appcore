@@ -30,18 +30,18 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AESUtils {
-
+    private final static String CHARSET="utf-8";
     public static String encrypt(String seed, String content) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
-        byte[] result = encrypt(rawKey, content.getBytes());
+        byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
+        byte[] result = encrypt(rawKey, content.getBytes(CHARSET));
         return toHex(result);
     }
 
     public static String decrypt(String seed, String encrypted) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+        byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
         byte[] enc = toByte(encrypted);
         byte[] result = decrypt(rawKey, enc);
-        return new String(result);
+        return new String(result,CHARSET);
     }
 
     private static byte[] getRawKey(byte[] seed) throws Exception {

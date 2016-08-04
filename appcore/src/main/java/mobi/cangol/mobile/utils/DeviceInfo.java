@@ -122,7 +122,7 @@ public class DeviceInfo {
         long result = -1;
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
             String str = bufferedReader.readLine();
             String resultStr = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length(), str.indexOf(" kB"));
             bufferedReader.close();
@@ -141,7 +141,7 @@ public class DeviceInfo {
         String result = "";
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
             String str = bufferedReader.readLine();
             bufferedReader.close();
             result = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length()).trim();
@@ -159,7 +159,7 @@ public class DeviceInfo {
         String result = "";
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/cpuinfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
             String str = bufferedReader.readLine();
             String title = "Processor\t: ";
             result = str.substring(str.indexOf(title) + title.length());
@@ -179,7 +179,7 @@ public class DeviceInfo {
         String result = "";
         try {
             Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(),"UTF-8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String str = bufferedReader.readLine();
             result = str.trim();
@@ -637,8 +637,7 @@ public class DeviceInfo {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA1");
                 md.update(signature.toByteArray());
-                String something = new String(md.digest());
-                return something;
+                return new String(md.digest(),"UTF-8");
             }
         } catch (NameNotFoundException e1) {
             Log.e("name not found", e1.toString());

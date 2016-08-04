@@ -86,7 +86,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
         for (int i = 0; i < classList.size(); i++) {
             Log.d(TAG,"classname="+classList.get(i).getSimpleName());
         }
-        System.gc();
+        //System.gc();
 		initServiceMap(classList);
 		//initServiceProperties();
 	}
@@ -232,7 +232,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 				mPackageNames.add(name);
 				classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
 				// 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
-				System.gc();
+				//System.gc();
 			}
 			initServiceMap(classList);
 		}

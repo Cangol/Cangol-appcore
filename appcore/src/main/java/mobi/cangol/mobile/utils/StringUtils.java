@@ -19,6 +19,7 @@ package mobi.cangol.mobile.utils;
  * @author Cangol
  */
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,13 @@ public class StringUtils {
 	 * @return
 	 */
 	public static String byte2String(byte[] value) {
-		return (value == null) ? "" : new String(value);
+		String result=null;
+		try {
+			result= (value == null) ? "" : new String(value,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -472,13 +473,15 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 	}
 
 	private String hashKeyForDisk(String key) {
-		String cacheKey;
+		String cacheKey = null;
 		try {
 			final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-			mDigest.update(key.getBytes());
+			mDigest.update(key.getBytes("UTF-8"));
 			cacheKey = bytesToHexString(mDigest.digest());
 		} catch (NoSuchAlgorithmException e) {
 			cacheKey = String.valueOf(key.hashCode());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 		return cacheKey;
 	}

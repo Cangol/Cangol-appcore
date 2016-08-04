@@ -158,11 +158,27 @@ public class DownloadResource implements Serializable{
 	public void setKey(String key) {
 		this.key=key;
 	}
+
+	@Override
+	public int hashCode() {
+		return key.hashCode();
+	}
+
 	@Override
 	public boolean equals(Object o) {
-		return key!=null&&key.equals(((DownloadResource)o).getKey());
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		DownloadResource that = (DownloadResource) o;
+
+		return key.equals(that.key);
+
 	}
-	
+
 	public void reset() {
 		completeSize=0;
 		progress=0;

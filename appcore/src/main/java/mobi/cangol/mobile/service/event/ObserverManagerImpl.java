@@ -39,7 +39,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 @Service("ObserverManager")
 class ObserverManagerImpl implements ObserverManager {
     private final static String TAG = "ObserverManager";
-    private static boolean debug = true;
+    private  boolean debug = true;
     private Application mContext;
     private ServiceProperty mServiceProperty = null;
     private Application context;

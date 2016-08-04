@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StreamCorruptedException;
 import java.math.BigDecimal;
@@ -195,14 +196,13 @@ public class FileUtils {
 			if (!myFilePath.exists()) {
 				myFilePath.createNewFile();
 			}
-			FileWriter resultFile = new FileWriter(myFilePath);
-			PrintWriter myFile = new PrintWriter(resultFile);
+			OutputStreamWriter outWrite = new OutputStreamWriter(new FileOutputStream(myFilePath),"UTF-8");
+			PrintWriter myFile = new PrintWriter(outWrite);
 			String strContent = fileContent;
 			myFile.println(strContent);
-			resultFile.close();
+			outWrite.close();
 
 		} catch (Exception e) {
-			Log.d(TAG,"新建目录操作出错 ");
 			e.printStackTrace();
 
 		}
@@ -497,7 +497,7 @@ public class FileUtils {
 		StringBuilder sb = new StringBuilder();
 		String readline = "";
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
 			while (br.ready()) {
 				readline = br.readLine();
 				sb.append(readline);

@@ -19,6 +19,7 @@
 package mobi.cangol.mobile.http;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -58,7 +59,7 @@ import android.util.Log;
  */
 public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     // Allow images by default
-    private static String[] mAllowedContentTypes = new String[] {
+    private String[] mAllowedContentTypes = new String[] {
         "application/zip", 
         "application/x-zip-compressed", 
         "application/octet-stream"
@@ -146,8 +147,12 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     protected void handleFailureMessage(Throwable e,String responseBody) {
     	byte[] response = null;
     	if(responseBody!=null) {
-    		onFailure(e, responseBody.getBytes());	
-    	}else{
+            try {
+                onFailure(e, responseBody.getBytes("utf-8"));
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+        }else{
     		onFailure(e, response);	
     	}
     }
