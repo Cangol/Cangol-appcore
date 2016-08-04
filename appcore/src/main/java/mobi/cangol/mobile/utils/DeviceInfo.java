@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,89 +57,95 @@ import java.util.UUID;
 import mobi.cangol.mobile.logging.Log;
 
 public class DeviceInfo {
-	public static final String SPECIAL_IMEI="000000000000000";
-	public static final String SPECIAL_ANDROID_ID="9774d56d682e549c";
+    public static final String SPECIAL_IMEI = "000000000000000";
+    public static final String SPECIAL_ANDROID_ID = "9774d56d682e549c";
 
-	/**
-	 * 获取操作系统类型
-	 * @return
-	 */
-	public static String getOS() {
-		return "Android";
-	}
-	/**
-	 * 获取操作系统版本号
-	 * @return
-	 */
-	public static String getOSVersion() {
-		return android.os.Build.VERSION.RELEASE;
-	}
-	/**
-	 * 获取设备型号
-	 * @return
-	 */
-	public static String getDeviceModel() {
-		return android.os.Build.MODEL;
-	}
-	/**
-	 * 获取设备品牌
-	 * @return
-	 */
-	public static String getDeviceBrand() {
-		return android.os.Build.BRAND;
-	}
-	/**
-	 * 获取设备信息
-	 * @return
-	 */
-	public static String getMobileInfo() {
-		StringBuffer sb = new StringBuffer();
-		try {
+    /**
+     * 获取操作系统类型
+     * @return
+     */
+    public static String getOS() {
+        return "Android";
+    }
 
-			Field[] fields = Build.class.getDeclaredFields();
-			for (Field field : fields) {
-				field.setAccessible(true);
-				String name = field.getName();
-				String value = field.get(null).toString();
-				sb.append(name + "=" + value);
-				sb.append("\n");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return sb.toString();
-	}
+    /**
+     * 获取操作系统版本号
+     * @return
+     */
+    public static String getOSVersion() {
+        return android.os.Build.VERSION.RELEASE;
+    }
+
+    /**
+     * 获取设备型号
+     * @return
+     */
+    public static String getDeviceModel() {
+        return android.os.Build.MODEL;
+    }
+
+    /**
+     * 获取设备品牌
+     * @return
+     */
+    public static String getDeviceBrand() {
+        return android.os.Build.BRAND;
+    }
+
+    /**
+     * 获取设备信息
+     * @return
+     */
+    public static String getMobileInfo() {
+        StringBuffer sb = new StringBuffer();
+        try {
+
+            Field[] fields = Build.class.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                String name = field.getName();
+                String value = field.get(null).toString();
+                sb.append(name + "=" + value);
+                sb.append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
     /**
      * 获取设备mem 大小 单位B
      * @return
      */
-    public static long getMemSize(){
-        long result =-1;
-        try{
-            Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
+    public static long getMemSize() {
+        long result = -1;
+        try {
+            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String str = bufferedReader.readLine();
             String resultStr = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length(), str.indexOf(" kB"));
             bufferedReader.close();
-            result=Long.parseLong(resultStr.trim())*1024;
-        }catch (IOException e){
+            result = Long.parseLong(resultStr.trim()) * 1024;
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
     }
+
     /**
      * 获取设备mem信息
      * @return
      */
-    public static String getMemInfo(){
+    public static String getMemInfo() {
         String result = "";
-        try{
-            Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/meminfo" }).start();
+        try {
+            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String str = bufferedReader.readLine();
             bufferedReader.close();
-            result = str.substring(str.indexOf("MemTotal:")+"MemTotal:".length()).trim();
-        }catch (IOException e){
+            result = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length()).trim();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
@@ -149,17 +155,17 @@ public class DeviceInfo {
      * 获取设备cpu信息
      * @return
      */
-    public static String getCPUInfo(){
+    public static String getCPUInfo() {
         String result = "";
-        try{
-            Process process=new ProcessBuilder(new String[] { "/system/bin/cat", "/proc/cpuinfo" }).start();
+        try {
+            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/cpuinfo"}).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String str = bufferedReader.readLine();
-            String title="Processor\t: ";
-            result = str.substring(str.indexOf(title)+title.length());
+            String title = "Processor\t: ";
+            result = str.substring(str.indexOf(title) + title.length());
             bufferedReader.close();
             return result;
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
@@ -169,72 +175,78 @@ public class DeviceInfo {
      * 获取CPU架构
      * @return
      */
-    public static String getCPUABI(){
+    public static String getCPUABI() {
         String result = "";
-        try{
-            Process process=Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
-            InputStreamReader inputStreamReader=new InputStreamReader(process.getInputStream());
+        try {
+            Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String str = bufferedReader.readLine();
-            result=str.trim();
-        }catch (Exception e){
+            result = str.trim();
+        } catch (Exception e) {
             result = "UNKNOWN";
         }
         return result;
     }
-	/**
-	 * 获取设备分辨率
-	 * @param context
-	 * @return
-	 */
-	public static String getResolution(Context context) {
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		Point point = new Point();
+
+    /**
+     * 获取设备分辨率
+     * @param context
+     * @return
+     */
+    public static String getResolution(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point point = new Point();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             display.getRealSize(point);
             return point.y + "x" + point.x;
-        }else{
+        } else {
             DisplayMetrics dm = context.getResources().getDisplayMetrics();
             return dm.heightPixels + "x" + dm.widthPixels;
         }
-	}
-	/**
-	 * 获取状态栏高度
-	 * @param activity
-	 * @return
-	 */
-	public static int getStatusBarHeight(Activity activity){
-		Rect frame = new Rect();  
-		activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
-		return frame.top; 
-	}
-	public static DisplayMetrics getDisplayMetrics(Context context) {
-		return context.getResources().getDisplayMetrics();
-	}
-	/**
-	 * 获取设备Density
-	 * @param context
-	 * @return
-	 */
-	public static float getDensity(Context context) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); 
-		return displayMetrics.density;
-	}
-	/**
-	 * 获取设备Density
-	 * @param context
-	 * @return
-	 */
-	public static float getDensityDpi(Context context) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics(); 
-		return displayMetrics.densityDpi;
-	}
-	/**
-	 * 获取设备Densitydpi 类型
-	 * @param context
-	 * @return
-	 */
+    }
+
+    /**
+     * 获取状态栏高度
+     * @param activity
+     * @return
+     */
+    public static int getStatusBarHeight(Activity activity) {
+        Rect frame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        return frame.top;
+    }
+
+    public static DisplayMetrics getDisplayMetrics(Context context) {
+        return context.getResources().getDisplayMetrics();
+    }
+
+    /**
+     * 获取设备Density
+     * @param context
+     * @return
+     */
+    public static float getDensity(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.density;
+    }
+
+    /**
+     * 获取设备Density
+     * @param context
+     * @return
+     */
+    public static float getDensityDpi(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.densityDpi;
+    }
+
+    /**
+     * 获取设备Densitydpi 类型
+     * @param context
+     * @return
+     */
     public static String getDensityDpiStr(Context context) {
         int density = context.getResources().getDisplayMetrics().densityDpi;
         switch (density) {
@@ -256,6 +268,7 @@ public class DeviceInfo {
                 return "";
         }
     }
+
     /**
      * 获取屏幕物理尺寸 单位英寸
      * @param context
@@ -263,64 +276,70 @@ public class DeviceInfo {
      */
     public static String getScreenSize(Context context) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        int width=dm.widthPixels;
-        int height=dm.heightPixels;
-        double x = Math.pow(width,2);
-        double y = Math.pow(height,2);
-        double diagonal = Math.sqrt(x+y);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        double x = Math.pow(width, 2);
+        double y = Math.pow(height, 2);
+        double diagonal = Math.sqrt(x + y);
 
-        int dens=dm.densityDpi;
-        double screenInches = diagonal/(double)dens;
+        int dens = dm.densityDpi;
+        double screenInches = diagonal / (double) dens;
         return String.format("%.2f", screenInches);
     }
+
     /**
      * 获取设备运营商
      * @param context
      * @return
      */
-	public static String getOperator(Context context) {
-		TelephonyManager manager = (TelephonyManager) context
-				.getSystemService(Context.TELEPHONY_SERVICE);
-		return manager.getNetworkOperatorName();
-	}
-	/**
+    public static String getOperator(Context context) {
+        TelephonyManager manager = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        return manager.getNetworkOperatorName();
+    }
+
+    /**
      * 获取设备Locale信息
      * @return
      */
-	public static String getLocale() {
-		Locale locale = Locale.getDefault();
-		return locale.getLanguage() + "_" + locale.getCountry();
-	}
-	/**
+    public static String getLocale() {
+        Locale locale = Locale.getDefault();
+        return locale.getLanguage() + "_" + locale.getCountry();
+    }
+
+    /**
      * 获取设备语言
      * @return
      */
-	public static String getLanguage() {
-		Locale locale = Locale.getDefault();
-		return locale.getLanguage();
-	}
-	/**
+    public static String getLanguage() {
+        Locale locale = Locale.getDefault();
+        return locale.getLanguage();
+    }
+
+    /**
      * 获取设备国家
      * @return
      */
-	public static String getCountry() {
-		Locale locale = Locale.getDefault();
-		return locale.getCountry();
-	}
-	/**
-	 * 获取app版本号
-	 * @param context
-	 * @return
-	 */
-	public static String getAppVersion(Context context) {
-		String result = "UNKNOWN";
-		try {
-			result = context.getPackageManager().getPackageInfo(
-					context.getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-		}
-		return result;
-	}
+    public static String getCountry() {
+        Locale locale = Locale.getDefault();
+        return locale.getCountry();
+    }
+
+    /**
+     * 获取app版本号
+     * @param context
+     * @return
+     */
+    public static String getAppVersion(Context context) {
+        String result = "UNKNOWN";
+        try {
+            result = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+        }
+        return result;
+    }
+
     /**
      * 获取app版本号
      * @param context
@@ -335,23 +354,25 @@ public class DeviceInfo {
         }
         return result;
     }
-	/**
-	 * 获取Meta数据
-	 * @param context
-	 * @param key
-	 * @return
-	 */
-	public static Object getAppMetaData(Context context, String key) {
-		Object data = null;
-		ApplicationInfo appInfo;
-		try {
-			appInfo = context.getPackageManager().getApplicationInfo(
-					context.getPackageName(), PackageManager.GET_META_DATA);
-			data = appInfo.metaData.get(key);
-		} catch (NameNotFoundException e) {
-		}
-		return data;
-	}
+
+    /**
+     * 获取Meta数据
+     * @param context
+     * @param key
+     * @return
+     */
+    public static Object getAppMetaData(Context context, String key) {
+        Object data = null;
+        ApplicationInfo appInfo;
+        try {
+            appInfo = context.getPackageManager().getApplicationInfo(
+                    context.getPackageName(), PackageManager.GET_META_DATA);
+            data = appInfo.metaData.get(key);
+        } catch (NameNotFoundException e) {
+        }
+        return data;
+    }
+
     /**
      * 获取StringMeta数据
      * @param context
@@ -364,57 +385,61 @@ public class DeviceInfo {
         try {
             appInfo = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
-            if(appInfo.metaData!=null)
-            data = appInfo.metaData.getString(key);
+            if (appInfo.metaData != null)
+                data = appInfo.metaData.getString(key);
         } catch (NameNotFoundException e) {
         }
         return data;
     }
-	/**
-	 * 获取mac地址
-	 * @param context
-	 * @return
-	 */
-	public static String getMacAddress(Context context) {
-		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		WifiInfo wifiInfo = manager.getConnectionInfo();
-		String macAddress = wifiInfo.getMacAddress();
-		return macAddress;
-	}
-	/**
-	 * 获取IP地址
-	 * @param context
-	 * @return
-	 */
-	public static int getIpAddress(Context context) {
-		int ipAddress = 0;
-		WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-		WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-		if (wifiInfo == null || wifiInfo.equals("")) {
-			return ipAddress;
-		} else {
-			ipAddress = wifiInfo.getIpAddress();
-		}
-		return ipAddress;
-	}
-	/**
-	 * 获取IP地址(%d.%d.%d.%d)
-	 * @param context
-	 * @return
-	 */
-	public static String getIpStr(Context context) {
-		int ipAddress = getIpAddress(context);
-		return String.format("%d.%d.%d.%d", (ipAddress & 0xff),
-				(ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff),
-				(ipAddress >> 24 & 0xff));
-	}
-	/**
-	 * 获取系统文件编码类型
-	 * @return
-	 */
-	public static String getCharset() {
-		return System.getProperty("file.encoding");
-	}
+
+    /**
+     * 获取mac地址
+     * @param context
+     * @return
+     */
+    public static String getMacAddress(Context context) {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = manager.getConnectionInfo();
+        String macAddress = wifiInfo.getMacAddress();
+        return macAddress;
+    }
+
+    /**
+     * 获取IP地址
+     * @param context
+     * @return
+     */
+    public static int getIpAddress(Context context) {
+        int ipAddress = 0;
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo == null || wifiInfo.equals("")) {
+            return ipAddress;
+        } else {
+            ipAddress = wifiInfo.getIpAddress();
+        }
+        return ipAddress;
+    }
+
+    /**
+     * 获取IP地址(%d.%d.%d.%d)
+     * @param context
+     * @return
+     */
+    public static String getIpStr(Context context) {
+        int ipAddress = getIpAddress(context);
+        return String.format("%d.%d.%d.%d", (ipAddress & 0xff),
+                (ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff),
+                (ipAddress >> 24 & 0xff));
+    }
+
+    /**
+     * 获取系统文件编码类型
+     * @return
+     */
+    public static String getCharset() {
+        return System.getProperty("file.encoding");
+    }
 
     /**
      * 获取设备openUDID
@@ -422,188 +447,214 @@ public class DeviceInfo {
      * @return
      */
     public static String getOpenUDID(Context context) {
-        String openUDID=null;
+        String openUDID = null;
+        Class clazz = null;
         try {
-            Class clazz=Class.forName("org.OpenUDID.OpenUDID_manager");
-            Method method = clazz.getDeclaredMethod("getOpenUDID");
-            Object obj= method.invoke(null);
-            if(obj!=null){
-                openUDID=String.valueOf(obj);
-            }else{
-                syncOpenUDID(context);
-                obj= method.invoke(null);
-                openUDID=String.valueOf(obj);
-            }
+            clazz = Class.forName("org.OpenUDID.OpenUDID_manager");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            try {
+                clazz = Class.forName("org.openudid.OpenUDIDManager");
+            } catch (ClassNotFoundException e1) {
+                return null;
+            }
         }
+        Method method = null;
+        try {
+            method = clazz.getDeclaredMethod("getOpenUDID");
+            Object obj = method.invoke(null);
+            if (obj != null) {
+                openUDID = String.valueOf(obj);
+            } else {
+                syncOpenUDID(context);
+                obj = method.invoke(null);
+                openUDID = String.valueOf(obj);
+            }
+        } catch (InvocationTargetException e) {
+            Log.d("InvocationTargetException", e.toString());
+        } catch (NoSuchMethodException e) {
+            Log.d("NoSuchMethodException", e.toString());
+        } catch (IllegalAccessException e) {
+            Log.d("IllegalAccessException", e.toString());
+        }
+
         return openUDID;
     }
+
     public static void syncOpenUDID(Context context) {
+        Class clazz = null;
         try {
-            Class clazz=Class.forName("org.OpenUDID.OpenUDID_manager");
-            Method method = clazz.getDeclaredMethod("sync",Context.class);
-            method.invoke(null,context);
+            clazz = Class.forName("org.OpenUDID.OpenUDID_manager");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            try {
+                clazz = Class.forName("org.openudid.OpenUDIDManager");
+            } catch (ClassNotFoundException e1) {
+                return;
+            }
+        }
+        try {
+            Method method = clazz.getDeclaredMethod("sync", Context.class);
+            method.invoke(null, context);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            Log.d("InvocationTargetException", e.toString());
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Log.d("NoSuchMethodException", e.toString());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.d("IllegalAccessException", e.toString());
         }
     }
-	public static String getDeviceId(Context context) {
-		String did="";
-		WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		WifiInfo wifiInfo = manager.getConnectionInfo();
-		String macAddress = wifiInfo.getMacAddress();
-		if (null != macAddress) {
-			did=macAddress.replace(".", "").replace(":", "")
-					.replace("-", "").replace("_", "");
-		} else {
-			TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-			String imei = tm.getDeviceId();
-			// no sim: sdk|any pad
-			if (null != imei && !SPECIAL_IMEI.equals(imei)) {
-				did=imei;
-			} else {
-				String deviceId = Secure.getString(context.getContentResolver(),
-						Secure.ANDROID_ID);
-				// sdk: android_id
-				if (null != deviceId
-						&& !SPECIAL_ANDROID_ID.equals(deviceId)) {
-					did=deviceId;
-				} else {
-					SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
-					String uid = sp.getString("uid", null);
-					if (null == uid) {
-						SharedPreferences.Editor editor = sp.edit();
-						uid = UUID.randomUUID().toString().replace("-", "");
-						editor.putString("uid", uid);
-						editor.commit();
-					}
-		
-					did=uid;
-				}
-			}
-		}
-		return did;
-	}
-	/**
-	 * 获取网络类型
-	 * @param context
-	 * @return
-	 */
-	public static String getNetworkType(Context context) {
-		ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE); 
-	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo(); 
-	    if(networkInfo!=null){
-	    	return networkInfo.getTypeName();
-	    }else{
-	    	return "UNKNOWN";
-	    }
-	}
-	/**
-	 * 判读WIFI网络是否连接
-	 * @param context
-	 * @return
-	 */
-	public static boolean isWifiConnection(Context context){
-		 final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	     final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	     if(networkInfo!=null&&networkInfo.isConnected()){
-	    	 return true;
-	     }
-	     return false;
-	}
-	/**
-	 * 判读网络是否连接
-	 * @param context
-	 * @return
-	 */
-	public static boolean isConnection(Context context){
-		 final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	     final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-	     if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
-	        	return false;
-	      }
-	     return true;
-	}
-	/**
-	 * 判断GPS定位是否开启
-	 * @param context
-	 * @return
-	 */
-	public static boolean isGPSLocation(Context context){
-		LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-		return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-	}
-	/**
-	 * 判断网络定位是否开启
-	 * @param context
-	 * @return
-	 */
-	public static boolean isNetworkLocation(Context context){
-		LocationManager locationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-		return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-	}
-	/**
-	 * 返回签名证书MD5值
-	 * @param context
-	 * @return
-	 */
-	public static String getMD5Fingerprint(Context context) {  
-	    PackageInfo info;
-	    try {
-	        info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-	        for (Signature signature : info.signatures) {
-	        	String something=StringUtils.md5(signature.toByteArray());
-	            return something;
-	        }
-	    } catch (NameNotFoundException e1) {
-	        Log.e("name not found", e1.toString());
-	    } catch (Exception e) {
-	        Log.e("exception", e.toString());
-	    }
-		return null;
-	}
-	/**
-	 * 返回签名证书SHA1值
-	 * @param context
-	 * @return
-	 */
-	public static String getSHA1Fingerprint(Context context) {  
-	    PackageInfo info;
-	    try {
-	        info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-	        for (Signature signature : info.signatures) {
-	        	 MessageDigest md=MessageDigest.getInstance("SHA1");
-		         md.update(signature.toByteArray());
-		         String something = new String(md.digest());
-		         return something;
-	        }
-	    } catch (NameNotFoundException e1) {
-	        Log.e("name not found", e1.toString());
-	    } catch (Exception e) {
-	        Log.e("exception", e.toString());
-	    }
-		return null;
-	}
+
+    public static String getDeviceId(Context context) {
+        String did = "";
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = manager.getConnectionInfo();
+        String macAddress = wifiInfo.getMacAddress();
+        if (null != macAddress) {
+            did = macAddress.replace(".", "").replace(":", "")
+                    .replace("-", "").replace("_", "");
+        } else {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String imei = tm.getDeviceId();
+            // no sim: sdk|any pad
+            if (null != imei && !SPECIAL_IMEI.equals(imei)) {
+                did = imei;
+            } else {
+                String deviceId = Secure.getString(context.getContentResolver(),
+                        Secure.ANDROID_ID);
+                // sdk: android_id
+                if (null != deviceId
+                        && !SPECIAL_ANDROID_ID.equals(deviceId)) {
+                    did = deviceId;
+                } else {
+                    SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
+                    String uid = sp.getString("uid", null);
+                    if (null == uid) {
+                        SharedPreferences.Editor editor = sp.edit();
+                        uid = UUID.randomUUID().toString().replace("-", "");
+                        editor.putString("uid", uid);
+                        editor.commit();
+                    }
+
+                    did = uid;
+                }
+            }
+        }
+        return did;
+    }
+
+    /**
+     * 获取网络类型
+     * @param context
+     * @return
+     */
+    public static String getNetworkType(Context context) {
+        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null) {
+            return networkInfo.getTypeName();
+        } else {
+            return "UNKNOWN";
+        }
+    }
+
+    /**
+     * 判读WIFI网络是否连接
+     * @param context
+     * @return
+     */
+    public static boolean isWifiConnection(Context context) {
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判读网络是否连接
+     * @param context
+     * @return
+     */
+    public static boolean isConnection(Context context) {
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 判断GPS定位是否开启
+     * @param context
+     * @return
+     */
+    public static boolean isGPSLocation(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    /**
+     * 判断网络定位是否开启
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkLocation(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    /**
+     * 返回签名证书MD5值
+     * @param context
+     * @return
+     */
+    public static String getMD5Fingerprint(Context context) {
+        PackageInfo info;
+        try {
+            info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                String something = StringUtils.md5(signature.toByteArray());
+                return something;
+            }
+        } catch (NameNotFoundException e1) {
+            Log.e("name not found", e1.toString());
+        } catch (Exception e) {
+            Log.e("exception", e.toString());
+        }
+        return null;
+    }
+
+    /**
+     * 返回签名证书SHA1值
+     * @param context
+     * @return
+     */
+    public static String getSHA1Fingerprint(Context context) {
+        PackageInfo info;
+        try {
+            info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA1");
+                md.update(signature.toByteArray());
+                String something = new String(md.digest());
+                return something;
+            }
+        } catch (NameNotFoundException e1) {
+            Log.e("name not found", e1.toString());
+        } catch (Exception e) {
+            Log.e("exception", e.toString());
+        }
+        return null;
+    }
+
     /**
      * return activity is foreground
      * @param activityName
      * @param context
      * @return
      */
-    public static boolean isForegroundActivity(String activityName,Context context) {
+    public static boolean isForegroundActivity(String activityName, Context context) {
         if (context == null || TextUtils.isEmpty(activityName)) {
             return false;
         }
@@ -617,13 +668,14 @@ public class DeviceInfo {
         }
         return false;
     }
+
     /**
      * return applcation is foreground
      * @param packageName
      * @param context
      * @return
      */
-    public static boolean isForegroundApplication(String packageName,Context context) {
+    public static boolean isForegroundApplication(String packageName, Context context) {
         boolean result = false;
         ActivityManager am = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);

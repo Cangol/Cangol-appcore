@@ -26,6 +26,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.StrictMode;
 
+import mobi.cangol.mobile.logging.Log;
+
 class DaoImpl<T,ID> implements Dao<T, ID> {
 	private CoreSQLiteOpenHelper mDatabaseHelper;
 	private String mTableName;
@@ -35,7 +37,11 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		this.mDatabaseHelper=databaseHelper;
 		this.mClazz=clazz;
 		DatabaseTable dbtable = clazz.getAnnotation(DatabaseTable.class);
-		this.mTableName="".equals(dbtable.value())?clazz.getSimpleName():dbtable.value();
+		if(dbtable!=null){
+			this.mTableName="".equals(dbtable.value())?clazz.getSimpleName():dbtable.value();
+		}else{
+			Log.e("has no Annotation DatabaseTable clazz="+clazz.getSimpleName());
+		}
 	}
 	
 	private Cursor query(SQLiteDatabase db,QueryBuilder queryBuilder){
@@ -258,7 +264,9 @@ class DaoImpl<T,ID> implements Dao<T, ID> {
 		SQLiteDatabase db=mDatabaseHelper.getWritableDatabase();
 		int result = 0;
 		try {
+			db.beginTransaction();
 			result = db.delete(mTableName,null,null);
+			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

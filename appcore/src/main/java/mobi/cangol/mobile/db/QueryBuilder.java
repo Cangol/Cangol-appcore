@@ -98,6 +98,12 @@ public class QueryBuilder {
             } else if (pType.equals("!=")) {
                 paraKey.add(pName + "!=?");
                 paraValue.add(pValue);
+            } else if (pType.equals(">=")) {
+                paraKey.add(pName + ">=?");
+                paraValue.add(pValue);
+            } else if (pType.equals("<=")) {
+                paraKey.add(pName + "<=?");
+                paraValue.add(pValue);
             } else {
                 if (pType.indexOf("?") == -1)
                     pType += "?";
