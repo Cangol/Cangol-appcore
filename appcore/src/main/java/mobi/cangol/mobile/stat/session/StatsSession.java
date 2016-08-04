@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,6 @@ import android.content.Context;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import mobi.cangol.mobile.stat.StatAgent;
-
 public class StatsSession {
     public static final String TAG = "StatsSession";
     private static StatsSession instance;
@@ -30,12 +28,6 @@ public class StatsSession {
     private long mLastTime;
     private long unSentSessionLength = 0;
     private OnSessionListener onSessionListener;
-    static public StatsSession instance(Context context) {
-        if (instance == null)
-            instance = new StatsSession(context);
-
-        return instance;
-    }
 
     private StatsSession(Context context) {
         mLastTime = System.currentTimeMillis() / 1000;
@@ -49,12 +41,22 @@ public class StatsSession {
         }, 30 * 1000, 30 * 1000);
         unSentSessionLength = 0;
     }
+
+    static public StatsSession getInstance(Context context) {
+        if (instance == null){
+            instance = new StatsSession(context);
+        }
+        return instance;
+    }
+
     public void onDestroy() {
         mTimer.cancel();
     }
+
     public void setOnSessionListener(OnSessionListener onSessionListener) {
         this.onSessionListener = onSessionListener;
     }
+
     public void onStart(String page) {
         mQueue.beginSession(page);
     }
@@ -78,7 +80,7 @@ public class StatsSession {
         unSentSessionLength -= duration;
     }
 
-    public interface OnSessionListener{
+    public interface OnSessionListener {
         void onTick(String sessionId
                 , String beginSession
                 , String sessionDuration

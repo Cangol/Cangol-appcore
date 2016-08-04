@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,136 +25,141 @@ import mobi.cangol.mobile.http.download.DownloadResponseHandler;
 import mobi.cangol.mobile.service.PoolManager.Pool;
 
 public class DownloadTask {
-	private Pool pool;
-	private DownloadResource downloadResource;
-	private DownloadHttpClient downloadHttpClient;
-	private Future<?> future;
-	private Handler handler;
-	private boolean isRunning;
-	private DownloadNotification downloadNotification;
-	private DownloadResponseHandler responseHandler=new DownloadResponseHandler(){
-		@Override
-		public void onWait() {
-			super.onWait();
-			if(downloadNotification!=null)downloadNotification.createNotification();
-		}
-		
-		@Override
-		public void onStart(long start,long length) {
-			super.onStart(start,length);
-			downloadResource.setStatus(Download.STATUS_START);
-			downloadResource.setFileLength(length);
-			sendDownloadMessage(Download.ACTION_DOWNLOAD_START,downloadResource);
-		}
+    private Pool pool;
+    private DownloadResource downloadResource;
+    private DownloadHttpClient downloadHttpClient;
+    private Future<?> future;
+    private Handler handler;
+    private boolean isRunning;
+    private DownloadNotification downloadNotification;
+    private DownloadResponseHandler responseHandler = new DownloadResponseHandler() {
+        @Override
+        public void onWait() {
+            super.onWait();
+            if (downloadNotification != null) downloadNotification.createNotification();
+        }
 
-		@Override
-		public void onStop(long end) {
-			super.onStop(end);
-			downloadResource.setCompleteSize(end);
-			sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
-			if(downloadNotification!=null)downloadNotification.cancelNotification();
-			
-		}
-		
-		@Override
-		public void onFinish(long end) {
-			super.onFinish(end);
-			downloadResource.setStatus(Download.STATUS_FINISH);
-			downloadResource.setCompleteSize(end);
-			sendDownloadMessage(Download.ACTION_DOWNLOAD_FINISH,downloadResource);
-			if(downloadNotification!=null)downloadNotification.finishNotification();
-		}
+        @Override
+        public void onStart(long start, long length) {
+            super.onStart(start, length);
+            downloadResource.setStatus(Download.STATUS_START);
+            downloadResource.setFileLength(length);
+            sendDownloadMessage(Download.ACTION_DOWNLOAD_START, downloadResource);
+        }
 
-		@Override
-		public void onProgressUpdate(long end, int progress, int speed) {
-			super.onProgressUpdate(end, progress, speed);
-			downloadResource.setSpeed(speed);
-			downloadResource.setProgress(progress);
-			downloadResource.setCompleteSize(end);
-			sendDownloadMessage(Download.ACTION_DOWNLOAD_UPDATE,downloadResource);
-			if(downloadNotification!=null)downloadNotification.updateNotification(progress,speed);//speed 转换
-		}
-		
-		@Override
-		public void onFailure(Throwable error, String content) {
-			super.onFailure(error, content);
-			downloadResource.setException(content);
-			downloadResource.setStatus(Download.STATUS_FAILURE);
-			sendDownloadMessage(Download.ACTION_DOWNLOAD_FAILED,downloadResource);
-			if(downloadNotification!=null)downloadNotification.failureNotification();
-		}
-		
-	};
-	
-	public DownloadTask(DownloadResource downloadResource,Pool pool,Handler handler) {
-		this.downloadResource = downloadResource;
-		this.pool=pool;
-		this.handler=handler;
-		downloadHttpClient=DownloadHttpClient.build(pool.getName());
-		downloadHttpClient.setThreadPool(pool);
-	}
-	public void setDownloadNotification(DownloadNotification downloadNotification) {
-		this.downloadNotification = downloadNotification;
-	}
+        @Override
+        public void onStop(long end) {
+            super.onStop(end);
+            downloadResource.setCompleteSize(end);
+            sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
+            if (downloadNotification != null) downloadNotification.cancelNotification();
 
-	protected Future<?> exec(DownloadResource downloadResource,DownloadResponseHandler responseHandler){
-		return downloadHttpClient.send(downloadResource.getKey(), downloadResource.getUrl(), responseHandler, downloadResource.getCompleteSize(), downloadResource.getSourceFile());
-	}
-	
-	protected void start(){
-		downloadResource.setStatus(Download.STATUS_WAIT);
-		future=exec(downloadResource,responseHandler);
-		pool.getFutureTasks().add(future);
-		isRunning=true;
-	}
-	protected void restart(){
-		if(future!=null&&!future.isCancelled())
-			future.cancel(true);
-		downloadResource.reset();
-		start();
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
-	}
+        }
 
-	public void resume() {
-		downloadResource.setStatus(Download.STATUS_WAIT);
-		future=exec(downloadResource,responseHandler);
-		pool.getFutureTasks().add(future);
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE,downloadResource);
-		isRunning=true;
-	}
+        @Override
+        public void onFinish(long end) {
+            super.onFinish(end);
+            downloadResource.setStatus(Download.STATUS_FINISH);
+            downloadResource.setCompleteSize(end);
+            sendDownloadMessage(Download.ACTION_DOWNLOAD_FINISH, downloadResource);
+            if (downloadNotification != null) downloadNotification.finishNotification();
+        }
 
-	protected void stop(){
-		if(future!=null&&!future.isCancelled())
-			future.cancel(true);
-		future=null;
-		downloadResource.setStatus(Download.STATUS_STOP);
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
-		isRunning=false;
-	}
-	public void interrupt() {
-		if(future!=null&&!future.isCancelled())
-			future.cancel(true);
-		future=null;
-		downloadResource.setStatus(Download.STATUS_RERUN);
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP,downloadResource);
-		isRunning=false;
-	}
-	protected void remove() {
-		if(future!=null&&!future.isCancelled())
-			future.cancel(true);
-		future=null;
-		sendDownloadMessage(Download.ACTION_DOWNLOAD_DELETE,downloadResource);
-		isRunning=false;
-	}
+        @Override
+        public void onProgressUpdate(long end, int progress, int speed) {
+            super.onProgressUpdate(end, progress, speed);
+            downloadResource.setSpeed(speed);
+            downloadResource.setProgress(progress);
+            downloadResource.setCompleteSize(end);
+            sendDownloadMessage(Download.ACTION_DOWNLOAD_UPDATE, downloadResource);
+            if (downloadNotification != null)
+                downloadNotification.updateNotification(progress, speed);//speed 转换
+        }
 
-	public boolean isRunning() {
-		return isRunning;
-	}
+        @Override
+        public void onFailure(Throwable error, String content) {
+            super.onFailure(error, content);
+            downloadResource.setException(content);
+            downloadResource.setStatus(Download.STATUS_FAILURE);
+            sendDownloadMessage(Download.ACTION_DOWNLOAD_FAILED, downloadResource);
+            if (downloadNotification != null) downloadNotification.failureNotification();
+        }
 
-	public void sendDownloadMessage(int what, DownloadResource obj){
-		  Message msg =handler.obtainMessage(what);
-		  msg.obj = obj;
-		  msg.sendToTarget();
-	}
-	
+    };
+
+    public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler) {
+        this.downloadResource = downloadResource;
+        this.pool = pool;
+        this.handler = handler;
+        downloadHttpClient = DownloadHttpClient.build(pool.getName());
+        downloadHttpClient.setThreadPool(pool);
+    }
+
+    public void setDownloadNotification(DownloadNotification downloadNotification) {
+        this.downloadNotification = downloadNotification;
+    }
+
+    protected Future<?> exec(DownloadResource downloadResource, DownloadResponseHandler responseHandler) {
+        return downloadHttpClient.send(downloadResource.getKey(), downloadResource.getUrl(), responseHandler, downloadResource.getCompleteSize(), downloadResource.getSourceFile());
+    }
+
+    protected void start() {
+        downloadResource.setStatus(Download.STATUS_WAIT);
+        future = exec(downloadResource, responseHandler);
+        pool.getFutureTasks().add(future);
+        isRunning = true;
+    }
+
+    protected void restart() {
+        if (future != null && !future.isCancelled())
+            future.cancel(true);
+        downloadResource.reset();
+        start();
+        sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE, downloadResource);
+    }
+
+    public void resume() {
+        downloadResource.setStatus(Download.STATUS_WAIT);
+        future = exec(downloadResource, responseHandler);
+        pool.getFutureTasks().add(future);
+        sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE, downloadResource);
+        isRunning = true;
+    }
+
+    protected void stop() {
+        if (future != null && !future.isCancelled())
+            future.cancel(true);
+        future = null;
+        downloadResource.setStatus(Download.STATUS_STOP);
+        sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
+        isRunning = false;
+    }
+
+    public void interrupt() {
+        if (future != null && !future.isCancelled())
+            future.cancel(true);
+        future = null;
+        downloadResource.setStatus(Download.STATUS_RERUN);
+        sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
+        isRunning = false;
+    }
+
+    protected void remove() {
+        if (future != null && !future.isCancelled())
+            future.cancel(true);
+        future = null;
+        sendDownloadMessage(Download.ACTION_DOWNLOAD_DELETE, downloadResource);
+        isRunning = false;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public void sendDownloadMessage(int what, DownloadResource obj) {
+        Message msg = handler.obtainMessage(what);
+        msg.obj = obj;
+        msg.sendToTarget();
+    }
+
 }

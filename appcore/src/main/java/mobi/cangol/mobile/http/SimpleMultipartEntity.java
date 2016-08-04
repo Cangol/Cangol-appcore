@@ -23,28 +23,27 @@
 
 package mobi.cangol.mobile.http;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.message.BasicHeader;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Random;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.message.BasicHeader;
-
 class SimpleMultipartEntity implements HttpEntity {
     private final static char[] MULTIPART_CHARS = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    private final static String CHARSET="utf-8";
-    private String boundary = null;
-
+    private final static String CHARSET = "utf-8";
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     boolean isSetLast = false;
     boolean isSetFirst = false;
+    private String boundary = null;
 
     public SimpleMultipartEntity() {
         final StringBuffer buf = new StringBuffer();
@@ -56,8 +55,8 @@ class SimpleMultipartEntity implements HttpEntity {
 
     }
 
-    public void writeFirstBoundaryIfNeeds(){
-        if(!isSetFirst){
+    public void writeFirstBoundaryIfNeeds() {
+        if (!isSetFirst) {
             try {
                 out.write(("--" + boundary + "\r\n").getBytes(CHARSET));
             } catch (final IOException e) {
@@ -69,7 +68,7 @@ class SimpleMultipartEntity implements HttpEntity {
     }
 
     public void writeLastBoundaryIfNeeds() {
-        if(isSetLast){
+        if (isSetLast) {
             return;
         }
 
@@ -85,7 +84,7 @@ class SimpleMultipartEntity implements HttpEntity {
     public void addPart(final String key, final String value) {
         writeFirstBoundaryIfNeeds();
         try {
-            out.write(("Content-Disposition: form-data; name=\"" +key+"\"\r\n\r\n").getBytes(CHARSET));
+            out.write(("Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n").getBytes(CHARSET));
             out.write(value.getBytes("utf-8"));
             out.write(("\r\n--" + boundary + "\r\n").getBytes(CHARSET));
         } catch (final IOException e) {
@@ -93,15 +92,15 @@ class SimpleMultipartEntity implements HttpEntity {
         }
     }
 
-    public void addPart(final String key, final String fileName, final InputStream fin, final boolean isLast){
+    public void addPart(final String key, final String fileName, final InputStream fin, final boolean isLast) {
         addPart(key, fileName, fin, "application/octet-stream", isLast);
     }
 
-    public void addPart(final String key, final String fileName, final InputStream fin, String type, final boolean isLast){
+    public void addPart(final String key, final String fileName, final InputStream fin, String type, final boolean isLast) {
         writeFirstBoundaryIfNeeds();
         try {
-            type = "Content-Type: "+type+"\r\n";
-            out.write(("Content-Disposition: form-data; name=\""+ key+"\"; filename=\"" + fileName + "\"\r\n").getBytes(CHARSET));
+            type = "Content-Type: " + type + "\r\n";
+            out.write(("Content-Disposition: form-data; name=\"" + key + "\"; filename=\"" + fileName + "\"\r\n").getBytes(CHARSET));
             out.write(type.getBytes("utf-8"));
             out.write("Content-Transfer-Encoding: binary\r\n\r\n".getBytes(CHARSET));
 
@@ -110,7 +109,7 @@ class SimpleMultipartEntity implements HttpEntity {
             while ((l = fin.read(tmp)) != -1) {
                 out.write(tmp, 0, l);
             }
-            if(!isLast)
+            if (!isLast)
                 out.write(("\r\n--" + boundary + "\r\n").getBytes(CHARSET));
             out.flush();
         } catch (final IOException e) {
@@ -170,16 +169,16 @@ class SimpleMultipartEntity implements HttpEntity {
 
     @Override
     public void consumeContent() throws IOException,
-    UnsupportedOperationException {
+            UnsupportedOperationException {
         if (isStreaming()) {
             throw new UnsupportedOperationException(
-            "Streaming entity does not implement #consumeContent()");
+                    "Streaming entity does not implement #consumeContent()");
         }
     }
 
     @Override
     public InputStream getContent() throws IOException,
-    UnsupportedOperationException {
+            UnsupportedOperationException {
         return new ByteArrayInputStream(out.toByteArray());
     }
 }

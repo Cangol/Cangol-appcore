@@ -24,11 +24,14 @@ import java.io.IOException;
  */
 public class SocketHandleException extends IOException {
     private Object object;
+
     public SocketHandleException() {
     }
+
     public SocketHandleException(Object object) {
-        this.object=object;
+        this.object = object;
     }
+
     public Object getObject() {
         return object;
     }

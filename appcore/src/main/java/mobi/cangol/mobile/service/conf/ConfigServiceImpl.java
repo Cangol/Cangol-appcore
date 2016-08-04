@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,193 +31,197 @@ import mobi.cangol.mobile.utils.StorageUtils;
 /**
  * @author Cangol
  */
- class ConfigServiceImpl implements ConfigService {
-	private final static String TAG="ConfigService";
-	private Application mContext = null;
-	private ServiceProperty mServiceProperty=null;
-	private boolean mDebug=false;
-    private boolean mUseInternalStorage=false;
-	private boolean mIsCustomAppDir=false;
-	private File mAppDir;
-	@Override
-	public void onCreate(Application context) {
-		mContext=context;
-		mAppDir=initAppDir();
-	}
-	@Override
-	public void setDebug(boolean debug) {
-		mDebug=debug;
-	}
-	@Override
-	public void init(ServiceProperty serviceProperty) {
-		this.mServiceProperty=serviceProperty;
-	}
+class ConfigServiceImpl implements ConfigService {
+    private final static String TAG = "ConfigService";
+    private Application mContext = null;
+    private ServiceProperty mServiceProperty = null;
+    private boolean mDebug = false;
+    private boolean mUseInternalStorage = false;
+    private boolean mIsCustomAppDir = false;
+    private File mAppDir;
 
-	@Override
-	public ServiceProperty getServiceProperty() {
-		return mServiceProperty;
-	}
+    @Override
+    public void onCreate(Application context) {
+        mContext = context;
+        mAppDir = initAppDir();
+    }
 
-	@Override
-	public ServiceProperty defaultServiceProperty() {
-		ServiceProperty sp=new ServiceProperty(TAG);
-		sp.putString(IMAGE_DIR, "image");
-		sp.putString(DOWNLOAD_DIR, "download");
-		sp.putString(TEMP_DIR,"temp");
-		sp.putString(UPGRADE_DIR,"upgrade");
-		sp.putString(DATABASE_NAME,"app_db");
-		sp.putString(SHARED_NAME,"app_shared");
-		return sp;
-	}
+    @Override
+    public void setDebug(boolean debug) {
+        mDebug = debug;
+    }
 
-	@Override
-	public String getName() {
-		return TAG;
-	}
+    @Override
+    public void init(ServiceProperty serviceProperty) {
+        this.mServiceProperty = serviceProperty;
+    }
 
-	@Override
-	public void onDestroy() {
-		
-	}
+    @Override
+    public ServiceProperty getServiceProperty() {
+        return mServiceProperty;
+    }
+
+    @Override
+    public ServiceProperty defaultServiceProperty() {
+        ServiceProperty sp = new ServiceProperty(TAG);
+        sp.putString(IMAGE_DIR, "image");
+        sp.putString(DOWNLOAD_DIR, "download");
+        sp.putString(TEMP_DIR, "temp");
+        sp.putString(UPGRADE_DIR, "upgrade");
+        sp.putString(DATABASE_NAME, "app_db");
+        sp.putString(SHARED_NAME, "app_shared");
+        return sp;
+    }
+
+    @Override
+    public String getName() {
+        return TAG;
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
+    public boolean isUseInternalStorage() {
+        return mUseInternalStorage;
+    }
 
     public void setUseInternalStorage(boolean useInternalStorage) {
-		if(!mIsCustomAppDir){
-			this.mUseInternalStorage = useInternalStorage;
-			mAppDir=initAppDir();
-		}
+        if (!mIsCustomAppDir) {
+            this.mUseInternalStorage = useInternalStorage;
+            mAppDir = initAppDir();
+        }
     }
 
-	@Override
-	public boolean isUseInternalStorage() {
-		return mUseInternalStorage;
-	}
-
-	@Override
-	public File getAppDir() {
-		return mAppDir;
-	}
+    @Override
+    public File getAppDir() {
+        return mAppDir;
+    }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-	@Override
-	public boolean setCustomAppDir(String path) {
+    @Override
+    public boolean setCustomAppDir(String path) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-		File file=new File(path);
-		if(file.exists()){
+        File file = new File(path);
+        if (file.exists()) {
             StrictMode.setThreadPolicy(oldPolicy);
-			mAppDir=file;
-			mIsCustomAppDir=true;
-			return true;
-		}else{
-			boolean mkdirs= file.mkdirs();
+            mAppDir = file;
+            mIsCustomAppDir = true;
+            return true;
+        } else {
+            boolean mkdirs = file.mkdirs();
             StrictMode.setThreadPolicy(oldPolicy);
-			if(mkdirs){
-				mAppDir=file;
-				mIsCustomAppDir=true;
-				return true;
-			}else
-				throw new IllegalArgumentException("mkdirs fail. path="+path);
-		}
-	}
+            if (mkdirs) {
+                mAppDir = file;
+                mIsCustomAppDir = true;
+                return true;
+            } else
+                throw new IllegalArgumentException("mkdirs fail. path=" + path);
+        }
+    }
 
-	@Override
-	public boolean isCustomAppDir() {
-		return mIsCustomAppDir;
-	}
+    @Override
+    public boolean isCustomAppDir() {
+        return mIsCustomAppDir;
+    }
 
-	@Override
-	public void resetAppDir() {
-		mIsCustomAppDir=false;
-		mAppDir=initAppDir();
-	}
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private File initAppDir(){
-		StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-		File file=null;
-		if(mUseInternalStorage){
-			file=  mContext.getFilesDir().getParentFile();
-		}else{
-			if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
-				file= new File(StorageUtils.getExternalStorageDir(mContext,mContext.getPackageName()));
-			else
-				file=  mContext.getFilesDir().getParentFile();
-		}
-		StrictMode.setThreadPolicy(oldPolicy);
-		return file;
-	}
+    @Override
+    public void resetAppDir() {
+        mIsCustomAppDir = false;
+        mAppDir = initAppDir();
+    }
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public File getFileDir(String name) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private File initAppDir() {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        File file=null;
-		if(mIsCustomAppDir){
-			file=new File(mAppDir,name);
-		}else{
-			if(mUseInternalStorage){
-				file=  mContext.getFileStreamPath(name);
-			}else{
-				if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
-					file= StorageUtils.getExternalFileDir(mContext, name);
-				else
-					file=  mContext.getFileStreamPath(name);
-
-			}
-		}
-		if(!file.exists())
-			file.mkdirs();
+        File file = null;
+        if (mUseInternalStorage) {
+            file = mContext.getFilesDir().getParentFile();
+        } else {
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+                file = new File(StorageUtils.getExternalStorageDir(mContext, mContext.getPackageName()));
+            else
+                file = mContext.getFilesDir().getParentFile();
+        }
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
     }
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    @Override
-	public File getCacheDir() {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public File getFileDir(String name) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        File file=null;
-		if(mIsCustomAppDir){
-			file=new File(mAppDir,"cache");
-		}else{
-			if(mUseInternalStorage){
-				file=  mContext.getCacheDir();
-			}else{
-				if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
-					file= StorageUtils.getExternalCacheDir(mContext);
-				else
-					file=  mContext.getCacheDir();
-			}
-		}
-		if(!file.exists())
-			file.mkdirs();
+        File file = null;
+        if (mIsCustomAppDir) {
+            file = new File(mAppDir, name);
+        } else {
+            if (mUseInternalStorage) {
+                file = mContext.getFileStreamPath(name);
+            } else {
+                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+                    file = StorageUtils.getExternalFileDir(mContext, name);
+                else
+                    file = mContext.getFileStreamPath(name);
+
+            }
+        }
+        if (!file.exists())
+            file.mkdirs();
         StrictMode.setThreadPolicy(oldPolicy);
         return file;
-	}
+    }
 
-	@Override
-	public File getImageDir() {
-		return getFileDir(mServiceProperty.getString(ConfigService.IMAGE_DIR));
-	}
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
+    public File getCacheDir() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        File file = null;
+        if (mIsCustomAppDir) {
+            file = new File(mAppDir, "cache");
+        } else {
+            if (mUseInternalStorage) {
+                file = mContext.getCacheDir();
+            } else {
+                if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) && !StorageUtils.isExternalStorageRemovable())
+                    file = StorageUtils.getExternalCacheDir(mContext);
+                else
+                    file = mContext.getCacheDir();
+            }
+        }
+        if (!file.exists())
+            file.mkdirs();
+        StrictMode.setThreadPolicy(oldPolicy);
+        return file;
+    }
 
-	@Override
-	public File getTempDir() {
-		return getFileDir(mServiceProperty.getString(ConfigService.TEMP_DIR));
-	}
+    @Override
+    public File getImageDir() {
+        return getFileDir(mServiceProperty.getString(ConfigService.IMAGE_DIR));
+    }
 
-	@Override
-	public File getDownloadDir() {
-		return getFileDir(mServiceProperty.getString(ConfigService.DOWNLOAD_DIR));
-	}
-	
-	@Override
-	public File getUpgradeDir() {
-		return getFileDir(mServiceProperty.getString(ConfigService.UPGRADE_DIR));
-	}
-	
-	@Override
-	public String getDatabaseName() {
-		return mServiceProperty.getString(ConfigService.DATABASE_NAME);
-	}
+    @Override
+    public File getTempDir() {
+        return getFileDir(mServiceProperty.getString(ConfigService.TEMP_DIR));
+    }
 
-	@Override
-	public String getSharedName() {
-		return mServiceProperty.getString(ConfigService.SHARED_NAME);
-	}
+    @Override
+    public File getDownloadDir() {
+        return getFileDir(mServiceProperty.getString(ConfigService.DOWNLOAD_DIR));
+    }
+
+    @Override
+    public File getUpgradeDir() {
+        return getFileDir(mServiceProperty.getString(ConfigService.UPGRADE_DIR));
+    }
+
+    @Override
+    public String getDatabaseName() {
+        return mServiceProperty.getString(ConfigService.DATABASE_NAME);
+    }
+
+    @Override
+    public String getSharedName() {
+        return mServiceProperty.getString(ConfigService.SHARED_NAME);
+    }
 }

@@ -30,7 +30,6 @@ import mobi.cangol.mobile.service.ServiceProperty;
 
 /**
  * @author Cangol
- *
  */
 @Service("AnalyticsService")
 class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
@@ -113,8 +112,8 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         if (mTrackers.containsKey(trackingId)) {
             return mTrackers.get(trackingId);
         } else {
-            ITracker tracker=new ITracker(trackingId, this);
-            mTrackers.put(trackingId,tracker);
+            ITracker tracker = new ITracker(trackingId, this);
+            mTrackers.put(trackingId, tracker);
             return tracker;
         }
     }

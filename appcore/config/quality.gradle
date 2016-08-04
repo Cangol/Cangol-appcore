@@ -62,7 +62,7 @@ task pmd(type: Pmd) {
     ruleSetFiles = files("config/quality/pmd/pmd-ruleset.xml")
     ruleSets = []
 
-    source 'src'
+    source 'src/main'
     include '**/*.java'
     exclude '**/gen/**'
 

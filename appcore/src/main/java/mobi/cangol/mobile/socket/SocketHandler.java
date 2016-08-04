@@ -32,8 +32,11 @@ import mobi.cangol.mobile.logging.Log;
  */
 public abstract class SocketHandler {
     protected static final int FAIL_MESSAGE = -1;
+    protected static final int START_MESSAGE = -4;
     protected static final int CONNECTED_MESSAGE = -2;
     protected static final int DISCONNECTED_MESSAGE = -3;
+    protected Object readLocker;
+    protected Object writeLocker;
     private Handler handler;
 
     public SocketHandler() {
@@ -44,7 +47,34 @@ public abstract class SocketHandler {
                 }
             };
         }
+        readLocker = new Object();
+        writeLocker = new Object();
     }
+
+    public void waitWrite() {
+        try {
+            writeLocker.wait();
+        } catch (InterruptedException e) {
+            Log.d(e.getMessage());
+        }
+    }
+
+    public void waitRead() {
+        try {
+            writeLocker.wait();
+        } catch (InterruptedException e) {
+           Log.d(e.getMessage());
+        }
+    }
+
+    public void notifyWrite() {
+        writeLocker.notify();
+    }
+
+    public void notifyRead() {
+        readLocker.notify();
+    }
+
     protected void sendMessage(Message msg) {
         if (handler != null) {
             handler.sendMessage(msg);
@@ -68,8 +98,11 @@ public abstract class SocketHandler {
     protected void handleMessage(Message msg) {
         switch (msg.what) {
             case FAIL_MESSAGE:
-                Object[]  response = (Object[])msg.obj;
+                Object[] response = (Object[]) msg.obj;
                 handleFailMessage(response[0], (Exception) response[1]);
+                break;
+            case START_MESSAGE:
+                handleStartMessage();
                 break;
             case CONNECTED_MESSAGE:
                 handleConnectedMessage();
@@ -79,32 +112,43 @@ public abstract class SocketHandler {
                 break;
         }
     }
-    public void whileRunnable(final Runnable r, final long delayMillis){
+
+    public void whileRunnable(final Runnable r, final long delayMillis) {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Log.d("SocketThread", "whileRunnable");
                 new Thread(r).start();
-                whileRunnable(r,delayMillis);
+                whileRunnable(r, delayMillis);
             }
         }, delayMillis);
     }
-    abstract public boolean  handleSocketWrite(OutputStream outputStream) throws IOException;
 
-    abstract public boolean  handleSocketRead(int timeout,InputStream inputStream) throws IOException, ClassNotFoundException;
+    abstract public boolean handleSocketWrite(OutputStream outputStream) throws IOException;
+
+    abstract public boolean handleSocketRead(int timeout, InputStream inputStream) throws IOException, ClassNotFoundException;
 
     abstract protected Object getSend();
 
     abstract protected void onFail(Object obj, Exception e);
 
-    protected void onConnected() {}
+    protected void onStart() {
+    }
+
+    protected void onConnected() {
+    }
 
 
-    protected void onDisconnected() {}
+    protected void onDisconnected() {
+    }
 
 
     public void sendFailMessage(Object obj) {
         sendMessage(obtainMessage(FAIL_MESSAGE, obj));
+    }
+
+    public void sendStartMessage() {
+        sendMessage(obtainMessage(START_MESSAGE, null));
     }
 
     public void sendConnectedMessage() {
@@ -115,8 +159,12 @@ public abstract class SocketHandler {
         sendMessage(obtainMessage(DISCONNECTED_MESSAGE, null));
     }
 
-    protected void handleFailMessage(Object obj,Exception exception) {
-        onFail(obj,exception);
+    protected void handleFailMessage(Object obj, Exception exception) {
+        onFail(obj, exception);
+    }
+
+    protected void handleStartMessage() {
+        onStart();
     }
 
     protected void handleConnectedMessage() {
@@ -126,6 +174,5 @@ public abstract class SocketHandler {
     protected void handleDisconnectedMessage() {
         onDisconnected();
     }
-
 
 }

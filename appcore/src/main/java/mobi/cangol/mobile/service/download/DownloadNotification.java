@@ -21,15 +21,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.StrictMode;
 import android.support.v4.app.NotificationCompat;
 
-import java.io.File;
 import java.util.Random;
 
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
 
 
@@ -41,7 +36,7 @@ public class DownloadNotification {
     private Context context;
     private Intent finishIntent;
 
-    public DownloadNotification(Context context, String title, String savePath, Intent finishIntent,String successText, String failureText) {
+    public DownloadNotification(Context context, String title, String savePath, Intent finishIntent, String successText, String failureText) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
@@ -52,7 +47,8 @@ public class DownloadNotification {
         notificationManager.cancelAll();
 
     }
-    public DownloadNotification(Context context, String title, String savePath,Intent finishIntent) {
+
+    public DownloadNotification(Context context, String title, String savePath, Intent finishIntent) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
@@ -63,6 +59,7 @@ public class DownloadNotification {
         notificationManager.cancelAll();
 
     }
+
     public int getId() {
         return id;
     }

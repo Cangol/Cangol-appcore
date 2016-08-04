@@ -18,7 +18,8 @@ package mobi.cangol.mobile.security;
 import java.io.UnsupportedEncodingException;
 
 /**
- *  base64加密解密类
+ * base64加密解密类
+ *
  * @author Cangol
  */
 
@@ -71,7 +72,7 @@ public class Base64 {
             convert4To3(sourceBytes, targetBytes, group * 3);
         }
         try {
-            return new String(targetBytes, 0, targetBytes.length - numExtraBytes,"utf-8");
+            return new String(targetBytes, 0, targetBytes.length - numExtraBytes, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

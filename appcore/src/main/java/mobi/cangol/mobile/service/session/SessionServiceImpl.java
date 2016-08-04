@@ -31,7 +31,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
  * Created by weixuewu on 15/10/24.
  */
 @Service("SessionService")
- class SessionServiceImpl implements SessionService {
+class SessionServiceImpl implements SessionService {
     private final static String TAG = "SessionService";
     private final static String JSON = ".json";
     private final static String JSONA = ".jsona";
@@ -98,15 +98,15 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public int getInt(String key, int defValue) {
-        if(mMap.containsKey(key)){
-           return (int) mMap.get(key);
+        if (mMap.containsKey(key)) {
+            return (int) mMap.get(key);
         }
         return defValue;
     }
 
     @Override
     public boolean getBoolean(String key, boolean defValue) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (boolean) mMap.get(key);
         }
         return defValue;
@@ -114,7 +114,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public long getLong(String key, long defValue) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (long) mMap.get(key);
         }
         return defValue;
@@ -122,7 +122,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public float getFloat(String key, float defValue) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (float) mMap.get(key);
         }
         return defValue;
@@ -130,7 +130,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public String getString(String key, String defValue) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (String) mMap.get(key);
         }
         return defValue;
@@ -138,7 +138,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public Set<String> getStringSet(String key, Set<String> defValue) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (Set<String>) mMap.get(key);
         }
         return defValue;
@@ -146,7 +146,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public JSONObject getJSONObject(String key) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (JSONObject) mMap.get(key);
         }
         return null;
@@ -154,7 +154,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public JSONArray getJSONArray(String key) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (JSONArray) mMap.get(key);
         }
         return null;
@@ -162,7 +162,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public Serializable getSerializable(String key) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return (Serializable) mMap.get(key);
         }
         return null;
@@ -207,7 +207,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public void saveJSONObject(String key, JSONObject value) {
-        Object2FileUtils.writeJSONObject2File( value, mConfigService.getCacheDir() + File.separator + key + JSON);
+        Object2FileUtils.writeJSONObject2File(value, mConfigService.getCacheDir() + File.separator + key + JSON);
         mMap.put(key, value);
     }
 
@@ -222,6 +222,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
         Object2FileUtils.writeObject(value, mConfigService.getCacheDir() + File.separator + key + SER);
         mMap.put(key, value);
     }
+
     @Override
     public void saveAll(Map<String, ?> map) {
         for (String key : map.keySet()) {
@@ -245,14 +246,14 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
                 saveSerializable(key, (Serializable) map.get(key));
             } else {
                 //其他缓存方案
-                throw new IllegalArgumentException(map.get(key).getClass()+" is not cache type");
+                throw new IllegalArgumentException(map.get(key).getClass() + " is not cache type");
             }
         }
     }
 
     @Override
     public Object get(String key) {
-        if(mMap.containsKey(key)){
+        if (mMap.containsKey(key)) {
             return mMap.get(key);
         }
         return null;
@@ -260,7 +261,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 
     @Override
     public void put(String key, Object value) {
-        mMap.put(key,value);
+        mMap.put(key, value);
     }
 
     @Override
@@ -284,13 +285,14 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
         Map<String, ?> map = getShared().getAll();
         StrictMode.setThreadPolicy(oldPolicy);
         mMap.putAll(map);
-        new AsyncTask<String, Void, List<File>>(){
+        new AsyncTask<String, Void, List<File>>() {
             @Override
             protected List<File> doInBackground(String... params) {
-                List<File> files=FileUtils.searchBySuffix(new File(params[0]), null, params[1],params[2],params[3]);
+                List<File> files = FileUtils.searchBySuffix(new File(params[0]), null, params[1], params[2], params[3]);
                 //System.gc();
                 return files;
             }
+
             @Override
             protected void onPostExecute(List<File> files) {
                 super.onPostExecute(files);

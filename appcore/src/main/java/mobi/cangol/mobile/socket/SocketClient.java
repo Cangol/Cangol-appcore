@@ -26,30 +26,50 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
 
-import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 
 /**
  * Created by weixuewu on 15/11/11.
  */
 public class SocketClient {
-    private final static String TAG = "SocketClient";
-    private final static boolean DEBUG = false;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
 
     private PoolManager.Pool threadPool;
+    private int port;
+    private String host;
+    private boolean isLong;
+    private int timeout = 10 * 1000;
+    protected SocketClient() {
+        threadPool = PoolManager.buildPool("SocketClient", 3);
+        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
+    }
 
     public static SocketClient build() {
         return new SocketClient();
     }
 
-    protected SocketClient() {
-        threadPool = PoolManager.buildPool(TAG,3);
-        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public void setLong(boolean aLong) {
+        isLong = aLong;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public Future<?> connect(Context context, SocketHandler socketHandler) {
+        return connect(context, this.host, this.port, this.isLong, this.timeout, socketHandler);
     }
 
     public Future<?> connect(Context context, String host, int port, boolean isLong, int timeout, SocketHandler socketHandler) {
-        Future<?> request = threadPool.submit(new SocketThread(host, port, isLong,timeout, socketHandler));
+        Future<?> request = threadPool.submit(new SocketThread(host, port, isLong, timeout, threadPool.getExecutorService(), socketHandler));
         // Add request to request map
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList == null) {
@@ -67,7 +87,6 @@ public class SocketClient {
                 Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
-                    if (DEBUG) Log.d(TAG, "cancelRequests");
                 }
             }
         }

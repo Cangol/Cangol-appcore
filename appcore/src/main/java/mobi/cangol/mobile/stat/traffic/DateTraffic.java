@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,26 +23,26 @@ import mobi.cangol.mobile.db.DatabaseTable;
  */
 
 @DatabaseTable("DATE_TRAFFIC")
-public class DateTraffic{
-    @DatabaseField(primaryKey=true,notNull=true)
+public class DateTraffic {
+    @DatabaseField(primaryKey = true, notNull = true)
     public int _id;
-    @DatabaseField(value="status",notNull=true)
+    @DatabaseField(value = "status", notNull = true)
     public int status;
-    @DatabaseField(value="date",notNull=true)
+    @DatabaseField(value = "date", notNull = true)
     public String date;
-    @DatabaseField(value="uid",notNull=true)
+    @DatabaseField(value = "uid", notNull = true)
     public int uid;
-    @DatabaseField(value="total_rx",notNull=true)
+    @DatabaseField(value = "total_rx", notNull = true)
     public long totalRx;
-    @DatabaseField(value="total_tx",notNull=true)
+    @DatabaseField(value = "total_tx", notNull = true)
     public long totalTx;
-    @DatabaseField(value="mobile_rx",notNull=true)
+    @DatabaseField(value = "mobile_rx", notNull = true)
     public long mobileRx;
-    @DatabaseField(value="mobile_tx",notNull=true)
+    @DatabaseField(value = "mobile_tx", notNull = true)
     public long mobileTx;
-    @DatabaseField(value="wifi_rx",notNull=true)
+    @DatabaseField(value = "wifi_rx", notNull = true)
     public long wifiRx;
-    @DatabaseField(value="wifi_tx",notNull=true)
+    @DatabaseField(value = "wifi_tx", notNull = true)
     public long wifiTx;
 
     @Override

@@ -160,12 +160,14 @@ public interface SessionService extends AppService {
      * @param map
      */
     void saveAll(Map<String, ?> map);
+
     /**
      * 获取缓存Object
      *
      * @param key
      */
     Object get(String key);
+
     /**
      * 缓存Object
      *

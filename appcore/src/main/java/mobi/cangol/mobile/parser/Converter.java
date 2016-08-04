@@ -37,12 +37,12 @@ public class Converter {
         return XmlUtils.parserToList(c, str, useAnnotation);
     }
 
-    public static <T> T  parserJson(Class<T> c,String str,boolean useAnnotation) throws JSONParserException{
-        return JsonUtils.parserToObject(c,str,useAnnotation);
+    public static <T> T parserJson(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+        return JsonUtils.parserToObject(c, str, useAnnotation);
     }
 
-    public static <T> ArrayList<T> parserJsonList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException{
-        return JsonUtils.parserToList(c,str,useAnnotation);
+    public static <T> ArrayList<T> parserJsonList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+        return JsonUtils.parserToList(c, str, useAnnotation);
     }
 
     /**
@@ -129,6 +129,7 @@ public class Converter {
             return defaultValue;
         }
     }
+
     protected static boolean isTransient(Class clz) {
         return Modifier.isTransient(clz.getModifiers());
     }
@@ -176,7 +177,7 @@ public class Converter {
                 filedName = TextUtils.isEmpty(element.value()) ? field.getName() : element.value();
             } else if (field.isAnnotationPresent(ElementList.class)) {
                 ElementList elementList = field.getAnnotation(ElementList.class);
-                filedName =TextUtils.isEmpty(elementList.value())? field.getName() : elementList.value();
+                filedName = TextUtils.isEmpty(elementList.value()) ? field.getName() : elementList.value();
             } else {
                 //do nothing
                 filedName = field.getName();

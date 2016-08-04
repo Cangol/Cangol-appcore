@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,13 +60,13 @@ public class DownloadRetryHandler implements HttpRequestRetryHandler {
     }
 
     public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
-        Log.d("download retryRequest", "exception:" +exception.getClass()+" executionCount="+executionCount);
+        Log.d("download retryRequest", "exception:" + exception.getClass() + " executionCount=" + executionCount);
         boolean retry = true;
 
         Boolean b = (Boolean) context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
         boolean sent = (b != null && b.booleanValue());
 
-        if(executionCount > maxRetries) {
+        if (executionCount > maxRetries) {
             // Do not retry if over max retry count
             retry = false;
         } else if (exceptionBlacklist.contains(exception.getClass())) {
@@ -75,19 +75,18 @@ public class DownloadRetryHandler implements HttpRequestRetryHandler {
         } else if (exceptionWhitelist.contains(exception.getClass())) {
             // immediately retry if error is whitelisted
             retry = true;
-        }
-        else if (!sent) {
+        } else if (!sent) {
             // for most other errors, retry only if request hasn't been fully sent yet
             retry = true;
         }
 
-        if(retry) {
+        if (retry) {
             // resend all idempotent requests
-            HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute( ExecutionContext.HTTP_REQUEST );
-            if(null==currentReq)return false;
+            HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
+            if (null == currentReq) return false;
         }
 
-        if(retry) {
+        if (retry) {
             SystemClock.sleep(RETRY_SLEEP_TIME_MILLIS);
         } else {
             exception.printStackTrace();

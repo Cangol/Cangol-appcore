@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,14 +20,14 @@ import java.util.List;
 
 
 public class QueryBuilder {
-    private boolean distinct;
+    private boolean distinctValue;
     private String table;
-    private String orderBy;
-    private String groupBy;
-    private String having;
+    private String orderByValue;
+    private String groupByValue;
+    private String havingValue;
 
-    private Long limit = null;
-    private Long offset = null;
+    private Long limitValue = null;
+    private Long offsetValue = null;
 
 
     private List<String> paraKey;
@@ -67,7 +67,7 @@ public class QueryBuilder {
      * @param isOr
      */
     public void addQuery(String pName, Object pValue, String pType, boolean isOr) {
-        if (pName != null && !pName.toString().equals("") && pValue != null && !pValue.toString().equals("")) {
+        if (pName != null && !"".equals(pName) && pValue != null && !"".equals(String.valueOf(pValue))) {
             if (pValue == null || pValue.toString().trim().equals("")) {
                 paraKey.add(pName + "=?");
                 paraValue.add(pValue);
@@ -105,8 +105,9 @@ public class QueryBuilder {
                 paraKey.add(pName + "<=?");
                 paraValue.add(pValue);
             } else {
-                if (pType.indexOf("?") == -1)
+                if (pType.indexOf('?') == -1) {
                     pType += "?";
+                }
                 paraKey.add(pName + pType);
                 paraValue.add(pValue);
             }
@@ -124,7 +125,7 @@ public class QueryBuilder {
      * @param isOr
      */
     public void addQuery(String pName, Object pValue1, Object pValue2, String pType, boolean isOr) {
-        if (pName != null && !pName.toString().equals("") && !pValue1.toString().equals("") && !pValue2.toString().equals("")) {
+        if (pName != null && !"".equals(pName) && !"".equals(String.valueOf(pValue1)) && !"".equals(String.valueOf(pValue2))) {
             if (pType.equals("between")) {
                 paraKey.add(pName + " between " + pValue1 + " and " + pValue2);
             }
@@ -136,10 +137,12 @@ public class QueryBuilder {
         StringBuffer sql = new StringBuffer();
         if (paraKey != null) {
             for (int i = 0; i < paraKey.size(); i++) {
-                if (i == 0)
+                if (i == 0) {
                     ;
-                else
+                } else {
                     sql.append(condList.get(i));
+                }
+
                 sql.append(paraKey.get(i));
             }
             return sql.toString();
@@ -162,8 +165,8 @@ public class QueryBuilder {
 
     }
 
-    protected boolean isDistinct() {
-        return distinct;
+    protected boolean isDistinctValue() {
+        return distinctValue;
     }
 
     /**
@@ -172,28 +175,28 @@ public class QueryBuilder {
      * @param distinct
      */
     public void distinct(boolean distinct) {
-        this.distinct = distinct;
+        this.distinctValue = distinct;
     }
 
     protected String getTable() {
         return table;
     }
 
-    protected String getOrderBy() {
-        return orderBy;
+    protected String getOrderByValue() {
+        return orderByValue;
     }
 
     /**
-     * 设置 orderBy
+     * 设置 orderByValue
      *
      * @param orderBy
      */
     public void orderBy(String orderBy) {
-        this.orderBy = orderBy;
+        this.orderByValue = orderBy;
     }
 
-    protected String getGroupBy() {
-        return groupBy;
+    protected String getGroupByValue() {
+        return groupByValue;
     }
 
     /**
@@ -202,11 +205,11 @@ public class QueryBuilder {
      * @param groupBy
      */
     public void groupBy(String groupBy) {
-        this.groupBy = groupBy;
+        this.groupByValue = groupBy;
     }
 
-    protected String getHaving() {
-        return having;
+    protected String getHavingValue() {
+        return havingValue;
     }
 
     /**
@@ -215,17 +218,18 @@ public class QueryBuilder {
      * @param having
      */
     public void having(String having) {
-        this.having = having;
+        this.havingValue = having;
     }
 
-    protected String getLimit() {
-        if (limit != null) {
-            if (offset != null) {
-                return offset + "," + limit;
+    protected String getLimitValue() {
+        if (limitValue != null) {
+            if (offsetValue != null) {
+                return offsetValue + "," + limitValue;
             }
-            return "" + limit;
-        } else
+            return "" + limitValue;
+        } else {
             return null;
+        }
     }
 
     /**
@@ -234,7 +238,7 @@ public class QueryBuilder {
      * @param limit
      */
     public void limit(long limit) {
-        this.limit = limit;
+        this.limitValue = limit;
     }
 
     /**
@@ -243,7 +247,7 @@ public class QueryBuilder {
      * @param offset
      */
     public void offset(long offset) {
-        this.offset = offset;
+        this.offsetValue = offset;
     }
 
 }

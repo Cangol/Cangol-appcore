@@ -1,42 +1,42 @@
 package mobi.cangol.mobile.http;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.http.conn.ClientConnectionManager;
 
+import java.util.concurrent.TimeUnit;
+
 public class IdleConnectionMonitorThread extends Thread {
-	private final ClientConnectionManager connMgr;
-	private volatile boolean shutdown;
-	private final static int IDLE_TIME_SECONDS = 30;
-	private final static int WAIT_TIME = 5000;
+    private final static int IDLE_TIME_SECONDS = 30;
+    private final static int WAIT_TIME = 5000;
+    private final ClientConnectionManager connMgr;
+    private volatile boolean shutdown;
 
-	public IdleConnectionMonitorThread(ClientConnectionManager connMgr) {
-		super();
-		this.connMgr = connMgr;
-	}
+    public IdleConnectionMonitorThread(ClientConnectionManager connMgr) {
+        super();
+        this.connMgr = connMgr;
+    }
 
-	@Override
-	public void run() {
-		try {
-			while (!shutdown) {
-				synchronized (this) {
-					wait(WAIT_TIME);
-					// Close expired connections
-					connMgr.closeExpiredConnections();
-					// Optionally, close connections
-					// that have been idle longer than IDLE_TIME_SECONDS
-					connMgr.closeIdleConnections(IDLE_TIME_SECONDS,TimeUnit.SECONDS);
-				}
-			}
-		} catch (InterruptedException ex) {
-			shutdown();
-		}
-	}
+    @Override
+    public void run() {
+        try {
+            while (!shutdown) {
+                synchronized (this) {
+                    wait(WAIT_TIME);
+                    // Close expired connections
+                    connMgr.closeExpiredConnections();
+                    // Optionally, close connections
+                    // that have been idle longer than IDLE_TIME_SECONDS
+                    connMgr.closeIdleConnections(IDLE_TIME_SECONDS, TimeUnit.SECONDS);
+                }
+            }
+        } catch (InterruptedException ex) {
+            shutdown();
+        }
+    }
 
-	public void shutdown() {
-		shutdown = true;
-		synchronized (this) {
-			notifyAll();
-		}
-	}
+    public void shutdown() {
+        shutdown = true;
+        synchronized (this) {
+            notifyAll();
+        }
+    }
 }

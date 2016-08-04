@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,9 +27,10 @@ import mobi.cangol.mobile.logging.Log;
 /**
  * Created by weixuewu on 16/1/23.
  */
-class TrafficDbService{
+class TrafficDbService {
     private Dao<DateTraffic, Integer> dateTrafficDao;
     private Dao<AppTraffic, Integer> appTrafficDao;
+
     public TrafficDbService(Context context) {
         try {
             StatDatabaseHelper dbHelper = StatDatabaseHelper
@@ -37,11 +38,11 @@ class TrafficDbService{
             dateTrafficDao = dbHelper.getDao(DateTraffic.class);
             appTrafficDao = dbHelper.getDao(AppTraffic.class);
         } catch (SQLException e) {
-            e.printStackTrace();
-            Log.e("TrafficDbService init fail!");
+            Log.e("TrafficDbService init fail!" + e.getMessage());
         }
     }
-    public int saveAppTraffic(AppTraffic obj){
+
+    public int saveAppTraffic(AppTraffic obj) {
         int result = -1;
         try {
             if (obj._id > 0 && obj._id != -1) {
@@ -53,12 +54,12 @@ class TrafficDbService{
                 result = appTrafficDao.create(obj);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            Log.e("TrafficDbService saveAppTraffic fail!");
+            Log.e("TrafficDbService saveAppTraffic fail! " + e.getMessage());
         }
         return result;
     }
-    public int saveDateTraffic(DateTraffic obj){
+
+    public int saveDateTraffic(DateTraffic obj) {
         int result = -1;
         try {
             if (obj._id > 0 && obj._id != -1) {
@@ -70,37 +71,41 @@ class TrafficDbService{
                 result = dateTrafficDao.create(obj);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            Log.e("TrafficDbService saveDateTraffic fail!");
+            Log.e("TrafficDbService saveDateTraffic fail! " + e.getMessage());
         }
         return result;
     }
 
-    public DateTraffic getDateTrafficByDate(int uid,String date) {
+    public DateTraffic getDateTrafficByDate(int uid, String date) {
         QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "=");
-        List<DateTraffic> list=dateTrafficDao.query(queryBuilder);
-        if(list.size()>0)
+        List<DateTraffic> list = dateTrafficDao.query(queryBuilder);
+        if (list.size() > 0) {
             return list.get(0);
-        else
+        } else {
             return null;
+        }
+
     }
+
     public AppTraffic getAppTraffic(int uid) {
         QueryBuilder queryBuilder = new QueryBuilder(AppTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
-        List<AppTraffic> list=appTrafficDao.query(queryBuilder);
-        if(list.size()>0)
+        List<AppTraffic> list = appTrafficDao.query(queryBuilder);
+        if (list.size() > 0) {
             return list.get(0);
-        else
+        } else {
             return null;
+        }
+
     }
 
     public List<AppTraffic> getAppTrafficList() {
         return appTrafficDao.queryForAll();
     }
 
-    public List<DateTraffic> getDateTrafficByStatus(int uid,String date,int status) {
+    public List<DateTraffic> getDateTrafficByStatus(int uid, String date, int status) {
         QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "<");

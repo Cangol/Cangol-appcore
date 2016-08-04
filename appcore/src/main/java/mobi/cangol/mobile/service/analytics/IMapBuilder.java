@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,57 +22,59 @@ import mobi.cangol.mobile.logging.Log;
 
 final public class IMapBuilder {
 
-	private String mUrl;
-	private Map<String, String> mParams;
+    private String mUrl;
+    private Map<String, String> mParams;
 
-	private IMapBuilder() {
-		mParams = new HashMap<String, String> ();
-	}
+    private IMapBuilder() {
+        mParams = new HashMap<String, String>();
+    }
 
-	public String getUrl() {
-		return mUrl;
-	}
+    public static IMapBuilder build() {
+        return new IMapBuilder();
+    }
 
-	public IMapBuilder setUrl(String url) {
-		this.mUrl = url;
-		return this;
-	}
+    public String getUrl() {
+        return mUrl;
+    }
 
-	public IMapBuilder set(String paramName, String paramValue) {
-		if (paramName != null)
-			mParams.put(paramName, paramValue);
-		else {
-			Log.w(" IMapBuilder.set() called with a null paramName.");
-		}
-		return this;
-	}
+    public IMapBuilder setUrl(String url) {
+        this.mUrl = url;
+        return this;
+    }
 
-	public IMapBuilder setAll(Map<String, String> params) {
-		if (params!= null) {
-			mParams.putAll(params);
-		}
-		return this;
-	}
+    public IMapBuilder set(String paramName, String paramValue) {
+        if (paramName != null)
+            mParams.put(paramName, paramValue);
+        else {
+            Log.w(" IMapBuilder.set() called with a null paramName.");
+        }
+        return this;
+    }
 
-	public String get(String paramName) {
-		return mParams.get(paramName);
-	}
+    public IMapBuilder setAll(Map<String, String> params) {
+        if (params != null) {
+            mParams.putAll(params);
+        }
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("url=" + mUrl);
-		builder.append("\n");
-		for (String key : mParams.keySet()) {
-			builder.append(key + "=" + mParams.get(key));
-		}
-		return builder.toString();
-	}
-	public  Map<String, String> getParams(){
-		return mParams;
-	}
-	public static IMapBuilder build() {
-		return new IMapBuilder();
-	}
+    public String get(String paramName) {
+        return mParams.get(paramName);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("url=" + mUrl);
+        builder.append("\n");
+        for (String key : mParams.keySet()) {
+            builder.append(key + "=" + mParams.get(key));
+        }
+        return builder.toString();
+    }
+
+    public Map<String, String> getParams() {
+        return mParams;
+    }
 
 }

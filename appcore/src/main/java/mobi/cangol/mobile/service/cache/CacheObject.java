@@ -22,28 +22,17 @@ import java.io.Serializable;
 /**
  * Created by xuewu.wei on 2016/3/14.
  */
-public class CacheObject implements Serializable{
-    public static final int TIME_HOUR=60*60*1000;
-    public static final int TIME_DAY=24*60*60*1000;
-    public static final int TIME_WEEK=7*24*60*60*1000;
-    public static final int TIME_MONTH=30*24*60*60*1000;
-
-    public enum Period{
-        HOUR,
-        DAY,
-        WEEK,
-        MONTH,
-        ANY
-    }
-
-
+public class CacheObject implements Serializable {
+    public static final int TIME_HOUR = 60 * 60 * 1000;
+    public static final int TIME_DAY = 24 * 60 * 60 * 1000;
+    public static final int TIME_WEEK = 7 * 24 * 60 * 60 * 1000;
+    public static final int TIME_MONTH = 30 * 24 * 60 * 60 * 1000;
     private String id;
     private String tag;
     private String timestamp;
     private Period period;
     private String deadline;
     private Serializable object;
-
     public CacheObject() {
     }
 
@@ -93,6 +82,14 @@ public class CacheObject implements Serializable{
 
     public void setObject(Serializable object) {
         this.object = object;
+    }
+
+    public enum Period {
+        HOUR,
+        DAY,
+        WEEK,
+        MONTH,
+        ANY
     }
 
 }

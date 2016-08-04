@@ -16,7 +16,8 @@
 package mobi.cangol.mobile.security;
 
 /**
- *  RSA加密解密类
+ * RSA加密解密类
+ *
  * @author Cangol
  */
 
@@ -34,7 +35,8 @@ import java.util.HashMap;
 import javax.crypto.Cipher;
 
 public class RSAUtils {
-    private final static String CHARSET="utf-8";
+    private final static String CHARSET = "utf-8";
+
     /**
      * 生成公钥和私钥
      * @throws NoSuchAlgorithmException
@@ -144,7 +146,7 @@ public class RSAUtils {
         String ming = "";
         byte[][] arrays = splitArray(bcd, key_len);
         for (byte[] arr : arrays) {
-            ming += new String(cipher.doFinal(arr),CHARSET);
+            ming += new String(cipher.doFinal(arr), CHARSET);
         }
         return ming;
     }

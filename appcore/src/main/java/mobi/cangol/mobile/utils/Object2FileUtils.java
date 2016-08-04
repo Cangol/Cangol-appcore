@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 package mobi.cangol.mobile.utils;
+
+import android.text.TextUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,54 +35,25 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.text.TextUtils;
 /**
  * @author Cangol
  */
 public class Object2FileUtils {
-	/**
-	 * 写入json对象到文件
-	 * @param jsonObject
-	 * @param objPath
-	 */
-	public static void writeJSONObject2File(JSONObject jsonObject,String objPath){
-		File file = new File(objPath);
-		FileOutputStream fileOutputStream = null;
-		try {
-			fileOutputStream = new FileOutputStream(file);
-			writeJSONObject(jsonObject,fileOutputStream);	
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if(fileOutputStream!=null){
-				try {
-					fileOutputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fileOutputStream = null;
-			}
-		}
-	}
     /**
      * 写入json对象到文件
-     * @param jsonArray
+     * @param jsonObject
      * @param objPath
      */
-    public static void writeJSONArray2File(JSONArray jsonArray,String objPath){
+    public static void writeJSONObject2File(JSONObject jsonObject, String objPath) {
         File file = new File(objPath);
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(file);
-            writeJSONArray(jsonArray, fileOutputStream);
+            writeJSONObject(jsonObject, fileOutputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            if(fileOutputStream!=null){
+            if (fileOutputStream != null) {
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
@@ -86,46 +63,73 @@ public class Object2FileUtils {
             }
         }
     }
-	/**
-	 * 读取文件到json对象
-	 * @param jsonFile
-	 * @return
-	 */
-	public static JSONArray readFile2JSONArray(File jsonFile){
-		FileInputStream fileInputStream = null;
-        JSONArray jsonArray=null;
-		try {
-			fileInputStream = new FileInputStream(jsonFile);
-            jsonArray=readJSONArray(fileInputStream);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally{
-			if(fileInputStream != null){
-				try {
-					fileInputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				fileInputStream = null;
-			}
-		}
-		return jsonArray;
-	}
+
+    /**
+     * 写入json对象到文件
+     * @param jsonArray
+     * @param objPath
+     */
+    public static void writeJSONArray2File(JSONArray jsonArray, String objPath) {
+        File file = new File(objPath);
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            writeJSONArray(jsonArray, fileOutputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileOutputStream = null;
+            }
+        }
+    }
+
     /**
      * 读取文件到json对象
      * @param jsonFile
      * @return
      */
-    public static JSONObject readFile2JSONObject(File jsonFile){
+    public static JSONArray readFile2JSONArray(File jsonFile) {
         FileInputStream fileInputStream = null;
-        JSONObject jsonObject=null;
+        JSONArray jsonArray = null;
         try {
             fileInputStream = new FileInputStream(jsonFile);
-            jsonObject=readJSONObject(fileInputStream);
+            jsonArray = readJSONArray(fileInputStream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } finally{
-            if(fileInputStream != null){
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileInputStream = null;
+            }
+        }
+        return jsonArray;
+    }
+
+    /**
+     * 读取文件到json对象
+     * @param jsonFile
+     * @return
+     */
+    public static JSONObject readFile2JSONObject(File jsonFile) {
+        FileInputStream fileInputStream = null;
+        JSONObject jsonObject = null;
+        try {
+            fileInputStream = new FileInputStream(jsonFile);
+            jsonObject = readJSONObject(fileInputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileInputStream != null) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
@@ -136,12 +140,13 @@ public class Object2FileUtils {
         }
         return jsonObject;
     }
+
     /**
      * 写入json对象到输出流
      * @param jsonArray
      * @param os
      */
-    public static void writeJSONArray(JSONArray jsonArray,OutputStream os){
+    public static void writeJSONArray(JSONArray jsonArray, OutputStream os) {
         try {
             byte[] buffer = jsonArray.toString().getBytes("UTF-8");
             os.write(buffer);
@@ -151,7 +156,7 @@ public class Object2FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(os!=null){
+            if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
@@ -161,85 +166,88 @@ public class Object2FileUtils {
             }
         }
     }
-	/**
-	 * 写入json对象到输出流
-	 * @param jsonObject
-	 * @param os
-	 */
-	public static void writeJSONObject(JSONObject jsonObject,OutputStream os){
-		try {
-			byte[] buffer = jsonObject.toString().getBytes("UTF-8");
-			os.write(buffer);
-			os.flush();			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if(os!=null){
-				try {
-					os.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				os = null;
-			}
-		}
-	}
-	/**
-	 * 从输入流读取json对象
-	 * @param is
-	 * @return
-	 */
-	public static JSONObject readJSONObject(InputStream is){
-		String content = null;
-		JSONObject jsonObject=null;
-		try {
-			byte[] buffer =new byte[is.available()];
-			if(is.read(buffer) != -1){
-				content = new String(buffer,"UTF-8");
-				if(!TextUtils.isEmpty(content))
-					jsonObject=new JSONObject(content);
-				
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} finally{
-			if(is != null){
-				try {
-					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				is = null;
-			}
-		}
-		return jsonObject;	
-	}
+
+    /**
+     * 写入json对象到输出流
+     * @param jsonObject
+     * @param os
+     */
+    public static void writeJSONObject(JSONObject jsonObject, OutputStream os) {
+        try {
+            byte[] buffer = jsonObject.toString().getBytes("UTF-8");
+            os.write(buffer);
+            os.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                os = null;
+            }
+        }
+    }
+
     /**
      * 从输入流读取json对象
      * @param is
      * @return
      */
-    public static JSONArray readJSONArray(InputStream is){
+    public static JSONObject readJSONObject(InputStream is) {
         String content = null;
-        JSONArray jsonArray=null;
+        JSONObject jsonObject = null;
         try {
-            byte[] buffer =new byte[is.available()];
-            if(is.read(buffer) != -1){
-                content = new String(buffer,"UTF-8");
-                if(!TextUtils.isEmpty(content))
-                    jsonArray=new JSONArray(content);
+            byte[] buffer = new byte[is.available()];
+            if (is.read(buffer) != -1) {
+                content = new String(buffer, "UTF-8");
+                if (!TextUtils.isEmpty(content))
+                    jsonObject = new JSONObject(content);
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        } finally{
-            if(is != null){
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                is = null;
+            }
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 从输入流读取json对象
+     * @param is
+     * @return
+     */
+    public static JSONArray readJSONArray(InputStream is) {
+        String content = null;
+        JSONArray jsonArray = null;
+        try {
+            byte[] buffer = new byte[is.available()];
+            if (is.read(buffer) != -1) {
+                content = new String(buffer, "UTF-8");
+                if (!TextUtils.isEmpty(content))
+                    jsonArray = new JSONArray(content);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
@@ -250,103 +258,107 @@ public class Object2FileUtils {
         }
         return jsonArray;
     }
-	/**
-	 * 将object对象写入输出流
-	 * @param obj
-	 * @param out
-	 */
-	public static void writeObject(Serializable obj,OutputStream out) {
-		ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(new BufferedOutputStream(out));
-			oos.writeObject(obj);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(oos!=null)oos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	/**
-	 * 从输入流读取对象
-	 * @param is
-	 * @return
-	 */
-	public static Serializable readObject(InputStream is) {
-		Object object = null;
-		ObjectInputStream ois = null;
-		try {
-			ois = new ObjectInputStream(new BufferedInputStream(is));
-			object = ois.readObject();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (StreamCorruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(ois!=null)ois.close();
-				if(is!=null)is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return (Serializable) object;
-	}
-	/**
-	 * 将对象写入文件
-	 * @param obj
-	 * @param objPath
-	 */
-	public static void writeObject(Serializable obj,String objPath) {
 
-		File file = new File(objPath);
-		if (file.exists())file.delete();
-		FileOutputStream os = null;
-		try {
-			os = new FileOutputStream(file);
-			writeObject(obj,os);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(os!=null)os.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	/**
-	 * 从文件读取对象
-	 * @param file
-	 * @return
-	 */
-	public static Serializable readObject(File file) {
-		if(!file.exists()||file.length()==0)return null;
-		Object object = null;
-		InputStream is = null;
-		ObjectInputStream ois = null;
-		try {
-			is = new FileInputStream(file);
-			object = readObject(is);
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} finally {
-			try {
-				if(ois!=null)ois.close();
-				if(is!=null)is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return (Serializable) object;
-	}
+    /**
+     * 将object对象写入输出流
+     * @param obj
+     * @param out
+     */
+    public static void writeObject(Serializable obj, OutputStream out) {
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(new BufferedOutputStream(out));
+            oos.writeObject(obj);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (oos != null) oos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 从输入流读取对象
+     * @param is
+     * @return
+     */
+    public static Serializable readObject(InputStream is) {
+        Object object = null;
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(new BufferedInputStream(is));
+            object = ois.readObject();
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ois != null) ois.close();
+                if (is != null) is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return (Serializable) object;
+    }
+
+    /**
+     * 将对象写入文件
+     * @param obj
+     * @param objPath
+     */
+    public static void writeObject(Serializable obj, String objPath) {
+
+        File file = new File(objPath);
+        if (file.exists()) file.delete();
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream(file);
+            writeObject(obj, os);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (os != null) os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 从文件读取对象
+     * @param file
+     * @return
+     */
+    public static Serializable readObject(File file) {
+        if (!file.exists() || file.length() == 0) return null;
+        Object object = null;
+        InputStream is = null;
+        ObjectInputStream ois = null;
+        try {
+            is = new FileInputStream(file);
+            object = readObject(is);
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        } finally {
+            try {
+                if (ois != null) ois.close();
+                if (is != null) is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return (Serializable) object;
+    }
 }

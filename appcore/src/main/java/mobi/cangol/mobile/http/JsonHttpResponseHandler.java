@@ -18,35 +18,36 @@
 
 package mobi.cangol.mobile.http;
 
+import android.content.Context;
+import android.os.Message;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.content.Context;
-import android.os.Message;
-
 /**
  * Used to intercept and handle the responses from requests made using
  * {@link AsyncHttpClient}, with automatic parsing into a {@link JSONObject}
  * or {@link JSONArray}.
- * <p>
+ * <p/>
  * This class is designed to be passed to get, post, put and delete requests
  * with the {@link #onSuccess(JSONObject)} or {@link #onSuccess(JSONArray)}
  * methods anonymously overridden.
- * <p>
+ * <p/>
  * Additionally, you can override the other event methods from the
  * parent class.
  */
 public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
-	public JsonHttpResponseHandler() {
-		super();
-	}
-    public JsonHttpResponseHandler(Context context) {
-		super(context);
-	}
+    protected static final int SUCCESS_JSON_MESSAGE = 100;
 
-	protected static final int SUCCESS_JSON_MESSAGE = 100;
+    public JsonHttpResponseHandler() {
+        super();
+    }
+
+    public JsonHttpResponseHandler(Context context) {
+        super(context);
+    }
 
     //
     // Callbacks to be overridden, typically anonymously
@@ -56,25 +57,30 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
      * Fired when a request returns successfully and contains a json object
      * at the base of the response string. Override to handle in your
      * own code.
+     *
      * @param response the parsed json object found in the server response (if any)
      */
-    public void onSuccess(JSONObject response) {}
+    public void onSuccess(JSONObject response) {
+    }
 
 
     /**
      * Fired when a request returns successfully and contains a json array
      * at the base of the response string. Override to handle in your
      * own code.
+     *
      * @param response the parsed json array found in the server response (if any)
      */
-    public void onSuccess(JSONArray response) {}
+    public void onSuccess(JSONArray response) {
+    }
 
     /**
      * Fired when a request returns successfully and contains a json object
      * at the base of the response string. Override to handle in your
      * own code.
+     *
      * @param statusCode the status code of the response
-     * @param response the parsed json object found in the server response (if any)
+     * @param response   the parsed json object found in the server response (if any)
      */
     public void onSuccess(int statusCode, JSONObject response) {
         onSuccess(response);
@@ -85,15 +91,19 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
      * Fired when a request returns successfully and contains a json array
      * at the base of the response string. Override to handle in your
      * own code.
+     *
      * @param statusCode the status code of the response
-     * @param response the parsed json array found in the server response (if any)
+     * @param response   the parsed json array found in the server response (if any)
      */
     public void onSuccess(int statusCode, JSONArray response) {
         onSuccess(response);
     }
 
-    public void onFailure(Throwable e, JSONObject errorResponse) {}
-    public void onFailure(Throwable e, JSONArray errorResponse) {}
+    public void onFailure(Throwable e, JSONObject errorResponse) {
+    }
+
+    public void onFailure(Throwable e, JSONArray errorResponse) {
+    }
 
 
     //
@@ -105,7 +115,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
         try {
             Object jsonResponse = parseResponse(responseBody);
             sendMessage(obtainMessage(SUCCESS_JSON_MESSAGE, new Object[]{statusCode, jsonResponse}));
-        } catch(JSONException e) {
+        } catch (JSONException e) {
             sendFailureMessage(e, responseBody);
         }
     }
@@ -117,9 +127,9 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
 
     @Override
     protected void handleMessage(Message msg) {
-        switch(msg.what){
+        switch (msg.what) {
             case SUCCESS_JSON_MESSAGE:
-            	
+
                 Object[] response = (Object[]) msg.obj;
                 handleSuccessJsonMessage(((Integer) response[0]).intValue(), response[1]);
                 break;
@@ -129,26 +139,26 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
     }
 
     protected void handleSuccessJsonMessage(int statusCode, Object jsonResponse) {
-        if(jsonResponse instanceof JSONObject) {
-            onSuccess(statusCode, (JSONObject)jsonResponse);
-        } else if(jsonResponse instanceof JSONArray) {
-            onSuccess(statusCode, (JSONArray)jsonResponse);
+        if (jsonResponse instanceof JSONObject) {
+            onSuccess(statusCode, (JSONObject) jsonResponse);
+        } else if (jsonResponse instanceof JSONArray) {
+            onSuccess(statusCode, (JSONArray) jsonResponse);
         } else {
-            onFailure(new JSONException("Unexpected type " + jsonResponse.getClass().getName()), (JSONObject)null);
+            onFailure(new JSONException("Unexpected type " + jsonResponse.getClass().getName()), (JSONObject) null);
         }
     }
 
     protected Object parseResponse(String responseBody) throws JSONException {
         Object result = null;
         //trim the string to prevent start with blank, and test if the string is valid JSON, because the parser don't do this :(. If Json is not valid this will return null
-		responseBody = responseBody.trim();
-		if(responseBody.startsWith("{") || responseBody.startsWith("[")) {
-			result = new JSONTokener(responseBody).nextValue();
-		}
-		if (result == null) {
-			result = responseBody;
-		}
-		return result;
+        responseBody = responseBody.trim();
+        if (responseBody.startsWith("{") || responseBody.startsWith("[")) {
+            result = new JSONTokener(responseBody).nextValue();
+        }
+        if (result == null) {
+            result = responseBody;
+        }
+        return result;
     }
 
     @Override
@@ -156,17 +166,17 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
         try {
             if (responseBody != null) {
                 Object jsonResponse = parseResponse(responseBody);
-                if(jsonResponse instanceof JSONObject) {
-                    onFailure(e, (JSONObject)jsonResponse);
-                } else if(jsonResponse instanceof JSONArray) {
-                    onFailure(e, (JSONArray)jsonResponse);
+                if (jsonResponse instanceof JSONObject) {
+                    onFailure(e, (JSONObject) jsonResponse);
+                } else if (jsonResponse instanceof JSONArray) {
+                    onFailure(e, (JSONArray) jsonResponse);
                 } else {
                     onFailure(e, responseBody);//父类方法
                 }
-            }else {
+            } else {
                 onFailure(e, "");//父类方法
             }
-        }catch(JSONException ex) {
+        } catch (JSONException ex) {
             onFailure(e, responseBody);//父类方法
         }
     }

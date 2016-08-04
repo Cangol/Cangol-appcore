@@ -18,9 +18,10 @@
 
 package mobi.cangol.mobile.http;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,21 +30,19 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.util.EntityUtils;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 /**
- * Used to intercept and handle the responses from requests made using 
- * {@link AsyncHttpClient}. The {@link #onSuccess(String)} method is 
+ * Used to intercept and handle the responses from requests made using
+ * {@link AsyncHttpClient}. The {@link #onSuccess(String)} method is
  * designed to be anonymously overridden with your own response handling code.
- * <p>
+ * <p/>
  * Additionally, you can override the {@link #onFailure(Throwable, String)},
  * {@link #onStart()}, and {@link #onFinish()} methods as required.
- * <p>
+ * <p/>
  * For example:
- * <p>
+ * <p/>
  * <pre>
  * AsyncHttpClient client = new AsyncHttpClient();
  * client.get("http://www.google.com", new AsyncHttpResponseHandler() {
@@ -56,7 +55,7 @@ import android.os.Message;
  *     public void onSuccess(String response) {
  *         // Successfully got a response
  *     }
- * 
+ *
  *     &#064;Override
  *     public void onFailure(Throwable e, String response) {
  *         // Response failed :(
@@ -76,67 +75,60 @@ public class AsyncHttpResponseHandler {
     protected static final int FINISH_MESSAGE = 3;
 
     private Handler handler;
-    
+
     /**
      * Creates a new AsyncHttpResponseHandler
      */
     public AsyncHttpResponseHandler() {
-    	// Set up a handler to post events back to the correct thread if possible
-    	if(Looper.myLooper() != null) {
-            handler = new Handler(){
-                public void handleMessage(Message msg){
+        // Set up a handler to post events back to the correct thread if possible
+        if (Looper.myLooper() != null) {
+            handler = new Handler() {
+                public void handleMessage(Message msg) {
                     AsyncHttpResponseHandler.this.handleMessage(msg);
                 }
             };
         }
     }
+
     /**
      * Creates a new AsyncHttpResponseHandler with context
      */
     public AsyncHttpResponseHandler(Context context) {
         // Set up a handler to post events back to the correct thread if possible
-        if(Looper.myLooper() != null) {
+        if (Looper.myLooper() != null) {
             handler = new InternalHandler(context);
         }
     }
-    final static class InternalHandler extends Handler {
-		private final WeakReference<Context> mContext;
-		public InternalHandler(Context context) {
-			mContext = new WeakReference<Context>(context);
-		}
 
-		public void handleMessage(Message msg) {
-			Context context = mContext.get();
-		   if (context != null) {
-			   handleMessage(msg);
-		   }
-       }
-	}
+    /**
+     * Fired when the request is started, override to handle in your own code
+     */
+    public void onStart() {
+    }
 
     //
     // Callbacks to be overridden, typically anonymously
     //
 
     /**
-     * Fired when the request is started, override to handle in your own code
-     */
-    public void onStart() {}
-
-    /**
      * Fired in all cases when the request is finished, after both success and failure, override to handle in your own code
      */
-    public void onFinish() {}
+    public void onFinish() {
+    }
 
     /**
      * Fired when a request returns successfully, override to handle in your own code
+     *
      * @param content the body of the HTTP response from the server
      */
-    public void onSuccess(String content) {}
+    public void onSuccess(String content) {
+    }
 
     /**
      * Fired when a request returns successfully, override to handle in your own code
+     *
      * @param statusCode the status code of the response
-     * @param content the body of the HTTP response from the server
+     * @param content    the body of the HTTP response from the server
      */
     public void onSuccess(int statusCode, String content) {
         onSuccess(content);
@@ -144,14 +136,17 @@ public class AsyncHttpResponseHandler {
 
     /**
      * Fired when a request fails to complete, override to handle in your own code
+     *
      * @param error the underlying cause of the failure
      * @deprecated use {@link #onFailure(Throwable, String)}
      */
-    public void onFailure(Throwable error) {}
+    public void onFailure(Throwable error) {
+    }
 
     /**
      * Fired when a request fails to complete, override to handle in your own code
-     * @param error the underlying cause of the failure
+     *
+     * @param error   the underlying cause of the failure
      * @param content the response body, if any
      */
     public void onFailure(Throwable error, String content) {
@@ -159,19 +154,19 @@ public class AsyncHttpResponseHandler {
         onFailure(error);
     }
 
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
+        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{new Integer(statusCode), responseBody}));
+    }
+
 
     //
     // Pre-processing of messages (executes in background threadpool thread)
     //
 
-    protected void sendSuccessMessage(int statusCode, String responseBody) {
-        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{new Integer(statusCode), responseBody}));
-    }
-
     protected void sendFailureMessage(Throwable e, String responseBody) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
-    
+
     protected void sendFailureMessage(Throwable e, byte[] responseBody) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
@@ -184,31 +179,30 @@ public class AsyncHttpResponseHandler {
         sendMessage(obtainMessage(FINISH_MESSAGE, null));
     }
 
+    protected void handleSuccessMessage(int statusCode, String responseBody) {
+        onSuccess(statusCode, responseBody);
+    }
+
 
     //
     // Pre-processing of messages (in original calling thread, typically the UI thread)
     //
 
-    protected void handleSuccessMessage(int statusCode, String responseBody) {
-        onSuccess(statusCode, responseBody);
-    }
-
     protected void handleFailureMessage(Throwable e, String responseBody) {
         onFailure(e, responseBody);
     }
 
-
-	// Methods which emulate android's Handler and Message methods
+    // Methods which emulate android's Handler and Message methods
     protected void handleMessage(Message msg) {
         Object[] response;
-        switch(msg.what) {
+        switch (msg.what) {
             case SUCCESS_MESSAGE:
-                response = (Object[])msg.obj;
+                response = (Object[]) msg.obj;
                 handleSuccessMessage(((Integer) response[0]).intValue(), (String) response[1]);
                 break;
             case FAILURE_MESSAGE:
-                response = (Object[])msg.obj;
-                handleFailureMessage((Throwable)response[0], (String)response[1]);
+                response = (Object[]) msg.obj;
+                handleFailureMessage((Throwable) response[0], (String) response[1]);
                 break;
             case START_MESSAGE:
                 onStart();
@@ -220,7 +214,7 @@ public class AsyncHttpResponseHandler {
     }
 
     protected void sendMessage(Message msg) {
-        if(handler != null){
+        if (handler != null) {
             handler.sendMessage(msg);
         } else {
             handleMessage(msg);
@@ -229,9 +223,9 @@ public class AsyncHttpResponseHandler {
 
     protected Message obtainMessage(int responseMessage, Object response) {
         Message msg = null;
-        if(handler != null){
+        if (handler != null) {
             msg = this.handler.obtainMessage(responseMessage, response);
-        }else{
+        } else {
             msg = new Message();
             msg.what = responseMessage;
             msg.obj = response;
@@ -246,23 +240,38 @@ public class AsyncHttpResponseHandler {
         HttpEntity entity = null;
         try {
             HttpEntity temp = response.getEntity();
-            if(temp != null) {
+            if (temp != null) {
                 entity = new BufferedHttpEntity(temp);
                 responseBody = EntityUtils.toString(entity, "UTF-8");
             }
-            if(entity!=null)
-            	entity.consumeContent();
-        } catch(IOException e) {
+            if (entity != null)
+                entity.consumeContent();
+        } catch (IOException e) {
             sendFailureMessage(e, (String) null);
         }
-        if(status.getStatusCode() >= 300) {
-        	if(status.getStatusCode()==404){
-        		sendFailureMessage(new HttpResponseException(status.getStatusCode(), "Page not Found"), "Not Found");
-        	}else{
-        		sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
-        	}
+        if (status.getStatusCode() >= 300) {
+            if (status.getStatusCode() == 404) {
+                sendFailureMessage(new HttpResponseException(status.getStatusCode(), "Page not Found"), "Not Found");
+            } else {
+                sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
+            }
         } else {
             sendSuccessMessage(status.getStatusCode(), responseBody);
+        }
+    }
+
+    final static class InternalHandler extends Handler {
+        private final WeakReference<Context> mContext;
+
+        public InternalHandler(Context context) {
+            mContext = new WeakReference<Context>(context);
+        }
+
+        public void handleMessage(Message msg) {
+            Context context = mContext.get();
+            if (context != null) {
+                handleMessage(msg);
+            }
         }
     }
 }

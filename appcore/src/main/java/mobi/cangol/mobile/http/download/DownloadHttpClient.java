@@ -1,12 +1,12 @@
-/** 
+/**
  * Copyright (c) 2013 Cangol
- * 
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,25 +35,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import mobi.cangol.mobile.service.PoolManager;
 
 public class DownloadHttpClient {
-	private final static boolean DEBUG=false;
-	public final static  String TAG = "DownloadHttpClient";
-    private DefaultHttpClient httpClient;
-    private final HttpContext httpContext;
-    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
-    private final static int DEFAULT_RETRYTIMES=10;
+    public final static String TAG = "DownloadHttpClient";
+    private final static boolean DEBUG = false;
+    private final static int DEFAULT_RETRYTIMES = 10;
     private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
     private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
-    private final static int DEFAULT_MAX=3;
+    private final static int DEFAULT_MAX = 3;
+    private final HttpContext httpContext;
+    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
+    private DefaultHttpClient httpClient;
     private PoolManager.Pool threadPool;
+
     protected DownloadHttpClient(final String name) {
 
         httpContext = new SyncBasicHttpContext(new BasicHttpContext());
@@ -66,23 +63,28 @@ public class DownloadHttpClient {
         HttpClientParams.setRedirecting(params, true);
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
         httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-		threadPool  = PoolManager.buildPool(TAG,DEFAULT_MAX);
+        threadPool = PoolManager.buildPool(TAG, DEFAULT_MAX);
 
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
-    public  static DownloadHttpClient build(String group) {
-    	DownloadHttpClient asyncHttpClient=new DownloadHttpClient(group);
-		return asyncHttpClient;
-	}
-    public  static void cancel(String group,boolean mayInterruptIfRunning) {
-    	PoolManager.getPool(group).cancle(mayInterruptIfRunning);
-	}
-    public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
-    	httpClient.setHttpRequestRetryHandler(retryHandler);
+
+    public static DownloadHttpClient build(String group) {
+        DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group);
+        return asyncHttpClient;
     }
+
+    public static void cancel(String group, boolean mayInterruptIfRunning) {
+        PoolManager.getPool(group).cancle(mayInterruptIfRunning);
+    }
+
+    public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
+        httpClient.setHttpRequestRetryHandler(retryHandler);
+    }
+
     public void setThreadPool(PoolManager.Pool pool) {
         this.threadPool = pool;
     }
+
     public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         HttpUriRequest request = new HttpGet(url);
         if (DEBUG) Log.d(TAG, "url:" + request.getURI().toString());

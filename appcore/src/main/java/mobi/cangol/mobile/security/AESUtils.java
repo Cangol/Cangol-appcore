@@ -20,17 +20,15 @@ package mobi.cangol.mobile.security;
  */
 
 import java.security.SecureRandom;
-import java.security.spec.KeySpec;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AESUtils {
-    private final static String CHARSET="utf-8";
+    private final static String CHARSET = "utf-8";
+
     public static String encrypt(String seed, String content) throws Exception {
         byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
         byte[] result = encrypt(rawKey, content.getBytes(CHARSET));
@@ -41,7 +39,7 @@ public class AESUtils {
         byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
         byte[] enc = toByte(encrypted);
         byte[] result = decrypt(rawKey, enc);
-        return new String(result,CHARSET);
+        return new String(result, CHARSET);
     }
 
     private static byte[] getRawKey(byte[] seed) throws Exception {

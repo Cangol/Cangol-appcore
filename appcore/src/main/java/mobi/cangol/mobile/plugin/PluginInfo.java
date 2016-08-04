@@ -26,7 +26,7 @@ import dalvik.system.DexClassLoader;
 /**
  * Created by xuewu.wei on 2016/4/14.
  */
-public  class PluginInfo {
+public class PluginInfo {
     private Context context;
     private String apkPath;
     private boolean debug;
@@ -43,6 +43,10 @@ public  class PluginInfo {
         return debug;
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public Context getContext() {
         return context;
     }
@@ -51,17 +55,14 @@ public  class PluginInfo {
         this.context = context;
     }
 
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-
     public void launch() {
 
     }
+
     public void startActivity(String clazz, Bundle bundle) {
-        Intent intent= null;
+        Intent intent = null;
         try {
-            intent = new Intent(context,Class.forName(clazz));
+            intent = new Intent(context, Class.forName(clazz));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -69,14 +70,15 @@ public  class PluginInfo {
     }
 
     public void startService(String clazz, Bundle bundle) {
-        Intent intent= null;
+        Intent intent = null;
         try {
-            intent = new Intent(context,Class.forName(clazz));
+            intent = new Intent(context, Class.forName(clazz));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         context.startActivity(intent);
     }
+
     public String getApkPath() {
         return apkPath;
     }
@@ -109,7 +111,7 @@ public  class PluginInfo {
         this.dexClassLoader = dexClassLoader;
     }
 
-    public  void onDestroy(){
+    public void onDestroy() {
 
     }
 }

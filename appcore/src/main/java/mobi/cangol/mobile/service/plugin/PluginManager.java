@@ -22,30 +22,26 @@ import mobi.cangol.mobile.service.AppService;
 
 /**
  * @author Cangol
- *
  */
 public interface PluginManager extends AppService {
 
     /**
-     *
      * @param name
      */
     void loadPlugin(String name) throws IllegalAccessException;
+
     /**
-     *
      * @param name
      * @param path
      */
-    void addPlugin(String name, String path,int flag);
+    void addPlugin(String name, String path, int flag);
 
     /**
-     *
      * @param name
      */
     void removePlugin(String name);
 
     /**
-     *
      * @param name
      * @return
      */

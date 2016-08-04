@@ -17,7 +17,6 @@ package mobi.cangol.mobile.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -42,9 +41,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -62,6 +59,7 @@ public class DeviceInfo {
 
     /**
      * 获取操作系统类型
+     *
      * @return
      */
     public static String getOS() {
@@ -70,6 +68,7 @@ public class DeviceInfo {
 
     /**
      * 获取操作系统版本号
+     *
      * @return
      */
     public static String getOSVersion() {
@@ -78,6 +77,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备型号
+     *
      * @return
      */
     public static String getDeviceModel() {
@@ -86,6 +86,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备品牌
+     *
      * @return
      */
     public static String getDeviceBrand() {
@@ -94,6 +95,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备信息
+     *
      * @return
      */
     public static String getMobileInfo() {
@@ -116,13 +118,14 @@ public class DeviceInfo {
 
     /**
      * 获取设备mem 大小 单位B
+     *
      * @return
      */
     public static long getMemSize() {
         long result = -1;
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String str = bufferedReader.readLine();
             String resultStr = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length(), str.indexOf(" kB"));
             bufferedReader.close();
@@ -135,13 +138,14 @@ public class DeviceInfo {
 
     /**
      * 获取设备mem信息
+     *
      * @return
      */
     public static String getMemInfo() {
         String result = "";
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String str = bufferedReader.readLine();
             bufferedReader.close();
             result = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length()).trim();
@@ -153,13 +157,14 @@ public class DeviceInfo {
 
     /**
      * 获取设备cpu信息
+     *
      * @return
      */
     public static String getCPUInfo() {
         String result = "";
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/cpuinfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
             String str = bufferedReader.readLine();
             String title = "Processor\t: ";
             result = str.substring(str.indexOf(title) + title.length());
@@ -173,13 +178,14 @@ public class DeviceInfo {
 
     /**
      * 获取CPU架构
+     *
      * @return
      */
     public static String getCPUABI() {
         String result = "";
         try {
             Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(),"UTF-8");
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), "UTF-8");
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String str = bufferedReader.readLine();
             result = str.trim();
@@ -191,6 +197,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备分辨率
+     *
      * @param context
      * @return
      */
@@ -209,6 +216,7 @@ public class DeviceInfo {
 
     /**
      * 获取状态栏高度
+     *
      * @param activity
      * @return
      */
@@ -224,6 +232,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备Density
+     *
      * @param context
      * @return
      */
@@ -234,6 +243,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备Density
+     *
      * @param context
      * @return
      */
@@ -244,6 +254,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备Densitydpi 类型
+     *
      * @param context
      * @return
      */
@@ -271,6 +282,7 @@ public class DeviceInfo {
 
     /**
      * 获取屏幕物理尺寸 单位英寸
+     *
      * @param context
      * @return
      */
@@ -289,6 +301,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备运营商
+     *
      * @param context
      * @return
      */
@@ -300,6 +313,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备Locale信息
+     *
      * @return
      */
     public static String getLocale() {
@@ -309,6 +323,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备语言
+     *
      * @return
      */
     public static String getLanguage() {
@@ -318,6 +333,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备国家
+     *
      * @return
      */
     public static String getCountry() {
@@ -327,6 +343,7 @@ public class DeviceInfo {
 
     /**
      * 获取app版本号
+     *
      * @param context
      * @return
      */
@@ -342,6 +359,7 @@ public class DeviceInfo {
 
     /**
      * 获取app版本号
+     *
      * @param context
      * @return
      */
@@ -357,6 +375,7 @@ public class DeviceInfo {
 
     /**
      * 获取Meta数据
+     *
      * @param context
      * @param key
      * @return
@@ -375,6 +394,7 @@ public class DeviceInfo {
 
     /**
      * 获取StringMeta数据
+     *
      * @param context
      * @param key
      * @return
@@ -394,6 +414,7 @@ public class DeviceInfo {
 
     /**
      * 获取mac地址
+     *
      * @param context
      * @return
      */
@@ -406,6 +427,7 @@ public class DeviceInfo {
 
     /**
      * 获取IP地址
+     *
      * @param context
      * @return
      */
@@ -423,6 +445,7 @@ public class DeviceInfo {
 
     /**
      * 获取IP地址(%d.%d.%d.%d)
+     *
      * @param context
      * @return
      */
@@ -435,6 +458,7 @@ public class DeviceInfo {
 
     /**
      * 获取系统文件编码类型
+     *
      * @return
      */
     public static String getCharset() {
@@ -443,6 +467,7 @@ public class DeviceInfo {
 
     /**
      * 获取设备openUDID
+     *
      * @param context
      * @return
      */
@@ -543,6 +568,7 @@ public class DeviceInfo {
 
     /**
      * 获取网络类型
+     *
      * @param context
      * @return
      */
@@ -558,6 +584,7 @@ public class DeviceInfo {
 
     /**
      * 判读WIFI网络是否连接
+     *
      * @param context
      * @return
      */
@@ -572,6 +599,7 @@ public class DeviceInfo {
 
     /**
      * 判读网络是否连接
+     *
      * @param context
      * @return
      */
@@ -586,6 +614,7 @@ public class DeviceInfo {
 
     /**
      * 判断GPS定位是否开启
+     *
      * @param context
      * @return
      */
@@ -596,6 +625,7 @@ public class DeviceInfo {
 
     /**
      * 判断网络定位是否开启
+     *
      * @param context
      * @return
      */
@@ -606,6 +636,7 @@ public class DeviceInfo {
 
     /**
      * 返回签名证书MD5值
+     *
      * @param context
      * @return
      */
@@ -627,6 +658,7 @@ public class DeviceInfo {
 
     /**
      * 返回签名证书SHA1值
+     *
      * @param context
      * @return
      */
@@ -637,7 +669,7 @@ public class DeviceInfo {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA1");
                 md.update(signature.toByteArray());
-                return new String(md.digest(),"UTF-8");
+                return new String(md.digest(), "UTF-8");
             }
         } catch (NameNotFoundException e1) {
             Log.e("name not found", e1.toString());
@@ -649,6 +681,7 @@ public class DeviceInfo {
 
     /**
      * return activity is foreground
+     *
      * @param activityName
      * @param context
      * @return
@@ -670,6 +703,7 @@ public class DeviceInfo {
 
     /**
      * return applcation is foreground
+     *
      * @param packageName
      * @param context
      * @return
