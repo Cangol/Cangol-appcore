@@ -16,7 +16,8 @@
 package mobi.cangol.mobile.db;
 
 
-import java.sql.SQLException;
+import android.database.SQLException;
+
 import java.util.Collection;
 import java.util.List;
 
