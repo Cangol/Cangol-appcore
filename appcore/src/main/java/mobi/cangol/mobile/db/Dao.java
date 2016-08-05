@@ -15,12 +15,12 @@
  */
 package mobi.cangol.mobile.db;
 
-import android.database.SQLException;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-public abstract interface Dao<T, ID> {
+public abstract interface Dao<T, K> {
     /**
      * 条件查询
      *
@@ -31,13 +31,13 @@ public abstract interface Dao<T, ID> {
     public abstract List<T> query(QueryBuilder queryBuilder) throws SQLException;
 
     /**
-     * 根据id查询
+     * 根据K查询
      *
-     * @param paramID
+     * @param paramK
      * @return
      * @throws SQLException
      */
-    public abstract T queryForId(ID paramID) throws SQLException;
+    public abstract T queryForK(K paramK) throws SQLException;
 
     /**
      * 查询所有
@@ -87,11 +87,11 @@ public abstract interface Dao<T, ID> {
      * 更新数据对象根据
      *
      * @param paramT
-     * @param paramID
+     * @param paramK
      * @return
      * @throws SQLException
      */
-    public abstract int updateId(T paramT, ID paramID) throws SQLException;
+    public abstract int updateK(T paramT, K paramK) throws SQLException;
 
     /**
      * 根据条件删除
@@ -121,22 +121,22 @@ public abstract interface Dao<T, ID> {
     public abstract int delete(Collection<T> paramCollection) throws SQLException;
 
     /**
-     * 更具id删除
+     * 更具K删除
      *
-     * @param paramID
+     * @param paramK
      * @return
      * @throws SQLException
      */
-    public abstract int deleteById(ID paramID) throws SQLException;
+    public abstract int deleteByK(K paramK) throws SQLException;
 
     /**
-     * 根据id列表执行删除
+     * 根据K列表执行删除
      *
      * @param paramCollection
      * @return
      * @throws SQLException
      */
-    public abstract int deleteByIds(Collection<ID> paramCollection) throws SQLException;
+    public abstract int deleteByKs(Collection<K> paramCollection) throws SQLException;
 
     /**
      * 清空表删

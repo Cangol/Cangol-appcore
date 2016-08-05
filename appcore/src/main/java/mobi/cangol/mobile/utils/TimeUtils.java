@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -336,8 +336,9 @@ public class TimeUtils {
      * @return
      */
     public static String formatRecentTime(String time) {
-        if (null == time || "".equals(time))
+        if (null == time || "".equals(time)) {
             return "";
+        }
         Date commentTime = null;
         Date currentTime = null;
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -358,33 +359,39 @@ public class TimeUtils {
         long minute = between % 3600 / 60;
         long second = between % 60 / 60;
 
-        StringBuffer sb = new StringBuffer();
         if (year != 0) {
+            StringBuffer sb = new StringBuffer();
             sb.append(year).append("年前");
-            return sb.toString() ;
+            return sb.toString();
         }
         if (month != 0) {
-            sb.append(month).append( "个月前");
+            StringBuffer sb = new StringBuffer();
+            sb.append(month).append("个月前");
             return sb.toString();
         }
         if (week != 0) {
-            sb.append(week ).append("周前");
-            return sb.toString() + "前";
+            StringBuffer sb = new StringBuffer();
+            sb.append(week).append("周前");
+            return sb.toString();
         }
         if (day != 0) {
-            sb.append(day ).append( "天前");
-            return sb.toString() + "前";
+            StringBuffer sb = new StringBuffer();
+            sb.append(day).append("天前");
+            return sb.toString();
         }
         if (hour != 0) {
-            sb.append(hour ).append( "小时前");
-            return sb.toString() + "前";
+            StringBuffer sb = new StringBuffer();
+            sb.append(hour).append("小时前");
+            return sb.toString();
         }
         if (minute != 0) {
-            sb.append(minute ).append("分钟前");
-            return sb.toString() ;
+            StringBuffer sb = new StringBuffer();
+            sb.append(minute).append("分钟前");
+            return sb.toString();
         }
         if (second != 0) {
-            sb.append(second ).append( "秒前");
+            StringBuffer sb = new StringBuffer();
+            sb.append(second).append("秒前");
             return sb.toString();
         }
 
@@ -443,7 +450,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatLatelyTime(String strTime) {
-        if (null == strTime || "".equals(strTime)){
+        if (null == strTime || "".equals(strTime)) {
             return "";
         }
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
