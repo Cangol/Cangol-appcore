@@ -20,8 +20,8 @@ apply plugin: 'jdepend'
  */
 
 // Add checkstyle, findbugs, pmd and lint to the check task.
-check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
-
+check.dependsOn 'findbugs', 'pmd', 'lint'
+//check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
 task checkstyle(type: Checkstyle) {
     configFile file("config/quality/checkstyle/checkstyle.xml")
     configProperties.checkstyleSuppressionsPath = file("config/quality/checkstyle/suppressions.xml").absolutePath
@@ -77,8 +77,8 @@ task pmd(type: Pmd) {
         }
     }
 }
-//, dependsOn: 'compileDebugSources'
-task jdepend(type: JDepend) {
+//
+task jdepend(type: JDepend, dependsOn: 'compileDebugSources') {
     classesDir file("build/intermediates/classes")
     reports {
         xml.enabled = false
