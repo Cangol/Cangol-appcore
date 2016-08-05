@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -73,7 +73,6 @@ public class RSAUtils {
             RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
             return (RSAPublicKey) keyFactory.generatePublic(keySpec);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -97,7 +96,6 @@ public class RSAUtils {
             RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
             return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -168,14 +166,16 @@ public class RSAUtils {
     protected static byte asc_to_bcd(byte asc) {
         byte bcd;
 
-        if ((asc >= '0') && (asc <= '9'))
+        if ((asc >= '0') && (asc <= '9')) {
             bcd = (byte) (asc - '0');
-        else if ((asc >= 'A') && (asc <= 'F'))
+        } else if ((asc >= 'A') && (asc <= 'F')) {
             bcd = (byte) (asc - 'A' + 10);
-        else if ((asc >= 'a') && (asc <= 'f'))
+        } else if ((asc >= 'a') && (asc <= 'f')) {
             bcd = (byte) (asc - 'a' + 10);
-        else
+        } else {
             bcd = (byte) (asc - 48);
+        }
+
         return bcd;
     }
 

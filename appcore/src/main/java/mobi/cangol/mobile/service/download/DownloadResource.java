@@ -69,8 +69,9 @@ public class DownloadResource implements Serializable {
     }
 
     public void setViewHolder(Object obj, BaseViewHolder viewHolder) {
-        if (viewHolders == null)
+        if (viewHolders == null){
             viewHolders = new HashMap<Object, BaseViewHolder>();
+        }
         this.viewHolders.put(obj, viewHolder);
     }
 

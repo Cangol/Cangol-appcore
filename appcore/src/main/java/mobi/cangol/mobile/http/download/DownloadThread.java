@@ -70,11 +70,11 @@ public class DownloadThread implements Runnable {
                     responseHandler.sendResponseMessage(response, saveFile);
                 }
             } else {
-                if (DEBUG) Log.d(TAG, "Thread.isInterrupted");
+                Log.d(TAG, "Thread.isInterrupted");
                 responseHandler.sendStopMessage(from);
             }
         } else {
-            if (DEBUG) Log.d(TAG, "Thread.isInterrupted");
+           Log.d(TAG, "Thread.isInterrupted");
             responseHandler.sendStopMessage(from);
         }
     }

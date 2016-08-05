@@ -18,7 +18,6 @@ package mobi.cangol.mobile.http.extras;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -49,24 +48,19 @@ public class PollingResponseHandler {
     }
 
     public boolean isFailResponse(String content) {
-        if (DEBUG) Log.d(TAG, "isFailResponse content=" + content);
         return false;
     }
 
     public void onStart() {
-        if (DEBUG) Log.d(TAG, "onStart");
     }
 
     public void onPollingFinish(int execTimes, String content) {
-        if (DEBUG) Log.d(TAG, "onPollingFinish execTimes=" + execTimes + " content:" + content);
     }
 
     public void onSuccess(int statusCode, String content) {
-        if (DEBUG) Log.d(TAG, "onSuccess statusCode=" + statusCode + " content:" + content);
     }
 
     public void onFailure(Throwable error, String content) {
-        if (DEBUG) Log.d(TAG, "onFailure error=" + error + " content:" + content);
     }
 
     public void sendStartMessage() {

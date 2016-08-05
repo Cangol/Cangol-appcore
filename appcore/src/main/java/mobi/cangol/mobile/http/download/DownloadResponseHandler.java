@@ -18,7 +18,6 @@ package mobi.cangol.mobile.http.download;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -51,27 +50,26 @@ public class DownloadResponseHandler {
     }
 
     public void onWait() {
-        if (DEBUG) Log.d(TAG, "onWait...");
+
     }
 
     public void onStart(long start, long length) {
-        if (DEBUG) Log.d(TAG, "onStart start=" + start);
     }
 
     public void onStop(long end) {
-        if (DEBUG) Log.d(TAG, "onStop end=" + end);
+
     }
 
     public void onFinish(long end) {
-        if (DEBUG) Log.d(TAG, "onFinish end=" + end);
+
     }
 
     public void onProgressUpdate(long end, int progress, int speed) {
-        if (DEBUG) Log.d(TAG, "progress=" + progress + " speed:" + speed);
+
     }
 
     public void onFailure(Throwable error, String content) {
-        if (DEBUG) Log.d(TAG, "error=" + error + " content:" + content);
+
     }
 
     public void sendWaitMessage() {
@@ -101,7 +99,6 @@ public class DownloadResponseHandler {
     void sendResponseMessage(HttpResponse response, String saveFile) throws IOException {
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_PARTIAL_CONTENT
                 || response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            if (DEBUG) Log.d(TAG, "StatusCode=" + response.getStatusLine().getStatusCode());
             HttpEntity entity = response.getEntity();
             long length = entity.getContentLength();
             RandomAccessFile threadfile = new RandomAccessFile(saveFile, "rwd");
@@ -126,7 +123,9 @@ public class DownloadResponseHandler {
                         startLength = 0;
                     }
                 }
-                if (threadfile != null) threadfile.close();
+                if (threadfile != null) {
+                    threadfile.close();
+                }
                 if (Thread.currentThread().isInterrupted()) {
                     sendStopMessage(oldLength);
                 } else {
@@ -143,8 +142,9 @@ public class DownloadResponseHandler {
             } else {
                 sendFailureMessage(new IOException(), "oldfile error oldLength>length");
             }
-            if (entity != null)
+            if (entity != null){
                 entity.consumeContent();
+            }
         } else {
             sendFailureMessage(new IOException(), "StatusCode " + response.getStatusLine().getStatusCode());
         }

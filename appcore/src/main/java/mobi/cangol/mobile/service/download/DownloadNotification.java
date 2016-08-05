@@ -127,7 +127,8 @@ public class DownloadNotification {
 
 
     public void cancelNotification() {
-        if (notificationManager != null)
+        if (notificationManager != null){
             notificationManager.cancel(id);
+        }
     }
 }

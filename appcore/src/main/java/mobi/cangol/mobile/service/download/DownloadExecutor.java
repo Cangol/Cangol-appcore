@@ -126,7 +126,7 @@ public abstract class DownloadExecutor<T> {
             JSONObject jsonObject = Object2FileUtils.readFile2JSONObject(new File(filePath));
             downloadResource = JsonUtils.parserToObject(DownloadResource.class, jsonObject, false);
         } catch (JSONParserException e) {
-            e.printStackTrace();
+            Log.d(mTag, e.getMessage());
         }
         //DownloadResource downloadResource= (DownloadResource) Object2FileUtils.readObject(new File(filePath));
         return downloadResource;
@@ -360,23 +360,31 @@ public abstract class DownloadExecutor<T> {
 
     private void notifyUpdateStatus(DownloadResource resource, int type) {
         for (WeakReference<DownloadStatusListener> listener : listeners) {
-            if (null != listener.get()) listener.get().onStatusChange(resource, type);
+            if (null != listener.get()) {
+                listener.get().onStatusChange(resource, type);
+            }
         }
     }
 
-    private void _handleMessage(Message msg) {
+    private void handleMessage(Message msg) {
         DownloadResource resource = (DownloadResource) msg.obj;
         switch (msg.what) {
             case Download.ACTION_DOWNLOAD_START:
-                if (null != mDownloadEvent) mDownloadEvent.onStart(resource);
+                if (null != mDownloadEvent) {
+                    mDownloadEvent.onStart(resource);
+                }
                 writeResource(resource);
             case Download.ACTION_DOWNLOAD_STOP:
                 writeResource(resource);
             case Download.ACTION_DOWNLOAD_FINISH:
-                if (null != mDownloadEvent) mDownloadEvent.onFinish(resource);
+                if (null != mDownloadEvent) {
+                    mDownloadEvent.onFinish(resource);
+                }
                 writeResource(resource);
             case Download.ACTION_DOWNLOAD_FAILED:
-                if (null != mDownloadEvent) mDownloadEvent.onFailure(resource);
+                if (null != mDownloadEvent) {
+                    mDownloadEvent.onFailure(resource);
+                }
                 writeResource(resource);
             default:
                 notifyUpdateStatus(resource, msg.what);
@@ -394,7 +402,7 @@ public abstract class DownloadExecutor<T> {
         public void handleMessage(Message msg) {
             DownloadExecutor downloadExecutor = mDownloadExecutor.get();
             if (downloadExecutor != null) {
-                downloadExecutor._handleMessage(msg);
+                downloadExecutor.handleMessage(msg);
             }
         }
     }

@@ -73,8 +73,9 @@ public class HttpClientFactory {
 
     public synchronized static DefaultHttpClient getThreadSafeClient() {
 
-        if (httpClient != null)
+        if (httpClient != null){
             return httpClient;
+        }
 
         httpClient = createDefaultHttpClient();
         monitorThread = new IdleConnectionMonitorThread(httpClient.getConnectionManager());

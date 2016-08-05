@@ -16,7 +16,6 @@
 package mobi.cangol.mobile.http.extras;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -75,10 +74,11 @@ public class RouteHttpClient {
     public void send(Context context, String url, HashMap<String, String> params, RouteResponseHandler responseHandler, String... host) {
         List<BasicNameValuePair> lparams = new LinkedList<BasicNameValuePair>();
 
-        if (params != null)
+        if (params != null){
             for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
             }
+        }
 
         String paramString = URLEncodedUtils.format(lparams, "UTF-8");
 
@@ -149,17 +149,18 @@ public class RouteHttpClient {
                 while (exec < host.length) {
                     try {
                         request = getHttpUriRequest(request.getURI().toURL(), host[exec]);
-                        Log.d(TAG, "" + request.getURI().toURL());
                         exec++;
                         client.execute(request, context);
                         HttpResponse response = client.execute(request, context);
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
-                                if (responseHandler.sendResponseMessage(response))
+                                if (responseHandler.sendResponseMessage(response)){
                                     break;
+                                }else{
+                                    //
+                                }
                             }
                         } else {
-                            if (DEBUG) Log.d(TAG, "Thread.isInterrupted");
                             break;
                         }
                     } catch (IOException e) {

@@ -47,15 +47,15 @@ public class RouteResponseHandler {
     }
 
     public void onStart() {
-        if (DEBUG) Log.d("ResponseHandler", "onStart");
+
     }
 
     public void onSuccess(int statusCode, String content) {
-        if (DEBUG) Log.d("ResponseHandler", "statusCode=" + statusCode + " content:" + content);
+
     }
 
     public void onFailure(Throwable error, String content) {
-        if (DEBUG) Log.d("ResponseHandler", "error=" + error + " content:" + content);
+
     }
 
     public void sendStartMessage() {

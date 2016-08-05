@@ -37,7 +37,6 @@ import java.util.List;
 
 public class XmlUtils extends Converter {
     private final static String TAG = "XmlUtils";
-    private final static boolean DEBUG = true;
 
     /**
      * 转换Object到xml
@@ -58,9 +57,9 @@ public class XmlUtils extends Converter {
             baos.close();
             result = baos.toString("utf-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
         return result;
     }
@@ -71,7 +70,9 @@ public class XmlUtils extends Converter {
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) continue;
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) {
+                    continue;
+                }
                 String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
@@ -96,15 +97,15 @@ public class XmlUtils extends Converter {
                             }
                         }
                     } else {
-                        if (DEBUG) Log.i(TAG, field.getName() + " require have generic");
+                        Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
             serializer.endTag(null, obj.getClass().getSimpleName());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
     }
 
@@ -125,7 +126,7 @@ public class XmlUtils extends Converter {
         try {
             inputSteam = new ByteArrayInputStream(str.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
         return parserToObject(c, inputSteam, useAnnotation);
     }
@@ -161,7 +162,7 @@ public class XmlUtils extends Converter {
         try {
             inputSteam = new ByteArrayInputStream(str.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
         return parserToList(c, inputSteam, useAnnotation);
     }
@@ -184,8 +185,9 @@ public class XmlUtils extends Converter {
 
 
     private static <T> T parserToObject(Class<T> c, Node node, boolean useAnnotation) throws XMLParserException {
-        if (null == node)
+        if (null == node){
             return null;
+        }
         T t = null;
         try {
             Constructor constructor = c.getDeclaredConstructor();
@@ -195,7 +197,10 @@ public class XmlUtils extends Converter {
             String filedName = null;
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) continue;
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) {
+                    continue;
+                }
+
 
                 filedName = getFieldName(field, useAnnotation);
 
@@ -214,7 +219,7 @@ public class XmlUtils extends Converter {
                             throw new XMLParserException(c, field, "filed is not accessible", e);
                         }
                     } else {
-                        if (DEBUG) Log.i(TAG, field.getName() + " require have generic");
+                        Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
@@ -232,7 +237,9 @@ public class XmlUtils extends Converter {
     }
 
     private static <T> ArrayList<T> parserToList(Class<T> c, NodeList nodeList, boolean useAnnotation) throws XMLParserException {
-        if (null == nodeList) return null;
+        if (null == nodeList) {
+            return null;
+        }
         ArrayList<T> list = new ArrayList<T>();
         T t = null;
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -248,10 +255,13 @@ public class XmlUtils extends Converter {
         try {
             if (isBaseClass(field.getType())) {
                 String valueStr = null;
-                if (field.isAnnotationPresent(Attribute.class))
+                if (field.isAnnotationPresent(Attribute.class)){
                     valueStr = getNodeAttr(node, filedName);
-                else
+                }
+                else{
                     valueStr = getNodeValue(node, filedName);
+                }
+
 
                 if (field.getType() == String.class) {
                     value = valueStr;

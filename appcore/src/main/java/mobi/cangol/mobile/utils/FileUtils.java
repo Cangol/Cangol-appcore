@@ -170,7 +170,7 @@ public class FileUtils {
         try {
             String filePath = folderPath;
             filePath = filePath.toString();
-            java.io.File myFilePath = new java.io.File(filePath);
+            File myFilePath = new File(filePath);
             if (!myFilePath.exists()) {
                 myFilePath.mkdirs();
             }
@@ -216,7 +216,7 @@ public class FileUtils {
         try {
             String filePath = filePathAndName;
             filePath = filePath.toString();
-            java.io.File myDelFile = new java.io.File(filePath);
+            File myDelFile = new File(filePath);
             myDelFile.delete();
 
         } catch (Exception e) {
@@ -244,7 +244,7 @@ public class FileUtils {
             delAllFile(folderPath); // 删除完里面所有内容
             String filePath = folderPath;
             filePath = filePath.toString();
-            java.io.File myFilePath = new java.io.File(filePath);
+           File myFilePath = new File(filePath);
             myFilePath.delete(); // 删除空文件夹
 
         } catch (Exception e) {
@@ -360,11 +360,12 @@ public class FileUtils {
      */
     public static List<File> searchBySuffix(File f, List<File> fileList,
                                             String... suffix) {
-        if (null == fileList)
+        if (null == fileList){
             fileList = new ArrayList<File>();
+        }
         if (f.isDirectory()) {
             File[] childs = f.listFiles();
-            if (childs != null)
+            if (childs != null){
                 for (int i = 0; i < childs.length; i++) {
                     if (childs[i].isDirectory()) {
                         searchBySuffix(childs[i], fileList, suffix);
@@ -377,6 +378,7 @@ public class FileUtils {
 
                     }
                 }
+            }
         }
         return fileList;
     }
@@ -453,8 +455,9 @@ public class FileUtils {
      *  @return
      */
     public static Object readObject(File file) {
-        if (!file.exists() || file.length() == 0)
+        if (!file.exists() || file.length() == 0){
             return null;
+        }
         Object object = null;
         InputStream is = null;
         ObjectInputStream ois = null;

@@ -67,7 +67,6 @@ public class PollingHttpClient {
         httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
 
         threadPool = PoolManager.buildPool(TAG, 3);
-        ;
 
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
     }
@@ -75,13 +74,13 @@ public class PollingHttpClient {
     public void send(Context context, String url, HashMap<String, String> params, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
         List<BasicNameValuePair> lparams = new LinkedList<BasicNameValuePair>();
 
-        if (params != null)
+        if (params != null){
             for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
             }
+        }
         String paramString = URLEncodedUtils.format(lparams, "UTF-8");
         HttpUriRequest request = new HttpGet(url + "?" + paramString);
-        if (DEBUG) Log.d(TAG, "url:" + request.getURI().toString());
         sendRequest(httpClient, httpContext, request, null, responseHandler, context, retryTimes, sleeptimes);
     }
 
@@ -142,22 +141,25 @@ public class PollingHttpClient {
                 boolean isInterrupted = false;
                 while (exec < retryTimes) {
                     try {
-                        if (DEBUG) Log.d(TAG, "exec=" + exec);
                         exec++;
                         HttpResponse response = client.execute(request, context);
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
-                                if (isSuccess = responseHandler.sendResponseMessage(response))
+                                if (isSuccess = responseHandler.sendResponseMessage(response)){
                                     break;
+                                } else{
+                                    //
+                                }
                             }
                         } else {
-                            if (DEBUG) Log.d(TAG, "Thread.isInterrupted");
+                            Log.d(TAG, "Thread.isInterrupted");
                             break;
                         }
                         if (!Thread.currentThread().isInterrupted()) {
-                            Log.d(TAG, "Thread sleepTimes=" + sleepTimes);
                             Thread.sleep(sleepTimes);
-                        } else break;
+                        } else {
+                            break;
+                        }
                         Log.d(TAG, "Thread Sleeptimes end");
                     } catch (IOException e) {
                         responseHandler.sendFailureMessage(e, "IOException");
@@ -166,12 +168,13 @@ public class PollingHttpClient {
                         }
                         continue;
                     } catch (InterruptedException e) {
-                        if (DEBUG) Log.d(TAG, "InterruptedException", e);
                         isInterrupted = true;
                         break;
                     }
                 }
-                if (!isSuccess && !isInterrupted) responseHandler.sendFinishMessage(exec);
+                if (!isSuccess && !isInterrupted) {
+                    responseHandler.sendFinishMessage(exec);
+                }
             }
         }
     }

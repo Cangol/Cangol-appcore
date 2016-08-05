@@ -15,8 +15,6 @@
  */
 package mobi.cangol.mobile.http.download;
 
-import android.util.Log;
-
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -87,7 +85,6 @@ public class DownloadHttpClient {
 
     public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         HttpUriRequest request = new HttpGet(url);
-        if (DEBUG) Log.d(TAG, "url:" + request.getURI().toString());
         return sendRequest(httpClient, httpContext, request, null, responseHandler, context, from, saveFile);
     }
 
@@ -115,7 +112,6 @@ public class DownloadHttpClient {
                 Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
-                    if (DEBUG) Log.d(TAG, "cancelRequests");
                 }
             }
         }

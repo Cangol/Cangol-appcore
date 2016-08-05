@@ -83,13 +83,15 @@ public class DownloadRetryHandler implements HttpRequestRetryHandler {
         if (retry) {
             // resend all idempotent requests
             HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
-            if (null == currentReq) return false;
+            if (null == currentReq) {
+                return false;
+            }
         }
 
         if (retry) {
             SystemClock.sleep(RETRY_SLEEP_TIME_MILLIS);
         } else {
-            exception.printStackTrace();
+           Log.d(getClass().getName(), exception.getMessage());
         }
 
         return retry;

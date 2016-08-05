@@ -68,7 +68,9 @@ public class PoolManager {
      * @return
      */
     public static Pool getPool(String name) {
-        if (null == poolMap) poolMap = new ConcurrentHashMap<String, Pool>();
+        if (null == poolMap) {
+            poolMap = new ConcurrentHashMap<String, Pool>();
+        }
         if (!poolMap.containsKey(name)) {
             poolMap.put(name, new Pool(name, MAXIMUM_POOL_SIZE));
         }
@@ -79,7 +81,9 @@ public class PoolManager {
      * 创建一个线程池
      */
     public static Pool buildPool(String name, int core) {
-        if (null == poolMap) poolMap = new ConcurrentHashMap<String, Pool>();
+        if (null == poolMap) {
+            poolMap = new ConcurrentHashMap<String, Pool>();
+        }
         if (!poolMap.containsKey(name)) {
             poolMap.put(name, new Pool(name, core));
         }
@@ -99,7 +103,7 @@ public class PoolManager {
     public static class Pool {
         private ArrayList<Future<?>> futureTasks = null;
         private ExecutorService executorService = null;
-        private boolean isThreadPoolClose = false;
+        private boolean threadPoolClose = false;
         private String name = null;
 
         Pool(String name, int core) {
@@ -107,7 +111,7 @@ public class PoolManager {
             this.executorService = PoolManager.generateExecutorService(name, core);
 
             this.futureTasks = new ArrayList<Future<?>>();
-            this.isThreadPoolClose = false;
+            this.threadPoolClose = false;
         }
 
         Pool(String name) {
@@ -115,13 +119,13 @@ public class PoolManager {
             this.executorService = PoolManager.generateExecutorService(name);
 
             this.futureTasks = new ArrayList<Future<?>>();
-            this.isThreadPoolClose = false;
+            this.threadPoolClose = false;
         }
 
         public void close() {
             this.executorService.shutdownNow();
             this.futureTasks.clear();
-            this.isThreadPoolClose = true;
+            this.threadPoolClose = true;
             this.executorService = null;
         }
 
@@ -162,11 +166,11 @@ public class PoolManager {
         }
 
         public boolean isThreadPoolClose() {
-            return isThreadPoolClose;
+            return threadPoolClose;
         }
 
-        public void setThreadPoolClose(boolean isThreadPoolClose) {
-            this.isThreadPoolClose = isThreadPoolClose;
+        public void setThreadPoolClose(boolean threadPoolClose) {
+            this.threadPoolClose = threadPoolClose;
         }
 
         public String getName() {

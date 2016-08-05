@@ -72,7 +72,7 @@ public class DeviceInfo {
      * @return
      */
     public static String getOSVersion() {
-        return android.os.Build.VERSION.RELEASE;
+        return Build.VERSION.RELEASE;
     }
 
     /**
@@ -81,7 +81,7 @@ public class DeviceInfo {
      * @return
      */
     public static String getDeviceModel() {
-        return android.os.Build.MODEL;
+        return Build.MODEL;
     }
 
     /**
@@ -90,7 +90,7 @@ public class DeviceInfo {
      * @return
      */
     public static String getDeviceBrand() {
-        return android.os.Build.BRAND;
+        return Build.BRAND;
     }
 
     /**

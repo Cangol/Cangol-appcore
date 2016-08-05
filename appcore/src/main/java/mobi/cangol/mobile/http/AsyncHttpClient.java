@@ -313,7 +313,9 @@ public class AsyncHttpClient {
      */
     public void get(Context context, String url, Header[] headers, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         HttpUriRequest request = new HttpGet(getUrlWithQueryString(url, params));
-        if (headers != null) request.setHeaders(headers);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
         sendRequest(httpClient, httpContext, request, null, responseHandler,
                 context);
     }
@@ -380,8 +382,12 @@ public class AsyncHttpClient {
     public void post(Context context, String url, Header[] headers, RequestParams params, String contentType,
                      AsyncHttpResponseHandler responseHandler) {
         HttpEntityEnclosingRequestBase request = new HttpPost(url);
-        if (params != null) request.setEntity(paramsToEntity(params));
-        if (headers != null) request.setHeaders(headers);
+        if (params != null) {
+            request.setEntity(paramsToEntity(params));
+        }
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
         sendRequest(httpClient, httpContext, request, contentType,
                 responseHandler, context);
     }
@@ -408,7 +414,9 @@ public class AsyncHttpClient {
     public void post(Context context, String url, Header[] headers, HttpEntity entity, String contentType,
                      AsyncHttpResponseHandler responseHandler) {
         HttpEntityEnclosingRequestBase request = addEntityToRequestBase(new HttpPost(url), entity);
-        if (headers != null) request.setHeaders(headers);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
         sendRequest(httpClient, httpContext, request, contentType, responseHandler, context);
     }
 
@@ -476,7 +484,9 @@ public class AsyncHttpClient {
      */
     public void put(Object context, String url, Header[] headers, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         HttpEntityEnclosingRequestBase request = addEntityToRequestBase(new HttpPut(url), entity);
-        if (headers != null) request.setHeaders(headers);
+        if (headers != null) {
+            request.setHeaders(headers);
+        }
         sendRequest(httpClient, httpContext, request, contentType, responseHandler, context);
     }
 
@@ -512,7 +522,9 @@ public class AsyncHttpClient {
      */
     public void delete(Object context, String url, Header[] headers, AsyncHttpResponseHandler responseHandler) {
         final HttpDelete delete = new HttpDelete(url);
-        if (headers != null) delete.setHeaders(headers);
+        if (headers != null) {
+            delete.setHeaders(headers);
+        }
         sendRequest(httpClient, httpContext, delete, null, responseHandler, context);
     }
 

@@ -39,7 +39,6 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class JsonUtils extends Converter {
-    private final static boolean DEBUG = false;
     private final static String TAG = "JsonUtils";
 
     /**
@@ -57,8 +56,9 @@ public class JsonUtils extends Converter {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers()))
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())){
                     continue;
+                }
                 String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
@@ -83,17 +83,17 @@ public class JsonUtils extends Converter {
                         }
                         json.put(filedName, jsonArray);
                     } else {
-                        if (DEBUG) Log.d(TAG, field.getName() + " require have generic");
+                        Log.d(TAG, field.getName() + " require have generic");
                     }
                 }
 
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
         }
         return json;
     }
@@ -166,7 +166,6 @@ public class JsonUtils extends Converter {
             json = formatJson(inputStreamTOString(urlConnection.getInputStream()));
             jsonObject = new JSONObject(json);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new JSONParserException(e.getMessage(), e);
         }
         return parserToObject(c, jsonObject, true);
@@ -177,15 +176,17 @@ public class JsonUtils extends Converter {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         byte[] data = new byte[BUFFER_SIZE];
         int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1)
+        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1){
             outStream.write(data, 0, count);
-
+        }
         data = null;
         return new String(outStream.toByteArray(), "utf-8");
     }
 
     public static <T> T parserToObject(Class<T> c, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
-        if (jsonObject == null) return null;
+        if (jsonObject == null) {
+            return null;
+        }
         T t = null;
         try {
             Constructor constructor = c.getDeclaredConstructor();
@@ -195,8 +196,9 @@ public class JsonUtils extends Converter {
             String filedName = null;
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers()))
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())){
                     continue;
+                }
                 filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     setField(t, field, filedName, jsonObject, false);
@@ -213,7 +215,7 @@ public class JsonUtils extends Converter {
                             throw new JSONParserException(c, field, "", e);
                         }
                     } else {
-                        if (DEBUG) Log.i(TAG, field.getName() + " require have generic");
+                        Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
@@ -231,7 +233,9 @@ public class JsonUtils extends Converter {
 
     @SuppressWarnings("unchecked")
     public static <T> ArrayList<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation) throws JSONParserException {
-        if (jsonArray == null) return null;
+        if (jsonArray == null) {
+            return null;
+        }
         ArrayList<T> list = new ArrayList<T>();
         T t = null;
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -298,8 +302,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else
+            } else{
                 return obj.getInt(key);
+            }
         } catch (JSONException e) {
             return defaultValue;
         }
@@ -309,8 +314,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else
+            } else{
                 return obj.getLong(key);
+            }
         } catch (JSONException e) {
             return defaultValue;
         }
@@ -320,8 +326,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else
+            } else{
                 return obj.getBoolean(key);
+            }
         } catch (JSONException e) {
             return defaultValue;
         }
@@ -341,8 +348,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else
+            } else{
                 return obj.getDouble(key);
+            }
         } catch (JSONException e) {
             return defaultValue;
         }
@@ -376,8 +384,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return null;
-            } else
+            } else{
                 return obj.get(key);
+            }
         } catch (JSONException e) {
             return null;
         }
@@ -395,8 +404,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return null;
-            } else
+            } else{
                 return obj.getJSONObject(key);
+            }
         } catch (JSONException e) {
             return null;
         }
@@ -406,8 +416,9 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return null;
-            } else
+            } else{
                 return obj.getJSONArray(key);
+            }
         } catch (JSONException e) {
             return null;
         }

@@ -123,15 +123,15 @@ public class AppServiceManagerImpl extends AppServiceManager {
                     throw new IllegalStateException("hasn't appService'name is " + name);
                 }
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                Log.d(e.getMessage());
             }
         }
         return appService;
@@ -145,7 +145,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
                     Service service = clazz.getAnnotation(Service.class);
                     mServiceMap.put(service.value(), clazz);
                 } else {
-                    if (debug) Log.d(TAG, clazz + " no Service Annotation");
+                    Log.d(TAG, clazz + " no Service Annotation");
                 }
             } else {
                 Method method = clazz.getMethod("getName");
@@ -154,15 +154,15 @@ public class AppServiceManagerImpl extends AppServiceManager {
                 mServiceMap.put(name, clazz);
             }
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
     }
 
@@ -191,11 +191,11 @@ public class AppServiceManagerImpl extends AppServiceManager {
                 filed.set(appService, serviceProperty);
             }
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
     }
 
@@ -207,13 +207,13 @@ public class AppServiceManagerImpl extends AppServiceManager {
             appService.onDestroy();
             mRunServiceMap.remove(name);
         } else {
-            if (debug) Log.d(TAG, name + " Service is not running");
+            Log.d(TAG, name + " Service is not running");
         }
     }
 
     @Override
     public void destroyAllService() {
-        if (debug) Log.d(TAG, "destoryAllService");
+        Log.d(TAG, "destoryAllService");
         AppService appService = null;
         for (String name : mRunServiceMap.keySet()) {
             appService = mRunServiceMap.get(name);
@@ -225,8 +225,10 @@ public class AppServiceManagerImpl extends AppServiceManager {
 
     @Override
     public void destroy() {
-        if (debug) Log.d(TAG, "destroy");
-        if (mAsyncClassScan != null) mAsyncClassScan.cancel(true);
+        Log.d(TAG, "destroy");
+        if (mAsyncClassScan != null) {
+            mAsyncClassScan.cancel(true);
+        }
         destroyAllService();
         mProperties.clear();
         mServiceMap.clear();
@@ -267,7 +269,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
             parser(is);
             is.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         }
     }
 

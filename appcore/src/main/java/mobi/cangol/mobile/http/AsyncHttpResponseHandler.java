@@ -244,8 +244,9 @@ public class AsyncHttpResponseHandler {
                 entity = new BufferedHttpEntity(temp);
                 responseBody = EntityUtils.toString(entity, "UTF-8");
             }
-            if (entity != null)
+            if (entity != null){
                 entity.consumeContent();
+            }
         } catch (IOException e) {
             sendFailureMessage(e, (String) null);
         }
