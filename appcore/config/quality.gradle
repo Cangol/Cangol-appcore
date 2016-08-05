@@ -77,7 +77,8 @@ task pmd(type: Pmd) {
         }
     }
 }
-task jdepend(type: JDepend, dependsOn: 'compileDebugSources') {
+//, dependsOn: 'compileDebugSources'
+task jdepend(type: JDepend) {
     classesDir file("build/intermediates/classes")
     reports {
         xml.enabled = false
@@ -92,7 +93,7 @@ task jdepend(type: JDepend, dependsOn: 'compileDebugSources') {
 }
 android {
     lintOptions {
-        abortOnError true
+        abortOnError false
         xmlReport false
         htmlReport true
         lintConfig file("build/config/quality/lint/lint.xml")
