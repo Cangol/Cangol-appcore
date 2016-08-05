@@ -20,7 +20,6 @@ apply plugin: 'jdepend'
  */
 
 // Add checkstyle, findbugs, pmd and lint to the check task.
-check.dependsOn 'findbugs', 'pmd', 'lint'
 //check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
 task checkstyle(type: Checkstyle) {
     configFile file("config/quality/checkstyle/checkstyle.xml")
