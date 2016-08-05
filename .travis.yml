@@ -8,7 +8,7 @@ android:
     - android-22
     - extra-android-m2repository
     - extra-android-support
-    - sys-img-armeabi-v7a-androi
+    - sys-img-armeabi-v7a-android
 before_install:
     # Gradle
     - wget -q http://services.gradle.org/distributions/gradle-2.10-all.zip
@@ -25,5 +25,5 @@ before_script:
 #  - gradle build jacocoTestReport
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - gradle cobertura coveralls
+  - gradle cobertura #//coveralls
 

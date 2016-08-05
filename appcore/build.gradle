@@ -81,9 +81,9 @@ artifacts {
 cobertura.coverageFormats = ['html', 'xml']
 cobertura.coverageSourceDirs = android.sourceSets.main.java.srcDirs
 
-tasks.coveralls {
-    dependsOn 'check'
-}
+//tasks.coveralls {
+//    dependsOn 'check'
+//}
 
 apply from: '../maven_push.gradle'
 //apply from: '../jacoco.gradle'
