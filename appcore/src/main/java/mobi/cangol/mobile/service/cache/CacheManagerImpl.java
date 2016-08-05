@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -110,7 +110,7 @@ class CacheManagerImpl implements CacheManager {
                             Log.e(TAG, "initDiskCache - " + e);
                         }
                     }
-                }else{
+                } else {
                     //
                 }
             }
@@ -129,7 +129,7 @@ class CacheManagerImpl implements CacheManager {
         Serializable obj = contextMap.get(id);
         if (obj == null) {
             obj = getContentFromDiskCache(id);
-            if (obj != null){
+            if (obj != null) {
                 contextMap.put(id, obj);
             }
         }
@@ -149,7 +149,7 @@ class CacheManagerImpl implements CacheManager {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    if (cacheLoader != null){
+                    if (cacheLoader != null) {
                         cacheLoader.loading();
                     }
                 }
@@ -162,16 +162,16 @@ class CacheManagerImpl implements CacheManager {
                 @Override
                 protected void onPostExecute(Serializable result) {
                     super.onPostExecute(result);
-                    if (result != null){
+                    if (result != null) {
                         addContentToMem(context, id, result);
                     }
-                    if (cacheLoader != null){
+                    if (cacheLoader != null) {
                         cacheLoader.returnContent(result);
                     }
                 }
             }.execute(id);
 
-        } else if (cacheLoader != null){
+        } else if (cacheLoader != null) {
             cacheLoader.returnContent(obj);
         }
     }
@@ -307,7 +307,7 @@ class CacheManagerImpl implements CacheManager {
      */
     private void moveContentToDiskCache(String context) {
         HashMap<String, Serializable> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty()){
+        if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
         Iterator<String> iterator = contextMap.keySet().iterator();
@@ -383,7 +383,7 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void removeContext(String context) {
         HashMap<String, Serializable> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty()){
+        if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
         Iterator<String> iterator = contextMap.keySet().iterator();
@@ -396,7 +396,7 @@ class CacheManagerImpl implements CacheManager {
                     mDiskLruCache.remove(key);
                 }
             } catch (IOException e) {
-                if (mDebug){
+                if (mDebug) {
                     Log.d(TAG, "cache remove" + key, e);
                 }
             }
@@ -408,7 +408,7 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void removeContent(String context, String id) {
         HashMap<String, Serializable> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty()){
+        if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
         contextMap.remove(id);
@@ -418,7 +418,7 @@ class CacheManagerImpl implements CacheManager {
                 mDiskLruCache.remove(key);
             }
         } catch (IOException e) {
-            if (mDebug){
+            if (mDebug) {
                 Log.d(TAG, "cache remove" + key, e);
             }
         }

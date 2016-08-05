@@ -38,9 +38,9 @@ import mobi.cangol.mobile.logging.Log;
 /**
  * A collection of string request parameters or files to send along with
  * requests made from an {@link AsyncHttpClient} instance.
- * <p/>
+ * <p>
  * For example:
- * <p/>
+ * <p>
  * <pre>
  * RequestParams params = new RequestParams();
  * params.put("username", "james");
@@ -105,7 +105,7 @@ public class RequestParams {
     public RequestParams(Object... keysAndValues) {
         init();
         int len = keysAndValues.length;
-        if (len % 2 != 0){
+        if (len % 2 != 0) {
             throw new IllegalArgumentException("Supplied arguments must be even");
         }
         for (int i = 0; i < len; i += 2) {
@@ -208,7 +208,7 @@ public class RequestParams {
     public String toString() {
         StringBuilder result = new StringBuilder();
         for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-            if (result.length() > 0){
+            if (result.length() > 0) {
                 result.append('&');
             }
 
@@ -218,7 +218,7 @@ public class RequestParams {
         }
 
         for (ConcurrentHashMap.Entry<String, FileWrapper> entry : fileParams.entrySet()) {
-            if (result.length() > 0){
+            if (result.length() > 0) {
                 result.append('&');
             }
 
@@ -264,7 +264,7 @@ public class RequestParams {
             try {
                 entity = new UrlEncodedFormEntity(getParamsList(), ENCODING);
             } catch (UnsupportedEncodingException e) {
-                Log.d("UnsupportedEncodingException",e.getMessage());
+                Log.d("UnsupportedEncodingException", e.getMessage());
             }
         }
 

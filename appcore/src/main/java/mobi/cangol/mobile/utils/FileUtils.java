@@ -180,7 +180,7 @@ public class FileUtils {
     /**
      * 新建文件
      *
-     * @param filePath String 文件路径及名称
+     * @param filePath    String 文件路径及名称
      * @param fileContent String 文件内容
      */
     public static void newFile(String filePath, String fileContent) {
@@ -229,6 +229,7 @@ public class FileUtils {
 
     /**
      * 删除文件夹
+     *
      * @param folderPath String 文件夹路径及名称 如c:/fqf
      */
     public static void delFolder(String folderPath) {
@@ -245,6 +246,7 @@ public class FileUtils {
 
     /**
      * 删除文件夹里面的所有文件
+     *
      * @param path String 文件夹路径 如 c:/fqf
      */
     public static void delAllFile(String path) {
@@ -442,7 +444,7 @@ public class FileUtils {
      * 从文件读取object
      *
      * @param file
-     *  @return
+     * @return
      */
     public static Object readObject(File file) {
         if (!file.exists() || file.length() == 0) {
@@ -482,6 +484,7 @@ public class FileUtils {
 
     /**
      * 输入流转string
+     *
      * @param is
      * @return
      */
@@ -577,6 +580,7 @@ public class FileUtils {
 
     /**
      * 获取文件夹中总文件大小
+     *
      * @param file
      * @return 文件大小 单位字节
      */

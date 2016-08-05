@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,11 +60,11 @@ public class StatsTraffic {
                 ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
                 NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                if (networkInfoWifi != null){
+                if (networkInfoWifi != null) {
                     wifiState = networkInfoWifi.getState();
                 }
                 NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-                if (networkInfo != null){
+                if (networkInfo != null) {
                     mobileState = networkInfo.getState();
                 }
 
@@ -102,7 +102,7 @@ public class StatsTraffic {
     }
 
     public static StatsTraffic getInstance(Context context) {
-        if (instance == null){
+        if (instance == null) {
             instance = new StatsTraffic(context);
         }
         return instance;
@@ -116,7 +116,7 @@ public class StatsTraffic {
         intentFileter.addAction(DATE_ACTION);
         intentFileter.addAction(NETWORK_ACTION);
         context.registerReceiver(statsTrafficReceiver, intentFileter);
-        if (trafficDbService.getAppTraffic(context.getApplicationInfo().uid) == null){
+        if (trafficDbService.getAppTraffic(context.getApplicationInfo().uid) == null) {
             addAppTrafficStats(context.getApplicationInfo().uid, context.getApplicationInfo().packageName);
         }
     }
@@ -241,7 +241,7 @@ public class StatsTraffic {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (networkInfoWifi != null){
+        if (networkInfoWifi != null) {
             wifiState = networkInfoWifi.getState();
         }
         NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);

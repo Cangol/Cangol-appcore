@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -155,10 +155,10 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onFinish(long end) {
                 super.onFinish(end);
-                if (notification){
+                if (notification) {
                     downloadNotification.finishNotification();
                 }
-                if (load){
+                if (load) {
                     makeLoad(savePath, upgradeType);
                 }
 
@@ -168,7 +168,7 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onProgressUpdate(long end, int progress, int speed) {
                 super.onProgressUpdate(end, progress, speed);
-                if (notification){
+                if (notification) {
                     downloadNotification.updateNotification(progress, speed);
                 }
 
@@ -178,7 +178,7 @@ class UpgradeServiceImpl implements UpgradeService {
             @Override
             public void onFailure(Throwable error, String content) {
                 super.onFailure(error, content);
-                if (notification){
+                if (notification) {
                     downloadNotification.failureNotification();
                 }
                 notifyUpgradeFailure(filename, content);

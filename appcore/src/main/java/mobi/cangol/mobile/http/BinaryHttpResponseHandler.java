@@ -38,9 +38,9 @@ import java.io.UnsupportedEncodingException;
  * {@link AsyncHttpClient}. Receives response body as byte array with a
  * content-type whitelist. (e.g. checks Content-Type against allowed list,
  * Content-length).
- * <p/>
+ * <p>
  * For example:
- * <p/>
+ * <p>
  * <pre>
  * AsyncHttpClient client = new AsyncHttpClient();
  * String[] allowedTypes = new String[] { "image/png" };
@@ -159,7 +159,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
             try {
                 onFailure(e, responseBody.getBytes("utf-8"));
             } catch (UnsupportedEncodingException e1) {
-                Log.d("UnsupportedEncoding",e.getMessage());
+                Log.d("UnsupportedEncoding", e.getMessage());
             }
         } else {
             onFailure(e, response);

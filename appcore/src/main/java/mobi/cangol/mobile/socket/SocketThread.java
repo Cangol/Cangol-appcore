@@ -71,7 +71,7 @@ public class SocketThread implements Runnable {
     }
 
     private void makeRequest() throws ClassNotFoundException, IllegalBlockingModeException, IllegalArgumentException, SocketTimeoutException, IOException {
-        if (DEBUG){
+        if (DEBUG) {
             Log.d(TAG, "socket connect executionCount=" + executionCount);
         }
 //        if(TextUtils.isEmpty(host)||port==0){
@@ -90,7 +90,7 @@ public class SocketThread implements Runnable {
             socket.setPerformancePreferences(0, 1, 0);
             socket.setReuseAddress(true);
             socket.setSoLinger(true, LINGER_TIME);
-            if (DEBUG){
+            if (DEBUG) {
                 Log.d(TAG, "socket " + host + ":" + port + " connect...");
             }
             socket.connect(new InetSocketAddress(host, port), CONNECT_TIME_OUT);

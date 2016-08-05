@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ public class JsonUtils extends Converter {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())){
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
                 String filedName = getFieldName(field, useAnnotation);
@@ -176,7 +176,7 @@ public class JsonUtils extends Converter {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         byte[] data = new byte[BUFFER_SIZE];
         int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1){
+        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
             outStream.write(data, 0, count);
         }
         data = null;
@@ -196,7 +196,7 @@ public class JsonUtils extends Converter {
             String filedName = null;
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())){
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
                 filedName = getFieldName(field, useAnnotation);
@@ -302,7 +302,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else{
+            } else {
                 return obj.getInt(key);
             }
         } catch (JSONException e) {
@@ -314,7 +314,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else{
+            } else {
                 return obj.getLong(key);
             }
         } catch (JSONException e) {
@@ -326,7 +326,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else{
+            } else {
                 return obj.getBoolean(key);
             }
         } catch (JSONException e) {
@@ -348,7 +348,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return defaultValue;
-            } else{
+            } else {
                 return obj.getDouble(key);
             }
         } catch (JSONException e) {
@@ -384,7 +384,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return null;
-            } else{
+            } else {
                 return obj.get(key);
             }
         } catch (JSONException e) {
@@ -404,7 +404,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return null;
-            } else{
+            } else {
                 return obj.getJSONObject(key);
             }
         } catch (JSONException e) {
@@ -416,7 +416,7 @@ public class JsonUtils extends Converter {
         try {
             if (obj.isNull(key)) {
                 return null;
-            } else{
+            } else {
                 return obj.getJSONArray(key);
             }
         } catch (JSONException e) {

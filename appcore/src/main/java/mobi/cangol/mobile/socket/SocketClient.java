@@ -39,6 +39,7 @@ public class SocketClient {
     private String host;
     private boolean isLong;
     private int timeout = 10 * 1000;
+
     protected SocketClient() {
         threadPool = PoolManager.buildPool("SocketClient", 3);
         requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();

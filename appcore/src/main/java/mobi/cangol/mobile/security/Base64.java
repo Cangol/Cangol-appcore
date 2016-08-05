@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public class Base64 {
             }
         }
         int numPadBytes = sourceBytes.length - source.length();
-        for (int i = target.length - numPadBytes; i < target.length; i++){
+        for (int i = target.length - numPadBytes; i < target.length; i++) {
             target[i] = '=';
         }
         return new String(target);
@@ -63,7 +63,7 @@ public class Base64 {
     }
 
     public static String decode(String source) {
-        if (source.length() % 4 != 0){
+        if (source.length() % 4 != 0) {
             throw new RuntimeException("valid Base64 codes have a multiple of 4 characters");
         }
         int numGroups = source.length() / 4;
@@ -79,7 +79,7 @@ public class Base64 {
         try {
             return new String(targetBytes, 0, targetBytes.length - numExtraBytes, "utf-8");
         } catch (UnsupportedEncodingException e) {
-           Log.d("UnsupportedEncoding",e.getMessage());
+            Log.d("UnsupportedEncoding", e.getMessage());
         }
         return null;
     }

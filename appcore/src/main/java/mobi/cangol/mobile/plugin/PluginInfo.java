@@ -65,7 +65,7 @@ public class PluginInfo {
         try {
             intent = new Intent(context, Class.forName(clazz));
         } catch (ClassNotFoundException e) {
-            Log.d("ClassNotFoundException",e.getMessage());
+            Log.d("ClassNotFoundException", e.getMessage());
         }
         context.startActivity(intent);
     }
@@ -75,7 +75,7 @@ public class PluginInfo {
         try {
             intent = new Intent(context, Class.forName(clazz));
         } catch (ClassNotFoundException e) {
-            Log.d("ClassNotFoundException",e.getMessage());
+            Log.d("ClassNotFoundException", e.getMessage());
         }
         context.startActivity(intent);
     }

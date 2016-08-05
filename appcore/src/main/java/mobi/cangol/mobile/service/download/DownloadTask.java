@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -79,7 +79,7 @@ public class DownloadTask {
             downloadResource.setProgress(progress);
             downloadResource.setCompleteSize(end);
             sendDownloadMessage(Download.ACTION_DOWNLOAD_UPDATE, downloadResource);
-            if (downloadNotification != null){
+            if (downloadNotification != null) {
                 downloadNotification.updateNotification(progress, speed);//speed 转换
             }
         }
@@ -122,7 +122,7 @@ public class DownloadTask {
     }
 
     protected void restart() {
-        if (future != null && !future.isCancelled()){
+        if (future != null && !future.isCancelled()) {
             future.cancel(true);
         }
         downloadResource.reset();
@@ -139,7 +139,7 @@ public class DownloadTask {
     }
 
     protected void stop() {
-        if (future != null && !future.isCancelled()){
+        if (future != null && !future.isCancelled()) {
             future.cancel(true);
         }
         future = null;
@@ -149,7 +149,7 @@ public class DownloadTask {
     }
 
     public void interrupt() {
-        if (future != null && !future.isCancelled()){
+        if (future != null && !future.isCancelled()) {
             future.cancel(true);
         }
         future = null;
@@ -159,7 +159,7 @@ public class DownloadTask {
     }
 
     protected void remove() {
-        if (future != null && !future.isCancelled()){
+        if (future != null && !future.isCancelled()) {
             future.cancel(true);
         }
         future = null;

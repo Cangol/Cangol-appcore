@@ -33,6 +33,7 @@ public class CacheObject implements Serializable {
     private Period period;
     private String deadline;
     private Serializable object;
+
     public CacheObject() {
     }
 

@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,8 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class Object2FileUtils {
-    private final static String CHARSET="UTF-8";
+    private final static String CHARSET = "UTF-8";
+
     /**
      * 写入json对象到文件
      * @param jsonObject
@@ -208,7 +209,7 @@ public class Object2FileUtils {
             byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
                 content = new String(buffer, CHARSET);
-                if (!TextUtils.isEmpty(content)){
+                if (!TextUtils.isEmpty(content)) {
                     jsonObject = new JSONObject(content);
                 }
 
@@ -241,8 +242,8 @@ public class Object2FileUtils {
         try {
             byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
-                content = new String(buffer,CHARSET);
-                if (!TextUtils.isEmpty(content)){
+                content = new String(buffer, CHARSET);
+                if (!TextUtils.isEmpty(content)) {
                     jsonArray = new JSONArray(content);
                 }
 

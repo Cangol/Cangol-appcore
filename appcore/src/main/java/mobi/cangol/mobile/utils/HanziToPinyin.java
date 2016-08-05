@@ -31,14 +31,14 @@ import java.util.Locale;
  * performance and minimum runtime resources with tolerable sacrifice of accuracy. This
  * implementation highly depends on zh_CN ICU collation data and must be always synchronized with
  * ICU.
- * <p/>
+ * <p>
  * Currently this file is aligned to zh.txt in ICU 4.6
  * 来自android4.2源码
  */
 public class HanziToPinyin {
     /**
      * Unihans array.
-     * <p/>
+     * <p>
      * Each unihans is the first one within same pinyin when collator is zh_CN.
      */
     public static final char[] UNIHANS = {
@@ -115,7 +115,7 @@ public class HanziToPinyin {
             '\u6628', '\u5159', '\u9fc3', '\u9fc4',};
     /**
      * Pinyin array.
-     * <p/>
+     * <p>
      * Each pinyin is corresponding to unihans of same
      * offset in the unihans array.
      */
@@ -584,8 +584,10 @@ public class HanziToPinyin {
          * original string in source.
          */
         public String target;
+
         public Token() {
         }
+
         public Token(int type, String source, String target) {
             this.type = type;
             this.source = source;

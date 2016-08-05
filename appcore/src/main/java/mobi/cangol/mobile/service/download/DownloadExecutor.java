@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,7 +59,7 @@ public abstract class DownloadExecutor<T> {
 
     protected void setDownloadDir(File directory) {
         mDownloadDir = directory;
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdirs();
         }
     }
@@ -174,7 +174,7 @@ public abstract class DownloadExecutor<T> {
                 resource.setDownloadTask(downloadTask);
                 downloadTask.setDownloadNotification(notification(mContext, resource));
             }
-            if (!downloadTask.isRunning()){
+            if (!downloadTask.isRunning()) {
                 downloadTask.start();
             }
         } else {
@@ -199,7 +199,7 @@ public abstract class DownloadExecutor<T> {
         }
         if (mDownloadRes.contains(resource)) {
             DownloadTask downloadTask = resource.getDownloadTask();
-            if (downloadTask.isRunning()){
+            if (downloadTask.isRunning()) {
                 downloadTask.stop();
             }
         } else {
@@ -315,7 +315,7 @@ public abstract class DownloadExecutor<T> {
             DownloadTask downloadTask = null;
             for (DownloadResource resource : mDownloadRes) {
                 downloadTask = resource.getDownloadTask();
-                if (downloadTask != null){
+                if (downloadTask != null) {
                     downloadTask.stop();
                 }
             }
@@ -328,7 +328,7 @@ public abstract class DownloadExecutor<T> {
      * 注册下载状态监听
      */
     public void registerDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
-        if (null == downloadStatusListener){
+        if (null == downloadStatusListener) {
             throw new IllegalArgumentException("downloadStatusListener is null!");
         }
         boolean isExist = false;
@@ -338,7 +338,7 @@ public abstract class DownloadExecutor<T> {
                 break;
             }
         }
-        if (!isExist){
+        if (!isExist) {
             listeners.add(new WeakReference<DownloadStatusListener>(downloadStatusListener));
         }
     }
@@ -347,7 +347,7 @@ public abstract class DownloadExecutor<T> {
      * 移除下载状态监听
      */
     public void unregisterDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
-        if (null == downloadStatusListener){
+        if (null == downloadStatusListener) {
             throw new IllegalArgumentException("downloadStatusListener is null!");
         }
         for (WeakReference<DownloadStatusListener> listener : listeners) {

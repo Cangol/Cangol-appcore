@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -61,7 +61,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateNickname(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
 
@@ -81,7 +81,7 @@ public class ValidatorUtils {
             }
         }
 
-        if (num <= 20 && num > 5){
+        if (num <= 20 && num > 5) {
             flag = true;
         }
 
@@ -105,7 +105,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validatePassword(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
@@ -124,7 +124,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validatePhone(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         Pattern p = Patterns.PHONE;
@@ -143,7 +143,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateMobile(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
@@ -162,7 +162,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateEmail(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         Pattern p = Patterns.EMAIL_ADDRESS;
@@ -181,7 +181,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateURL(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         Pattern p = Patterns.WEB_URL;
@@ -200,7 +200,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateIP(String str) {
-        if (str == null || "".equals(str)){
+        if (str == null || "".equals(str)) {
             return false;
         }
         Pattern p = Patterns.IP_ADDRESS;

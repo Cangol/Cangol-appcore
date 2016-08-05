@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,7 +72,7 @@ public class AESUtils {
     private static byte[] toByte(String hexString) {
         int len = hexString.length() / 2;
         byte[] result = new byte[len];
-        for (int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
         }
         return result;
@@ -80,7 +80,7 @@ public class AESUtils {
 
     private static String toHex(byte[] buf) {
         String HEX = "0123456789ABCDEF";
-        if (buf == null){
+        if (buf == null) {
             return "";
         }
         StringBuffer result = new StringBuffer(2 * buf.length);

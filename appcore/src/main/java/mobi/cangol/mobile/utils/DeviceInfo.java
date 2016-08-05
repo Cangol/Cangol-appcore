@@ -55,8 +55,9 @@ import mobi.cangol.mobile.logging.Log;
 public class DeviceInfo {
     public static final String SPECIAL_IMEI = "000000000000000";
     public static final String SPECIAL_ANDROID_ID = "9774d56d682e549c";
-    public static final String CHARSET =  "UTF-8";
-    /** 
+    public static final String CHARSET = "UTF-8";
+
+    /**
      * 获取操作系统类型
      *
      * @return
@@ -123,17 +124,17 @@ public class DeviceInfo {
      * @return
      */
     public static long getMemSize() {
-        long result =0;
+        long result = 0;
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
-            String memStr="MemTotal:";
+            String memStr = "MemTotal:";
             String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
         } catch (IOException e) {
-            result=-1;
+            result = -1;
         }
         return result;
     }
@@ -150,7 +151,7 @@ public class DeviceInfo {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             bufferedReader.close();
-            String memStr="MemTotal:";
+            String memStr = "MemTotal:";
             result = str.substring(str.indexOf(memStr) + memStr.length()).trim();
         } catch (IOException e) {
             Log.d(e.getMessage());

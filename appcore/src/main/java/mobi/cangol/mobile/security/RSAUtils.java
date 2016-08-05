@@ -39,8 +39,8 @@ public class RSAUtils {
 
     /**
      * 生成公钥和私钥
-     * @throws NoSuchAlgorithmException
      *
+     * @throws NoSuchAlgorithmException
      */
     public static HashMap<String, Object> getKeys() throws NoSuchAlgorithmException {
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -59,10 +59,8 @@ public class RSAUtils {
      * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA
      * /None/NoPadding】
      *
-     * @param modulus
-     *            模
-     * @param exponent
-     *            指数
+     * @param modulus  模
+     * @param exponent 指数
      * @return
      */
     public static RSAPublicKey getPublicKey(String modulus, String exponent) {
@@ -82,10 +80,8 @@ public class RSAUtils {
      * 注意：【此代码用了默认补位方式，为RSA/None/PKCS1Padding，不同JDK默认的补位方式可能不同，如Android默认是RSA
      * /None/NoPadding】
      *
-     * @param modulus
-     *            模
-     * @param exponent
-     *            指数
+     * @param modulus  模
+     * @param exponent 指数
      * @return
      */
     public static RSAPrivateKey getPrivateKey(String modulus, String exponent) {
@@ -151,7 +147,6 @@ public class RSAUtils {
 
     /**
      * ASCII码转BCD码
-     *
      */
     protected static byte[] asciiToBcd(byte[] ascii, int asc_len) {
         byte[] bcd = new byte[asc_len / 2];
@@ -219,7 +214,7 @@ public class RSAUtils {
     }
 
     /**
-     *拆分数组
+     * 拆分数组
      */
     protected static byte[][] splitArray(byte[] data, int len) {
         int x = data.length / len;

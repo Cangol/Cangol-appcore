@@ -62,8 +62,8 @@ class SimpleMultipartEntity implements HttpEntity {
         if (!isSetFirst) {
             try {
                 out.write(("--" + boundary + "\r\n").getBytes(CHARSET));
-            } catch ( IOException e) {
-                Log.d(getClass().getName(),e.getMessage());
+            } catch (IOException e) {
+                Log.d(getClass().getName(), e.getMessage());
             }
         }
 
@@ -77,8 +77,8 @@ class SimpleMultipartEntity implements HttpEntity {
 
         try {
             out.write(("\r\n--" + boundary + "--\r\n").getBytes(CHARSET));
-        } catch ( IOException e) {
-            Log.d(getClass().getName(),e.getMessage());
+        } catch (IOException e) {
+            Log.d(getClass().getName(), e.getMessage());
         }
 
         isSetLast = true;
@@ -90,8 +90,8 @@ class SimpleMultipartEntity implements HttpEntity {
             out.write(("Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n").getBytes(CHARSET));
             out.write(value.getBytes("utf-8"));
             out.write(("\r\n--" + boundary + "\r\n").getBytes(CHARSET));
-        } catch ( IOException e) {
-            Log.d(getClass().getName(),e.getMessage());
+        } catch (IOException e) {
+            Log.d(getClass().getName(), e.getMessage());
         }
     }
 
@@ -112,17 +112,17 @@ class SimpleMultipartEntity implements HttpEntity {
             while ((l = fin.read(tmp)) != -1) {
                 out.write(tmp, 0, l);
             }
-            if (!isLast){
+            if (!isLast) {
                 out.write(("\r\n--" + boundary + "\r\n").getBytes(CHARSET));
             }
             out.flush();
-        } catch ( IOException e) {
-            Log.d(getClass().getName(),e.getMessage());
+        } catch (IOException e) {
+            Log.d(getClass().getName(), e.getMessage());
         } finally {
             try {
                 fin.close();
-            } catch ( IOException e) {
-                Log.d(getClass().getName(),e.getMessage());
+            } catch (IOException e) {
+                Log.d(getClass().getName(), e.getMessage());
             }
         }
     }
@@ -130,8 +130,8 @@ class SimpleMultipartEntity implements HttpEntity {
     public void addPart(final String key, final File value, final boolean isLast) {
         try {
             addPart(key, value.getName(), new FileInputStream(value), isLast);
-        } catch ( FileNotFoundException e) {
-            Log.d(getClass().getName(),e.getMessage());
+        } catch (FileNotFoundException e) {
+            Log.d(getClass().getName(), e.getMessage());
         }
     }
 

@@ -37,12 +37,12 @@ import java.lang.ref.WeakReference;
  * Used to intercept and handle the responses from requests made using
  * {@link AsyncHttpClient}. The {@link #onSuccess(String)} method is
  * designed to be anonymously overridden with your own response handling code.
- * <p/>
+ * <p>
  * Additionally, you can override the {@link #onFailure(Throwable, String)},
  * {@link #onStart()}, and {@link #onFinish()} methods as required.
- * <p/>
+ * <p>
  * For example:
- * <p/>
+ * <p>
  * <pre>
  * AsyncHttpClient client = new AsyncHttpClient();
  * client.get("http://www.google.com", new AsyncHttpResponseHandler() {
@@ -244,7 +244,7 @@ public class AsyncHttpResponseHandler {
                 entity = new BufferedHttpEntity(temp);
                 responseBody = EntityUtils.toString(entity, "UTF-8");
             }
-            if (entity != null){
+            if (entity != null) {
                 entity.consumeContent();
             }
         } catch (IOException e) {

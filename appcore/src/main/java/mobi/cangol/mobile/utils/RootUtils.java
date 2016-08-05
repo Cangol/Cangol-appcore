@@ -68,7 +68,7 @@ public class RootUtils {
                     fullResponse.add(line);
                 }
             } catch (Exception e) {
-                Log.d(getClass().getName(),e.getMessage());
+                Log.d(getClass().getName(), e.getMessage());
             }
             Log.d(getClass().getName(), "--> Full response was: " + fullResponse);
             return fullResponse;

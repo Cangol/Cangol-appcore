@@ -26,7 +26,7 @@ public abstract class SyncHttpClient extends AsyncHttpClient {
         @Override
         protected void sendMessage(Message msg) {
             /*
-			 * Dont use the handler and send it directly to the analysis
+             * Dont use the handler and send it directly to the analysis
 			 * (because its all the same thread)
 			 */
             handleMessage(msg);
@@ -42,6 +42,7 @@ public abstract class SyncHttpClient extends AsyncHttpClient {
             result = onRequestFailed(error, content);
         }
     };
+
     /**
      * Creates a new instance of SyncHttpClient.
      *

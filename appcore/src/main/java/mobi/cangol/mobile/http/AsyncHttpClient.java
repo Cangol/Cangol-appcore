@@ -67,9 +67,9 @@ import mobi.cangol.mobile.service.PoolManager.Pool;
  * with additional parameters by passing a {@link RequestParams} instance,
  * and responses can be handled by passing an anonymously overridden
  * {@link AsyncHttpResponseHandler} instance.
- * <p/>
+ * <p>
  * For example:
- * <p/>
+ * <p>
  * <pre>
  * AsyncHttpClient client = new AsyncHttpClient();
  * client.get("http://www.google.com", new AsyncHttpResponseHandler() {
@@ -230,7 +230,7 @@ public class AsyncHttpClient {
     /**
      * Cancels any pending (or potentially active) requests associated with the
      * passed Context.
-     * <p/>
+     * <p>
      * <b>Note:</b> This will only affect requests which were created with a non-null
      * android Context. This method is intended to be used in the onDestroy
      * method of your android activities to destroy all requests which are no

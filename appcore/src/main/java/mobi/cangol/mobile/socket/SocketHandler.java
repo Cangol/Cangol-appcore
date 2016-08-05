@@ -63,7 +63,7 @@ public abstract class SocketHandler {
         try {
             writeLocker.wait();
         } catch (InterruptedException e) {
-           Log.d(e.getMessage());
+            Log.d(e.getMessage());
         }
     }
 
