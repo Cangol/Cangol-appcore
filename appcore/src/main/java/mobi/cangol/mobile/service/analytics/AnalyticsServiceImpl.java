@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mobi.cangol.mobile.http.AsyncHttpClient;
+import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
@@ -76,7 +77,24 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     @Override
     public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
         RequestParams params = new RequestParams(paramsMap);
-        mAsyncHttpClient.get(mContext, url, params, null);
+        mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onSuccess(String content) {
+                super.onSuccess(content);
+            }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                super.onFailure(error, content);
+            }
+
+        });
     }
 
     @Override

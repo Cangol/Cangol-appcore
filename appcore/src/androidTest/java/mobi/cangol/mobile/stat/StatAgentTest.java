@@ -1,7 +1,6 @@
 package mobi.cangol.mobile.stat;
 
 import android.test.ApplicationTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.utils.TimeUtils;
@@ -28,7 +27,6 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
         StatAgent.getInstance(getApplication()).setDebug(true);
 
     }
-
     public void testSend() throws Exception {
         StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createAppView(TAG));
         StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));

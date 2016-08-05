@@ -89,6 +89,7 @@ public class StatAgent {
     }
 
     public void destroy() {
+        analyticsService.closeTracker(STAT_TRACKING_ID);
         StatsSession.getInstance(context).onDestroy();
         StatsTraffic.getInstance(context).onDestroy();
     }
