@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-public abstract interface Dao<T, K> {
+public abstract interface Dao<T, ID> {
     /**
      * 条件查询
      *
@@ -37,7 +37,7 @@ public abstract interface Dao<T, K> {
      * @return
      * @throws SQLException
      */
-    public abstract T queryForK(K paramK) throws SQLException;
+    public abstract T queryForId(ID paramK) throws SQLException;
 
     /**
      * 查询所有
@@ -87,11 +87,11 @@ public abstract interface Dao<T, K> {
      * 更新数据对象根据
      *
      * @param paramT
-     * @param paramK
+     * @param paramID
      * @return
      * @throws SQLException
      */
-    public abstract int updateK(T paramT, K paramK) throws SQLException;
+    public abstract int updateById(T paramT, ID paramID) throws SQLException;
 
     /**
      * 根据条件删除
@@ -123,11 +123,11 @@ public abstract interface Dao<T, K> {
     /**
      * 更具K删除
      *
-     * @param paramK
+     * @param paramID
      * @return
      * @throws SQLException
      */
-    public abstract int deleteByK(K paramK) throws SQLException;
+    public abstract int deleteById(ID paramID) throws SQLException;
 
     /**
      * 根据K列表执行删除
@@ -136,7 +136,7 @@ public abstract interface Dao<T, K> {
      * @return
      * @throws SQLException
      */
-    public abstract int deleteByKs(Collection<K> paramCollection) throws SQLException;
+    public abstract int deleteByIds(Collection<ID> paramCollection) throws SQLException;
 
     /**
      * 清空表删

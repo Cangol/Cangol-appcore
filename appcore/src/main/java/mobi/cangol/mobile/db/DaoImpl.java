@@ -29,7 +29,7 @@ import java.util.List;
 import mobi.cangol.mobile.logging.Log;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-class DaoImpl<T, K> implements Dao<T, K> {
+class DaoImpl<T, ID> implements Dao<T, ID> {
     private CoreSQLiteOpenHelper mDatabaseHelper;
     private String mTableName;
     private Class<T> mClazz;
@@ -78,13 +78,13 @@ class DaoImpl<T, K> implements Dao<T, K> {
     }
 
     @Override
-    public T queryForId(K paramK) throws SQLException {
+    public T queryForId(ID paramID) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         T obj = null;
         try {
             SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             QueryBuilder queryBuilder = new QueryBuilder(mClazz);
-            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramK, "=");
+            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
             Cursor cursor = query(db, queryBuilder);
             if (cursor.getCount() > 0) {
                 cursor.moveToFirst();
@@ -186,13 +186,13 @@ class DaoImpl<T, K> implements Dao<T, K> {
     }
 
     @Override
-    public int updateId(T paramT, K paramK) throws SQLException {
+    public int updateById(T paramT, ID paramID) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
 
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
-            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramK});
+            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
         } catch (Exception e) {
             throw new SQLException(mTableName, e.getCause());
         }
@@ -242,19 +242,19 @@ class DaoImpl<T, K> implements Dao<T, K> {
     }
 
     @Override
-    public int deleteById(K paramK) throws SQLException {
+    public int deleteById(ID paramID) throws SQLException {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        int result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramK});
+        int result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
         return result;
     }
 
     @Override
-    public int deleteByIds(Collection<K> paramCollection) throws SQLException {
+    public int deleteByIds(Collection<ID> paramCollection) throws SQLException {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = 0;
         try {
             db.beginTransaction();
-            for (K id : paramCollection) {
+            for (ID id : paramCollection) {
                 result = result + db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + id});
             }
             db.setTransactionSuccessful();
