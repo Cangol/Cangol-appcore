@@ -56,9 +56,9 @@ public class DocumentParser {
                     }
                     return getNodeValue((Element) node, nodeNs);
                 }
-            } else
+            } else{
                 return null;
-
+            }
         }
     }
 

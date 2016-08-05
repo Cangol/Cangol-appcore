@@ -635,7 +635,7 @@ public class BitmapUtils {
         try {
             baos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(e.getMessage());
         } finally {
             bitmap.recycle();
             bitmap = null;

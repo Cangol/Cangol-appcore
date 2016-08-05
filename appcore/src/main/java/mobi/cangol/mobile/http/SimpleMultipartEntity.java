@@ -112,11 +112,12 @@ class SimpleMultipartEntity implements HttpEntity {
             while ((l = fin.read(tmp)) != -1) {
                 out.write(tmp, 0, l);
             }
-            if (!isLast)
+            if (!isLast){
                 out.write(("\r\n--" + boundary + "\r\n").getBytes(CHARSET));
+            }
             out.flush();
         } catch ( IOException e) {
-            e.printStackTrace();
+            Log.d(getClass().getName(),e.getMessage());
         } finally {
             try {
                 fin.close();

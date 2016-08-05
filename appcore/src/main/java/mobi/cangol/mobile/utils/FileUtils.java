@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -157,7 +157,7 @@ public class FileUtils {
                 inStream.close();
             }
         } catch (Exception e) {
-            Log.d("copy file error!" +e.getMessage());
+            Log.d("copy file error!" + e.getMessage());
         }
     }
 
@@ -168,9 +168,7 @@ public class FileUtils {
      */
     public static void newFolder(String folderPath) {
         try {
-            String filePath = folderPath;
-            filePath = filePath.toString();
-            File myFilePath = new File(filePath);
+            File myFilePath = new File(folderPath);
             if (!myFilePath.exists()) {
                 myFilePath.mkdirs();
             }
@@ -182,22 +180,19 @@ public class FileUtils {
     /**
      * 新建文件
      *
-     * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
+     * @param filePath String 文件路径及名称
      * @param fileContent String 文件内容
      */
-    public static void newFile(String filePathAndName, String fileContent) {
+    public static void newFile(String filePath, String fileContent) {
 
         try {
-            String filePath = filePathAndName;
-            filePath = filePath.toString();
             File myFilePath = new File(filePath);
             if (!myFilePath.exists()) {
                 myFilePath.createNewFile();
             }
             OutputStreamWriter outWrite = new OutputStreamWriter(new FileOutputStream(myFilePath), "UTF-8");
             PrintWriter myFile = new PrintWriter(outWrite);
-            String strContent = fileContent;
-            myFile.println(strContent);
+            myFile.println(fileContent);
             outWrite.close();
 
         } catch (Exception e) {
@@ -209,13 +204,10 @@ public class FileUtils {
     /**
      * 删除文件
      *
-     * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
-     * @param filePathAndName String
+     * @param filePath String 文件路径及名称
      */
-    public static void delFile(String filePathAndName) {
+    public static void delFile(String filePath) {
         try {
-            String filePath = filePathAndName;
-            filePath = filePath.toString();
             File myDelFile = new File(filePath);
             myDelFile.delete();
 
@@ -242,9 +234,7 @@ public class FileUtils {
     public static void delFolder(String folderPath) {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
-            String filePath = folderPath;
-            filePath = filePath.toString();
-           File myFilePath = new File(filePath);
+            File myFilePath = new File(folderPath);
             myFilePath.delete(); // 删除空文件夹
 
         } catch (Exception e) {
@@ -360,12 +350,12 @@ public class FileUtils {
      */
     public static List<File> searchBySuffix(File f, List<File> fileList,
                                             String... suffix) {
-        if (null == fileList){
+        if (null == fileList) {
             fileList = new ArrayList<File>();
         }
         if (f.isDirectory()) {
             File[] childs = f.listFiles();
-            if (childs != null){
+            if (childs != null) {
                 for (int i = 0; i < childs.length; i++) {
                     if (childs[i].isDirectory()) {
                         searchBySuffix(childs[i], fileList, suffix);
@@ -434,11 +424,11 @@ public class FileUtils {
             Log.d(e.getMessage());
         } finally {
             try {
-                if (oos != null){
+                if (oos != null) {
                     oos.close();
                 }
 
-                if (os != null){
+                if (os != null) {
                     os.close();
                 }
 
@@ -455,7 +445,7 @@ public class FileUtils {
      *  @return
      */
     public static Object readObject(File file) {
-        if (!file.exists() || file.length() == 0){
+        if (!file.exists() || file.length() == 0) {
             return null;
         }
         Object object = null;
@@ -475,11 +465,11 @@ public class FileUtils {
             Log.d(e.getMessage());
         } finally {
             try {
-                if (ois != null){
+                if (ois != null) {
                     ois.close();
                 }
 
-                if (is != null){
+                if (is != null) {
                     is.close();
                 }
 
@@ -557,11 +547,11 @@ public class FileUtils {
      * @return
      */
     public static long formatSize(String sizeStr) {
-        if (sizeStr != null && sizeStr.trim().length() > 0) {
+        if (sizeStr != null && !"".equals(sizeStr.trim())) {
             String unit = sizeStr
                     .replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
             String size = sizeStr.substring(0, sizeStr.indexOf(unit));
-            if (TextUtils.isEmpty(size)){
+            if (TextUtils.isEmpty(size)) {
                 return -1;
             }
 
@@ -602,7 +592,7 @@ public class FileUtils {
                 }
             }
         } catch (Exception e) {
-           Log.d(e.getMessage());
+            Log.d(e.getMessage());
         }
         return size;
     }

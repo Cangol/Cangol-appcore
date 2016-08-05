@@ -96,16 +96,12 @@ public class DataCleanManager {
 
     public static long getFolderSize(File file) {
         long size = 0;
-        try {
-            for (File item : file.listFiles()) {
-                if (!item.isDirectory()) {
-                    size = size + getFolderSize(item);
-                } else {
-                    size = size + item.length();
-                }
+        for (File item : file.listFiles()) {
+            if (!item.isDirectory()) {
+                size = size + getFolderSize(item);
+            } else {
+                size = size + item.length();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return size;
     }

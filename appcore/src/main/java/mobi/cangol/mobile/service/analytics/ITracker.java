@@ -25,7 +25,7 @@ import mobi.cangol.mobile.logging.Log;
 public class ITracker {
     private final String mTrackingId;
     private ITrackerHandler mHandler;
-    private boolean isClosed;
+    private boolean mClosed;
 
     public ITracker(String trackingId, ITrackerHandler handler) {
         super();
@@ -34,7 +34,7 @@ public class ITracker {
     }
 
     public boolean send(IMapBuilder statBuilder) {
-        if (!isClosed) {
+        if (!mClosed) {
             if (statBuilder != null) {
                 mHandler.send(this, statBuilder.getUrl(), statBuilder.getParams());
                 return true;
@@ -48,7 +48,7 @@ public class ITracker {
     }
 
     public boolean send(String url, Map<String, String> params) {
-        if (!isClosed) {
+        if (!mClosed) {
             if (url != null) {
                 mHandler.send(this, url, params);
                 return true;
@@ -66,10 +66,10 @@ public class ITracker {
     }
 
     public boolean isClosed() {
-        return isClosed;
+        return mClosed;
     }
 
-    protected void setClosed(boolean closed) {
-        isClosed = closed;
+    protected void setClosed(boolean mClosed) {
+        this.mClosed = mClosed;
     }
 }

@@ -99,7 +99,7 @@ class RetryHandler implements HttpRequestRetryHandler {
         if (retry) {
             SystemClock.sleep(RETRY_SLEEP_TIME_MILLIS);
         } else {
-            exception.printStackTrace();
+            Log.d(getClass().getName(), exception.getMessage());
         }
         Log.d("RetryHandler", "retryRequest:" + exception.getClass() + " executionCount=" + executionCount + " retry=" + retry);
         return retry;

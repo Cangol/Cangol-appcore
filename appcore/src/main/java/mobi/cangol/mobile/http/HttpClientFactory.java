@@ -59,7 +59,7 @@ public class HttpClientFactory {
 
     private static DefaultHttpClient httpClient;
     private static IdleConnectionMonitorThread monitorThread;
-    private static boolean SSL_VERIFIY = false;
+    private static boolean sslVerifiy = false;
 
     public static DefaultHttpClient getDefaultHttpClient() {
         DefaultHttpClient httpClient = createDefaultHttpClient();
@@ -68,7 +68,7 @@ public class HttpClientFactory {
     }
 
     public static void setSslVerifiy(boolean sslVerifiy) {
-        SSL_VERIFIY = sslVerifiy;
+        HttpClientFactory.sslVerifiy = sslVerifiy;
     }
 
     public synchronized static DefaultHttpClient getThreadSafeClient() {
@@ -114,7 +114,7 @@ public class HttpClientFactory {
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         HostnameVerifier hostnameVerifier = SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
         SSLSocketFactory socketFactory = null;
-        if (SSL_VERIFIY) {
+        if (sslVerifiy) {
             /**
              KeyStore trustStore = null;
              InputStream is =null;

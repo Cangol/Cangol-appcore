@@ -159,7 +159,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
             try {
                 onFailure(e, responseBody.getBytes("utf-8"));
             } catch (UnsupportedEncodingException e1) {
-                e1.printStackTrace();
+                Log.d("UnsupportedEncoding",e.getMessage());
             }
         } else {
             onFailure(e, response);

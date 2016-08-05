@@ -20,21 +20,21 @@ package mobi.cangol.mobile.logging;
  * @author Cangol
  */
 public class Log {
-    private static int LEVEL = android.util.Log.VERBOSE;
+    private static int level = android.util.Log.VERBOSE;
 
-    private static boolean FORMAT = false;
+    private static boolean format = false;
 
     public static void setLogLevelFormat(int level, boolean format) {
-        LEVEL = level;
-        FORMAT = format;
+        Log.level = level;
+        Log.format = format;
     }
 
     public static int getLevel() {
-        return LEVEL;
+        return level;
     }
 
     public static boolean isFormat() {
-        return FORMAT;
+        return format;
     }
     // VERBOSE log
 
@@ -106,15 +106,16 @@ public class Log {
     }
 
     private static void formatLog(int logLevel, String tag, String msg, Throwable error) {
-        if (LEVEL > logLevel) return;
+        if (level > logLevel) {
+            return;
+        }
         StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
         String classname = stackTrace.getClassName();
         String filename = stackTrace.getFileName();
         String methodname = stackTrace.getMethodName();
         int linenumber = stackTrace.getLineNumber();
         String output = null;
-        ;
-        if (FORMAT) {
+        if (format) {
             output = String.format("%s.%s(%s:%d)-->%s", classname, methodname, filename, linenumber, msg);
         } else {
             output = msg;

@@ -139,7 +139,7 @@ public class RSAUtils {
         //模长   
         int key_len = privateKey.getModulus().bitLength() / 8;
         byte[] bytes = data.getBytes(CHARSET);
-        byte[] bcd = ASCII_To_BCD(bytes, bytes.length);
+        byte[] bcd = asciiToBcd(bytes, bytes.length);
         //如果密文长度大于模长则要分组解密
         String ming = "";
         byte[][] arrays = splitArray(bcd, key_len);
@@ -153,17 +153,17 @@ public class RSAUtils {
      * ASCII码转BCD码
      *
      */
-    protected static byte[] ASCII_To_BCD(byte[] ascii, int asc_len) {
+    protected static byte[] asciiToBcd(byte[] ascii, int asc_len) {
         byte[] bcd = new byte[asc_len / 2];
         int j = 0;
         for (int i = 0; i < (asc_len + 1) / 2; i++) {
-            bcd[i] = asc_to_bcd(ascii[j++]);
-            bcd[i] = (byte) (((j >= asc_len) ? 0x00 : asc_to_bcd(ascii[j++])) + (bcd[i] << 4));
+            bcd[i] = ascToBcd(ascii[j++]);
+            bcd[i] = (byte) (((j >= asc_len) ? 0x00 : ascToBcd(ascii[j++])) + (bcd[i] << 4));
         }
         return bcd;
     }
 
-    protected static byte asc_to_bcd(byte asc) {
+    protected static byte ascToBcd(byte asc) {
         byte bcd;
 
         if ((asc >= '0') && (asc <= '9')) {

@@ -8,7 +8,7 @@ public class IdleConnectionMonitorThread extends Thread {
     private final static int IDLE_TIME_SECONDS = 30;
     private final static int WAIT_TIME = 5000;
     private final ClientConnectionManager connMgr;
-    private volatile boolean shutdown;
+    private volatile boolean isShutdown;
 
     public IdleConnectionMonitorThread(ClientConnectionManager connMgr) {
         super();
@@ -18,7 +18,7 @@ public class IdleConnectionMonitorThread extends Thread {
     @Override
     public void run() {
         try {
-            while (!shutdown) {
+            while (!isShutdown) {
                 synchronized (this) {
                     wait(WAIT_TIME);
                     // Close expired connections
@@ -34,7 +34,7 @@ public class IdleConnectionMonitorThread extends Thread {
     }
 
     public void shutdown() {
-        shutdown = true;
+        isShutdown = true;
         synchronized (this) {
             notifyAll();
         }

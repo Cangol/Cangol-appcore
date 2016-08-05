@@ -30,7 +30,7 @@ public class DownloadTask {
     private DownloadHttpClient downloadHttpClient;
     private Future<?> future;
     private Handler handler;
-    private boolean isRunning;
+    private boolean running;
     private DownloadNotification downloadNotification;
     private DownloadResponseHandler responseHandler = new DownloadResponseHandler() {
         @Override
@@ -118,7 +118,7 @@ public class DownloadTask {
         downloadResource.setStatus(Download.STATUS_WAIT);
         future = exec(downloadResource, responseHandler);
         pool.getFutureTasks().add(future);
-        isRunning = true;
+        running = true;
     }
 
     protected void restart() {
@@ -135,7 +135,7 @@ public class DownloadTask {
         future = exec(downloadResource, responseHandler);
         pool.getFutureTasks().add(future);
         sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE, downloadResource);
-        isRunning = true;
+        running = true;
     }
 
     protected void stop() {
@@ -145,7 +145,7 @@ public class DownloadTask {
         future = null;
         downloadResource.setStatus(Download.STATUS_STOP);
         sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
-        isRunning = false;
+        running = false;
     }
 
     public void interrupt() {
@@ -155,7 +155,7 @@ public class DownloadTask {
         future = null;
         downloadResource.setStatus(Download.STATUS_RERUN);
         sendDownloadMessage(Download.ACTION_DOWNLOAD_STOP, downloadResource);
-        isRunning = false;
+        running = false;
     }
 
     protected void remove() {
@@ -164,11 +164,11 @@ public class DownloadTask {
         }
         future = null;
         sendDownloadMessage(Download.ACTION_DOWNLOAD_DELETE, downloadResource);
-        isRunning = false;
+        running = false;
     }
 
     public boolean isRunning() {
-        return isRunning;
+        return running;
     }
 
     public void sendDownloadMessage(int what, DownloadResource obj) {

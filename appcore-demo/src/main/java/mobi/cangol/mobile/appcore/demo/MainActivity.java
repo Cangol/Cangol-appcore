@@ -15,6 +15,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.utils.DeviceInfo;
+
 public class MainActivity extends FragmentActivity {
     private static List<Class<? extends Fragment>> fragments=new ArrayList<Class<? extends Fragment>>();
     static {
@@ -39,7 +42,7 @@ public class MainActivity extends FragmentActivity {
                     .replace(R.id.framelayout, new DemoListFragment(fragments), null)
                     .commit();
         }
-
+        Log.d("getMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(this));
     }
 
     @Override

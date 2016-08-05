@@ -43,9 +43,9 @@ final public class IMapBuilder {
     }
 
     public IMapBuilder set(String paramName, String paramValue) {
-        if (paramName != null)
+        if (paramName != null){
             mParams.put(paramName, paramValue);
-        else {
+        }else {
             Log.w(" IMapBuilder.set() called with a null paramName.");
         }
         return this;
@@ -65,10 +65,11 @@ final public class IMapBuilder {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("url=" + mUrl);
-        builder.append("\n");
+        builder.append("url=" )
+                .append(mUrl)
+                .append('\n');
         for (String key : mParams.keySet()) {
-            builder.append(key + "=" + mParams.get(key));
+            builder.append(key).append('=').append(mParams.get(key));
         }
         return builder.toString();
     }

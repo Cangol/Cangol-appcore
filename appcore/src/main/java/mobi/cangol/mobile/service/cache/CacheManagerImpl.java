@@ -110,6 +110,8 @@ class CacheManagerImpl implements CacheManager {
                             Log.e(TAG, "initDiskCache - " + e);
                         }
                     }
+                }else{
+                    //
                 }
             }
             mDiskCacheStarting = false;
@@ -169,8 +171,9 @@ class CacheManagerImpl implements CacheManager {
                 }
             }.execute(id);
 
-        } else if (cacheLoader != null)
+        } else if (cacheLoader != null){
             cacheLoader.returnContent(obj);
+        }
     }
 
     @Override
@@ -502,7 +505,7 @@ class CacheManagerImpl implements CacheManager {
         } catch (NoSuchAlgorithmException e) {
             cacheKey = String.valueOf(key.hashCode());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return cacheKey;
     }

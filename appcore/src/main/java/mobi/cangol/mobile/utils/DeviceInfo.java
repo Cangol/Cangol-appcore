@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.LocationManager;
@@ -56,8 +55,8 @@ import mobi.cangol.mobile.logging.Log;
 public class DeviceInfo {
     public static final String SPECIAL_IMEI = "000000000000000";
     public static final String SPECIAL_ANDROID_ID = "9774d56d682e549c";
-
-    /**
+    public static final String CHARSET =  "UTF-8";
+    /** 
      * 获取操作系统类型
      *
      * @return
@@ -107,8 +106,10 @@ public class DeviceInfo {
                 field.setAccessible(true);
                 String name = field.getName();
                 String value = field.get(null).toString();
-                sb.append(name + "=" + value);
-                sb.append("\n");
+                sb.append(name)
+                        .append('=')
+                        .append(value)
+                        .append('\n');
             }
         } catch (Exception e) {
             Log.d(e.getMessage());
@@ -122,16 +123,17 @@ public class DeviceInfo {
      * @return
      */
     public static long getMemSize() {
-        long result = -1;
+        long result =0;
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
-            String resultStr = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length(), str.indexOf(" kB"));
+            String memStr="MemTotal:";
+            String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
         } catch (IOException e) {
-            e.printStackTrace();
+            result=-1;
         }
         return result;
     }
@@ -145,10 +147,11 @@ public class DeviceInfo {
         String result = "";
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             bufferedReader.close();
-            result = str.substring(str.indexOf("MemTotal:") + "MemTotal:".length()).trim();
+            String memStr="MemTotal:";
+            result = str.substring(str.indexOf(memStr) + memStr.length()).trim();
         } catch (IOException e) {
             Log.d(e.getMessage());
         }
@@ -164,7 +167,7 @@ public class DeviceInfo {
         String result = "";
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/cpuinfo"}).start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             String title = "Processor\t: ";
             result = str.substring(str.indexOf(title) + title.length());
@@ -185,7 +188,7 @@ public class DeviceInfo {
         String result = "";
         try {
             Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), "UTF-8");
+            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), CHARSET);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String str = bufferedReader.readLine();
             result = str.trim();
@@ -405,7 +408,7 @@ public class DeviceInfo {
         try {
             appInfo = context.getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
-            if (appInfo.metaData != null){
+            if (appInfo.metaData != null) {
                 data = appInfo.metaData.getString(key);
             }
         } catch (NameNotFoundException e) {
@@ -646,10 +649,7 @@ public class DeviceInfo {
         PackageInfo info;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                String something = StringUtils.md5(signature.toByteArray());
-                return something;
-            }
+            return StringUtils.md5(info.signatures[0].toByteArray());
         } catch (NameNotFoundException e1) {
             Log.e("name not found", e1.toString());
         } catch (Exception e) {
@@ -668,11 +668,9 @@ public class DeviceInfo {
         PackageInfo info;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA1");
-                md.update(signature.toByteArray());
-                return new String(md.digest(), "UTF-8");
-            }
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            md.update(info.signatures[0].toByteArray());
+            return new String(md.digest(), CHARSET);
         } catch (NameNotFoundException e1) {
             Log.e("name not found", e1.toString());
         } catch (Exception e) {

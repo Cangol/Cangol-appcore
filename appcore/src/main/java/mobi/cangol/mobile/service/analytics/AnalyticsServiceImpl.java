@@ -100,7 +100,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         ITracker tracker = mTrackers.get(trackingId);
         if (tracker != null) {
             mTrackers.remove(trackingId);
-            tracker.setClosed(true);
+            tracker.setmClosed(true);
         }
     }
 }

@@ -72,15 +72,17 @@ public class AESUtils {
     private static byte[] toByte(String hexString) {
         int len = hexString.length() / 2;
         byte[] result = new byte[len];
-        for (int i = 0; i < len; i++)
+        for (int i = 0; i < len; i++){
             result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
+        }
         return result;
     }
 
     private static String toHex(byte[] buf) {
         String HEX = "0123456789ABCDEF";
-        if (buf == null)
+        if (buf == null){
             return "";
+        }
         StringBuffer result = new StringBuffer(2 * buf.length);
         for (int i = 0; i < buf.length; i++) {
             result.append(HEX.charAt((buf[i] >> 4) & 0x0f))

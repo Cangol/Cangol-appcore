@@ -70,7 +70,7 @@ public class AnalyticsServiceFragment extends Fragment{
                 if(tracker==null){
                     showToast("Please getTracker");
                 }else{
-                    if(tracker.isClosed()){
+                    if(tracker.ismClosed()){
                         updateViews("\n"+tracker.getTrackingId()+" is closed");
                     }else{
                         updateViews("\n"+tracker.getTrackingId()+" close");

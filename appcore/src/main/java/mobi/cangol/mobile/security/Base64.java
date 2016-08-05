@@ -15,6 +15,8 @@
  */
 package mobi.cangol.mobile.security;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -39,7 +41,9 @@ public class Base64 {
             }
         }
         int numPadBytes = sourceBytes.length - source.length();
-        for (int i = target.length - numPadBytes; i < target.length; i++) target[i] = '=';
+        for (int i = target.length - numPadBytes; i < target.length; i++){
+            target[i] = '=';
+        }
         return new String(target);
     }
 
@@ -59,8 +63,9 @@ public class Base64 {
     }
 
     public static String decode(String source) {
-        if (source.length() % 4 != 0)
+        if (source.length() % 4 != 0){
             throw new RuntimeException("valid Base64 codes have a multiple of 4 characters");
+        }
         int numGroups = source.length() / 4;
         int numExtraBytes = source.endsWith("==") ? 2 : (source.endsWith("=") ? 1 : 0);
         byte[] targetBytes = new byte[3 * numGroups];
@@ -74,7 +79,7 @@ public class Base64 {
         try {
             return new String(targetBytes, 0, targetBytes.length - numExtraBytes, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+           Log.d("UnsupportedEncoding",e.getMessage());
         }
         return null;
     }

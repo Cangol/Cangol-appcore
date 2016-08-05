@@ -20,6 +20,7 @@ package mobi.cangol.mobile.plugin;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import dalvik.system.DexClassLoader;
 
@@ -64,7 +65,7 @@ public class PluginInfo {
         try {
             intent = new Intent(context, Class.forName(clazz));
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.d("ClassNotFoundException",e.getMessage());
         }
         context.startActivity(intent);
     }
@@ -74,7 +75,7 @@ public class PluginInfo {
         try {
             intent = new Intent(context, Class.forName(clazz));
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Log.d("ClassNotFoundException",e.getMessage());
         }
         context.startActivity(intent);
     }

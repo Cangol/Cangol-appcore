@@ -55,7 +55,7 @@ import mobi.cangol.mobile.logging.Log;
  * </pre>
  */
 public class RequestParams {
-    private static String ENCODING = "UTF-8";
+    private final static String ENCODING = "UTF-8";
 
     protected ConcurrentHashMap<String, String> urlParams;
     protected ConcurrentHashMap<String, FileWrapper> fileParams;
@@ -190,17 +190,15 @@ public class RequestParams {
         StringBuilder result = new StringBuilder();
         for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
 
-            result.append(entry.getKey());
-            result.append("=");
-            result.append(entry.getValue());
-            result.append("\n");
+            result.append(entry.getKey())
+                    .append('=')
+                    .append(entry.getValue())
+                    .append('\n');
         }
 
         for (ConcurrentHashMap.Entry<String, FileWrapper> entry : fileParams.entrySet()) {
-            result.append(entry.getKey());
-            result.append("=");
-            result.append("FILE");
-            result.append("\n");
+            result.append(entry.getKey())
+                    .append("=FILE\n");
         }
 
         return result.toString();
@@ -211,22 +209,21 @@ public class RequestParams {
         StringBuilder result = new StringBuilder();
         for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
             if (result.length() > 0){
-                result.append("&");
+                result.append('&');
             }
 
-            result.append(entry.getKey());
-            result.append("=");
-            result.append(entry.getValue());
+            result.append(entry.getKey())
+                    .append('=')
+                    .append(entry.getValue());
         }
 
         for (ConcurrentHashMap.Entry<String, FileWrapper> entry : fileParams.entrySet()) {
             if (result.length() > 0){
-                result.append("&");
+                result.append('&');
             }
 
-            result.append(entry.getKey());
-            result.append("=");
-            result.append("FILE");
+            result.append(entry.getKey())
+                    .append("=FILE");
         }
 
         return result.toString();
