@@ -7,7 +7,6 @@ apply from: 'config/quality.gradle'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v4:23.0.0+'
-    compile 'org.greenrobot:eventbus:3.0.0'
     testCompile 'junit:junit:4.12'
 }
 
@@ -17,12 +16,11 @@ android {
 
     defaultConfig {
         minSdkVersion 8
-        versionCode 4
-        versionName "1.0.4"
+        versionCode 5
+        versionName "1.0.5"
     }
     buildTypes {
         debug {
-            versionNameSuffix "123"
             testCoverageEnabled true
         }
     }
