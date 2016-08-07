@@ -26,12 +26,15 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 
 /**
  * Created by weixuewu on 15/11/11.
  */
 public class SocketClient {
+    private final static String TAG = "SocketClient";
+    private final static boolean DEBUG = false;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
 
     private PoolManager.Pool threadPool;
@@ -88,6 +91,7 @@ public class SocketClient {
                 Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
+                    if (DEBUG) Log.d(TAG, "cancelRequests");
                 }
             }
         }

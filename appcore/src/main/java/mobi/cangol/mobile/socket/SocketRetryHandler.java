@@ -33,6 +33,8 @@ import javax.net.ssl.SSLHandshakeException;
 import mobi.cangol.mobile.logging.Log;
 
 public class SocketRetryHandler {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "SocketRetryHandler";
     private static final long RETRY_SLEEP_TIME_MILLIS = 1500L;
     private static HashSet<Class<?>> exceptionWhitelist = new HashSet<Class<?>>();
     private static HashSet<Class<?>> exceptionBlacklist = new HashSet<Class<?>>();
@@ -66,6 +68,8 @@ public class SocketRetryHandler {
     }
 
     public boolean retryRequest(Exception exception, int executionCount, Socket socket) {
+        if(DEBUG)
+            Log.d(TAG, "exception:" + exception.getClass() + " executionCount=" + executionCount);
         boolean retry = true;
         if (executionCount >= maxRetries) {
             // Do not retry if over max retry count

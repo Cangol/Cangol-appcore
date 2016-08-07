@@ -67,12 +67,12 @@ public class SoapRequest implements Runnable {
                     }
                 }
             } catch (IOException e) {
-                Log.d(TAG, "IOException", e);
+                if(DEBUG)Log.d(TAG, "IOException", e);
                 if (responseHandler != null) {
                     responseHandler.sendFailureMessage(e.getMessage());
                 }
             } catch (XmlPullParserException e) {
-                Log.d(TAG, "XmlPullParserException", e);
+                if(DEBUG)Log.d(TAG, "XmlPullParserException", e);
                 if (responseHandler != null) {
                     responseHandler.sendFailureMessage(e.getMessage());
                 }

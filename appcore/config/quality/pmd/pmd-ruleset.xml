@@ -33,7 +33,9 @@
         <exclude name="TooManyStaticImports" />
     </rule>
     <rule ref="rulesets/java/logging-java.xml" />
-    <rule ref="rulesets/java/braces.xml" />
+    <rule ref="rulesets/java/braces.xml">
+        <exclude name="IfStmtsMustUseBraces" />
+    </rule>
     <rule ref="rulesets/java/strings.xml" >
         <exclude name="AvoidDuplicateLiterals" />
     </rule>

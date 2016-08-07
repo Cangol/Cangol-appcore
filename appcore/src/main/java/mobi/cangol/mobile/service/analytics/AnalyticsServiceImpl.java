@@ -23,6 +23,7 @@ import java.util.Map;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -77,6 +78,8 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     @Override
     public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
         RequestParams params = new RequestParams(paramsMap);
+        if (mDebug) Log.v(TAG, "send " + AsyncHttpClient.getUrlWithQueryString(url, params));
+        if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
         mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
 
             @Override
@@ -87,11 +90,13 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
+                if (mDebug) Log.d(TAG, iTracker.getTrackingId() + " send Success :" + content);
             }
 
             @Override
             public void onFailure(Throwable error, String content) {
                 super.onFailure(error, content);
+                if (mDebug) Log.d(TAG, iTracker.getTrackingId() + " send Failure :" + content);
             }
 
         });

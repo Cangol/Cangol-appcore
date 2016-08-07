@@ -285,7 +285,8 @@ class SessionServiceImpl implements SessionService {
         Map<String, ?> map = getShared().getAll();
         StrictMode.setThreadPolicy(oldPolicy);
         mMap.putAll(map);
-        new AsyncTask<String, Void, List<File>>() {
+        if (debug) Log.d("scan cache file");
+        new AsyncTask<String, Void, List<File>>(){
             @Override
             protected List<File> doInBackground(String... params) {
                 List<File> files = FileUtils.searchBySuffix(new File(params[0]), null, params[1], params[2], params[3]);

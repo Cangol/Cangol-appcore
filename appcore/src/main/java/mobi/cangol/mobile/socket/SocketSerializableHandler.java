@@ -20,6 +20,8 @@ package mobi.cangol.mobile.socket;
 import android.annotation.SuppressLint;
 import android.os.Message;
 
+import mobi.cangol.mobile.logging.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -35,6 +37,8 @@ import java.io.Serializable;
 @SuppressLint("LongLogTag")
 public abstract class SocketSerializableHandler extends SocketHandler {
 
+    private final static String TAG = "SocketSerializableHandler";
+    protected static final boolean DEBUG = false;
     protected static final int RECEIVE_MESSAGE = 0;
 
     public SocketSerializableHandler() {
@@ -79,6 +83,7 @@ public abstract class SocketSerializableHandler extends SocketHandler {
         if (sendMsg == null || outputStream == null) {
             return false;
         }
+        if(DEBUG) Log.d(TAG, "sendMsg=" + sendMsg);
         write(outputStream, (Serializable) sendMsg);
         return true;
     }
@@ -90,6 +95,7 @@ public abstract class SocketSerializableHandler extends SocketHandler {
         }
         Serializable receivedMsg = null;
         receivedMsg = read(timeout, inputStream);
+        if(DEBUG)Log.d(TAG, "receivedMsg=" + receivedMsg);
         sendReceiveMessage(receivedMsg);
         return true;
     }
