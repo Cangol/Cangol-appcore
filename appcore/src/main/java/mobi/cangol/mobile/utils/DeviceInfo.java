@@ -727,4 +727,37 @@ public class DeviceInfo {
         }
         return result;
     }
+
+    /**
+     * 获取当前进程name
+     * @param context
+     * @return
+     */
+    public static String getCurProcessName(Context context) {
+
+        int pid = android.os.Process.myPid();
+
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager
+                .getRunningAppProcesses()) {
+
+            if (appProcess.pid == pid) {
+                return appProcess.processName;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 是否是app当前进程
+     * @param context
+     * @return
+     */
+    public static boolean isAppProcess(Context context) {
+        if (context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext())) ) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -49,18 +49,22 @@ public class CoreApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (mDevMode && Build.VERSION.SDK_INT >= 9) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+        if(DeviceInfo.isAppProcess(this)){
+            if (mDevMode && Build.VERSION.SDK_INT >= 9) {
+                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+            }
+            if (mDevMode) {
+                Log.setLogLevelFormat(android.util.Log.VERBOSE, false);
+            } else {
+                Log.setLogLevelFormat(android.util.Log.WARN, true);
+            }
+            initAppServiceManager();
+            mActivityManager = new ArrayList<WeakReference<Activity>>();
+            StatAgent.getInstance(this).init();
+        }else{
+            Log.i("cur process is not app' process");
         }
-        if (mDevMode) {
-            Log.setLogLevelFormat(android.util.Log.VERBOSE, false);
-        } else {
-            Log.setLogLevelFormat(android.util.Log.WARN, true);
-        }
-        initAppServiceManager();
-        mActivityManager = new ArrayList<WeakReference<Activity>>();
-        StatAgent.getInstance(this).init();
     }
 
     /**
