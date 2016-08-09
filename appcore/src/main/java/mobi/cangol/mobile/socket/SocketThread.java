@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 import mobi.cangol.mobile.logging.Log;
 
 /**
- * Created by weixuewu on 15/11/11.
+ * Created by Canogl on 15/11/11.
  * 链接异常后开始重试（重试次数RETRY_TIMES次）
  * 重试次数用完后，发消息断开，由使用者决定是否继续重试
  */

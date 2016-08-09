@@ -32,10 +32,13 @@ public class Log {
         return (tag.length() > 50) ? tag.substring(0, 50) : tag;
     }
 
+    /**
+     * 设置类对象TAG
+     * @param obj
+     */
     public static void setLogTag(Object obj) {
         setLogTag(obj.getClass(), obj);
     }
-
     private static Field findField(Class clazz, String name) {
         if (clazz != Object.class) {
             try {
@@ -48,6 +51,11 @@ public class Log {
         return null;
     }
 
+    /**
+     * 设置类的TAG
+     * @param clazz
+     * @param obj
+     */
     public static void setLogTag(Class clazz, Object obj) {
         if (clazz != Object.class) {
             Field field = null;
