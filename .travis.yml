@@ -26,6 +26,5 @@ before_script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura #//coveralls
-  - gradle jacocoTestReport
-  - bash <(curl -s http://codacy.com/bash)
+  - bash <(curl -s http://codacy.com)
 
