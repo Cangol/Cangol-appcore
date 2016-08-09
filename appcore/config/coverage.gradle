@@ -14,17 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
 
-jacoco {
-    toolVersion "0.7.6.201602180812"
-}
 
-def jacocoDaggerMap = [:]
-
-task jacocoTestReportAndroidTest( type: JacocoReport, dependsOn: "connectedAndroidTest" ) {
+task jacocoReport( type: JacocoReport, dependsOn: "connectedAndroidTest" ) {
     def coverageSourceDirs = [
             'src/main/java'
     ]
@@ -32,9 +25,9 @@ task jacocoTestReportAndroidTest( type: JacocoReport, dependsOn: "connectedAndro
     description = "Generate Jacoco coverage reports after running tests."
 
     reports {
-        csv.enabled false
+        html.enabled false
         xml.enabled true
-        html.enabled true
+        csv.enabled true
     }
 
     classDirectories = fileTree(
@@ -43,27 +36,9 @@ task jacocoTestReportAndroidTest( type: JacocoReport, dependsOn: "connectedAndro
                     '**/R.class',
                     '**/R$*.class',
                     '**/BuildConfig.*',
-                    '**/Manifest*.*',
-                    '**/*Activity*.*',
-                    '**/*Fragment*.*',
-                    '**/preference/*.class',
-                    '**/*Entity.class',
-                    '**/*Model.class'
+                    '**/Manifest*.*'
             ])
     sourceDirectories = files( coverageSourceDirs )
     additionalSourceDirs = files( coverageSourceDirs )
-
-    if( project.hasProperty( 'coverageFiles' ) ) {
-
-        // convert the comma separated string to an array to create an aggregate report from
-        // multiple coverage.ec files
-        def coverageFilesArray = coverageFiles.split( ',' )
-        executionData = files(coverageFilesArray)
-
-    } else {
-
-        executionData = files( 'build/outputs/code-coverage/connected/coverage.ec' )
-
-    }
-
+    executionData = files('build/jacoco/coverage.exec')
 }

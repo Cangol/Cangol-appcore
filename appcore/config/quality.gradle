@@ -35,7 +35,7 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     ignoreFailures = false
     effort = "max"
     reportLevel = "high"
-    excludeFilter = new File("config/quality/findbugs/findbugs-filter.xml")
+    excludeFilter = new File("${buildDir}/config/quality/findbugs/findbugs-filter.xml")
     classes = files("build/intermediates/classes")
 
     source 'src'

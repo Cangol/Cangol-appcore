@@ -1,9 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.saliman.cobertura'
 apply from: 'config/quality.gradle'
+apply from: 'config/coverage.gradle'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v4:[23.0.0,)'
@@ -79,9 +79,5 @@ artifacts {
 cobertura.coverageFormats = ['html', 'xml']
 cobertura.coverageSourceDirs = android.sourceSets.main.java.srcDirs
 
-//tasks.coveralls {
-//    dependsOn 'check'
-//}
 
 apply from: '../maven_push.gradle'
-//apply from: '../jacoco.gradle'
