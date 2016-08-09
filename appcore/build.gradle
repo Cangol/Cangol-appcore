@@ -84,4 +84,4 @@ cobertura.coverageSourceDirs = android.sourceSets.main.java.srcDirs
 //}
 
 apply from: '../maven_push.gradle'
-//apply from: '../jacoco.gradle'
+apply from: '../jacoco.gradle'
