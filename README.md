@@ -6,6 +6,7 @@
 [![Build Status](https://travis-ci.org/Cangol/Cangol-appcore.svg?branch=master)](https://travis-ci.org/Cangol/Cangol-appcore)
 [![codecov](https://codecov.io/gh/Cangol/Cangol-appcore/branch/master/graph/badge.svg)](https://codecov.io/gh/Cangol/Cangol-appcore)
 [![Join the chat at https://gitter.im/Cangol/Cangol-appcore](https://badges.gitter.im/Cangol/Cangol-appcore.svg)](https://gitter.im/Cangol/Cangol-appcore?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5729a3741d06413fa2da545d8a3838c9)](https://www.codacy.com/app/wxw404/Cangol-appcore?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Cangol/Cangol-appcore&amp;utm_campaign=Badge_Grade)
 
 这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
 [详细文档](http://cangol.github.io/Cangol-appcore)  
