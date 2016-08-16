@@ -171,7 +171,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         error.error = ex.toString();
         error.position = ex.getStackTrace()[0].toString();
         error.context = throwableToString(ex);
-        error.timestamp = TimeUtils.getCurrentTime2();
+        error.timestamp = TimeUtils.getCurrentTime();
         error.fatal = "0";
         error.path = mConfigService.getTempDir() + File.separator + TimeUtils.getCurrentTime2() + _CRASH;
         return error;
