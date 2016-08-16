@@ -32,6 +32,7 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.analytics.AnalyticsService;
 import mobi.cangol.mobile.service.analytics.IMapBuilder;
 import mobi.cangol.mobile.service.analytics.ITracker;
+import mobi.cangol.mobile.service.crash.CrashService;
 import mobi.cangol.mobile.service.session.SessionService;
 import mobi.cangol.mobile.stat.session.StatsSession;
 import mobi.cangol.mobile.stat.traffic.StatsTraffic;
@@ -57,13 +58,13 @@ public class StatAgent {
     private HashMap<String, String> commonParams;
     private AnalyticsService analyticsService;
     private SessionService sessionService;
-
+    private CrashService crashService;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private StatAgent(Application context) {
         this.context = context;
         sessionService = (SessionService) ((CoreApplication) context).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context).getAppService(AppService.ANALYTICS_SERVICE);
-        analyticsService.setDebug(false);
+        crashService= (CrashService) ((CoreApplication) context).getAppService(AppService.CRASH_SERVICE);
         itracker = analyticsService.getTracker(STAT_TRACKING_ID);
 
         commonParams = this.getCommonParams();
@@ -86,6 +87,7 @@ public class StatAgent {
             }
         });
         StatsTraffic.getInstance(context).onCreated();
+        crashService.setReport(STAT_HOST_URL+STAT_ACTION_EXCEPTION,getCommonParams());
     }
 
     public void destroy() {
