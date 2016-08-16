@@ -60,8 +60,8 @@ public class StatAgent {
     private SessionService sessionService;
     private CrashService crashService;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private StatAgent(Application context) {
-        this.context = context;
+    private StatAgent(Context context) {
+        this.context = (CoreApplication) context.getApplicationContext();
         sessionService = (SessionService) ((CoreApplication) context).getAppService(AppService.SESSION_SERVICE);
         analyticsService = (AnalyticsService) ((CoreApplication) context).getAppService(AppService.ANALYTICS_SERVICE);
         crashService= (CrashService) ((CoreApplication) context).getAppService(AppService.CRASH_SERVICE);
@@ -70,7 +70,7 @@ public class StatAgent {
         commonParams = this.getCommonParams();
     }
 
-    public static StatAgent getInstance(CoreApplication context) {
+    public static StatAgent getInstance(Context context) {
         if (instance == null) {
             instance = new StatAgent(context);
         }
