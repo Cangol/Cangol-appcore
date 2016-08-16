@@ -41,7 +41,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String SDK_VERSION = "1.0";
+    private final static String SDK_VERSION = "1.0.5";
     private final static String STAT_HOST_URL = "http://www.cangol.mobi/cmweb/";
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
     private final static String STAT_ACTION_EVENT = "api/countly/event.do";
