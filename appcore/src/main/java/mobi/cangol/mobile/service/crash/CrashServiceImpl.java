@@ -167,13 +167,15 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     }
 
     protected ReportError makeReportError(Throwable ex) {
+        String timestamp=TimeUtils.getCurrentTime();
+        String filename=timestamp.replaceAll(" ","").replaceAll("-","").replaceAll(":","");
         ReportError error = new ReportError();
         error.error = ex.toString();
         error.position = ex.getStackTrace()[0].toString();
         error.context = throwableToString(ex);
-        error.timestamp = TimeUtils.getCurrentTime();
+        error.timestamp = timestamp;
         error.fatal = "0";
-        error.path = mConfigService.getTempDir() + File.separator + TimeUtils.getCurrentTime2() + _CRASH;
+        error.path = mConfigService.getTempDir() + File.separator + filename + _CRASH;
         return error;
     }
 
