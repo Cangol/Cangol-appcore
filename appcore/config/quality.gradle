@@ -58,7 +58,7 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
 
 task pmd(type: Pmd) {
     ignoreFailures = false
-    ruleSetFiles = files("config/quality/pmd/pmd-ruleset.xml")
+    ruleSetFiles = files("${buildDir}/config/quality/pmd/pmd-ruleset.xml")
     ruleSets = []
 
     source 'src/main'
@@ -95,7 +95,7 @@ android {
         abortOnError false
         xmlReport false
         htmlReport true
-        lintConfig file("${buildDir}config/quality/lint/lint.xml")
+        lintConfig file("${buildDir}/config/quality/lint/lint.xml")
         htmlOutput file("build/reports/lint/lint-result.html")
         xmlOutput file("build/reports/lint/lint-result.xml")
     }
