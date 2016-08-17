@@ -3,7 +3,6 @@ package mobi.cangol.mobile.stat;
 import android.test.ApplicationTestCase;
 
 import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.StatAgent;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 /**

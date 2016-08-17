@@ -30,6 +30,7 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.session.SessionService;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
 

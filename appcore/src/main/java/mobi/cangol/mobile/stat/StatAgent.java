@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile;
+package mobi.cangol.mobile.stat;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.analytics.AnalyticsService;
@@ -74,7 +75,7 @@ public class StatAgent {
         }
         return instance;
     }
-    protected static void initInstance(CoreApplication coreApplication){
+    public static void initInstance(CoreApplication coreApplication){
         if (instance == null) {
             instance=new StatAgent(coreApplication);
             instance.init();

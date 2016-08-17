@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'net.saliman.cobertura'
 apply from: 'config/quality.gradle'
-apply from: 'config/coverage.gradle'
+//apply from: 'config/coverage.gradle'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v4:[23.0.0,)'
