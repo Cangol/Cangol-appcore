@@ -25,5 +25,5 @@ before_script:
 #
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - gradle cobertura #//coveralls
+  #- gradle cobertura #//coveralls
 
