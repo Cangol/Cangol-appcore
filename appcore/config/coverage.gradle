@@ -17,7 +17,7 @@
 apply plugin: 'jacoco'
 
 
-task jacocoTestReport( type: JacocoReport, dependsOn: "connectedAndroidTest" ) {
+task jacocoReport( type: JacocoReport, dependsOn: "connectedAndroidTest" ) {
     def coverageSourceDirs = [
             'src/main/java'
     ]
@@ -42,7 +42,6 @@ task jacocoTestReport( type: JacocoReport, dependsOn: "connectedAndroidTest" ) {
     additionalSourceDirs = files( coverageSourceDirs )
     executionData = files('build/jacoco/coverage.exec')
 }
-
 task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoTestReport) {
     main = "com.codacy.CodacyCoverageReporter"
     classpath = configurations.codacy
