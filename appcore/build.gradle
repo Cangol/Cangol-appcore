@@ -39,6 +39,12 @@ android.libraryVariants.all { variant ->
     task.from variant.javaCompile.destinationDir
     task.exclude '**/BuildConfig.class'
     task.exclude '**/R.class'
+    task.manifest{
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": version
+        )
+    }
     artifacts.add('archives', task);
 }
 

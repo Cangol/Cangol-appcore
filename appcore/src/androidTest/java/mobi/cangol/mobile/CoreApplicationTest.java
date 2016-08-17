@@ -4,7 +4,6 @@ import android.test.ApplicationTestCase;
 
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.conf.ConfigService;
-import mobi.cangol.mobile.stat.StatAgent;
 
 
 /**
@@ -21,7 +20,6 @@ public class CoreApplicationTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication=getApplication();
-        StatAgent.getInstance(coreApplication);
     }
 
     public void testGetAppService() throws Exception {

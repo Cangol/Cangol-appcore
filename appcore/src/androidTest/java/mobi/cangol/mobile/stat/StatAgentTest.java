@@ -3,6 +3,7 @@ package mobi.cangol.mobile.stat;
 import android.test.ApplicationTestCase;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.StatAgent;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
@@ -20,7 +21,6 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication=getApplication();
-        StatAgent.getInstance(coreApplication).init();
     }
 
     public void testSetDebug() throws Exception {
@@ -32,7 +32,6 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
         StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
         StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createEvent("test", TAG, "test", null, null));
         StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createTiming(TAG, 1000L));
-        StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createSession(TAG, "start", "1s", "end", "test"));
     }
 
     public void testSendLaunch() throws Exception {

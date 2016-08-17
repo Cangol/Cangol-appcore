@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.stat;
+package mobi.cangol.mobile;
 
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
@@ -26,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.analytics.AnalyticsService;
@@ -53,31 +51,36 @@ public class StatAgent {
     private final static String STAT_TRACKING_ID = "stat";
     private final static String TIMESTAMP = "timestamp";
     private static StatAgent instance;
-    private Application context;
+    private CoreApplication context;
     private ITracker itracker;
     private HashMap<String, String> commonParams;
     private AnalyticsService analyticsService;
     private SessionService sessionService;
     private CrashService crashService;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private StatAgent(Context context) {
-        this.context = (CoreApplication) context.getApplicationContext();
-        sessionService = (SessionService) ((CoreApplication) context).getAppService(AppService.SESSION_SERVICE);
-        analyticsService = (AnalyticsService) ((CoreApplication) context).getAppService(AppService.ANALYTICS_SERVICE);
-        crashService= (CrashService) ((CoreApplication) context).getAppService(AppService.CRASH_SERVICE);
+    protected StatAgent(CoreApplication coreApplication) {
+        this.context = coreApplication;
+        sessionService = (SessionService) coreApplication.getAppService(AppService.SESSION_SERVICE);
+        analyticsService = (AnalyticsService)coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
+        crashService= (CrashService)coreApplication.getAppService(AppService.CRASH_SERVICE);
         itracker = analyticsService.getTracker(STAT_TRACKING_ID);
 
         commonParams = this.getCommonParams();
     }
-
-    public static StatAgent getInstance(Context context) {
+    public static StatAgent getInstance(Context context){
         if (instance == null) {
-            instance = new StatAgent(context);
+            instance=new StatAgent((CoreApplication) context.getApplicationContext());
+            instance.init();
         }
         return instance;
     }
-
-    public void init() {
+    protected static void initInstance(CoreApplication coreApplication){
+        if (instance == null) {
+            instance=new StatAgent(coreApplication);
+            instance.init();
+        }
+    }
+    protected void init() {
         sendDevice();
         sendLaunch();
         StatsSession.getInstance(context).setOnSessionListener(new StatsSession.OnSessionListener() {

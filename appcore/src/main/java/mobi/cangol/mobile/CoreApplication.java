@@ -30,7 +30,6 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.session.SessionService;
-import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
@@ -61,7 +60,7 @@ public class CoreApplication extends Application {
             }
             initAppServiceManager();
             mActivityManager = new ArrayList<WeakReference<Activity>>();
-            StatAgent.getInstance(this).init();
+            StatAgent.initInstance(this);
         }else{
             Log.i("cur process is not app' process");
         }

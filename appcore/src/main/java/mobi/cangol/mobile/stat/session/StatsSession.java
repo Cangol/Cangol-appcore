@@ -28,8 +28,9 @@ public class StatsSession {
     private long mLastTime;
     private long unSentSessionLength = 0;
     private OnSessionListener onSessionListener;
-
+    private Context mContext;
     private StatsSession(Context context) {
+        this.mContext=context;
         mLastTime = System.currentTimeMillis() / 1000;
         mQueue = new ConnectionQueue(onSessionListener);
         mTimer = new Timer();
