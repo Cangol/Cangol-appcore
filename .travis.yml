@@ -15,6 +15,8 @@ before_install:
     - unzip -q gradle-2.10-all.zip
     - export GRADLE_HOME=$PWD/gradle-2.10
     - export PATH=$GRADLE_HOME/bin:$PATH
+    - curl https://www.jpm4j.org/install/script | sh
+    - jpm install com.codacy:codacy-coverage-reporter:assembly
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
@@ -26,4 +28,5 @@ before_script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   #- gradle cobertura #//coveralls
+  - codacy-coverage-reporter -l Java -r coverage.xml
 
