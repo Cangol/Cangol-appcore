@@ -87,6 +87,9 @@ cobertura{
     coverageFormats = ['html', 'xml']
     coverageSourceDirs = android.sourceSets.main.java.srcDirs
 }
+tasks.cobertura{
+    dependsOn 'check'
+}
 tasks.coveralls {
     dependsOn 'check'
 }
