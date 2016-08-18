@@ -19,7 +19,7 @@ jacoco {
     toolVersion = "0.7.1.201405082137"
     reportsDir = file("$buildDir/reports/jacoco")
 }
-task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+task jacocoReport(type: JacocoReport, dependsOn: 'connectedAndroidTest') {
     group = 'Reporting'
     description = 'Generate Jacoco coverage reports after running tests.'
 

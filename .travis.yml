@@ -32,5 +32,6 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
   - gradle jacocoReport
-  - codacy-coverage-reporter -l Java -r appcore/build/reports/jacoco/jacocoReport/jacocoReport.xml
+  #- codacy-coverage-reporter -l Java -r appcore/build/reports/jacoco/jacocoReport/jacocoReport.xml
+  - codacy-coverage-reporter -l Java -r appcore/build/reports/coverage/debug/report.xml
 
