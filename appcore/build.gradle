@@ -86,3 +86,6 @@ artifacts {
 tasks.coveralls {
     dependsOn 'check'
 }
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
+}
