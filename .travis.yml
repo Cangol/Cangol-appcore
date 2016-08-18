@@ -1,7 +1,7 @@
 language: android
 jdk:
   - oraclejdk7
-sudo: false
+sudo: true
 android:
   components:
     - build-tools-22.0.0
