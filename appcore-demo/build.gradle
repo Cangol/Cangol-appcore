@@ -6,8 +6,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.0"
 
     defaultConfig {
         minSdkVersion 9
