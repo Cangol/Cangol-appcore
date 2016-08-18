@@ -1,11 +1,13 @@
 language: android
 jdk:
   - oraclejdk7
+env:
+  - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
 sudo: true
 android:
   components:
-    - build-tools-22.0.0
-    - android-22
+    - build-tools-23.0.2
+    - android-23
     - extra-android-m2repository
     - extra-android-support
     - sys-img-armeabi-v7a-android
