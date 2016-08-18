@@ -20,10 +20,10 @@ apply plugin: 'jdepend'
  */
 
 // Add checkstyle, findbugs, pmd and lint to the check task.
-//check.dependsOn 'checkstyle', 'findbugs', 'pmd', 'lint'
+check.dependsOn  'findbugs', 'pmd', 'lint','jdepend'//,'checkstyle'
 task checkstyle(type: Checkstyle) {
     configFile file("config/quality/checkstyle/checkstyle.xml")
-    configProperties.checkstyleSuppressionsPath = file("${buildDir}/config/quality/checkstyle/suppressions.xml").absolutePath
+    configProperties.checkstyleSuppressionsPath = file("config/quality/checkstyle/suppressions.xml").absolutePath
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'

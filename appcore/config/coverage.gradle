@@ -15,58 +15,35 @@
  *  limitations under the License.
  */
 apply plugin: 'jacoco'
-
-
-task jacocoReport( type: JacocoReport, dependsOn: "connectedAndroidTest" ) {
-    def coverageSourceDirs = [
-            'src/main/java'
-    ]
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+    reportsDir = file("$buildDir/reports/jacoco")
+}
+task jacocoReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
 
     reports {
-        html.enabled false
-        xml.enabled true
-        csv.enabled true
+        xml.enabled = true
+        html.enabled = true
     }
 
     classDirectories = fileTree(
-            dir: "${ buildDir }/intermediates/classes/debug",
-            exclude: [
-                    '**/R.class',
-                    '**/R$*.class',
-                    '**/BuildConfig.*',
-                    '**/Manifest*.*'
-            ])
-    sourceDirectories = files( coverageSourceDirs )
-    additionalSourceDirs = files( coverageSourceDirs )
-    executionData = files('build/jacoco/coverage.exec')
-}
-task uploadCoverageToCodacy(type: JavaExec, dependsOn : jacocoTestReport) {
-    main = "com.codacy.CodacyCoverageReporter"
-    classpath = configurations.codacy
-    args = [
-            "-l",
-            "Java",
-            "-r",
-            "${buildDir}/test-results/jacoco/${archivesBaseName}.xml"
-    ]
-}
+            dir: 'build/intermediates/classes/debug',
+            excludes: [
+                    '**/R*.class',
+                    '**/BuildConfig*'
+            ]
+    )
 
-task (codacyDepsize) << {
-    def size = 0;
-    configurations.codacy.collect { it.length() / (1024 * 1024) }.each { size += it }
-    println "Total dependencies size: ${Math.round(size * 100) / 100} Mb"
+    sourceDirectories = files('src/main/java')
+    executionData = files('build/jacoco/testDebugUnitTest.exec')
 
-    configurations
-            .codacy
-            .sort { -it.length() }
-            .each { println "${it.name} : ${Math.round(it.length() / (1024) * 100) / 100} kb" }
-}
-
-task (codacyLocs) << {
-    configurations.codacy.each {
-        String jarName = it
-        println jarName
+    doFirst {
+        files('build/intermediates/classes/debug').getFiles().each { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
     }
 }
