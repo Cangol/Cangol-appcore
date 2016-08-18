@@ -6,8 +6,8 @@ env:
 sudo: true
 android:
   components:
-    - build-tools-22.0.0
-    - android-22
+    - build-tools-23.0.2
+    - android-23
     - extra-android-m2repository
     - extra-android-support
     - sys-img-armeabi-v7a-android
@@ -31,6 +31,6 @@ before_script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
-  - ./gradlew jacocoReport
+  - gradle jacocoReport
   - codacy-coverage-reporter -l Java -r appcore/build/reports/jacoco/jacocoReport/jacocoReport.xml
 
