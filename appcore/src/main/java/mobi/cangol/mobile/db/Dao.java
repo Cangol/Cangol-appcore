@@ -58,6 +58,15 @@ public abstract interface Dao<T, ID> {
     public abstract int create(T paramT) throws SQLException;
 
     /**
+     * 新建一组数据对象
+     *
+     * @param paramT
+     * @return
+     * @throws SQLException
+     */
+    public abstract int create(Collection<T> paramT) throws SQLException;
+
+    /**
      * 刷新数据对象
      *
      * @param paramT
