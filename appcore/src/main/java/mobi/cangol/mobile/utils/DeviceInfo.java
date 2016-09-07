@@ -40,12 +40,19 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -669,13 +676,32 @@ public class DeviceInfo {
         PackageInfo info;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+            byte[] cert = info.signatures[0].toByteArray();
             MessageDigest md = MessageDigest.getInstance("SHA1");
-            md.update(info.signatures[0].toByteArray());
-            return new String(md.digest(), CHARSET);
-        } catch (NameNotFoundException e1) {
-            Log.e("name not found", e1.toString());
-        } catch (Exception e) {
-            Log.e("exception", e.toString());
+
+            InputStream input = new ByteArrayInputStream(cert);
+            //证书工厂类，这个类实现了出厂合格证算法的功能
+            CertificateFactory cf = CertificateFactory.getInstance("X509");
+            X509Certificate c = (X509Certificate) cf.generateCertificate(input);
+            //获得公钥
+            byte[] publicKey = md.digest(c.getEncoded());
+            //字节到十六进制的格式转换
+            char[] hexArray = "0123456789ABCDEF".toCharArray();
+            char[] hexChars = new char[publicKey.length * 2];
+            for ( int j = 0; j < publicKey.length; j++ ) {
+                int v = publicKey[j] & 0xFF;
+                hexChars[j * 2] = hexArray[v >>> 4];
+                hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+            }
+            return new String(hexChars);
+        } catch (NameNotFoundException e) {
+            Log.e("NameNotFoundException", e.toString());
+        }catch (NoSuchAlgorithmException e) {
+            Log.e("NoSuchAlgorithmException", e.toString());
+        } catch (CertificateEncodingException e) {
+            Log.e("CertificateEncodingException", e.toString());
+        } catch (CertificateException e) {
+            Log.e("CertificateException", e.toString());
         }
         return null;
     }
