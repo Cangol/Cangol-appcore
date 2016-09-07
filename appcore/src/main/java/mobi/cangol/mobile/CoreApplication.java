@@ -41,7 +41,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 
 public class CoreApplication extends Application {
 
-    public List<WeakReference<Activity>> mActivityManager;
+    public List<WeakReference<Activity>> mActivityManager=new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
     private boolean mDevMode = false;
 
@@ -60,7 +60,6 @@ public class CoreApplication extends Application {
                 Log.setLogLevelFormat(android.util.Log.WARN, true);
             }
             initAppServiceManager();
-            mActivityManager = new ArrayList<WeakReference<Activity>>();
             StatAgent.initInstance(this);
         }else{
             Log.i("cur process is not app' process");

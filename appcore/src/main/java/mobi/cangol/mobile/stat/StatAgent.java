@@ -101,9 +101,13 @@ public class StatAgent {
     }
 
     /**
-     * 公共参数 osVersion 操作系统版本号 4.2.2 deviceId 设备唯一ID Android|IOS均为open-uuid
-     * platform 平台 平台控制使用IOS|Android channelId 渠道
-     * 渠道控制使用(Google|baidu|91|appstore…) appId App ID appVersion App版本号 1.1.0
+     * 公共参数
+     * osVersion 操作系统版本号 4.2.2
+     * deviceId 设备唯一ID Android|IOS均为open-uuid
+     * platform 平台 平台控制使用IOS|Android
+     * channelId 渠道 渠道控制使用(Google|baidu|91|appstore…)
+     * appId AppID
+     * appVersion App版本号 1.1.0
      * sdkVersion 统计SDK版本号
      *
      * @return
