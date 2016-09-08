@@ -18,3 +18,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+#-keepattributes *Annotation*
+#-keepclassmembers class * {
+#    @mobi.cangol.mobile.service.event.Subscribe *;
+#}
+#
+#-dontwarn mobi.cangol.mobile.**
+#-keep  class mobi.cangol.mobile.** {*;}
