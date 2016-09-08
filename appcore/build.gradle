@@ -15,7 +15,7 @@ dependencies {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 9
@@ -66,6 +66,7 @@ task sourcesJar(type: Jar) {
 //
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
+    //classpath = configurations.compile
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
     options {
