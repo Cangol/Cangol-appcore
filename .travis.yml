@@ -13,7 +13,7 @@ android:
     - sys-img-armeabi-v7a-android
 before_install:
     # Gradle
-    - wget -q http://services.gradle.org/distributions/gradle-2.10-all.zip
+    - wget -q http://services.gradle.org/distributions/gradle-2.14.1-all.zip
     - unzip -q gradle-2.10-all.zip
     - export GRADLE_HOME=$PWD/gradle-2.10
     - export PATH=$GRADLE_HOME/bin:$PATH
