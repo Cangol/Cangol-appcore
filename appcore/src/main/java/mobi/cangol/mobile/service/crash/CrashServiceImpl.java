@@ -183,7 +183,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
         Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
         ReportError error = makeReportError(ex);
-        android.util.Log.e("AndroidRuntime", error.context);
+        Log.e("AndroidRuntime", error.context);
         if (debug) {
             Log.d(TAG, "save .crash " + error.path);
         }
