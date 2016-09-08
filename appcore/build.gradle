@@ -4,8 +4,8 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.saliman.cobertura'
 apply from: '../maven_push.gradle'
-apply from: 'config/quality.gradle'
-apply from: 'config/coverage.gradle'
+//apply from: 'config/quality.gradle'
+//apply from: 'config/coverage.gradle'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
