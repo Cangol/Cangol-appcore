@@ -6,8 +6,8 @@ env:
 sudo: true
 android:
   components:
-    - build-tools-24.0.0
-    - android-24
+    - build-tools-23.0.3
+    - android-23
     - extra-android-m2repository
     - extra-android-support
     - sys-img-armeabi-v7a-android
