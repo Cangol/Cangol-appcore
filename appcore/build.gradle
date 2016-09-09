@@ -21,10 +21,11 @@ android {
         minSdkVersion 9
         versionCode 5
         versionName "1.0.5"
+        multiDexEnabled false
     }
     buildTypes {
         debug {
-            testCoverageEnabled true
+            //testCoverageEnabled true
         }
     }
     lintOptions {
@@ -35,9 +36,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     dexOptions {
-        preDexLibraries true
-        javaMaxHeapSize "3g"
         incremental true
+        javaMaxHeapSize "4g"
         dexInProcess false
     }
     useLibrary 'org.apache.http.legacy'

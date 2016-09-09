@@ -18,10 +18,4 @@ android {
     lintOptions {
         abortOnError false
     }
-    dexOptions {
-        preDexLibraries true
-        javaMaxHeapSize "3g"
-        incremental true
-        dexInProcess false
-    }
 }
