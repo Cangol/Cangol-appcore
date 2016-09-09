@@ -17,9 +17,11 @@ package mobi.cangol.mobile;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
  * @author Cangol
  */
 
-public class CoreApplication extends Application {
+public class CoreApplication extends MultiDexApplication {
 
     public List<WeakReference<Activity>> mActivityManager=new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
@@ -65,7 +67,6 @@ public class CoreApplication extends Application {
             Log.i("cur process is not app' process");
         }
     }
-
     /**
      * 初始化应用服务管理器
      */
