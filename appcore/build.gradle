@@ -1,38 +1,34 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-//apply plugin: 'com.github.kt3k.coveralls'
-//apply plugin: 'net.saliman.cobertura'
-//apply from: '../maven_push.gradle'
-//apply from: 'config/quality.gradle'
-//apply from: 'config/coverage.gradle'
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'net.saliman.cobertura'
+apply from: '../maven_push.gradle'
+apply from: 'config/quality.gradle'
+apply from: 'config/coverage.gradle'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v4:[23.0.2,)'
-    compile 'com.android.support:multidex:1.0.1'
+    //compile 'com.android.support:multidex:1.0.1'
     //test
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
     testCompile 'junit:junit:4.12'
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.0'
 
     defaultConfig {
-        multiDexEnabled true
         minSdkVersion 9
         versionCode 5
         versionName "1.0.5"
-        testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
     }
 
     buildTypes {
         debug {
             minifyEnabled false
             zipAlignEnabled false
-            testCoverageEnabled true
+            //testCoverageEnabled true
         }
     }
     lintOptions {
@@ -46,67 +42,67 @@ android {
         javaMaxHeapSize "4g"
         preDexLibraries false
         incremental true
-        dexInProcess  true
+        dexInProcess  false
         jumboMode true
     }
-    useLibrary 'org.apache.http.legacy'
+    //useLibrary 'org.apache.http.legacy'
+}
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+        return; // Skip debug builds.
+    }
+    def task = project.tasks.create "jar${name.capitalize()}", Jar
+    task.dependsOn variant.javaCompile
+    task.from variant.javaCompile.destinationDir
+    task.exclude '**/BuildConfig.class'
+    task.exclude '**/R.class'
+    task.manifest{
+        attributes(
+                "Implementation-Title": project.name,
+                "Implementation-Version": version
+        )
+    }
+    artifacts.add('archives', task);
+}
+
+// build a jar with source files
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
 }
 //
-//android.libraryVariants.all { variant ->
-//    def name = variant.buildType.name
-//    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
-//        return; // Skip debug builds.
-//    }
-//    def task = project.tasks.create "jar${name.capitalize()}", Jar
-//    task.dependsOn variant.javaCompile
-//    task.from variant.javaCompile.destinationDir
-//    task.exclude '**/BuildConfig.class'
-//    task.exclude '**/R.class'
-//    task.manifest{
-//        attributes(
-//                "Implementation-Title": project.name,
-//                "Implementation-Version": version
-//        )
-//    }
-//    artifacts.add('archives', task);
-//}
-//
-//// build a jar with source files
-//task sourcesJar(type: Jar) {
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//    exclude '**/BuildConfig.java'
-//    exclude '**/R.java'
-//}
-////
-//task javadoc(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    //classpath = configurations.compile
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
-//    options {
-//        encoding "UTF-8"
-//        links "http://docs.oracle.com/javase/7/docs/api/"
-//        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-//    }
-//    exclude '**/BuildConfig.java'
-//    exclude '**/R.java'
-//    exclude '**/properties.xml'
-//
-//}
-//
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
-//artifacts {
-//    archives sourcesJar
-//    archives javadocJar
-//}
-//
-//tasks.coveralls {
-//    dependsOn 'check'
-//}
-//coveralls {
-//    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
-//}
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    //classpath = configurations.compile
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
+    options {
+        encoding "UTF-8"
+        links "http://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+    }
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+    exclude '**/properties.xml'
+
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+tasks.coveralls {
+    dependsOn 'check'
+}
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
+}

@@ -17,11 +17,9 @@ package mobi.cangol.mobile;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
+import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
  * @author Cangol
  */
 
-public class CoreApplication extends MultiDexApplication {
+public class CoreApplication extends Application {
 
     public List<WeakReference<Activity>> mActivityManager=new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
