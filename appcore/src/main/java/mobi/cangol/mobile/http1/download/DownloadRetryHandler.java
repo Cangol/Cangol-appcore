@@ -14,11 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package mobi.cangol.mobile.appcore.demo.url;
+package mobi.cangol.mobile.http1.download;
 
 import android.os.SystemClock;
 import android.util.Log;
-
 
 import java.io.IOException;
 import java.io.InterruptedIOException;

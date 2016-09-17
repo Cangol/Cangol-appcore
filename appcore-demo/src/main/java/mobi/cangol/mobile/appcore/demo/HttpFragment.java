@@ -11,17 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.appcore.demo.url.DownloadHttpClient;
-import mobi.cangol.mobile.appcore.demo.url.DownloadResponseHandler;
-import mobi.cangol.mobile.http.AsyncHttpClient;
-import mobi.cangol.mobile.http.JsonHttpResponseHandler;
+import mobi.cangol.mobile.http1.AsyncHttpClient;
+import mobi.cangol.mobile.http1.JsonHttpResponseHandler;
+import mobi.cangol.mobile.http1.download.DownloadHttpClient;
+import mobi.cangol.mobile.http1.download.DownloadResponseHandler;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.utils.FileUtils;
 
@@ -99,7 +97,7 @@ public class HttpFragment extends Fragment {
 
     private void request(){
 
-        mAsyncHttpClient.get(getActivity(),url,null,new JsonHttpResponseHandler(){
+        mAsyncHttpClient.get(getActivity(),url,new JsonHttpResponseHandler(){
             ProgressDialog progressDialog;
             @Override
             public void onStart() {

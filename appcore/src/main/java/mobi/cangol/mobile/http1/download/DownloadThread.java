@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package mobi.cangol.mobile.appcore.demo.url;
+package mobi.cangol.mobile.http1.download;
 
 import android.util.Log;
 
@@ -35,7 +35,7 @@ public class DownloadThread implements Runnable {
     private long from;
     private String saveFile;
 
-    public DownloadThread(DownloadHttpClient context,OkHttpClient client, Request request, DownloadResponseHandler responseHandler,String saveFile) {
+    public DownloadThread(DownloadHttpClient context, OkHttpClient client, Request request, DownloadResponseHandler responseHandler, String saveFile) {
         this.client = client;
         this.context=context;
         this.request = request;

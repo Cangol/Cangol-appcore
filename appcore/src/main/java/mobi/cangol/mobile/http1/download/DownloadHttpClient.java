@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.appcore.demo.url;
+package mobi.cangol.mobile.http1.download;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -77,7 +77,7 @@ public class DownloadHttpClient {
         return sendRequest(request, responseHandler, saveFile);
     }
 
-    protected Future<?> sendRequest(Request urlRequest, DownloadResponseHandler responseHandler,String saveFile) {
+    protected Future<?> sendRequest(Request urlRequest, DownloadResponseHandler responseHandler, String saveFile) {
         Future<?> request = threadPool.submit(new DownloadThread(this,httpClient, urlRequest, responseHandler, saveFile));
         if (urlRequest.tag() != null) {
             // Add request to request map
@@ -88,10 +88,12 @@ public class DownloadHttpClient {
             }
             requestList.add(new WeakReference<Future<?>>(request));
         }
+
         return request;
     }
 
     public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
+
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {

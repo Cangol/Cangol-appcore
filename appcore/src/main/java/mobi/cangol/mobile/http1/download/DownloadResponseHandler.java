@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package mobi.cangol.mobile.appcore.demo.url;
+package mobi.cangol.mobile.http1.download;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -98,10 +98,10 @@ public class DownloadResponseHandler {
 
     void sendResponseMessage(Response response, String saveFile) throws IOException {
         if (response.isSuccessful()) {
-            ResponseBody requestBody=response.body();
-            long length = requestBody.contentLength();
+            ResponseBody responseBody=response.body();
+            long length = responseBody.contentLength();
             RandomAccessFile threadfile = new RandomAccessFile(saveFile, "rwd");
-            InputStream inputStream = requestBody.byteStream();
+            InputStream inputStream = responseBody.byteStream();
             long oldLength = threadfile.length();
             sendStartMessage(oldLength, length);
             if (oldLength < length) {
@@ -141,8 +141,8 @@ public class DownloadResponseHandler {
             } else {
                 sendFailureMessage(new IOException(), "oldfile error oldLength>length");
             }
-            if (requestBody != null) {
-                requestBody.close();
+            if (responseBody != null) {
+                responseBody.close();
             }
         } else {
             sendFailureMessage(new IOException(), "StatusCode " + response.code());
