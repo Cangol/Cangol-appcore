@@ -19,6 +19,9 @@ package mobi.cangol.mobile.http.extras;
 
 import android.test.AndroidTestCase;
 
+import mobi.cangol.mobile.http.polling.PollingHttpClient;
+import mobi.cangol.mobile.http.polling.PollingResponseHandler;
+
 /**
  * Created by xuewu.wei on 2016/6/8.
  */

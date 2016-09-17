@@ -19,6 +19,9 @@ package mobi.cangol.mobile.http.extras;
 
 import android.test.AndroidTestCase;
 
+import mobi.cangol.mobile.http.route.RouteHttpClient;
+import mobi.cangol.mobile.http.route.RouteResponseHandler;
+
 /**
  * Created by xuewu.wei on 2016/6/8.
  */

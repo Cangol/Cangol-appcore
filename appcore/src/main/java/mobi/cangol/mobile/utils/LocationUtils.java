@@ -15,13 +15,6 @@
  */
 package mobi.cangol.mobile.utils;
 
-import android.net.http.AndroidHttpClient;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +22,11 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import mobi.cangol.mobile.http.HttpClientFactory;
 import mobi.cangol.mobile.logging.Log;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class LocationUtils {
@@ -76,23 +73,26 @@ public class LocationUtils {
                 .format("http://www.mapdigit.com/guidebeemap/offsetinchina.php?lng=%f&lat=%f",
                         lat, lng);
         String response = null;
-        AndroidHttpClient httpClient = AndroidHttpClient.newInstance("android");
-        HttpGet request = new HttpGet(url);
-        HttpResponse httpResponse;
+        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        Response httpResponse=null;
         try {
-            httpResponse = httpClient.execute(request);
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                HttpEntity httpEntity = httpResponse.getEntity();
-                response = EntityUtils.toString(httpEntity, "UTF-8");
+            httpResponse = httpClient.newCall(request).execute();
+            if (httpResponse.isSuccessful()) {
+                 response = httpResponse.body().string();
             } else {
-                Log.d("response fail :" + httpResponse.getStatusLine().getStatusCode());
+                Log.d("response fail :" + httpResponse.code());
             }
             return response;
         } catch (IOException e) {
             Log.d(e.getMessage());
             return null;
         } finally {
-            httpClient.close();
+            if(httpResponse!=null)
+                httpResponse.close();
         }
     }
 
@@ -176,20 +176,22 @@ public class LocationUtils {
                 .format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderReverse&location=%f,%f&output=json&pois=0",
                         ak, lat, lng);
         String address = null;
-        AndroidHttpClient httpClient = AndroidHttpClient.newInstance("android");
-        HttpGet request = new HttpGet(url);
-        HttpResponse httpResponse;
+        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        Response httpResponse=null;
         try {
-            httpResponse = httpClient.execute(request);
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                HttpEntity httpEntity = httpResponse.getEntity();
-                String response = EntityUtils.toString(httpEntity, "UTF-8");
+            httpResponse = httpClient.newCall(request).execute();
+            if (httpResponse.isSuccessful()) {
+                String response = httpResponse.body().string();
                 int start = "renderReverse&&renderReverse(".length();
                 int end = response.lastIndexOf(')');
                 JSONObject json = new JSONObject(response.substring(start, end));
                 address = json.getJSONObject("result").getString("formatted_address");
             } else {
-                Log.d("response fail :" + httpResponse.getStatusLine().getStatusCode());
+                Log.d("response fail :" + httpResponse.code());
             }
             return address;
         } catch (IOException e) {
@@ -199,7 +201,8 @@ public class LocationUtils {
             Log.d(e.getMessage());
             return null;
         } finally {
-            httpClient.close();
+            if(httpResponse!=null)
+                httpResponse.close();
         }
     }
 
@@ -215,18 +218,20 @@ public class LocationUtils {
                 .format("http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&language=zh-cn&sensor=true",
                         lat, lng);
         String address = null;
-        AndroidHttpClient httpClient = AndroidHttpClient.newInstance("android");
-        HttpGet request = new HttpGet(url);
-        HttpResponse httpResponse;
+        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        Response httpResponse=null;
         try {
-            httpResponse = httpClient.execute(request);
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                HttpEntity httpEntity = httpResponse.getEntity();
-                String response = EntityUtils.toString(httpEntity, "UTF-8");
+            httpResponse = httpClient.newCall(request).execute();
+            if (httpResponse.isSuccessful()) {
+                String response = httpResponse.body().string();
                 JSONObject json = new JSONObject(response);
                 address = json.getJSONArray("results").getJSONObject(0).getString("formatted_address");
             } else {
-                Log.d("response fail :" + httpResponse.getStatusLine().getStatusCode());
+                Log.d("response fail :" + httpResponse.code());
             }
             return address;
         } catch (IOException e) {
@@ -236,7 +241,8 @@ public class LocationUtils {
             Log.d(e.getMessage());
             return null;
         } finally {
-            httpClient.close();
+            if(httpResponse!=null)
+                httpResponse.close();
         }
 
     }
