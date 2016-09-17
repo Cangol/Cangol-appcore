@@ -22,6 +22,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -122,7 +123,7 @@ public class HttpClientFactory {
             } else {
                 trustManager = new UnSafeTrustManager();
             }
-            sslContext.init(keyManagers, new TrustManager[]{trustManager}, null);
+            sslContext.init(keyManagers, new TrustManager[]{trustManager}, new SecureRandom());
             sslSocketFactory=sslContext.getSocketFactory();
 
         } catch (NoSuchAlgorithmException e) {
@@ -145,27 +146,33 @@ public class HttpClientFactory {
 
         return httpClient;
     }
-    public static OkHttpClient createUnSafeHttpClient(InputStream[] certificates, InputStream bksFile, String password) {
+    public static OkHttpClient createUnSafeHttpClient() {
         SSLContext sslContext = null;
         SSLSocketFactory sslSocketFactory=null;
+        X509TrustManager trustManager=null;
         try {
-            TrustManager[] trustManagers = prepareTrustManager(certificates);
-            KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
             sslContext = SSLContext.getInstance("TLS");
-            X509TrustManager trustManager = null;
-            if (trustManagers != null) {
-                trustManager = new MyTrustManager(chooseTrustManager(trustManagers));
-            } else {
-                trustManager = new UnSafeTrustManager();
-            }
-            sslContext.init(keyManagers, new TrustManager[]{trustManager}, null);
-            sslSocketFactory=sslContext.getSocketFactory();
+            trustManager=new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType) throws CertificateException {
+                }
 
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
+                @Override
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] chain,
+                        String authType) throws CertificateException {
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[]{};
+                }
+            };
+            sslContext.init(null, new TrustManager[]{trustManager}, new SecureRandom());
+            sslSocketFactory=sslContext.getSocketFactory();
+        }catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -176,10 +183,15 @@ public class HttpClientFactory {
                 .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .socketFactory(sslSocketFactory)
-                .hostnameVerifier(new UnSafeHostnameVerifier())
-                .build();
+                .sslSocketFactory(sslSocketFactory, trustManager)
+                .hostnameVerifier(new HostnameVerifier(){
 
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                })
+                .build();
         return httpClient;
     }
     private static class UnSafeHostnameVerifier implements HostnameVerifier {
