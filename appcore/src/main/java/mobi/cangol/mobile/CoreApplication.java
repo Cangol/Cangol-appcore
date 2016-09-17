@@ -18,8 +18,10 @@ package mobi.cangol.mobile;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -64,6 +66,12 @@ public class CoreApplication extends Application {
         }else{
             Log.i("cur process is not app' process");
         }
+    }
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+
     }
     /**
      * 初始化应用服务管理器

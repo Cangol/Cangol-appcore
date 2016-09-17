@@ -8,16 +8,16 @@ android:
   components:
     - platform-tools
     - tools
-    - build-tools-23.0.1
-    - android-23
+    - build-tools-22.0.0
+    - android-22
     - extra-android-m2repository
     - extra-android-support
     - sys-img-armeabi-v7a-android
 before_install:
     # Gradle
-    - wget -q http://services.gradle.org/distributions/gradle-2.14.1-all.zip
-    - unzip -q gradle-2.14.1-all.zip
-    - export GRADLE_HOME=$PWD/gradle-2.14.1
+    - wget -q http://services.gradle.org/distributions/gradle-2.10-all.zip
+    - unzip -q gradle-2.10-all.zip
+    - export GRADLE_HOME=$PWD/gradle-2.10
     - export PATH=$GRADLE_HOME/bin:$PATH
     - curl http://www.jpm4j.org/install/script > jpmInstall.sh
     - sudo sh jpmInstall.sh
