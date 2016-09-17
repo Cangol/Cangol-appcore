@@ -13,7 +13,7 @@ android {
     defaultConfig {
         minSdkVersion 9
         versionCode 5
-        versionName "1.0.5"
+        versionName "1.0.6"
     }
     lintOptions {
         abortOnError false

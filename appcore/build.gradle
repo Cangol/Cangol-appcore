@@ -5,13 +5,13 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.saliman.cobertura'
 apply from: '../maven_push.gradle'
 apply from: 'config/quality.gradle'
-apply from: 'config/coverage.gradle'
+//apply from: 'config/coverage.gradle'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     compile 'com.android.support:support-v4:[23.0.2,)'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.9.0'
-    compile 'com.android.support:multidex:1.0.1'
+    //compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
 }
 
@@ -20,11 +20,9 @@ android {
     buildToolsVersion '23.0.2'
 
     defaultConfig {
-        multiDexEnabled true
         minSdkVersion 9
         versionCode 5
-        versionName "1.0.5"
-        testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
+        versionName "1.0.6"
     }
 
     buildTypes {
@@ -79,8 +77,8 @@ task sourcesJar(type: Jar) {
 //
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    //classpath = configurations.compile
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath = configurations.compile
+    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
     options {
         encoding "UTF-8"
