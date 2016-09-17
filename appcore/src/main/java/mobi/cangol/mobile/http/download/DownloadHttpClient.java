@@ -15,97 +15,88 @@
  */
 package mobi.cangol.mobile.http.download;
 
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.SyncBasicHttpContext;
-
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import mobi.cangol.mobile.service.PoolManager;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class DownloadHttpClient {
     public final static String TAG = "DownloadHttpClient";
     private final static boolean DEBUG = false;
     private final static int DEFAULT_RETRYTIMES = 10;
-    private final static int DEFAULT_SOCKET_TIMEOUT = 50 * 1000;
-    private final static int DEFAULT_SOCKET_BUFFER_SIZE = 8192;
+    private final static int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
+    private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
+    private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
     private final static int DEFAULT_MAX = 3;
-    private final HttpContext httpContext;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
-    private DefaultHttpClient httpClient;
-    private PoolManager.Pool threadPool;
 
-    protected DownloadHttpClient(final String name) {
+    private OkHttpClient httpClient;
+    private static PoolManager.Pool threadPool;
+    private DownloadRetryHandler downloadRetryHandler;
+    private String group;
 
-        httpContext = new SyncBasicHttpContext(new BasicHttpContext());
-        httpClient = new DefaultHttpClient();
-        ClientConnectionManager mgr = httpClient.getConnectionManager();
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, DEFAULT_SOCKET_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, DEFAULT_SOCKET_TIMEOUT);
-        HttpConnectionParams.setSocketBufferSize(params, DEFAULT_SOCKET_BUFFER_SIZE);
-        HttpClientParams.setRedirecting(params, true);
-        httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
-        httpClient.setHttpRequestRetryHandler(new DownloadRetryHandler(DEFAULT_RETRYTIMES));
-        threadPool = PoolManager.buildPool(TAG, DEFAULT_MAX);
-
+    protected DownloadHttpClient(final String group) {
+        this.group=group;
+        httpClient = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                .build();
+        threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        this.downloadRetryHandler = new DownloadRetryHandler(DEFAULT_RETRYTIMES);
+
+    }
+
+    public DownloadRetryHandler getDownloadRetryHandler() {
+        return downloadRetryHandler;
     }
 
     public static DownloadHttpClient build(String group) {
         DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group);
         return asyncHttpClient;
     }
-
-    public static void cancel(String group, boolean mayInterruptIfRunning) {
-        PoolManager.getPool(group).cancle(mayInterruptIfRunning);
-    }
-
-    public void setRetryHandler(HttpRequestRetryHandler retryHandler) {
-        httpClient.setHttpRequestRetryHandler(retryHandler);
-    }
-
     public void setThreadPool(PoolManager.Pool pool) {
-        this.threadPool = pool;
+        threadPool=pool;
     }
 
     public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
-        HttpUriRequest request = new HttpGet(url);
-        return sendRequest(httpClient, httpContext, request, null, responseHandler, context, from, saveFile);
+        Request request=new Request.Builder()
+                        .tag(context)
+                        .addHeader("Range", "bytes=" + from + "-")
+                        .url(url)
+                        .build();
+        return sendRequest(request, responseHandler, saveFile);
     }
 
-    protected Future<?> sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, DownloadResponseHandler responseHandler, Object context, long from, String saveFile) {
-        if (contentType != null) {
-            uriRequest.addHeader("Content-Type", contentType);
-        }
-        Future<?> request = threadPool.submit(new DownloadThread(client, httpContext, uriRequest, responseHandler, from, saveFile));
-        if (context != null) {
+    protected Future<?> sendRequest(Request urlRequest, DownloadResponseHandler responseHandler, String saveFile) {
+        Future<?> request = threadPool.submit(new DownloadThread(this,httpClient, urlRequest, responseHandler, saveFile));
+        if (urlRequest.tag() != null) {
             // Add request to request map
-            List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+            List<WeakReference<Future<?>>> requestList = requestMap.get(urlRequest.tag());
             if (requestList == null) {
                 requestList = new LinkedList<WeakReference<Future<?>>>();
-                requestMap.put(context, requestList);
+                requestMap.put(urlRequest.tag(), requestList);
             }
             requestList.add(new WeakReference<Future<?>>(request));
         }
+
         return request;
     }
 
     public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
+
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {
@@ -116,6 +107,21 @@ public class DownloadHttpClient {
             }
         }
         requestMap.remove(context);
+
+        for (Call call : httpClient.dispatcher().queuedCalls()) {
+            if (call.request().tag().equals(group)) {
+                call.cancel();
+            }
+        }
+        for (Call call : httpClient.dispatcher().runningCalls()) {
+            if (call.request().tag().equals(group)) {
+                call.cancel();
+            }
+        }
     }
 
+    public  void cancelAll() {
+        httpClient.dispatcher().cancelAll();
+        threadPool.cancle(true);
+    }
 }

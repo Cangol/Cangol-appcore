@@ -14,10 +14,10 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.http1.AsyncHttpClient;
-import mobi.cangol.mobile.http1.JsonHttpResponseHandler;
-import mobi.cangol.mobile.http1.download.DownloadHttpClient;
-import mobi.cangol.mobile.http1.download.DownloadResponseHandler;
+import mobi.cangol.mobile.http.AsyncHttpClient;
+import mobi.cangol.mobile.http.JsonHttpResponseHandler;
+import mobi.cangol.mobile.http.download.DownloadHttpClient;
+import mobi.cangol.mobile.http.download.DownloadResponseHandler;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.conf.ConfigService;

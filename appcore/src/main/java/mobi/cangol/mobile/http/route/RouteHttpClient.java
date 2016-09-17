@@ -13,29 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.http.extras;
+package mobi.cangol.mobile.http.route;
 
 import android.content.Context;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.SyncBasicHttpContext;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,64 +26,77 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import mobi.cangol.mobile.service.PoolManager;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class RouteHttpClient {
     public final static String TAG = "RouteHttpClient";
     private final static boolean DEBUG = true;
-    private final HttpContext httpContext;
-    private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
-    private DefaultHttpClient httpClient;
+    private final static int DEFAULT_RETRYTIMES = 10;
+    private final static int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
+    private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
+    private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
+    private final static int DEFAULT_MAX = 3;
+    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
+    private OkHttpClient httpClient;
     private PoolManager.Pool threadPool;
 
     public RouteHttpClient() {
 
-        httpContext = new SyncBasicHttpContext(new BasicHttpContext());
-        httpClient = new DefaultHttpClient();
-        ClientConnectionManager mgr = httpClient.getConnectionManager();
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
-        HttpConnectionParams.setSoTimeout(params, 20 * 1000);
-        HttpConnectionParams.setSocketBufferSize(params, 8192);
-        HttpClientParams.setRedirecting(params, false);
-        httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+        httpClient = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                .build();
+        threadPool = PoolManager.buildPool(TAG, DEFAULT_MAX);
 
-        threadPool = PoolManager.buildPool(TAG, 3);
-
-        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
+        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
 
-    public void send(Context context, String url, HashMap<String, String> params, RouteResponseHandler responseHandler, String... host) {
-        List<BasicNameValuePair> lparams = new LinkedList<BasicNameValuePair>();
-
+    public void send(Object tag, String url, HashMap<String, String> params, RouteResponseHandler responseHandler, String... host) {
+        Request request=null;
         if (params != null) {
+            FormBody.Builder requestBodyBuilder=new FormBody.Builder();
             for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
-                lparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
+            request=new Request.Builder()
+                    .tag(tag)
+                    .url(url)
+                    .post(requestBodyBuilder.build())
+                    .build();
+        }else{
+            request=new Request.Builder()
+                    .tag(tag)
+                    .url(url)
+                    .build();
         }
-
-        String paramString = URLEncodedUtils.format(lparams, "UTF-8");
-
-        HttpUriRequest request = new HttpGet(url + "?" + paramString);
-        sendRequest(httpClient, httpContext, request, null, responseHandler, context, host);
+        sendRequest(httpClient, request, responseHandler, tag, host);
     }
 
-    private HttpUriRequest getHttpUriRequest(URL url, String host) {
+    private Request getNewRequest(Request request, String host) {
+        String hostStr = request.url().url().getHost();
+        String urlStr = request.url().url().toString().replace(hostStr, host);
 
-        String hostStr = url.getHost();
-        String urlStr = url.toString().replace(hostStr, host);
-        HttpUriRequest request = new HttpGet(urlStr);
+        Request newRequest=new Request.Builder()
+                .tag(request.tag())
+                .url(urlStr)
+                .build();
 
-        return request;
+        return newRequest;
     }
 
-    protected void sendRequest(DefaultHttpClient client, HttpContext httpContext, HttpUriRequest uriRequest, String contentType, RouteResponseHandler responseHandler, Context context, String... host) {
-        if (contentType != null) {
-            uriRequest.addHeader("Content-Type", contentType);
-        }
+    protected void sendRequest(OkHttpClient client, Request uriRequest, RouteResponseHandler responseHandler, Object context, String... host) {
 
-        Future<?> request = threadPool.submit(new HttpRequestTask(client, httpContext, uriRequest, responseHandler, host));
+        Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, host));
         if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
@@ -127,15 +123,12 @@ public class RouteHttpClient {
 
     class HttpRequestTask implements Runnable {
         private final RouteResponseHandler responseHandler;
-        private HttpClient client;
-        private HttpContext context;
-        private HttpUriRequest request;
+        private OkHttpClient client;
+        private Request request;
         private String[] host;
 
-        public HttpRequestTask(DefaultHttpClient client,
-                               HttpContext context, HttpUriRequest request, RouteResponseHandler responseHandler, String... host) {
+        public HttpRequestTask(OkHttpClient client, Request request, RouteResponseHandler responseHandler, String... host) {
             this.client = client;
-            this.context = context;
             this.request = request;
             this.responseHandler = responseHandler;
             this.host = host;
@@ -148,10 +141,9 @@ public class RouteHttpClient {
                 int exec = 0;
                 while (exec < host.length) {
                     try {
-                        request = getHttpUriRequest(request.getURI().toURL(), host[exec]);
+                        request = getNewRequest(request, host[exec]);
                         exec++;
-                        client.execute(request, context);
-                        HttpResponse response = client.execute(request, context);
+                        Response response = client.newCall(request).execute();
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
                                 if (responseHandler.sendResponseMessage(response)) {

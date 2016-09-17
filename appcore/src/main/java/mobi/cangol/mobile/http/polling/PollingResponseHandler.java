@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.http1.polling;
+package mobi.cangol.mobile.http.polling;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -21,7 +21,6 @@ import android.os.Message;
 
 import java.io.IOException;
 
-import mobi.cangol.mobile.http.extras.PollingHttpClient;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 

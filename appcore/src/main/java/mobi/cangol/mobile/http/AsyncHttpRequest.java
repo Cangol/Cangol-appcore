@@ -20,28 +20,26 @@ package mobi.cangol.mobile.http;
 
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.protocol.HttpContext;
-
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 class AsyncHttpRequest implements Runnable {
-    private final AbstractHttpClient client;
-    private final HttpContext context;
-    private final HttpUriRequest request;
+    private final AsyncHttpClient client;
+    private final OkHttpClient content;
+    private final Request request;
     private final AsyncHttpResponseHandler responseHandler;
     private boolean isBinaryRequest;
     private int executionCount;
 
-    public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request, AsyncHttpResponseHandler responseHandler) {
+    public AsyncHttpRequest(AsyncHttpClient client,OkHttpClient content, Request request, AsyncHttpResponseHandler responseHandler) {
         this.client = client;
-        this.context = context;
+        this.content=content;
         this.request = request;
         this.responseHandler = responseHandler;
         if (responseHandler instanceof BinaryHttpResponseHandler) {
@@ -74,7 +72,7 @@ class AsyncHttpRequest implements Runnable {
 
     private void makeRequest() throws IOException {
         if (!Thread.currentThread().isInterrupted()) {
-            HttpResponse response = client.execute(request, context);
+            Response response = content.newCall(request).execute();
             if (!Thread.currentThread().isInterrupted()) {
                 if (responseHandler != null) {
                     responseHandler.sendResponseMessage(response);
@@ -91,7 +89,7 @@ class AsyncHttpRequest implements Runnable {
         // See: https://github.com/kaeppler/droid-fu/blob/master/src/main/java/com/github/droidfu/http/BetterHttpRequestBase.java
         boolean retry = true;
         IOException cause = null;
-        HttpRequestRetryHandler retryHandler = client.getHttpRequestRetryHandler();
+        RetryHandler retryHandler = client.getRetryHandler();
         while (retry) {
             try {
                 makeRequest();
@@ -109,13 +107,13 @@ class AsyncHttpRequest implements Runnable {
                 return;
             } catch (IOException e) {
                 cause = e;
-                retry = retryHandler.retryRequest(cause, ++executionCount, context);
+                retry = retryHandler.retryRequest(cause, ++executionCount);
             } catch (NullPointerException e) {
                 // there's a bug in HttpClient 4.0.x that on some occasions causes
                 // DefaultRequestExecutor to throw an NPE, see
                 // http://code.google.com/p/android/issues/detail?id=5255
                 cause = new IOException("NPE in HttpClient" + e.getMessage());
-                retry = retryHandler.retryRequest(cause, ++executionCount, context);
+                retry = retryHandler.retryRequest(cause, ++executionCount);
             }
         }
 

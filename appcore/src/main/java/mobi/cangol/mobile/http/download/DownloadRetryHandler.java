@@ -1,28 +1,23 @@
-/**
- * Copyright (c) 2013 Cangol
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ *
+ *  Copyright (c) 2013 Cangol
+ *   <p/>
+ *   Licensed under the Apache License, Version 2.0 (the "License")
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package mobi.cangol.mobile.http.download;
 
 import android.os.SystemClock;
 import android.util.Log;
-
-import org.apache.http.NoHttpResponseException;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.protocol.ExecutionContext;
-import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -32,14 +27,13 @@ import java.util.HashSet;
 
 import javax.net.ssl.SSLHandshakeException;
 
-public class DownloadRetryHandler implements HttpRequestRetryHandler {
+public class DownloadRetryHandler{
     private static final long RETRY_SLEEP_TIME_MILLIS = 1500L;
     private static HashSet<Class<?>> exceptionWhitelist = new HashSet<Class<?>>();
     private static HashSet<Class<?>> exceptionBlacklist = new HashSet<Class<?>>();
 
     static {
         // Retry if the server dropped connection on us
-        exceptionWhitelist.add(NoHttpResponseException.class);
         // retry-this, since it may happens as part of a Wi-Fi to 3G failover
         exceptionWhitelist.add(UnknownHostException.class);
         // retry-this, since it may happens as part of a Wi-Fi to 3G failover
@@ -59,13 +53,9 @@ public class DownloadRetryHandler implements HttpRequestRetryHandler {
         this.maxRetries = maxRetries;
     }
 
-    public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+    public boolean retryRequest(IOException exception, int executionCount) {
         Log.d("download retryRequest", "exception:" + exception.getClass() + " executionCount=" + executionCount);
         boolean retry = true;
-
-        Boolean b = (Boolean) context.getAttribute(ExecutionContext.HTTP_REQ_SENT);
-        boolean sent = (b != null && b.booleanValue());
-
         if (executionCount > maxRetries) {
             // Do not retry if over max retry count
             retry = false;
@@ -75,17 +65,6 @@ public class DownloadRetryHandler implements HttpRequestRetryHandler {
         } else if (exceptionWhitelist.contains(exception.getClass())) {
             // immediately retry if error is whitelisted
             retry = true;
-        } else if (!sent) {
-            // for most other errors, retry only if request hasn't been fully sent yet
-            retry = true;
-        }
-
-        if (retry) {
-            // resend all idempotent requests
-            HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
-            if (null == currentReq) {
-                return false;
-            }
         }
 
         if (retry) {

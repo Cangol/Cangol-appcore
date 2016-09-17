@@ -59,18 +59,12 @@ class ApiClient {
         RequestParams requestParams = new RequestParams();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             if (entry.getValue() instanceof File) {
-                try {
-                    requestParams.put(entry.getKey(), (File) entry.getValue());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else if (entry.getValue() instanceof InputStream) {
-                requestParams.put(entry.getKey(), (InputStream) entry.getValue());
+                requestParams.put(entry.getKey(), (File) entry.getValue());
             } else if (entry.getValue() != null) {
                 requestParams.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
         }
-        if (DEBUG) Log.d(AsyncHttpClient.getUrlWithQueryString(url, requestParams));
+        if (DEBUG) Log.d("url "+url);
         if (DEBUG) Log.d(requestParams.toDebugString());
         if (onResponse != null) onResponse.onStart();
         if (!DeviceInfo.isConnection(mContext)) {

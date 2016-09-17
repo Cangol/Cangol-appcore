@@ -1,17 +1,18 @@
-/**
- * Copyright (c) 2013 Cangol
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ *
+ *  Copyright (c) 2013 Cangol
+ *   <p/>
+ *   Licensed under the Apache License, Version 2.0 (the "License")
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *  <p/>
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  <p/>
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 package mobi.cangol.mobile.http.download;
 
@@ -19,13 +20,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class DownloadResponseHandler {
     public final static String TAG = "DownloadResponseHandler";
@@ -96,13 +96,12 @@ public class DownloadResponseHandler {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
 
-    void sendResponseMessage(HttpResponse response, String saveFile) throws IOException {
-        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_PARTIAL_CONTENT
-                || response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            HttpEntity entity = response.getEntity();
-            long length = entity.getContentLength();
+    void sendResponseMessage(Response response, String saveFile) throws IOException {
+        if (response.isSuccessful()) {
+            ResponseBody responseBody=response.body();
+            long length = responseBody.contentLength();
             RandomAccessFile threadfile = new RandomAccessFile(saveFile, "rwd");
-            InputStream inputStream = entity.getContent();
+            InputStream inputStream = responseBody.byteStream();
             long oldLength = threadfile.length();
             sendStartMessage(oldLength, length);
             if (oldLength < length) {
@@ -142,11 +141,11 @@ public class DownloadResponseHandler {
             } else {
                 sendFailureMessage(new IOException(), "oldfile error oldLength>length");
             }
-            if (entity != null) {
-                entity.consumeContent();
+            if (responseBody != null) {
+                responseBody.close();
             }
         } else {
-            sendFailureMessage(new IOException(), "StatusCode " + response.getStatusLine().getStatusCode());
+            sendFailureMessage(new IOException(), "StatusCode " + response.code());
         }
     }
 

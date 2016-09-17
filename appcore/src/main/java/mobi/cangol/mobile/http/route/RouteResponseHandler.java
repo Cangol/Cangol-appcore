@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package mobi.cangol.mobile.http.extras;
+package mobi.cangol.mobile.http.route;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.util.EntityUtils;
-
 import java.io.IOException;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class RouteResponseHandler {
     protected static final int START_MESSAGE = 1;
@@ -69,27 +65,21 @@ public class RouteResponseHandler {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
 
-    boolean sendResponseMessage(HttpResponse response) {
-        StatusLine status = response.getStatusLine();
-        String responseBody = null;
+    boolean sendResponseMessage(Response response) {
         boolean result = false;
-        try {
-            HttpEntity entity = null;
-            HttpEntity temp = response.getEntity();
-            if (temp != null) {
-                entity = new BufferedHttpEntity(temp);
-                responseBody = EntityUtils.toString(entity, "UTF-8");
+        ResponseBody responseBody=response.body();
+        String content=null;
+        if(response.isSuccessful()){
+            if (responseBody != null) {
+                content = responseBody.toString();
             }
-        } catch (IOException e) {
-            sendFailureMessage(e, (String) null);
+            sendSuccessMessage(response.code(), content);
+            result = true;
+        }else{
+            sendFailureMessage(new IOException("code="+response.code()), content);
+            result = false;
         }
 
-        if (status.getStatusCode() >= 300) {
-            sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
-        } else {
-            sendSuccessMessage(status.getStatusCode(), responseBody);
-            result = true;
-        }
         return result;
     }
 
