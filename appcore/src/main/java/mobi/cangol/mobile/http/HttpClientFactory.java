@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -137,7 +137,7 @@ public class HttpClientFactory {
      */
     public static OkHttpClient createSafeHttpClient(InputStream[] certificates, InputStream bksFile, String password) {
         SSLContext sslContext = null;
-        SSLSocketFactory sslSocketFactory=null;
+        SSLSocketFactory sslSocketFactory = null;
         try {
             TrustManager[] trustManagers = prepareTrustManager(certificates);
             KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
@@ -149,14 +149,14 @@ public class HttpClientFactory {
                 trustManager = new UnSafeTrustManager();
             }
             sslContext.init(keyManagers, new TrustManager[]{trustManager}, new SecureRandom());
-            sslSocketFactory=sslContext.getSocketFactory();
+            sslSocketFactory = sslContext.getSocketFactory();
 
         } catch (NoSuchAlgorithmException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (KeyStoreException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (KeyManagementException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -178,14 +178,14 @@ public class HttpClientFactory {
      */
     public static OkHttpClient createUnSafeHttpClient() {
         SSLContext sslContext = null;
-        SSLSocketFactory sslSocketFactory=null;
-        X509TrustManager trustManager=null;
+        SSLSocketFactory sslSocketFactory = null;
+        X509TrustManager trustManager = null;
         try {
             sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{new UnSafeTrustManager()}, new SecureRandom());
-            sslSocketFactory=sslContext.getSocketFactory();
-        }catch (Exception e) {
-            Log.d(TAG,e.getMessage());
+            sslSocketFactory = sslContext.getSocketFactory();
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
         }
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -215,8 +215,8 @@ public class HttpClientFactory {
                 try {
                     if (certificate != null)
                         certificate.close();
-                } catch (IOException e){
-                    Log.d(TAG,e.getMessage());
+                } catch (IOException e) {
+                    Log.d(TAG, e.getMessage());
                 }
             }
             TrustManagerFactory trustManagerFactory = null;
@@ -229,13 +229,13 @@ public class HttpClientFactory {
 
             return trustManagers;
         } catch (NoSuchAlgorithmException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (CertificateException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (KeyStoreException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (Exception e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         return null;
 
@@ -252,17 +252,17 @@ public class HttpClientFactory {
             return keyManagerFactory.getKeyManagers();
 
         } catch (KeyStoreException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (UnrecoverableKeyException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (CertificateException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (IOException e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         } catch (Exception e) {
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG, e.getMessage());
         }
         return null;
     }

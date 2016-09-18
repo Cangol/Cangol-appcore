@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,19 +63,19 @@ public class PollingHttpClient {
 
     public void send(Object tag, String url, HashMap<String, String> params, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
 
-        Request request=null;
+        Request request = null;
         if (params != null) {
-            FormBody.Builder requestBodyBuilder=new FormBody.Builder();
+            FormBody.Builder requestBodyBuilder = new FormBody.Builder();
             for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
-            request=new Request.Builder()
+            request = new Request.Builder()
                     .tag(tag)
                     .url(url)
                     .post(requestBodyBuilder.build())
                     .build();
-        }else{
-            request=new Request.Builder()
+        } else {
+            request = new Request.Builder()
                     .tag(tag)
                     .url(url)
                     .build();

@@ -37,7 +37,7 @@ public class DownloadThread implements Runnable {
 
     public DownloadThread(DownloadHttpClient context, OkHttpClient client, Request request, DownloadResponseHandler responseHandler, String saveFile) {
         this.client = client;
-        this.context=context;
+        this.context = context;
         this.request = request;
         this.responseHandler = responseHandler;
         this.saveFile = saveFile;
@@ -46,7 +46,7 @@ public class DownloadThread implements Runnable {
     @Override
     public void run() {
         try {
-            from=parserFrom(request);
+            from = parserFrom(request);
             if (responseHandler != null) {
                 responseHandler.sendWaitMessage();
             }
@@ -75,15 +75,17 @@ public class DownloadThread implements Runnable {
             responseHandler.sendStopMessage(from);
         }
     }
-    private long parserFrom(Request request){
-        String value=request.header("Range");
-        if(value!=null&&value.contains("bytes=")){
-            value=value.substring(value.indexOf("bytes=")+"bytes=".length(),value.indexOf('-'));
-        }else{
-            value="0";
+
+    private long parserFrom(Request request) {
+        String value = request.header("Range");
+        if (value != null && value.contains("bytes=")) {
+            value = value.substring(value.indexOf("bytes=") + "bytes=".length(), value.indexOf('-'));
+        } else {
+            value = "0";
         }
         return Long.parseLong(value);
     }
+
     private void makeRequestWithRetries() throws Exception {
         boolean retry = true;
         Exception cause = null;

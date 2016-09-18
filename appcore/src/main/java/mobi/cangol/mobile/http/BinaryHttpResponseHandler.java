@@ -1,5 +1,3 @@
-
-
 package mobi.cangol.mobile.http;
 
 import android.content.Context;
@@ -142,11 +140,12 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
                 break;
         }
     }
+
     void sendResponseMessage(Response response) {
         Log.d(">>", "sendResponseMessage=");
-        ResponseBody responseBody=response.body();
-        if(response.isSuccessful()){
-            String contentType=response.body().contentType().toString();
+        ResponseBody responseBody = response.body();
+        if (response.isSuccessful()) {
+            String contentType = response.body().contentType().toString();
             boolean foundAllowedContentType = false;
             for (String anAllowedContentType : mAllowedContentTypes) {
                 if (anAllowedContentType.equals(contentType)) {
@@ -154,7 +153,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
                 }
             }
             if (!foundAllowedContentType) {
-                sendFailureMessage(new IOException("Content-Type not allowed! "+contentType), response.message());
+                sendFailureMessage(new IOException("Content-Type not allowed! " + contentType), response.message());
                 return;
             }
             try {
@@ -162,8 +161,8 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
             } catch (IOException e) {
                 sendFailureMessage(e, (byte[]) null);
             }
-        }else{
-            sendFailureMessage(new IOException("code="+response.code()), response.message());
+        } else {
+            sendFailureMessage(new IOException("code=" + response.code()), response.message());
         }
     }
 }

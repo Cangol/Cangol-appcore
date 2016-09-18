@@ -146,15 +146,15 @@ public class AsyncHttpResponseHandler {
     }
 
     void sendResponseMessage(Response response) {
-        ResponseBody requestBody=response.body();
-        if(response.isSuccessful()){
+        ResponseBody requestBody = response.body();
+        if (response.isSuccessful()) {
             try {
                 sendSuccessMessage(response.code(), requestBody.string());
             } catch (IOException e) {
                 sendFailureMessage(e, response.message());
             }
-        }else{
-            sendFailureMessage(new IOException("code="+response.code()), response.message());
+        } else {
+            sendFailureMessage(new IOException("code=" + response.code()), response.message());
         }
         response.close();
     }

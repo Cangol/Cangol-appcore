@@ -98,7 +98,7 @@ public class DownloadResponseHandler {
 
     void sendResponseMessage(Response response, String saveFile) throws IOException {
         if (response.isSuccessful()) {
-            ResponseBody responseBody=response.body();
+            ResponseBody responseBody = response.body();
             long length = responseBody.contentLength();
             RandomAccessFile threadfile = new RandomAccessFile(saveFile, "rwd");
             InputStream inputStream = responseBody.byteStream();

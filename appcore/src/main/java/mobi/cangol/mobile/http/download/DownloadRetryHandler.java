@@ -27,7 +27,7 @@ import java.util.HashSet;
 
 import javax.net.ssl.SSLHandshakeException;
 
-public class DownloadRetryHandler{
+public class DownloadRetryHandler {
     private static final long RETRY_SLEEP_TIME_MILLIS = 1500L;
     private static HashSet<Class<?>> exceptionWhitelist = new HashSet<Class<?>>();
     private static HashSet<Class<?>> exceptionBlacklist = new HashSet<Class<?>>();

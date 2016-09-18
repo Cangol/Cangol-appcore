@@ -97,7 +97,7 @@ public class AsyncHttpClient {
                         .append(entry.getValue());
             }
         }
-        execMethod("GET", context, url + sb.toString(), headers,(HashMap<String, String>) null, responseHandler);
+        execMethod("GET", context, url + sb.toString(), headers, (HashMap<String, String>) null, responseHandler);
     }
 
     public void get(Object context, String url, RequestParams requestParams, AsyncHttpResponseHandler responseHandler) {
@@ -168,15 +168,15 @@ public class AsyncHttpClient {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
         }
-        Request request =null;
-        if("GET".equals(method)){
+        Request request = null;
+        if ("GET".equals(method)) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
                     .get()
                     .build();
-        }else{
+        } else {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -208,20 +208,20 @@ public class AsyncHttpClient {
                 requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
             }
         }
-        Request request =null;
-        if("GET".equals(method)){
+        Request request = null;
+        if ("GET".equals(method)) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
                     .get()
                     .build();
-        }else{
+        } else {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
-                    .method(method,  requestBodyBuilder.build())
+                    .method(method, requestBodyBuilder.build())
                     .build();
         }
 
@@ -236,15 +236,15 @@ public class AsyncHttpClient {
             }
         }
 
-        Request request =null;
-        if("GET".equals(method)){
+        Request request = null;
+        if ("GET".equals(method)) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
                     .get()
                     .build();
-        }else{
+        } else {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())

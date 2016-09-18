@@ -37,9 +37,9 @@ class AsyncHttpRequest implements Runnable {
     private boolean isBinaryRequest;
     private int executionCount;
 
-    public AsyncHttpRequest(AsyncHttpClient client,OkHttpClient content, Request request, AsyncHttpResponseHandler responseHandler) {
+    public AsyncHttpRequest(AsyncHttpClient client, OkHttpClient content, Request request, AsyncHttpResponseHandler responseHandler) {
         this.client = client;
-        this.content=content;
+        this.content = content;
         this.request = request;
         this.responseHandler = responseHandler;
         if (responseHandler instanceof BinaryHttpResponseHandler) {

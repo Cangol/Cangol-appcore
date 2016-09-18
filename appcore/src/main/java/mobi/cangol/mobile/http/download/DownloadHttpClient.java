@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ public class DownloadHttpClient {
     private String group;
 
     protected DownloadHttpClient(final String group) {
-        this.group=group;
+        this.group = group;
         httpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
                 .followRedirects(true)
@@ -67,21 +67,22 @@ public class DownloadHttpClient {
         DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group);
         return asyncHttpClient;
     }
+
     public static void setThreadPool(PoolManager.Pool pool) {
-        threadPool=pool;
+        threadPool = pool;
     }
 
     public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
-        Request request=new Request.Builder()
-                        .tag(context)
-                        .addHeader("Range", "bytes=" + from + "-")
-                        .url(url)
-                        .build();
+        Request request = new Request.Builder()
+                .tag(context)
+                .addHeader("Range", "bytes=" + from + "-")
+                .url(url)
+                .build();
         return sendRequest(request, responseHandler, saveFile);
     }
 
     protected Future<?> sendRequest(Request urlRequest, DownloadResponseHandler responseHandler, String saveFile) {
-        Future<?> request = threadPool.submit(new DownloadThread(this,httpClient, urlRequest, responseHandler, saveFile));
+        Future<?> request = threadPool.submit(new DownloadThread(this, httpClient, urlRequest, responseHandler, saveFile));
         if (urlRequest.tag() != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(urlRequest.tag());
@@ -120,7 +121,7 @@ public class DownloadHttpClient {
         }
     }
 
-    public  void cancelAll() {
+    public void cancelAll() {
         httpClient.dispatcher().cancelAll();
         threadPool.cancle(true);
     }
