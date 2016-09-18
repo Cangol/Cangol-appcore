@@ -41,7 +41,7 @@ class ApiClient {
     private ApiClient(Context context) {
         mContext = context;
         mAsyncHttpClient = AsyncHttpClient.build(TAG);
-        mAsyncHttpClient.setThreadool(PoolManager.buildPool(TAG, MAX_THREAD));
+        mAsyncHttpClient.setThreadPool(PoolManager.buildPool(TAG, MAX_THREAD));
     }
 
     public static ApiClient getInstance(Context context) {

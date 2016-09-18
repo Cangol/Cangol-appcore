@@ -51,17 +51,17 @@ public class AsyncHttpClient {
 
     protected AsyncHttpClient(String group) {
         this.group = group;
-        httpClient = HttpClientFactory.createDefaultHttpClient();
-        threadPool = PoolManager.getPool(group);
-        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        this.httpClient = HttpClientFactory.createDefaultHttpClient();
+        this.threadPool = PoolManager.getPool(group);
+        this.requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
         this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
     protected AsyncHttpClient(String group, OkHttpClient client) {
         this.group = group;
-        httpClient = client;
-        threadPool = PoolManager.getPool(group);
-        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        this.httpClient = client;
+        this.threadPool = PoolManager.getPool(group);
+        this.requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
         this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
@@ -79,7 +79,7 @@ public class AsyncHttpClient {
         return asyncHttpClient;
     }
 
-    public void setThreadool(Pool pool) {
+    public void setThreadPool(Pool pool) {
         this.threadPool = pool;
     }
 
