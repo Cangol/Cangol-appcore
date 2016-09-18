@@ -78,7 +78,7 @@ public class DownloadThread implements Runnable {
     private long parserFrom(Request request){
         String value=request.header("Range");
         if(value!=null&&value.contains("bytes=")){
-            value=value.substring(value.indexOf("bytes=")+"bytes=".length(),value.indexOf("-"));
+            value=value.substring(value.indexOf("bytes=")+"bytes=".length(),value.indexOf('-'));
         }else{
             value="0";
         }

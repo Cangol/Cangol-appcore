@@ -92,7 +92,9 @@ public class AsyncHttpClient {
         StringBuffer sb = new StringBuffer(url.contains("?") ? "" : "?");
         if (params != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
-                sb.append(entry.getKey() + "&" + entry.getValue());
+                sb.append(entry.getKey())
+                        .append('&')
+                        .append(entry.getValue());
             }
         }
         execMethod("GET", context, url + sb.toString(), headers,(HashMap<String, String>) null, responseHandler);
@@ -102,7 +104,9 @@ public class AsyncHttpClient {
         StringBuffer sb = new StringBuffer(url.contains("?") ? "" : "?");
         if (requestParams.urlParams != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : requestParams.urlParams.entrySet()) {
-                sb.append(entry.getKey() + "&" + entry.getValue());
+                sb.append(entry.getKey())
+                        .append('&')
+                        .append(entry.getValue());
             }
         }
 

@@ -39,6 +39,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import mobi.cangol.mobile.logging.Log;
 import okhttp3.Authenticator;
 import okhttp3.CertificatePinner;
 import okhttp3.Credentials;
@@ -48,14 +49,19 @@ import okhttp3.Response;
 import okhttp3.Route;
 
 public class HttpClientFactory {
-
+    private final static String TAG = "HttpClientFactory";
     private final static int DEFAULT_RETRYTIMES = 3;
-    private final static int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_MAX = 3;
+    private final static int DEFAULT_CONNECT_TIMEOUT = 20 * 1000;
+    private final static int DEFAULT_READ_TIMEOUT = 20 * 1000;
+    private final static int DEFAULT_WRITE_TIMEOUT = 20 * 1000;
+
     private static OkHttpClient httpClient;
 
+    /**
+     * 创建默的 HttpClient
+     *
+     * @return
+     */
     public static OkHttpClient createDefaultHttpClient() {
 
         httpClient = new OkHttpClient.Builder()
@@ -70,6 +76,12 @@ public class HttpClientFactory {
         return httpClient;
     }
 
+    /**
+     * 创建 auth认证的 HttpClient
+     * @param username 用户名
+     * @param password 密码
+     * @return
+     */
     public static OkHttpClient createAuthHttpClient(final String username, final String password) {
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -93,6 +105,12 @@ public class HttpClientFactory {
         return httpClient;
     }
 
+    /**
+     * 创建 固定证书的 HttpClient
+     * @param pattern
+     * @param pins
+     * @return
+     */
     public static OkHttpClient createCertHttpClient(final String pattern, final String... pins) {
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -110,6 +128,13 @@ public class HttpClientFactory {
         return httpClient;
     }
 
+    /**
+     * 创建 auth认证的 HttpClient
+     * @param certificates
+     * @param bksFile
+     * @param password
+     * @return
+     */
     public static OkHttpClient createSafeHttpClient(InputStream[] certificates, InputStream bksFile, String password) {
         SSLContext sslContext = null;
         SSLSocketFactory sslSocketFactory=null;
@@ -127,11 +152,11 @@ public class HttpClientFactory {
             sslSocketFactory=sslContext.getSocketFactory();
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (KeyStoreException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -146,34 +171,21 @@ public class HttpClientFactory {
 
         return httpClient;
     }
+
+    /**
+     * 创建 不认证证书的 HttpClient
+     * @return
+     */
     public static OkHttpClient createUnSafeHttpClient() {
         SSLContext sslContext = null;
         SSLSocketFactory sslSocketFactory=null;
         X509TrustManager trustManager=null;
         try {
             sslContext = SSLContext.getInstance("TLS");
-            trustManager=new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[]{};
-                }
-            };
-            sslContext.init(null, new TrustManager[]{trustManager}, new SecureRandom());
+            sslContext.init(null, new TrustManager[]{new UnSafeTrustManager()}, new SecureRandom());
             sslSocketFactory=sslContext.getSocketFactory();
         }catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -184,38 +196,9 @@ public class HttpClientFactory {
                 .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                 .sslSocketFactory(sslSocketFactory, trustManager)
-                .hostnameVerifier(new HostnameVerifier(){
-
-                    @Override
-                    public boolean verify(String hostname, SSLSession session) {
-                        return true;
-                    }
-                })
+                .hostnameVerifier(new UnSafeHostnameVerifier())
                 .build();
         return httpClient;
-    }
-    private static class UnSafeHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            return true;
-        }
-    }
-
-    private static class UnSafeTrustManager implements X509TrustManager {
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType)
-                throws CertificateException {
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType)
-                throws CertificateException {
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return new java.security.cert.X509Certificate[]{};
-        }
     }
 
     private static TrustManager[] prepareTrustManager(InputStream... certificates) {
@@ -233,6 +216,7 @@ public class HttpClientFactory {
                     if (certificate != null)
                         certificate.close();
                 } catch (IOException e){
+                    Log.d(TAG,e.getMessage());
                 }
             }
             TrustManagerFactory trustManagerFactory = null;
@@ -245,13 +229,13 @@ public class HttpClientFactory {
 
             return trustManagers;
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (CertificateException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (KeyStoreException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
         return null;
 
@@ -268,17 +252,17 @@ public class HttpClientFactory {
             return keyManagerFactory.getKeyManagers();
 
         } catch (KeyStoreException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (UnrecoverableKeyException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (CertificateException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG,e.getMessage());
         }
         return null;
     }
@@ -292,7 +276,9 @@ public class HttpClientFactory {
         return null;
     }
 
-
+    /**
+     * 证书解释器
+     */
     private static class MyTrustManager implements X509TrustManager {
         private X509TrustManager defaultTrustManager;
         private X509TrustManager localTrustManager;
@@ -323,6 +309,36 @@ public class HttpClientFactory {
         @Override
         public X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];
+        }
+    }
+
+    /**
+     * 不验证host
+     */
+    private static class UnSafeHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    }
+
+    /**
+     * 不验证证书
+     */
+    private static class UnSafeTrustManager implements X509TrustManager {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[]{};
         }
     }
 }
