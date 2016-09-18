@@ -67,7 +67,7 @@ public class DownloadHttpClient {
         DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group);
         return asyncHttpClient;
     }
-    public void setThreadPool(PoolManager.Pool pool) {
+    public static void setThreadPool(PoolManager.Pool pool) {
         threadPool=pool;
     }
 

@@ -41,7 +41,7 @@ import okhttp3.RequestBody;
 
 public class AsyncHttpClient {
     public final static String TAG = "AsyncHttpClient";
-    private final static int DEFAULT_RETRYTIMES = 3;
+    private final static int DEFAULT_RETRY_TIMES = 3;
     private final OkHttpClient httpClient;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
 
@@ -54,7 +54,7 @@ public class AsyncHttpClient {
         httpClient = HttpClientFactory.createDefaultHttpClient();
         threadPool = PoolManager.getPool(group);
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
-        this.retryHandler = new RetryHandler(DEFAULT_RETRYTIMES);
+        this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
     protected AsyncHttpClient(String group, OkHttpClient client) {
@@ -62,7 +62,7 @@ public class AsyncHttpClient {
         httpClient = client;
         threadPool = PoolManager.getPool(group);
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
-        this.retryHandler = new RetryHandler(DEFAULT_RETRYTIMES);
+        this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
     public RetryHandler getRetryHandler() {

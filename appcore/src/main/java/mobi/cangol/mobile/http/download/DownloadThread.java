@@ -82,7 +82,7 @@ public class DownloadThread implements Runnable {
         }else{
             value="0";
         }
-        return Long.valueOf(value);
+        return Long.parseLong(value);
     }
     private void makeRequestWithRetries() throws Exception {
         boolean retry = true;

@@ -64,8 +64,10 @@ public class RequestParams {
         }
     }
 
-    public void put(String key, File file) {
-        put(key, file);
+    public void put(String key, File value) {
+        if (key != null && value != null) {
+            fileParams.put(key, value);
+        }
     }
 
     public void remove(String key) {
