@@ -29,6 +29,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import mobi.cangol.mobile.service.PoolManager;
+import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -46,6 +47,9 @@ public class RouteHttpClient {
     private OkHttpClient httpClient;
     private PoolManager.Pool threadPool;
 
+    /**
+     * 构造实例
+     */
     public RouteHttpClient() {
 
         httpClient = new OkHttpClient.Builder()
@@ -61,6 +65,14 @@ public class RouteHttpClient {
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
 
+    /**
+     * 发起请求
+     * @param tag
+     * @param url
+     * @param params
+     * @param responseHandler
+     * @param host
+     */
     public void send(Object tag, String url, HashMap<String, String> params, RouteResponseHandler responseHandler, String... host) {
         Request request = null;
         if (params != null) {
@@ -108,8 +120,13 @@ public class RouteHttpClient {
         }
     }
 
-    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+    /**
+     * 取消请求
+     * @param tag
+     * @param mayInterruptIfRunning
+     */
+    public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
+        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {
                 Future<?> request = requestRef.get();
@@ -118,7 +135,17 @@ public class RouteHttpClient {
                 }
             }
         }
-        requestMap.remove(context);
+        requestMap.remove(tag);
+        for (Call call : httpClient.dispatcher().queuedCalls()) {
+            if (call.request().tag().equals(tag)) {
+                call.cancel();
+            }
+        }
+        for (Call call : httpClient.dispatcher().runningCalls()) {
+            if (call.request().tag().equals(tag)) {
+                call.cancel();
+            }
+        }
     }
 
     class HttpRequestTask implements Runnable {

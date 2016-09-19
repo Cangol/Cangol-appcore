@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,39 +43,66 @@ public class PollingResponseHandler {
         }
     }
 
+    /**
+     * 是否结束请求
+     *
+     * @param content
+     * @return
+     */
     public boolean isFailResponse(String content) {
         return false;
     }
 
+    /**
+     * 启动开始
+     */
     public void onStart() {
     }
 
+    /**
+     * 轮询结束
+     *
+     * @param execTimes
+     * @param content
+     */
     public void onPollingFinish(int execTimes, String content) {
     }
 
+    /**
+     * 轮询成功
+     *
+     * @param statusCode
+     * @param content
+     */
     public void onSuccess(int statusCode, String content) {
     }
 
+    /**
+     * 轮询失败
+     *
+     * @param error
+     * @param content
+     */
     public void onFailure(Throwable error, String content) {
     }
 
-    public void sendStartMessage() {
+    protected void sendStartMessage() {
         sendMessage(obtainMessage(START_MESSAGE, new Object[]{new Integer(-1), "exec start"}));
     }
 
-    public void sendFinishMessage(int execTimes) {
+    protected void sendFinishMessage(int execTimes) {
         sendMessage(obtainMessage(FINISH_MESSAGE, new Object[]{new Integer(execTimes), "exec finish"}));
     }
 
-    public void sendSuccessMessage(int statusCode, String responseBody) {
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
         sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{new Integer(statusCode), responseBody}));
     }
 
-    public void sendFailureMessage(IOException e, String responseBody) {
+    protected void sendFailureMessage(IOException e, String responseBody) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
 
-    boolean sendResponseMessage(Response response) {
+    protected boolean sendResponseMessage(Response response) {
         boolean result = false;
         ResponseBody responseBody = response.body();
         String content = null;

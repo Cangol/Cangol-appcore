@@ -49,50 +49,77 @@ public class DownloadResponseHandler {
         }
     }
 
+    /**
+     * 等候状态
+     */
     public void onWait() {
-
     }
 
+    /**
+     * 开始状态
+     *
+     * @param start
+     * @param length
+     */
     public void onStart(long start, long length) {
     }
 
+    /**
+     * 停止状态
+     *
+     * @param end
+     */
     public void onStop(long end) {
-
     }
 
+    /**
+     * 完成状态
+     *
+     * @param end
+     */
     public void onFinish(long end) {
-
     }
 
+    /**
+     * 更新状态
+     *
+     * @param end
+     * @param progress
+     * @param speed
+     */
     public void onProgressUpdate(long end, int progress, int speed) {
-
     }
 
+    /**
+     * 失败状态
+     *
+     * @param error
+     * @param content
+     */
     public void onFailure(Throwable error, String content) {
-
     }
 
-    public void sendWaitMessage() {
+    protected void sendWaitMessage() {
         sendMessage(obtainMessage(WAIT_MESSAGE, null));
     }
 
-    public void sendStartMessage(long start, long length) {
+    protected void sendStartMessage(long start, long length) {
         sendMessage(obtainMessage(START_MESSAGE, new Object[]{start, length}));
     }
 
-    public void sendStopMessage(long end) {
+    protected void sendStopMessage(long end) {
         sendMessage(obtainMessage(STOP_MESSAGE, new Object[]{end}));
     }
 
-    public void sendFinishMessage(long end) {
+    protected void sendFinishMessage(long end) {
         sendMessage(obtainMessage(FINISH_MESSAGE, new Object[]{end}));
     }
 
-    public void sendProgressMessage(long end, int progress, int speed) {
+    protected void sendProgressMessage(long end, int progress, int speed) {
         sendMessage(obtainMessage(PROGRESS_MESSAGE, new Object[]{end, progress, speed}));
     }
 
-    public void sendFailureMessage(Exception e, String responseBody) {
+    protected void sendFailureMessage(Exception e, String responseBody) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
 

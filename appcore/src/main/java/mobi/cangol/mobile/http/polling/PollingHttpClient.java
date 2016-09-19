@@ -15,7 +15,6 @@
  */
 package mobi.cangol.mobile.http.polling;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
@@ -30,6 +29,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import mobi.cangol.mobile.service.PoolManager;
+import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -47,6 +47,9 @@ public class PollingHttpClient {
     private OkHttpClient httpClient;
     private PoolManager.Pool threadPool;
 
+    /**
+     * 构造实例
+     */
     public PollingHttpClient() {
         httpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
@@ -61,6 +64,15 @@ public class PollingHttpClient {
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
 
+    /**
+     * 发送轮询请求(get请求)
+     * @param tag
+     * @param url
+     * @param params
+     * @param responseHandler
+     * @param retryTimes
+     * @param sleeptimes
+     */
     public void send(Object tag, String url, HashMap<String, String> params, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
 
         Request request = null;
@@ -97,8 +109,13 @@ public class PollingHttpClient {
         }
     }
 
-    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+    /**
+     * 取消请求
+     * @param tag
+     * @param mayInterruptIfRunning
+     */
+    public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
+        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {
                 Future<?> request = requestRef.get();
@@ -107,7 +124,18 @@ public class PollingHttpClient {
                 }
             }
         }
-        requestMap.remove(context);
+        requestMap.remove(tag);
+
+        for (Call call : httpClient.dispatcher().queuedCalls()) {
+            if (call.request().tag().equals(tag)) {
+                call.cancel();
+            }
+        }
+        for (Call call : httpClient.dispatcher().runningCalls()) {
+            if (call.request().tag().equals(tag)) {
+                call.cancel();
+            }
+        }
     }
 
     class HttpRequestTask implements Runnable {

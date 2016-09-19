@@ -41,31 +41,41 @@ public class RouteResponseHandler {
         }
     }
 
+    /**
+     * 开始请求
+     */
     public void onStart() {
-
     }
 
+    /**
+     * 请求成功
+     * @param statusCode
+     * @param content
+     */
     public void onSuccess(int statusCode, String content) {
-
     }
 
+    /**
+     * 请求失败
+     * @param error
+     * @param content
+     */
     public void onFailure(Throwable error, String content) {
-
     }
 
-    public void sendStartMessage() {
+    protected void sendStartMessage() {
         sendMessage(obtainMessage(START_MESSAGE, null));
     }
 
-    public void sendSuccessMessage(int statusCode, String responseBody) {
+    protected void sendSuccessMessage(int statusCode, String responseBody) {
         sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, responseBody}));
     }
 
-    public void sendFailureMessage(IOException e, String responseBody) {
+    protected void sendFailureMessage(IOException e, String responseBody) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, new Object[]{e, responseBody}));
     }
 
-    boolean sendResponseMessage(Response response) {
+    protected boolean sendResponseMessage(Response response) {
         boolean result = false;
         ResponseBody responseBody = response.body();
         String content = null;

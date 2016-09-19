@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2013 Cangol
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 package mobi.cangol.mobile.utils;
-
-/**
- * @author Cangol
- */
 
 import android.app.Activity;
 import android.content.Context;
@@ -50,7 +46,12 @@ import java.io.IOException;
 
 import mobi.cangol.mobile.logging.Log;
 
-public class BitmapUtils {
+/**
+ * Bitmap 工具类
+ * @author Cangol
+ */
+public final class BitmapUtils {
+    private BitmapUtils() { }
     /**
      * 添加水印文字
      * @param src
@@ -58,9 +59,10 @@ public class BitmapUtils {
      * @param top
      * @param content
      * @param alpha
-     * @return
+     * @return Bitmap
      */
-    public static Bitmap addWatermark(Bitmap src, float left, float top, String content, int color, int size, int alpha) {
+    public static Bitmap addWatermark(Bitmap src, float left, float top, String content, int color,
+                                      int size, int alpha) {
         int w = src.getWidth();
         int h = src.getHeight();
         Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);

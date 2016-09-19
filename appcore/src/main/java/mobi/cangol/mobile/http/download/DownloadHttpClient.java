@@ -59,22 +59,40 @@ public class DownloadHttpClient {
 
     }
 
-    public DownloadRetryHandler getDownloadRetryHandler() {
+    protected DownloadRetryHandler getDownloadRetryHandler() {
         return downloadRetryHandler;
     }
 
+    /**
+     * 构造实例
+     * @param group
+     * @return
+     */
     public static DownloadHttpClient build(String group) {
         DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group);
         return asyncHttpClient;
     }
 
+    /**
+     * 设置线程池
+     * @param pool
+     */
     public static void setThreadPool(PoolManager.Pool pool) {
         threadPool = pool;
     }
 
-    public Future<?> send(Object context, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
+    /**
+     * 发起请求
+     * @param tag
+     * @param url
+     * @param responseHandler
+     * @param from
+     * @param saveFile
+     * @return
+     */
+    public Future<?> send(Object tag, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
         Request request = new Request.Builder()
-                .tag(context)
+                .tag(tag)
                 .addHeader("Range", "bytes=" + from + "-")
                 .url(url)
                 .build();
@@ -96,9 +114,14 @@ public class DownloadHttpClient {
         return request;
     }
 
-    public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
+    /**
+     * 取消请求
+     * @param tag
+     * @param mayInterruptIfRunning
+     */
+    public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
 
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {
                 Future<?> request = requestRef.get();
@@ -107,7 +130,7 @@ public class DownloadHttpClient {
                 }
             }
         }
-        requestMap.remove(context);
+        requestMap.remove(tag);
 
         for (Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(group)) {
@@ -121,6 +144,9 @@ public class DownloadHttpClient {
         }
     }
 
+    /**
+     * 取消所有
+     */
     public void cancelAll() {
         httpClient.dispatcher().cancelAll();
         threadPool.cancle(true);

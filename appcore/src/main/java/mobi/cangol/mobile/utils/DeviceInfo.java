@@ -59,11 +59,24 @@ import java.util.UUID;
 
 import mobi.cangol.mobile.logging.Log;
 
-public class DeviceInfo {
-    public static final String SPECIAL_IMEI = "000000000000000";
-    public static final String SPECIAL_ANDROID_ID = "9774d56d682e549c";
-    public static final String CHARSET = "UTF-8";
+/**
+ * 设备信息获取工具类
+ */
+public final class DeviceInfo {
+    /**
+     * 默认IMEI
+     */
+    private static final String SPECIAL_IMEI = "000000000000000";
+    /**
+     * 默认ANDROID_ID
+     */
+    private static final String SPECIAL_ANDROID_ID = "9774d56d682e549c";
+    /**
+     * 默认CHARSET
+     */
+    private static final String CHARSET = "UTF-8";
 
+    private DeviceInfo() { }
     /**
      * 获取操作系统类型
      *

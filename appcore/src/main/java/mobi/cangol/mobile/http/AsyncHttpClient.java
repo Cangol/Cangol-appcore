@@ -38,9 +38,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
-
+/**
+ * 异步http请求client
+ * 基于okio,okhttp3实现
+ */
 public class AsyncHttpClient {
-    public final static String TAG = "AsyncHttpClient";
+    private final static String TAG = "AsyncHttpClient";
     private final static int DEFAULT_RETRY_TIMES = 3;
     private final OkHttpClient httpClient;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
@@ -49,7 +52,7 @@ public class AsyncHttpClient {
     private RetryHandler retryHandler;
     private String group;
 
-    protected AsyncHttpClient(String group) {
+    private AsyncHttpClient(String group) {
         this.group = group;
         this.httpClient = HttpClientFactory.createDefaultHttpClient();
         this.threadPool = PoolManager.getPool(group);
@@ -57,7 +60,7 @@ public class AsyncHttpClient {
         this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
-    protected AsyncHttpClient(String group, OkHttpClient client) {
+    private AsyncHttpClient(String group, OkHttpClient client) {
         this.group = group;
         this.httpClient = client;
         this.threadPool = PoolManager.getPool(group);
@@ -65,28 +68,61 @@ public class AsyncHttpClient {
         this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
-    public RetryHandler getRetryHandler() {
-        return retryHandler;
-    }
-
+    /**
+     * 构造一个实例
+     * @param group
+     * @return
+     */
     public static AsyncHttpClient build(String group) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient(group);
         return asyncHttpClient;
     }
 
+    /**
+     * 构造一个实例
+     * @param group
+     * @param client
+     * @return
+     */
     public static AsyncHttpClient build(String group, OkHttpClient client) {
         AsyncHttpClient asyncHttpClient = new AsyncHttpClient(group, client);
         return asyncHttpClient;
     }
 
+    /**
+     * 设置线程池
+     * @param pool
+     */
     public void setThreadPool(Pool pool) {
         this.threadPool = pool;
     }
 
+    /**
+     * 获取RetryHandler
+     * @return
+     */
+    protected RetryHandler getRetryHandler() {
+        return retryHandler;
+    }
+
+    /**
+     * 执行get方法
+     * @param context
+     * @param url
+     * @param responseHandler
+     */
     public void get(Object context, String url, AsyncHttpResponseHandler responseHandler) {
         get(context, url, null, null, responseHandler);
     }
 
+    /**
+     * 执行get方法
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void get(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
 
         StringBuffer sb = new StringBuffer(url.contains("?") ? "" : "?");
@@ -100,6 +136,13 @@ public class AsyncHttpClient {
         execMethod("GET", context, url + sb.toString(), headers, (HashMap<String, String>) null, responseHandler);
     }
 
+    /**
+     * 执行get方法
+     * @param context
+     * @param url
+     * @param requestParams
+     * @param responseHandler
+     */
     public void get(Object context, String url, RequestParams requestParams, AsyncHttpResponseHandler responseHandler) {
         StringBuffer sb = new StringBuffer(url.contains("?") ? "" : "?");
         if (requestParams.urlParams != null) {
@@ -113,47 +156,126 @@ public class AsyncHttpClient {
         execMethod("GET", context, url, null, (HashMap<String, String>) null, responseHandler);
     }
 
+    /**
+     * 执行patch方法
+     * @param context
+     * @param url
+     * @param responseHandler
+     */
     public void patch(Object context, String url, AsyncHttpResponseHandler responseHandler) {
         patch(context, url, null, null, responseHandler);
     }
 
+    /**
+     * 执行patch方法
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void patch(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("PATCH", context, url, headers, params, responseHandler);
     }
 
+    /**
+     * 执行post方法
+     * @param context
+     * @param url
+     * @param responseHandler
+     */
     public void post(Object context, String url, AsyncHttpResponseHandler responseHandler) {
         post(context, url, null, null, responseHandler);
     }
 
+    /**
+     * 执行post方法
+     * @param context
+     * @param url
+     * @param json
+     * @param responseHandler
+     */
     public void post(Object context, String url, JSONObject json, AsyncHttpResponseHandler responseHandler) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         execMethod("POST", context, url, null, requestBody, responseHandler);
     }
 
+    /**
+     * 执行post方法
+     * @param context
+     * @param url
+     * @param requestParams
+     * @param responseHandler
+     */
     public void post(Object context, String url, RequestParams requestParams, AsyncHttpResponseHandler responseHandler) {
         execMethod("POST", context, url, null, requestParams, responseHandler);
     }
 
+    /**
+     * 执行post方法
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void post(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("POST", context, url, headers, params, responseHandler);
     }
 
+    /**
+     * 执行put方法
+     * @param context
+     * @param url
+     * @param responseHandler
+     */
     public void put(Object context, String url, AsyncHttpResponseHandler responseHandler) {
         put(context, url, null, null, responseHandler);
     }
 
+    /**
+     * 执行put方法
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void put(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("PUT", context, url, headers, params, responseHandler);
     }
 
+    /**
+     * 执行delete方法
+     * @param context
+     * @param url
+     * @param responseHandler
+     */
     public void delete(Object context, String url, AsyncHttpResponseHandler responseHandler) {
         delete(context, url, null, null, responseHandler);
     }
 
+    /**
+     * 执行delete方法
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void delete(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("DELETE", context, url, headers, params, responseHandler);
     }
 
+    /**
+     * 执行方法
+     * @param method
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void execMethod(String method, Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
@@ -169,7 +291,7 @@ public class AsyncHttpClient {
             }
         }
         Request request = null;
-        if ("GET".equals(method)) {
+        if ("GET".equals(method.toUpperCase())) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -187,6 +309,15 @@ public class AsyncHttpClient {
         sendRequest(httpClient, request, responseHandler, context);
     }
 
+    /**
+     * 执行方法
+     * @param method
+     * @param context
+     * @param url
+     * @param headers
+     * @param params
+     * @param responseHandler
+     */
     public void execMethod(String method, Object context, String url, HashMap<String, String> headers, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
@@ -209,7 +340,7 @@ public class AsyncHttpClient {
             }
         }
         Request request = null;
-        if ("GET".equals(method)) {
+        if ("GET".equals(method.toUpperCase())) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -228,6 +359,15 @@ public class AsyncHttpClient {
         sendRequest(httpClient, request, responseHandler, context);
     }
 
+    /**
+     *
+     * @param method
+     * @param context
+     * @param url
+     * @param headers
+     * @param requestBody
+     * @param responseHandler
+     */
     public void execMethod(String method, Object context, String url, HashMap<String, String> headers, RequestBody requestBody, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
@@ -237,7 +377,7 @@ public class AsyncHttpClient {
         }
 
         Request request = null;
-        if ("GET".equals(method)) {
+        if ("GET".equals(method.toUpperCase())) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -269,6 +409,11 @@ public class AsyncHttpClient {
         }
     }
 
+    /**
+     * 取消请求
+     * @param context
+     * @param mayInterruptIfRunning
+     */
     public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
 
         List<WeakReference<Future<?>>> requestList = requestMap.get(context);
@@ -294,6 +439,9 @@ public class AsyncHttpClient {
         }
     }
 
+    /**
+     * 取消所有
+     */
     public void cancelAll() {
         httpClient.dispatcher().cancelAll();
         threadPool.cancle(true);
