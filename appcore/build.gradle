@@ -24,7 +24,6 @@ android {
         minSdkVersion 9
         versionCode 5
         versionName "1.0.6"
-        multiDexEnabled true
     }
 
     buildTypes {

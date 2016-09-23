@@ -67,11 +67,16 @@ public class QueryBuilder {
      * @param isOr
      */
     public void addQuery(String pName, Object pValue, String pType, boolean isOr) {
-        if (pName != null && !"".equals(pName) && pValue != null && !"".equals(String.valueOf(pValue))) {
-            if (pValue == null || pValue.toString().trim().equals("")) {
-                paraKey.add(pName + "=?");
+        if (pName != null && !"".equals(pName) && pValue != null
+                //&& !"".equals(String.valueOf(pValue))
+                ) {
+            if (pType.equals("is")) {
+                paraKey.add(pName + " is ?");
                 paraValue.add(pValue);
-            } else if (pType.equals("like")) {
+            }else if (pType.equals("isnot")) {
+                paraKey.add(pName + " is not ?");
+                paraValue.add(pValue);
+            }else if (pType.equals("like")) {
                 paraKey.add(pName + " like ?");
                 paraValue.add("%" + pValue + "%");
             } else if (pType.equals("blike")) {
