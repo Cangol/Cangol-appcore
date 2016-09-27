@@ -128,7 +128,6 @@ public abstract class CoreSQLiteOpenHelper {
 
     /**
      *
-     * TODO 内部数据库创建帮手类
      *
      */
     private class CreateDBHelper extends SQLiteOpenHelper {

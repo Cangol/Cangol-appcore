@@ -241,7 +241,6 @@ public final class DiskLruCache implements Closeable {
      *                              character.
      */
     public static String readAsciiLine(InputStream in) throws IOException {
-        // TODO: support UTF-8 here instead
 
         StringBuilder result = new StringBuilder(80);
         while (true) {
@@ -278,7 +277,6 @@ public final class DiskLruCache implements Closeable {
     /**
      * Recursively delete everything in {@code dir}.
      */
-    // TODO: this should specify paths as Strings rather than as Files
     public static void deleteContents(File dir) throws IOException {
         File[] files = dir.listFiles();
         if (files == null) {

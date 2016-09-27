@@ -167,7 +167,6 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
                 result = result+ db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT));
             }
             db.setTransactionSuccessful();
-
         } catch (Exception e) {
             throw new SQLException(mTableName+" error="+e.getMessage());
         } finally {

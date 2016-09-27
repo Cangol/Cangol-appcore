@@ -79,7 +79,6 @@ class AsyncHttpRequest implements Runnable {
                 }
             } else {
                 Log.d("AsyncHttpRequest", "Thread.isInterrupted");
-                //TODO: should raise InterruptedException? this block is reached whenever the request is cancelled before its response is received
             }
         }
     }

@@ -92,11 +92,21 @@ public class DatabaseFragment extends Fragment {
         simpleAdapter.addAll(list);
     }
     private void addData() {
-        Data data=new Data("name_" + atomicInteger.addAndGet(1));
-        data.setNickname("nickname_"+new Random().nextInt(100));
-        dataService.save(data);
-        dataService.refresh(data);
-        simpleAdapter.add(data);
+//        Data data=new Data("name_" + atomicInteger.addAndGet(1));
+//        data.setNickname("nickname_"+new Random().nextInt(100));
+//        dataService.save(data);
+//        dataService.refresh(data);
+//        simpleAdapter.add(data);
+        List<Data> list=new ArrayList<>();
+        Data data=null;
+        for (int i = 0; i < 1000; i++) {
+            data=new Data("name_" + atomicInteger.addAndGet(1));
+            list.add(data);
+        }
+        Log.d("idle start");
+        long start=System.currentTimeMillis();
+        dataService.createAll(list);
+        Log.d("idle end "+(System.currentTimeMillis()-start)+"ms");
     }
 
     private void delData() {
@@ -197,7 +207,13 @@ class DataService implements BaseService<Data> {
         }
         return null;
     }
-
+    public void createAll(List<Data> list) {
+        try {
+            dao.create(list);
+        } catch (Exception e) {
+            Log.e(TAG, "DataService createAll fail!" + e.getMessage());
+        }
+    }
     @Override
     public List<Data> findList(QueryBuilder queryBuilder) {
         return dao.query(queryBuilder);
@@ -247,7 +263,6 @@ class DatabaseHelper extends CoreSQLiteOpenHelper {
         Log.d(TAG, "onUpgrade " + oldVersion + "->" + newVersion);
     }
 
-
 }
 
 @DatabaseTable("TEST_DATA")
@@ -258,6 +273,30 @@ class Data {
     private String name;
     @DatabaseField
     private String nickname;
+    @DatabaseField
+    private String nickname1;
+    @DatabaseField
+    private String nickname2;
+    @DatabaseField
+    private String nickname3;
+    @DatabaseField
+    private String nickname4;
+    @DatabaseField
+    private String nickname5;
+    @DatabaseField
+    private String nickname6;
+    @DatabaseField
+    private String nickname7;
+    @DatabaseField
+    private String nickname8;
+    @DatabaseField
+    private String nickname9;
+    @DatabaseField
+    private String nickname10;
+    @DatabaseField
+    private String nickname11;
+    @DatabaseField
+    private String nickname12;
     public Data() {
     }
 
@@ -287,6 +326,102 @@ class Data {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getNickname1() {
+        return nickname1;
+    }
+
+    public void setNickname1(String nickname1) {
+        this.nickname1 = nickname1;
+    }
+
+    public String getNickname2() {
+        return nickname2;
+    }
+
+    public void setNickname2(String nickname2) {
+        this.nickname2 = nickname2;
+    }
+
+    public String getNickname3() {
+        return nickname3;
+    }
+
+    public void setNickname3(String nickname3) {
+        this.nickname3 = nickname3;
+    }
+
+    public String getNickname4() {
+        return nickname4;
+    }
+
+    public void setNickname4(String nickname4) {
+        this.nickname4 = nickname4;
+    }
+
+    public String getNickname5() {
+        return nickname5;
+    }
+
+    public void setNickname5(String nickname5) {
+        this.nickname5 = nickname5;
+    }
+
+    public String getNickname6() {
+        return nickname6;
+    }
+
+    public void setNickname6(String nickname6) {
+        this.nickname6 = nickname6;
+    }
+
+    public String getNickname7() {
+        return nickname7;
+    }
+
+    public void setNickname7(String nickname7) {
+        this.nickname7 = nickname7;
+    }
+
+    public String getNickname8() {
+        return nickname8;
+    }
+
+    public void setNickname8(String nickname8) {
+        this.nickname8 = nickname8;
+    }
+
+    public String getNickname9() {
+        return nickname9;
+    }
+
+    public void setNickname9(String nickname9) {
+        this.nickname9 = nickname9;
+    }
+
+    public String getNickname10() {
+        return nickname10;
+    }
+
+    public void setNickname10(String nickname10) {
+        this.nickname10 = nickname10;
+    }
+
+    public String getNickname11() {
+        return nickname11;
+    }
+
+    public void setNickname11(String nickname11) {
+        this.nickname11 = nickname11;
+    }
+
+    public String getNickname12() {
+        return nickname12;
+    }
+
+    public void setNickname12(String nickname12) {
+        this.nickname12 = nickname12;
     }
 
     @Override
