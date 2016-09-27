@@ -244,7 +244,8 @@ public class XmlUtils extends Converter {
         T t = null;
         for (int i = 0; i < nodeList.getLength(); i++) {
             t = parserToObject(c, nodeList.item(i), useAnnotation);
-            list.add(t);
+            if(t!=null)
+                list.add(t);
         }
         return list;
     }

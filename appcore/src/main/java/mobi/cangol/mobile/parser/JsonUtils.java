@@ -242,8 +242,10 @@ public class JsonUtils extends Converter {
             try {
                 if (jsonArray.get(i) instanceof JSONObject) {
                     t = parserToObject(c, jsonArray.getJSONObject(i), useAnnotation);
-                } else {
+                } else if(jsonArray.get(i)!=null) {
                     t = (T) jsonArray.get(i);
+                }else{
+                    continue;
                 }
                 list.add(t);
             } catch (JSONException e) {
