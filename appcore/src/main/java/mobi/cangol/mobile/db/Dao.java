@@ -27,7 +27,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param queryBuilder
      * @return
-     * @throws SQLException
      */
     public abstract List<T> query(QueryBuilder queryBuilder) throws SQLException;
 
@@ -36,7 +35,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramK
      * @return
-     * @throws SQLException
      */
     public abstract T queryForId(ID paramK) throws SQLException;
 
@@ -44,7 +42,6 @@ public abstract interface Dao<T, ID> {
      * 查询所有
      *
      * @return
-     * @throws SQLException
      */
     public abstract List<T> queryForAll() throws SQLException;
 
@@ -53,7 +50,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramT
      * @return
-     * @throws SQLException
      */
     public abstract int create(T paramT) throws SQLException;
 
@@ -62,7 +58,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramT
      * @return
-     * @throws SQLException
      */
     public abstract int create(Collection<T> paramT) throws SQLException;
 
@@ -71,7 +66,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramT
      * @return
-     * @throws SQLException
      */
     public abstract T refresh(T paramT) throws SQLException;
 
@@ -80,7 +74,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramT
      * @return
-     * @throws SQLException
      */
     public abstract int update(T paramT) throws SQLException;
 
@@ -89,7 +82,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramT
      * @return
-     * @throws SQLException
      */
     public abstract int update(Collection<T> paramT) throws SQLException;
 
@@ -99,7 +91,6 @@ public abstract interface Dao<T, ID> {
      * @param paramT
      * @param paramID
      * @return
-     * @throws SQLException
      */
     public abstract int updateById(T paramT, ID paramID) throws SQLException;
 
@@ -108,7 +99,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param deleteBuilder
      * @return
-     * @throws SQLException
      */
     public abstract int delete(DeleteBuilder deleteBuilder) throws SQLException;
 
@@ -117,7 +107,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramT
      * @return
-     * @throws SQLException
      */
     public abstract int delete(T paramT) throws SQLException;
 
@@ -126,7 +115,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramCollection
      * @return
-     * @throws SQLException
      */
     public abstract int delete(Collection<T> paramCollection) throws SQLException;
 
@@ -135,7 +123,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramID
      * @return
-     * @throws SQLException
      */
     public abstract int deleteById(ID paramID) throws SQLException;
 
@@ -144,14 +131,12 @@ public abstract interface Dao<T, ID> {
      *
      * @param paramCollection
      * @return
-     * @throws SQLException
      */
     public abstract int deleteByIds(Collection<ID> paramCollection) throws SQLException;
 
     /**
      * 清空表删
      *
-     * @throws SQLException
      */
     public abstract int deleteAll() throws SQLException;
 
