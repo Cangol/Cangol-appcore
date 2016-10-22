@@ -27,6 +27,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.PoolManager.Pool;
 import okhttp3.Call;
@@ -325,7 +326,7 @@ public class AsyncHttpClient {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
-        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder();
+        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         if (params.fileParams != null) {
             for (ConcurrentHashMap.Entry<String, File> entry : params.fileParams.entrySet()) {
