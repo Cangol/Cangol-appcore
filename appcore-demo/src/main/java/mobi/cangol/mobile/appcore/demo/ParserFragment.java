@@ -32,7 +32,7 @@ public class ParserFragment extends Fragment {
     private RadioGroup radioGroup;
 
     private String xmlStr="<?xml version='1.0' encoding='utf-8' standalone='yes' ?><ParserObject><name>Nick</name><id>1</id><height>1.75</height><isChild>true</isChild></ParserObject>";
-    private String jsonStr=" {\"name\":\"Nick\",\"id\":1,\"height\":1.75,\"isChild\":true}";
+    private String jsonStr=" {\"name\":\"Nick\",\"id\":1,\"height\":1.75,\"isChild\":true,\"test\":true}";
     private boolean isJson=true;
     private ParserObject parserObject;
     @Override
@@ -156,7 +156,7 @@ public class ParserFragment extends Fragment {
         Log.d(message);
     }
 }
-class ParserObject {
+class ParserObject<T> {
     @Element("id")
     private int id;
     @Element("name")
@@ -165,9 +165,18 @@ class ParserObject {
     private double height;
     @Element("_IS_CHILD")
     private boolean isChild;
-
+    @Element("test")
+    private T test;
     public ParserObject() {
 
+    }
+
+    public T getTest() {
+        return test;
+    }
+
+    public void setTest(T test) {
+        this.test = test;
     }
 
     public int getId() {
@@ -204,12 +213,12 @@ class ParserObject {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("ParserObject{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", height=").append(height);
-        sb.append(", isChild=").append(isChild);
-        sb.append('}');
-        return sb.toString();
+        return "ParserObject{" +
+                "height=" + height +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", isChild=" + isChild +
+                ", test=" + test +
+                '}';
     }
 }

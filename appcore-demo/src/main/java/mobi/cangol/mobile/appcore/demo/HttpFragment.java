@@ -13,9 +13,12 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.JsonHttpResponseHandler;
+import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
 import mobi.cangol.mobile.logging.Log;
@@ -96,8 +99,17 @@ public class HttpFragment extends Fragment {
     }
 
     private void request(){
-
-        mAsyncHttpClient.get(getActivity(),url,new JsonHttpResponseHandler(){
+        RequestParams params=new RequestParams();
+        params.put("appVersion","1.0.1");
+        params.put("apiVersion","1");
+        params.put("osVersion","5.0.2");
+        params.put("appId","Hunao");
+        params.put("sign","56d24ee613b70d9fc1d80c05e80737b8");
+        params.put("deviceId","9cf64d9c047c36a9");
+        params.put("platform","Android");
+        params.put("channelId","google");
+        String url="http://192.168.1.2:8080/Hunao/api/user/autoRegister.do";
+        mAsyncHttpClient.post(getActivity(),url,params,new JsonHttpResponseHandler(){
             ProgressDialog progressDialog;
             @Override
             public void onStart() {

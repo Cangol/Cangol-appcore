@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.TypeVariable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -191,6 +192,7 @@ public class JsonUtils extends Converter {
         try {
             Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
+            Log.e("c="+c.getTypeParameters()[0]);
             t = (T) constructor.newInstance();
             Field[] fields = c.getDeclaredFields();
             String filedName = null;
@@ -200,8 +202,14 @@ public class JsonUtils extends Converter {
                     continue;
                 }
                 filedName = getFieldName(field, useAnnotation);
+                Log.e("filedName:"+filedName+","+field.getType()+","+field.getGenericType().getClass());
                 if (!List.class.isAssignableFrom(field.getType())) {
-                    setField(t, field, filedName, jsonObject, false);
+                    if (field.getGenericType() instanceof TypeVariable) {
+                        TypeVariable pt = (TypeVariable) field.getGenericType();
+                        Class<?> genericClazz = pt.getClass();
+                        Log.e("TypeVariable "+genericClazz);
+                    }else
+                        setField(t, field, filedName, jsonObject, false);
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
