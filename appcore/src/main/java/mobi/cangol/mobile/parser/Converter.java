@@ -23,6 +23,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
+import mobi.cangol.mobile.utils.StringUtils;
+
 /**
  * Created by xuewu.wei on 2016/5/31.
  */
@@ -171,13 +173,13 @@ public class Converter {
         if (useAnnotation) {
             if (field.isAnnotationPresent(Attribute.class)) {
                 Attribute attr = field.getAnnotation(Attribute.class);
-                filedName = TextUtils.isEmpty(attr.value()) ? field.getName() : attr.value();
+                filedName = StringUtils.isEmpty(attr.value()) ? field.getName() : attr.value();
             } else if (field.isAnnotationPresent(Element.class)) {
                 Element element = field.getAnnotation(Element.class);
-                filedName = TextUtils.isEmpty(element.value()) ? field.getName() : element.value();
+                filedName = StringUtils.isEmpty(element.value()) ? field.getName() : element.value();
             } else if (field.isAnnotationPresent(ElementList.class)) {
                 ElementList elementList = field.getAnnotation(ElementList.class);
-                filedName = TextUtils.isEmpty(elementList.value()) ? field.getName() : elementList.value();
+                filedName = StringUtils.isEmpty(elementList.value()) ? field.getName() : elementList.value();
             } else {
                 //do nothing
                 filedName = field.getName();

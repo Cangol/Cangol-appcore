@@ -14,6 +14,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -156,28 +158,19 @@ public class ParserFragment extends Fragment {
             Log.e(""+clazz.cast(tr).getR());
             Map<String,Class> typeMap=new HashMap<String,Class>();
 
-//            for(TypeVariable type:clazz.getTypeParameters()){
-//                Log.e("type:"+type.getName()+","+type.getGenericDeclaration());
-//            }
-//            for(Method method:clazz.getDeclaredMethods()){
-//                Log.e("method:"+method.getName()+","+method.getReturnType());
-//            }
+            for(TypeVariable type:clazz.getTypeParameters()){
+                Log.e("type:"+type.getName());
+            }
+            for(Field field:clazz.getDeclaredFields()){
+                field.setAccessible(true);
+                Log.e("field:"+field.getName()+","+field.getGenericType().getClass().getGenericSuperclass());
+            }
 
             parserObject=json?JsonUtils.parserToObject(clazz,str,annotation):
                     XmlUtils.parserToObject(clazz,str,annotation);
 
-        } catch (JSONParserException e) {
-            e.printStackTrace();
-        } catch (XMLParserException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        }catch (Exception e) {
+            Log.e(TAG,e.getMessage());
         }
         printLog(parserObject+"\n");
     }
