@@ -24,14 +24,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -190,9 +194,12 @@ public class JsonUtils extends Converter {
         }
         T t = null;
         try {
+            Map<String,Class> typeMap=new HashMap<String,Class>();
+            for(TypeVariable type:c.getTypeParameters()){
+                typeMap.put("T",Boolean.TYPE);
+            }
             Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
-            Log.e("c="+c.getTypeParameters()[0]);
             t = (T) constructor.newInstance();
             Field[] fields = c.getDeclaredFields();
             String filedName = null;
@@ -202,14 +209,16 @@ public class JsonUtils extends Converter {
                     continue;
                 }
                 filedName = getFieldName(field, useAnnotation);
-                Log.e("filedName:"+filedName+","+field.getType()+","+field.getGenericType().getClass());
                 if (!List.class.isAssignableFrom(field.getType())) {
-                    if (field.getGenericType() instanceof TypeVariable) {
-                        TypeVariable pt = (TypeVariable) field.getGenericType();
-                        Class<?> genericClazz = pt.getClass();
-                        Log.e("TypeVariable "+genericClazz);
-                    }else
-                        setField(t, field, filedName, jsonObject, false);
+                    Class<?> filedClass=null;
+
+                    if(field.getGenericType() instanceof TypeVariable){
+                        TypeVariable aType = (TypeVariable) field.getGenericType();
+                        filedClass=typeMap.get(aType.getName());
+                    }else{
+                        filedClass=field.getType();
+                    }
+                    field.set(t,getField(t, filedClass, filedName, jsonObject, false));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
@@ -263,37 +272,47 @@ public class JsonUtils extends Converter {
         return list;
     }
 
-    private static <T> void setField(T t, Field field, String key, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
-        field.setAccessible(true);
+    private static <T> Object getField(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
         Object value = null;
         try {
-            if (isBaseClass(field.getType())) {
-                if (field.getType() == String.class) {
+            if (isBaseClass(fieldClass)) {
+                if (fieldClass == String.class) {
                     value = getString(jsonObject, key);
-                } else if (field.getType() == Integer.class || field.getType() == int.class) {
+                } else if (fieldClass == Integer.class || fieldClass == int.class) {
                     value = getInt(jsonObject, key, 0);
-                } else if (field.getType() == Long.class || field.getType() == long.class) {
+                } else if (fieldClass == Long.class || fieldClass == long.class) {
                     value = getLong(jsonObject, key, 0L);
-                } else if (field.getType() == Double.class || field.getType() == double.class) {
+                } else if (fieldClass == Double.class || fieldClass == double.class) {
                     value = getDouble(jsonObject, key, 0.0d);
-                } else if (field.getType() == Boolean.class || field.getType() == boolean.class) {
+                } else if (fieldClass == Boolean.class || fieldClass == boolean.class) {
                     value = getBoolean(jsonObject, key, false);
-                } else if (field.getType() == Float.class || field.getType() == float.class) {
+                } else if (fieldClass == Float.class || fieldClass == float.class) {
                     value = getFloat(jsonObject, key, 0.0f);
                 }
-            } else {
-                value = parserToObject(field.getType(), getJSONObject(jsonObject, key), useAnnotation);
+            }else {
+                value = parserToObject(fieldClass, getJSONObject(jsonObject, key), useAnnotation);
             }
-            field.set(t, value);
         } catch (IllegalArgumentException e) {
-            throw new JSONParserException(t.getClass(), field, "Illegal Argument value=" + value, e);
-        } catch (IllegalAccessException e) {
-            throw new JSONParserException(t.getClass(), field, "Illegal Access " + t, e);
+            throw new JSONParserException(t.getClass(),"Illegal Argument value=" + value, e);
+        }finally {
+            return value;
         }
-
-
     }
+    public static ParameterizedType getType(final Class raw, final Type... args) {
+        return new ParameterizedType() {
+            public Type getRawType() {
+                return raw;
+            }
 
+            public Type[] getActualTypeArguments() {
+                return args;
+            }
+
+            public Type getOwnerType() {
+                return null;
+            }
+        };
+    }
     public static String formatJson(String json) {
         if (null != json && json.startsWith("{\"\"")) {
             json = json.replaceFirst("\"\"", "\"");

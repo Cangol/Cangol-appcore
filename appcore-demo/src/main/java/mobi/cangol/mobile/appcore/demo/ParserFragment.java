@@ -14,6 +14,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.util.HashMap;
+import java.util.Map;
+
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.parser.Element;
 import mobi.cangol.mobile.parser.JSONParserException;
@@ -32,7 +41,7 @@ public class ParserFragment extends Fragment {
     private RadioGroup radioGroup;
 
     private String xmlStr="<?xml version='1.0' encoding='utf-8' standalone='yes' ?><ParserObject><name>Nick</name><id>1</id><height>1.75</height><isChild>true</isChild></ParserObject>";
-    private String jsonStr=" {\"name\":\"Nick\",\"id\":1,\"height\":1.75,\"isChild\":true,\"test\":true}";
+    private String jsonStr=" {\"name\":\"Nick\",\"id\":1,\"height\":1.75,\"isChild\":true,\"t\":true,\"r\":\"111\"}";
     private boolean isJson=true;
     private ParserObject parserObject;
     @Override
@@ -140,23 +149,68 @@ public class ParserFragment extends Fragment {
     }
     private void parser(String str, boolean json,boolean annotation) {
         try {
-            parserObject=json?JsonUtils.parserToObject(ParserObject.class,str,annotation):
-                    XmlUtils.parserToObject(ParserObject.class,str,annotation);
+            ParserObject<Boolean,String> test=new ParserObject<Boolean,String>();
+            Class<ParserObject<Boolean,String>> clazz= (Class<ParserObject<Boolean,String>>) test.getClass();
+            ParserObject tr = clazz.getDeclaredConstructor().newInstance();
+            Log.e(""+clazz.cast(tr).getT());
+            Log.e(""+clazz.cast(tr).getR());
+            Map<String,Class> typeMap=new HashMap<String,Class>();
+
+//            for(TypeVariable type:clazz.getTypeParameters()){
+//                Log.e("type:"+type.getName()+","+type.getGenericDeclaration());
+//            }
+//            for(Method method:clazz.getDeclaredMethods()){
+//                Log.e("method:"+method.getName()+","+method.getReturnType());
+//            }
+
+            parserObject=json?JsonUtils.parserToObject(clazz,str,annotation):
+                    XmlUtils.parserToObject(clazz,str,annotation);
+
         } catch (JSONParserException e) {
             e.printStackTrace();
         } catch (XMLParserException e) {
             e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
         printLog(parserObject+"\n");
     }
+    public static Class getSuperClassGenricType(Class clazz, int index) throws IndexOutOfBoundsException {
 
+        Type genType = clazz.getGenericSuperclass();
+
+        if (!(genType instanceof ParameterizedType)) {
+            return Object.class;
+        }
+
+        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+
+        if (index >= params.length || index < 0) {
+            return Object.class;
+        }
+        if (!(params[index] instanceof Class)) {
+            return Object.class;
+        }
+        return (Class) params[index];
+    }
     private void printLog(String message) {
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.append(message);
         Log.d(message);
     }
 }
-class ParserObject<T> {
+class ParserObject<T,R> {
+    @Element("t")
+    private T t;
+    @Element("r")
+    private R r;
+
     @Element("id")
     private int id;
     @Element("name")
@@ -165,18 +219,24 @@ class ParserObject<T> {
     private double height;
     @Element("_IS_CHILD")
     private boolean isChild;
-    @Element("test")
-    private T test;
     public ParserObject() {
 
     }
 
-    public T getTest() {
-        return test;
+    public T getT() {
+        return t;
     }
 
-    public void setTest(T test) {
-        this.test = test;
+    public void setT(T t) {
+        this.t = t;
+    }
+
+    public R getR() {
+        return r;
+    }
+
+    public void setR(R r) {
+        this.r = r;
     }
 
     public int getId() {
@@ -214,11 +274,12 @@ class ParserObject<T> {
     @Override
     public String toString() {
         return "ParserObject{" +
-                "height=" + height +
-                ", id=" + id +
+                "id=" + id +
                 ", name='" + name + '\'' +
+                ", height=" + height +
                 ", isChild=" + isChild +
-                ", test=" + test +
+                ", t=" + t +
+                ", r=" + r +
                 '}';
     }
 }

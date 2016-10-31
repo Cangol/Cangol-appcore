@@ -2,9 +2,7 @@ package mobi.cangol.mobile;
 
 import org.junit.Test;
 
-import java.io.Serializable;
-
-import mobi.cangol.mobile.utils.UrlUtils;
+import java.lang.reflect.ParameterizedType;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -14,7 +12,19 @@ import static junit.framework.Assert.assertEquals;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
+    public void test1() throws Exception {
+        System.out.println(Bar.getParameterClass());
         assertEquals(4, 2 + 2);
     }
 }
+class Bar {
+    public static Class<?> getParameterClass() {
+        return (Class<?>) (((ParameterizedType)Bar.class.getGenericSuperclass()).getActualTypeArguments()[0]);
+    }
+}
+class Foo<T>{
+ T t;
+}
+
+
+
