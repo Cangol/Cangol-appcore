@@ -163,7 +163,7 @@ public class ParserFragment extends Fragment {
             }
             for(Field field:clazz.getDeclaredFields()){
                 field.setAccessible(true);
-                Log.e("field:"+field.getName()+","+field.getGenericType().getClass().getGenericSuperclass());
+                Log.e("field:"+field.getName()+","+field.getGenericType().getClass());
             }
 
             parserObject=json?JsonUtils.parserToObject(clazz,str,annotation):

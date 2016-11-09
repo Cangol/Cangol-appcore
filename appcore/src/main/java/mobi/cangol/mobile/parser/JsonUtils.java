@@ -47,6 +47,25 @@ public class JsonUtils extends Converter {
     private final static String TAG = "JsonUtils";
 
     /**
+     * 转换Object到JSONArray
+     * @param <T>
+     * @param obj
+     * @return
+     */
+    public static <T> JSONArray toJSONArray(List<T> obj, boolean useAnnotation) {
+        JSONArray jsonArray=new JSONArray();
+        if (obj != null) {
+            for (int i = 0; i < obj.size(); i++) {
+                if (isBaseClass(obj.get(i).getClass())) {
+                    jsonArray.put(obj.get(i));
+                } else {
+                    jsonArray.put(toJSONObject(obj.get(i), useAnnotation));
+                }
+            }
+        }
+        return jsonArray;
+    }
+    /**
      * 转换Object到JSONObject
      * @param <T>
      * @param obj
@@ -56,6 +75,10 @@ public class JsonUtils extends Converter {
         if (obj == null) {
             return null;
         }
+        if (List.class.isAssignableFrom(obj.getClass())) {
+            return null;
+        }
+
         JSONObject json = new JSONObject();
         Field[] fields = obj.getClass().getDeclaredFields();
         try {
@@ -196,7 +219,7 @@ public class JsonUtils extends Converter {
         try {
             Map<String,Class> typeMap=new HashMap<String,Class>();
             for(TypeVariable type:c.getTypeParameters()){
-                typeMap.put("T",Boolean.TYPE);
+                //typeMap.put("T",type);
             }
             Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
