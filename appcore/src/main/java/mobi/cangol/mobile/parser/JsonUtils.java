@@ -241,12 +241,12 @@ public class JsonUtils extends Converter {
                     }else{
                         filedClass=field.getType();
                     }
-                    field.set(t,getField(t, filedClass, filedName, jsonObject, false));
+                    field.set(t,getField(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
                         Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
-                        List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), false);
+                        List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
                         try {
                             field.set(t, list);
                         } catch (IllegalArgumentException e) {
