@@ -21,11 +21,11 @@ public interface DownloadManager extends AppService {
     /**
      * 并发线程数
      */
-    public final static String DOWNLOADSERVICE_THREAD_MAX = "thread_max";
+    String DOWNLOADSERVICE_THREAD_MAX = "thread_max";
     /**
      * 线程池名称
      */
-    public final static String DOWNLOADSERVICE_THREADPOOL_NAME = "threadpool_name";
+    String DOWNLOADSERVICE_THREADPOOL_NAME = "threadpool_name";
 
     /**
      * 获取一个下载执行器

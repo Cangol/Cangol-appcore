@@ -21,48 +21,48 @@ public interface AppService {
     /**
      * 状态监听服务
      */
-    public final static String STATUS_SERVICE = "StatusService";
+    String STATUS_SERVICE = "StatusService";
     /**
      * 更新服务
      */
-    public final static String UPGRADE_SERVICE = "UpgradeService";
+    String UPGRADE_SERVICE = "UpgradeService";
     /**
      * 统计服务
      */
-    public final static String ANALYTICS_SERVICE = "AnalyticsService";
+    String ANALYTICS_SERVICE = "AnalyticsService";
     /**
      * 位置服务
      */
-    public final static String LOCATION_SERVICE = "LocationService";
+    String LOCATION_SERVICE = "LocationService";
     /**
      * 缓存服务
      */
-    public final static String CACHE_MANAGER = "CacheManager";
+    String CACHE_MANAGER = "CacheManager";
     /**
      * 应用配置服务
      */
-    public final static String CONFIG_SERVICE = "ConfigService";
+    String CONFIG_SERVICE = "ConfigService";
     /**
      * 异常监听服务
      */
-    public final static String CRASH_SERVICE = "CrashService";
+    String CRASH_SERVICE = "CrashService";
     /**
      * 下载服务
      */
-    public final static String DOWNLOAD_MANAGER = "DownloadManager";
+    String DOWNLOAD_MANAGER = "DownloadManager";
     /**
      * Session服务
      */
-    public final static String SESSION_SERVICE = "SessionService";
+    String SESSION_SERVICE = "SessionService";
     /**
      * PluginManager
      */
-    //public final static String PLUGIN_MANAGER = "PluginManager";
+    //String PLUGIN_MANAGER = "PluginManager";
 
     /**
      * ObserverManager
      */
-    public final static String OBSERVER_MANAGER = "ObserverManager";
+    String OBSERVER_MANAGER = "ObserverManager";
 
     /**
      * 当创建时

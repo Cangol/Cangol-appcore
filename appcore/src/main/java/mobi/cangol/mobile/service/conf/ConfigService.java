@@ -21,13 +21,13 @@ import mobi.cangol.mobile.service.AppService;
 
 public interface ConfigService extends AppService {
 
-    public final static String APP_DIR = "app_dir";
-    public final static String IMAGE_DIR = "image_dir";
-    public final static String DOWNLOAD_DIR = "download_dir";
-    public final static String TEMP_DIR = "temp_dir";
-    public final static String UPGRADE_DIR = "upgrade_dir";
-    public final static String DATABASE_NAME = "database_name";
-    public final static String SHARED_NAME = "shared_name";
+    String APP_DIR = "app_dir";
+    String IMAGE_DIR = "image_dir";
+    String DOWNLOAD_DIR = "download_dir";
+    String TEMP_DIR = "temp_dir";
+    String UPGRADE_DIR = "upgrade_dir";
+    String DATABASE_NAME = "database_name";
+    String SHARED_NAME = "shared_name";
 
     /**
      * 获取缓存目录

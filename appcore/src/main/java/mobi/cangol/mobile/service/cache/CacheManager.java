@@ -8,11 +8,11 @@ public interface CacheManager extends AppService {
     /**
      * 缓存路径
      */
-    public final static String CACHE_DIR = "cache_dir";
+    String CACHE_DIR = "cache_dir";
     /**
      * 缓存最大大小
      */
-    public final static String CACHE_SIZE = "cache_size";
+    String CACHE_SIZE = "cache_size";
 
     /**
      * 获取缓存对象

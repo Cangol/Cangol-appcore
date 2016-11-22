@@ -23,35 +23,35 @@ public interface CrashService extends AppService {
     /**
      * 并发线程数
      */
-    public final static String CRASHSERVICE_THREAD_MAX = "thread_max";
+    String CRASHSERVICE_THREAD_MAX = "thread_max";
     /**
      * 线程池名称
      */
-    public final static String CRASHSERVICE_THREADPOOL_NAME = "threadpool_name";
+    String CRASHSERVICE_THREADPOOL_NAME = "threadpool_name";
     /**
      * 报告url
      */
-    public final static String CRASHSERVICE_REPORT_URL = "report_url";
+    String CRASHSERVICE_REPORT_URL = "report_url";
     /**
      * 报告错误参数
      */
-    public final static String CRASHSERVICE_REPORT_ERROR = "report_param_error";
+    String CRASHSERVICE_REPORT_ERROR = "report_param_error";
     /**
      * 报告错误位置参数
      */
-    public final static String CRASHSERVICE_REPORT_POSITION = "report_param_position";
+    String CRASHSERVICE_REPORT_POSITION = "report_param_position";
     /**
      * 报告错误内容参数
      */
-    public final static String CRASHSERVICE_REPORT_CONTEXT = "report_param_context";
+    String CRASHSERVICE_REPORT_CONTEXT = "report_param_context";
     /**
      * 报告错误时间参数
      */
-    public final static String CRASHSERVICE_REPORT_TIMESTAMP = "report_param_timestamp";
+    String CRASHSERVICE_REPORT_TIMESTAMP = "report_param_timestamp";
     /**
      * 报告错误是否致命参数
      */
-    public final static String CRASHSERVICE_REPORT_FATAL = "report_param_fatal";
+    String CRASHSERVICE_REPORT_FATAL = "report_param_fatal";
 
     /**
      * 追加异常报告的参数

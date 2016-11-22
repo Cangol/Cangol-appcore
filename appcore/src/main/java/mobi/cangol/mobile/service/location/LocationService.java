@@ -23,31 +23,31 @@ public interface LocationService extends AppService {
     /**
      * 最佳定位时间间隔,单位豪秒
      */
-    public final static String LOCATIONSERVICE_BETTERTIME = "better_time";
+    String LOCATIONSERVICE_BETTERTIME = "better_time";
     /**
      * 定位超市时间,单位豪秒
      */
-    public final static String LOCATIONSERVICE_TIMEOUT = "timeout";
+    String LOCATIONSERVICE_TIMEOUT = "timeout";
     /**
      * 百度LBS 的apikey
      */
-    public final static String LOCATIONSERVICE_BAIDU_AK = "baidu_ak";
+    String LOCATIONSERVICE_BAIDU_AK = "baidu_ak";
     /**
      * GPS定位 最小时间间隔,单位豪秒
      */
-    public final static String LOCATIONSERVICE_GPS_MINTIME = "gps_min_time";
+    String LOCATIONSERVICE_GPS_MINTIME = "gps_min_time";
     /**
      * GPS定位 最小距离间隔,单位米
      */
-    public final static String LOCATIONSERVICE_GPS_MINDISTANCE = "gps_min_distance";
+    String LOCATIONSERVICE_GPS_MINDISTANCE = "gps_min_distance";
     /**
      * 网络定位 最小时间间隔,单位豪秒
      */
-    public final static String LOCATIONSERVICE_NETWORK_MINTIME = "network_min_time";
+    String LOCATIONSERVICE_NETWORK_MINTIME = "network_min_time";
     /**
      * 网络定位 最小位置间,单位米
      */
-    public final static String LOCATIONSERVICE_NETWORK_MINDISTANCE = "network_min_distance";
+    String LOCATIONSERVICE_NETWORK_MINDISTANCE = "network_min_distance";
 
     /**
      * 请求位置更新

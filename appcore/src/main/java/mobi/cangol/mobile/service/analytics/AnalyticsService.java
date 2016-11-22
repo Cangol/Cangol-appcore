@@ -21,11 +21,11 @@ public interface AnalyticsService extends AppService {
     /**
      * 并发线程数
      */
-    public final static String ANALYTICSSERVICE_THREAD_MAX = "thread_max";
+    String ANALYTICSSERVICE_THREAD_MAX = "thread_max";
     /**
      * 线程池名称
      */
-    public final static String ANALYTICSSERVICE_THREADPOOL_NAME = "threadpool_name";
+    String ANALYTICSSERVICE_THREADPOOL_NAME = "threadpool_name";
 
     /**
      * 获取一个统计跟踪器
