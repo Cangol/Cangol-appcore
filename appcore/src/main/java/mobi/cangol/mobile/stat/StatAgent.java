@@ -40,7 +40,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String SDK_VERSION = "1.0.5";
+    private final static String SDK_VERSION = "1.0.7";
     private final static String STAT_HOST_URL = "http://www.cangol.mobi/cmweb/";
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
     private final static String STAT_ACTION_EVENT = "api/countly/event.do";
@@ -58,29 +58,33 @@ public class StatAgent {
     private AnalyticsService analyticsService;
     private SessionService sessionService;
     private CrashService crashService;
+
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     protected StatAgent(CoreApplication coreApplication) {
         this.context = coreApplication;
         sessionService = (SessionService) coreApplication.getAppService(AppService.SESSION_SERVICE);
-        analyticsService = (AnalyticsService)coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
-        crashService= (CrashService)coreApplication.getAppService(AppService.CRASH_SERVICE);
+        analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
+        crashService = (CrashService) coreApplication.getAppService(AppService.CRASH_SERVICE);
         itracker = analyticsService.getTracker(STAT_TRACKING_ID);
 
         commonParams = this.getCommonParams();
     }
-    public static StatAgent getInstance(Context context){
+
+    public static StatAgent getInstance(Context context) {
         if (instance == null) {
-            instance=new StatAgent((CoreApplication) context.getApplicationContext());
+            instance = new StatAgent((CoreApplication) context.getApplicationContext());
             instance.init();
         }
         return instance;
     }
-    public static void initInstance(CoreApplication coreApplication){
+
+    public static void initInstance(CoreApplication coreApplication) {
         if (instance == null) {
-            instance=new StatAgent(coreApplication);
+            instance = new StatAgent(coreApplication);
             instance.init();
         }
     }
+
     protected void init() {
         sendDevice();
         sendLaunch();
@@ -91,7 +95,7 @@ public class StatAgent {
             }
         });
         StatsTraffic.getInstance(context).onCreated();
-        crashService.setReport(STAT_HOST_URL+STAT_ACTION_EXCEPTION,getCommonParams());
+        crashService.setReport(STAT_HOST_URL + STAT_ACTION_EXCEPTION, getCommonParams());
     }
 
     public void destroy() {
@@ -148,6 +152,7 @@ public class StatAgent {
      * cpuInfo cpuInfo
      * cpuAbi  cpuAbi
      * mem 内存大小
+     *
      * @return
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -416,6 +421,7 @@ public class StatAgent {
 
         /**
          * 流量统计
+         *
          * @param map
          * @return
          */

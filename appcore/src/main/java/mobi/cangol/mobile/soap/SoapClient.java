@@ -36,7 +36,8 @@ import java.util.concurrent.Future;
 import mobi.cangol.mobile.service.PoolManager;
 
 /**
- *  SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
+ * SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
+ *
  * @author Cangol
  */
 public class SoapClient {
@@ -56,6 +57,7 @@ public class SoapClient {
 
     /**
      * 添加header
+     *
      * @param namespace
      * @param authheader
      * @param headers
@@ -69,6 +71,7 @@ public class SoapClient {
 
     /**
      * 执行请求
+     *
      * @param context
      * @param url
      * @param namespace
@@ -102,6 +105,7 @@ public class SoapClient {
 
     /**
      * 构建auth header
+     *
      * @param namespace
      * @param authheader
      * @param params
@@ -119,6 +123,7 @@ public class SoapClient {
 
     /**
      * 取消请求
+     *
      * @param context
      * @param mayInterruptIfRunning
      */
@@ -137,6 +142,7 @@ public class SoapClient {
 
     /**
      * 发生请求
+     *
      * @param ht
      * @param envelope
      * @param namespace

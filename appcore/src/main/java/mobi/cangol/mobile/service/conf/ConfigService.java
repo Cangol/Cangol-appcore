@@ -31,72 +31,84 @@ public interface ConfigService extends AppService {
 
     /**
      * 获取缓存目录
+     *
      * @return
      */
     File getCacheDir();
 
     /**
      * 获取图片目录
+     *
      * @return
      */
     File getImageDir();
 
     /**
      * 获取临时目录
+     *
      * @return
      */
     File getTempDir();
 
     /**
      * 获取下载目录
+     *
      * @return
      */
     File getDownloadDir();
 
     /**
      * 获取更新目录
+     *
      * @return
      */
     File getUpgradeDir();
 
     /**
      * 获取数据库名称
+     *
      * @return
      */
     String getDatabaseName();
 
     /**
      * 获取共享文件名称
+     *
      * @return
      */
     String getSharedName();
 
     /**
      * 返回是否使用内置存储(只对非自定义AppDir有效)
+     *
      * @return
      */
     boolean isUseInternalStorage();
 
     /**
      * 使用内部存储(只对非自定义AppDir有效) 默认为false
+     *
      * @param useInternalStorage
      */
     void setUseInternalStorage(boolean useInternalStorage);
 
     /**
      * 获取app目录
+     *
      * @return
      */
     File getAppDir();
 
     /**
      * 自定义设置AppDir
+     *
      * @return 是否设置成功
      */
     boolean setCustomAppDir(String path);
 
     /**
      * 返回是否使用自定义AppDir
+     *
      * @return 是否使用自定义AppDir
      */
     boolean isCustomAppDir();

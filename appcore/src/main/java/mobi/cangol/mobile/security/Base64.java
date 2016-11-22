@@ -26,8 +26,10 @@ import java.io.UnsupportedEncodingException;
  */
 
 public class Base64 {
-
     final static String encodingChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    private Base64() {
+    }
 
     public static String encode(String source) {
         char[] sourceBytes = getPaddedBytes(source);

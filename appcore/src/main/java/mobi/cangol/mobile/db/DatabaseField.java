@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * @author Cangol
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -34,18 +33,21 @@ import java.lang.annotation.Target;
 public @interface DatabaseField {
     /**
      * 列名 默认为属性名
+     *
      * @return
      */
     String value() default "";
 
     /**
      * 是否主键
+     *
      * @return
      */
     boolean primaryKey() default false;
 
     /**
      * 是否可为空
+     *
      * @return
      */
     boolean notNull() default false;

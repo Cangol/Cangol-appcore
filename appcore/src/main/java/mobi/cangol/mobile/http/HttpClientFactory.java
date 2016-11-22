@@ -78,6 +78,7 @@ public class HttpClientFactory {
 
     /**
      * 创建 auth认证的 HttpClient
+     *
      * @param username 用户名
      * @param password 密码
      * @return
@@ -107,6 +108,7 @@ public class HttpClientFactory {
 
     /**
      * 创建 固定证书的 HttpClient
+     *
      * @param pattern
      * @param pins
      * @return
@@ -130,6 +132,7 @@ public class HttpClientFactory {
 
     /**
      * 创建 auth认证的 HttpClient
+     *
      * @param certificates
      * @param bksFile
      * @param password
@@ -174,6 +177,7 @@ public class HttpClientFactory {
 
     /**
      * 创建 不认证证书的 HttpClient
+     *
      * @return
      */
     public static OkHttpClient createUnSafeHttpClient() {

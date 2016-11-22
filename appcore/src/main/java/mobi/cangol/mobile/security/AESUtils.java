@@ -29,6 +29,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class AESUtils {
     private final static String CHARSET = "utf-8";
 
+    private AESUtils() {
+    }
+
     public static String encrypt(String seed, String content) throws Exception {
         byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
         byte[] result = encrypt(rawKey, content.getBytes(CHARSET));

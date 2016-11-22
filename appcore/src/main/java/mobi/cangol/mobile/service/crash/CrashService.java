@@ -55,6 +55,7 @@ public interface CrashService extends AppService {
 
     /**
      * 追加异常报告的参数
+     *
      * @param url
      * @param params
      */
@@ -62,6 +63,7 @@ public interface CrashService extends AppService {
 
     /**
      * 注册异常报告监听
+     *
      * @param crashReportListener
      */
     void report(CrashReportListener crashReportListener);

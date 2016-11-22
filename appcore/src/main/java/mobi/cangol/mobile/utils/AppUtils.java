@@ -31,8 +31,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class AppUtils {
+    private AppUtils() {
+    }
+
     /**
      * 修改locale ,修改后只对新生成activity有效，旧的activity需要重启
+     *
      * @param context
      * @param locale
      */
@@ -49,6 +53,7 @@ public class AppUtils {
 
     /**
      * 安装apk文件
+     *
      * @param context
      * @param apkPath
      */
@@ -63,6 +68,7 @@ public class AppUtils {
 
     /**
      * 卸载应用
+     *
      * @param context
      * @param packageName
      */
@@ -74,6 +80,7 @@ public class AppUtils {
 
     /**
      * 启动应用
+     *
      * @param context
      * @param packageName
      */
@@ -86,6 +93,7 @@ public class AppUtils {
 
     /**
      * 判断是否安装应用
+     *
      * @param context
      * @param packageName
      * @return
@@ -103,6 +111,7 @@ public class AppUtils {
 
     /**
      * 获取apk应用包名
+     *
      * @param context
      * @param apkPath
      * @return
@@ -117,6 +126,7 @@ public class AppUtils {
 
     /**
      * 获取apk应用icon
+     *
      * @param context
      * @param apkPath
      * @return
@@ -134,6 +144,7 @@ public class AppUtils {
 
     /**
      * 获取应用信息
+     *
      * @param context
      * @param apkPath
      * @return
@@ -150,6 +161,7 @@ public class AppUtils {
 
     /**
      * 获取所有非系统应用
+     *
      * @param context
      * @return
      */

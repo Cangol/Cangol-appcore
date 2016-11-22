@@ -71,7 +71,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return list;
@@ -92,7 +92,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return obj;
@@ -113,7 +113,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return list;
@@ -128,10 +128,13 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
             Cursor cursor = query(db, queryBuilder);
-            result = DatabaseUtils.cursorToObject(paramT, cursor);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                result = DatabaseUtils.cursorToObject(paramT, cursor);
+            }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -148,7 +151,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             result = db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT));
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         } finally {
             db.endTransaction();
         }
@@ -164,11 +167,11 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         try {
             db.beginTransaction();
             for (T paramT : paramTs) {
-                result = result+ db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT));
+                result = result + db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT));
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         } finally {
             db.endTransaction();
         }
@@ -184,7 +187,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -202,7 +205,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         } finally {
             db.endTransaction();
         }
@@ -219,7 +222,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -233,7 +236,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         try {
             result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -251,7 +254,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         } finally {
             db.endTransaction();
         }
@@ -282,7 +285,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
                 result = result + db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + id});
             }
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         return result;
     }
@@ -296,7 +299,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             result = db.delete(mTableName, null, null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName+" error="+e.getMessage());
+            throw new SQLException(mTableName + " error=" + e.getMessage());
         } finally {
             db.endTransaction();
         }

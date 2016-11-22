@@ -24,6 +24,8 @@ import java.util.Map;
  * @author Cangol
  */
 public class UrlUtils {
+    private UrlUtils() {
+    }
 
     /**
      * 判断是否是url

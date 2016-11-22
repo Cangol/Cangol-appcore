@@ -15,8 +15,6 @@
  */
 package mobi.cangol.mobile.http.route;
 
-import android.content.Context;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -67,6 +65,7 @@ public class RouteHttpClient {
 
     /**
      * 发起请求
+     *
      * @param tag
      * @param url
      * @param params
@@ -122,6 +121,7 @@ public class RouteHttpClient {
 
     /**
      * 取消请求
+     *
      * @param tag
      * @param mayInterruptIfRunning
      */

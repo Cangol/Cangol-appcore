@@ -46,12 +46,14 @@ public abstract class CoreSQLiteOpenHelper {
 
     /**
      * 创建数据库
+     *
      * @param db
      */
     public abstract void onCreate(SQLiteDatabase db);
 
     /**
      * 升级数据库
+     *
      * @param db
      * @param oldVersion
      * @param newVersion
@@ -60,6 +62,7 @@ public abstract class CoreSQLiteOpenHelper {
 
     /**
      * 初始化数据库
+     *
      * @param context
      */
     public void open(Context context) {
@@ -69,6 +72,7 @@ public abstract class CoreSQLiteOpenHelper {
 
     /**
      * 获取读写数据库
+     *
      * @return
      */
     public SQLiteDatabase getWritableDatabase() {
@@ -89,6 +93,7 @@ public abstract class CoreSQLiteOpenHelper {
 
     /**
      * 获取只读数据库
+     *
      * @return
      */
     public SQLiteDatabase getReadableDatabase() {
@@ -109,6 +114,7 @@ public abstract class CoreSQLiteOpenHelper {
 
     /**
      * 获取对象dao
+     *
      * @param clazz
      * @return
      */

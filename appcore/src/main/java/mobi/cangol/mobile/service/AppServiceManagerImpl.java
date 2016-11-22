@@ -167,9 +167,9 @@ public class AppServiceManagerImpl extends AppServiceManager {
     }
 
     /**
-     * @deprecated
      * @param appService
      * @param serviceProperty
+     * @deprecated
      */
     private void init(AppService appService, ServiceProperty serviceProperty) {
         Field filed = null;

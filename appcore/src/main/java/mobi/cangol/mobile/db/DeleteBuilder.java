@@ -58,12 +58,12 @@ public class DeleteBuilder {
      */
     public void addQuery(String pName, Object pValue, String pType, boolean isOr) {
         if (pName != null && !"".equals(pName) && pValue != null
-                //&& !"".equals(String.valueOf(pValue))
+            //&& !"".equals(String.valueOf(pValue))
                 ) {
             if (pType.equals("is")) {
                 paraKey.add(pName + " is ?");
                 paraValue.add(pValue);
-            }else if (pType.equals("isnot")) {
+            } else if (pType.equals("isnot")) {
                 paraKey.add(pName + " is not ?");
                 paraValue.add(pValue);
             } else if (pType.equals("like")) {

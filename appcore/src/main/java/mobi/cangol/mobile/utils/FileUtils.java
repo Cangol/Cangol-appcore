@@ -45,6 +45,9 @@ import mobi.cangol.mobile.logging.Log;
 public class FileUtils {
     public static final String TAG = "FileUtils";
 
+    private FileUtils() {
+    }
+
     /**
      * 删除文件，可以是单个文件或文件夹
      *

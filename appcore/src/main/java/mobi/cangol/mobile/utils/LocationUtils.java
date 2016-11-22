@@ -30,6 +30,8 @@ import okhttp3.Response;
 
 
 public class LocationUtils {
+    private LocationUtils() {
+    }
 //	/**
 //	 * 获取偏移值
 //	 * @param longitude
@@ -64,6 +66,7 @@ public class LocationUtils {
 
     /**
      * 获取偏移变量
+     *
      * @param lat
      * @param lng
      * @return
@@ -78,11 +81,11 @@ public class LocationUtils {
                 .url(url)
                 .get()
                 .build();
-        Response httpResponse=null;
+        Response httpResponse = null;
         try {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
-                 response = httpResponse.body().string();
+                response = httpResponse.body().string();
             } else {
                 Log.d("response fail :" + httpResponse.code());
             }
@@ -91,7 +94,7 @@ public class LocationUtils {
             Log.d(e.getMessage());
             return null;
         } finally {
-            if(httpResponse!=null)
+            if (httpResponse != null)
                 httpResponse.close();
         }
     }
@@ -147,6 +150,7 @@ public class LocationUtils {
 
     /**
      * 获取UTC时间
+     *
      * @return
      */
     public static Long getUTCTime() {
@@ -157,6 +161,7 @@ public class LocationUtils {
 
     /**
      * 获取本地时间
+     *
      * @return
      */
     public static Long getLocalTime() {
@@ -167,6 +172,7 @@ public class LocationUtils {
     /**
      * 百度逆地理编码(需要密钥access key)
      * <br>http://developer.baidu.com/map/webservice-geocoding.htm#.E8.BF.94.E5.9B.9E.E6.95.B0.E6.8D.AE.E8.AF.B4.E6.98.8E
+     *
      * @param lat
      * @param lng
      * @return
@@ -181,7 +187,7 @@ public class LocationUtils {
                 .url(url)
                 .get()
                 .build();
-        Response httpResponse=null;
+        Response httpResponse = null;
         try {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
@@ -201,7 +207,7 @@ public class LocationUtils {
             Log.d(e.getMessage());
             return null;
         } finally {
-            if(httpResponse!=null)
+            if (httpResponse != null)
                 httpResponse.close();
         }
     }
@@ -209,6 +215,7 @@ public class LocationUtils {
     /**
      * Google逆地理编码
      * <br>https://developers.google.com/maps/documentation/geocoding/?hl=zh-cn#ReverseGeocoding
+     *
      * @param lat
      * @param lng
      * @return
@@ -223,7 +230,7 @@ public class LocationUtils {
                 .url(url)
                 .get()
                 .build();
-        Response httpResponse=null;
+        Response httpResponse = null;
         try {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
@@ -241,7 +248,7 @@ public class LocationUtils {
             Log.d(e.getMessage());
             return null;
         } finally {
-            if(httpResponse!=null)
+            if (httpResponse != null)
                 httpResponse.close();
         }
 

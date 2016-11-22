@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
 
 /**
  * Customer VO annotation
- * @author Cangol
  *
+ * @author Cangol
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

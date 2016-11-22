@@ -167,8 +167,8 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     }
 
     protected ReportError makeReportError(Throwable ex) {
-        String timestamp=TimeUtils.getCurrentTime();
-        String filename=timestamp.replaceAll(" ","").replaceAll("-","").replaceAll(":","");
+        String timestamp = TimeUtils.getCurrentTime();
+        String filename = timestamp.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "");
         ReportError error = new ReportError();
         error.error = ex.toString();
         error.position = ex.getStackTrace()[0].toString();

@@ -76,6 +76,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 设置磁盘缓存位置，并初始化
+     *
      * @param cacheDir
      * @param cacheSize
      */
@@ -89,6 +90,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 初始化磁盘缓存
+     *
      * @param diskCacheDir
      * @param diskCacheSize
      */
@@ -193,6 +195,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 判断磁盘缓存是否含有
+     *
      * @param id
      * @return
      */
@@ -234,6 +237,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 从磁盘缓存获取
+     *
      * @param id
      * @return
      */
@@ -276,6 +280,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 添加到内存缓存
+     *
      * @param context
      * @param id
      * @param data
@@ -303,6 +308,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * context暂停或退出时，持久化context关联的缓存（持久化到磁盘）
+     *
      * @param context
      */
     private void moveContentToDiskCache(String context) {
@@ -323,6 +329,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 异步添加到磁盘缓存
+     *
      * @param id
      * @param data
      */
@@ -338,6 +345,7 @@ class CacheManagerImpl implements CacheManager {
 
     /**
      * 添加到磁盘缓存
+     *
      * @param id
      * @param data
      */

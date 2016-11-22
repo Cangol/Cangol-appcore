@@ -24,6 +24,9 @@ import android.os.StatFs;
 import java.io.File;
 
 public class StorageUtils {
+    private StorageUtils() {
+    }
+
     public static String getExternalStorageDir(Context context, String appName) {
         String externalDir = null;
         if (Environment.MEDIA_MOUNTED.equals(Environment

@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
  * @author Cangol
  */
 public class ValidatorUtils {
+    private ValidatorUtils() {
+    }
 
     /**
      * 验证字符串是否不为空

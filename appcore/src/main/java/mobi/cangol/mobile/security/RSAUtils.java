@@ -37,6 +37,9 @@ import javax.crypto.Cipher;
 public class RSAUtils {
     private final static String CHARSET = "utf-8";
 
+    private RSAUtils() {
+    }
+
     /**
      * 生成公钥和私钥
      *

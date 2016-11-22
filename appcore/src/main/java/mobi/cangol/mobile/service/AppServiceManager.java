@@ -29,12 +29,12 @@ public abstract class AppServiceManager {
 
     /**
      * 销毁一个应用服务
-     *
      */
     public abstract void destroyService(String name);
 
     /**
      * 注册一个自定义AppService
+     *
      * @param clazz
      */
     public abstract void registeService(Class<? extends AppService> clazz);

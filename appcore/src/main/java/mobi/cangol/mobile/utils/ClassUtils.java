@@ -26,6 +26,8 @@ import dalvik.system.DexFile;
 import mobi.cangol.mobile.logging.Log;
 
 public class ClassUtils {
+    private ClassUtils() {
+    }
 
     /**
      * 加载类

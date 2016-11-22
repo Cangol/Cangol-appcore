@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- *
  * @author Cangol
  */
 public class Log {
@@ -34,18 +33,20 @@ public class Log {
 
     /**
      * 设置类对象TAG
+     *
      * @param obj
      */
     public static void setLogTag(Object obj) {
         setLogTag(obj.getClass(), obj);
     }
+
     private static Field findField(Class clazz, String name) {
         if (clazz != Object.class) {
             try {
-                Field field  = clazz.getDeclaredField(name);
+                Field field = clazz.getDeclaredField(name);
                 return field;
             } catch (NoSuchFieldException e) {
-                return findField(clazz.getSuperclass(),name);
+                return findField(clazz.getSuperclass(), name);
             }
         }
         return null;
@@ -53,6 +54,7 @@ public class Log {
 
     /**
      * 设置类的TAG
+     *
      * @param clazz
      * @param obj
      */
@@ -60,19 +62,19 @@ public class Log {
         if (clazz != Object.class) {
             Field field = null;
             try {
-                field = findField(clazz,"TAG");
-                if(field!=null){
-                    if(!Modifier.isPrivate(field.getModifiers())){
+                field = findField(clazz, "TAG");
+                if (field != null) {
+                    if (!Modifier.isPrivate(field.getModifiers())) {
                         field.setAccessible(true);
                         field.set(obj, makeLogTag(clazz));
-                    }else{
+                    } else {
                         Log.e("field TAG is private!");
                     }
-                }else{
+                } else {
                     Log.e("not field is TAG");
                 }
             } catch (IllegalAccessException e) {
-               //
+                //
             }
         }
     }

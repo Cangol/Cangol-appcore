@@ -66,6 +66,7 @@ public class PollingHttpClient {
 
     /**
      * 发送轮询请求(get请求)
+     *
      * @param tag
      * @param url
      * @param params
@@ -111,6 +112,7 @@ public class PollingHttpClient {
 
     /**
      * 取消请求
+     *
      * @param tag
      * @param mayInterruptIfRunning
      */

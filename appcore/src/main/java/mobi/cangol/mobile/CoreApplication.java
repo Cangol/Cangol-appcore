@@ -35,13 +35,12 @@ import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
 /**
- *
  * @author Cangol
  */
 
 public class CoreApplication extends Application {
 
-    public List<WeakReference<Activity>> mActivityManager=new ArrayList<WeakReference<Activity>>();
+    public List<WeakReference<Activity>> mActivityManager = new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
     private boolean mDevMode = false;
 
@@ -49,7 +48,7 @@ public class CoreApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if(DeviceInfo.isAppProcess(this)){
+        if (DeviceInfo.isAppProcess(this)) {
             if (mDevMode && Build.VERSION.SDK_INT >= 9) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
@@ -61,10 +60,11 @@ public class CoreApplication extends Application {
             }
             initAppServiceManager();
             StatAgent.initInstance(this);
-        }else{
+        } else {
             Log.i("cur process is not app' process");
         }
     }
+
     /**
      * 初始化应用服务管理器
      */

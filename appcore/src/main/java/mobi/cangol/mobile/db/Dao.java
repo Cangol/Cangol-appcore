@@ -136,7 +136,6 @@ public abstract interface Dao<T, ID> {
 
     /**
      * 清空表删
-     *
      */
     public abstract int deleteAll() throws SQLException;
 

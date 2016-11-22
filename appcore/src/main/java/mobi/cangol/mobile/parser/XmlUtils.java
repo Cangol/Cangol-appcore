@@ -38,6 +38,9 @@ import java.util.List;
 public class XmlUtils extends Converter {
     private final static String TAG = "XmlUtils";
 
+    private XmlUtils() {
+    }
+
     /**
      * 转换Object到xml
      *
@@ -244,7 +247,7 @@ public class XmlUtils extends Converter {
         T t = null;
         for (int i = 0; i < nodeList.getLength(); i++) {
             t = parserToObject(c, nodeList.item(i), useAnnotation);
-            if(t!=null)
+            if (t != null)
                 list.add(t);
         }
         return list;

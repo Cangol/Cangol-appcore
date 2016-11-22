@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * @author Cangol
- *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
@@ -34,6 +33,7 @@ import java.lang.annotation.Target;
 public @interface DatabaseTable {
     /**
      * 表名 默认为类名
+     *
      * @return
      */
     String value() default "";

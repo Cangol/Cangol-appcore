@@ -36,10 +36,9 @@ public class DownloadHttpClient {
     private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
     private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
     private final static int DEFAULT_MAX = 3;
-    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
-
-    private OkHttpClient httpClient;
     private static PoolManager.Pool threadPool;
+    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
+    private OkHttpClient httpClient;
     private DownloadRetryHandler downloadRetryHandler;
     private String group;
 
@@ -59,12 +58,9 @@ public class DownloadHttpClient {
 
     }
 
-    protected DownloadRetryHandler getDownloadRetryHandler() {
-        return downloadRetryHandler;
-    }
-
     /**
      * 构造实例
+     *
      * @param group
      * @return
      */
@@ -75,14 +71,20 @@ public class DownloadHttpClient {
 
     /**
      * 设置线程池
+     *
      * @param pool
      */
     public static void setThreadPool(PoolManager.Pool pool) {
         threadPool = pool;
     }
 
+    protected DownloadRetryHandler getDownloadRetryHandler() {
+        return downloadRetryHandler;
+    }
+
     /**
      * 发起请求
+     *
      * @param tag
      * @param url
      * @param responseHandler
@@ -116,6 +118,7 @@ public class DownloadHttpClient {
 
     /**
      * 取消请求
+     *
      * @param tag
      * @param mayInterruptIfRunning
      */

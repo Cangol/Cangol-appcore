@@ -12,6 +12,8 @@ import mobi.cangol.mobile.logging.Log;
  * @author Kevin Kowalewski
  */
 public class RootUtils {
+    private RootUtils() {
+    }
 
     public static boolean isDeviceRooted() {
         return checkRootMethod1() || checkRootMethod2() || checkRootMethod3();

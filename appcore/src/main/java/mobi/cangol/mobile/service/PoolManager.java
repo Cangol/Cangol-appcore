@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * TheadPool manager by name
- * @author Cangol
  *
+ * @author Cangol
  */
 public class PoolManager {
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
@@ -64,6 +64,7 @@ public class PoolManager {
 
     /**
      * 获取一个线程池
+     *
      * @param name
      * @return
      */

@@ -48,12 +48,16 @@ import mobi.cangol.mobile.logging.Log;
 
 /**
  * Bitmap 工具类
+ *
  * @author Cangol
  */
 public final class BitmapUtils {
-    private BitmapUtils() { }
+    private BitmapUtils() {
+    }
+
     /**
      * 添加水印文字
+     *
      * @param src
      * @param left
      * @param top
@@ -86,6 +90,7 @@ public final class BitmapUtils {
 
     /**
      * 添加水印图片
+     *
      * @param src
      * @param left
      * @param top
@@ -110,6 +115,7 @@ public final class BitmapUtils {
 
     /**
      * 在src上按progress绘制pro
+     *
      * @param src
      * @param pro
      * @param progress
@@ -129,6 +135,7 @@ public final class BitmapUtils {
 
     /**
      * 设置图片透明度
+     *
      * @param sourceImg
      * @param number
      * @return
@@ -149,6 +156,7 @@ public final class BitmapUtils {
 
     /**
      * 转为图片
+     *
      * @param bitmap
      * @param roundPx
      * @return
@@ -175,6 +183,7 @@ public final class BitmapUtils {
 
     /**
      * 原图添加倒影
+     *
      * @param bitmap
      * @return
      */
@@ -212,6 +221,7 @@ public final class BitmapUtils {
 
     /**
      * 创建倒影
+     *
      * @param originalImage
      * @return
      */
@@ -253,6 +263,7 @@ public final class BitmapUtils {
 
     /**
      * 获取宽度
+     *
      * @param filepath
      * @return
      */
@@ -265,6 +276,7 @@ public final class BitmapUtils {
 
     /**
      * 获取高度
+     *
      * @param filepath
      * @return
      */
@@ -277,6 +289,7 @@ public final class BitmapUtils {
 
     /**
      * 获取宽度,高度
+     *
      * @param filepath
      * @return
      */
@@ -289,6 +302,7 @@ public final class BitmapUtils {
 
     /**
      * 缩放图片到新大小(无损)
+     *
      * @param bitmap
      * @param newWidth
      * @param newHeight
@@ -306,6 +320,7 @@ public final class BitmapUtils {
 
     /**
      * 缩放图片按最大宽高(无损)
+     *
      * @param filepath
      * @param maxWidth
      * @param maxHeight
@@ -322,7 +337,8 @@ public final class BitmapUtils {
 
     /**
      * 压缩图片按指定精度
-     * @param image 图片
+     *
+     * @param image   图片
      * @param quality 精度 推荐大于65
      * @return
      */
@@ -334,6 +350,7 @@ public final class BitmapUtils {
 
     /**
      * 压缩图片 按最大图片存储大小
+     *
      * @param image
      * @param maxSize 最大图片存储大小 (单位b)
      * @return
@@ -355,6 +372,7 @@ public final class BitmapUtils {
 
     /**
      * 重置图片文件大小
+     *
      * @param filepath
      * @param maxWidth
      * @param maxHeight
@@ -388,6 +406,7 @@ public final class BitmapUtils {
 
     /**
      * 重置图片大小
+     *
      * @param bitmap
      * @param maxWidth
      * @param maxHeight
@@ -423,6 +442,7 @@ public final class BitmapUtils {
 
     /**
      * 计算
+     *
      * @param options
      * @param minSideLength
      * @param maxNumOfPixels
@@ -447,6 +467,7 @@ public final class BitmapUtils {
 
     /**
      * 计算
+     *
      * @param options
      * @param minSideLength
      * @param maxNumOfPixels
@@ -479,10 +500,11 @@ public final class BitmapUtils {
 
     /**
      * 根据数字，创建一张带有数字的图片
-     * @param number 数字
+     *
+     * @param number   数字
      * @param textSize 字体大小
-     * @param bitmap 图片
-     * @param context 上下文
+     * @param bitmap   图片
+     * @param context  上下文
      * @return
      */
     public static Bitmap createAlbumIcon(int number, int textSize, Bitmap bitmap, Context context) {
@@ -529,7 +551,8 @@ public final class BitmapUtils {
 
     /**
      * bitmap To File
-     * @param bm 图片
+     *
+     * @param bm   图片
      * @param path 路径
      */
     public static void bitmap2File(Bitmap bm, String path) {
@@ -550,6 +573,7 @@ public final class BitmapUtils {
 
     /**
      * Bitmap to Bytes
+     *
      * @param bitmap
      * @return
      */
@@ -604,6 +628,7 @@ public final class BitmapUtils {
 
     /**
      * 截屏
+     *
      * @param activity
      * @return
      */
@@ -627,6 +652,7 @@ public final class BitmapUtils {
 
     /**
      * Bitmap转成String
+     *
      * @param bitmap
      * @return
      */
@@ -647,6 +673,7 @@ public final class BitmapUtils {
 
     /**
      * 图片文件转string
+     *
      * @param imagePath
      * @return
      */
@@ -667,6 +694,7 @@ public final class BitmapUtils {
 
     /**
      * String转成Bitmap
+     *
      * @param string
      */
     public static Bitmap stringToBitmap(String string) {

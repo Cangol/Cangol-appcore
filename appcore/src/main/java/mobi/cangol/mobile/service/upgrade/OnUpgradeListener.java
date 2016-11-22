@@ -19,19 +19,17 @@ package mobi.cangol.mobile.service.upgrade;
  * 更新监听接口
  *
  * @author cangol
- *
  */
 public interface OnUpgradeListener {
     /**
      * 更新
      *
-     * @param force
-     *            是否强制更新
+     * @param force 是否强制更新
      */
     void upgrade(boolean force);
 
     /**
-     * @param speed 更新速度
+     * @param speed    更新速度
      * @param progress 更新进度
      */
     void progress(int speed, int progress);

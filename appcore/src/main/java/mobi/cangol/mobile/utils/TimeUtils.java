@@ -30,6 +30,8 @@ import java.util.GregorianCalendar;
 import mobi.cangol.mobile.logging.Log;
 
 public class TimeUtils {
+    private TimeUtils() {
+    }
 
     /**
      * 得到当前的年份 返回格式:yyyy

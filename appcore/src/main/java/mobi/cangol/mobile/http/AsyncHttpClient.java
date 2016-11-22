@@ -27,7 +27,6 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.PoolManager.Pool;
 import okhttp3.Call;
@@ -71,6 +70,7 @@ public class AsyncHttpClient {
 
     /**
      * 构造一个实例
+     *
      * @param group
      * @return
      */
@@ -81,6 +81,7 @@ public class AsyncHttpClient {
 
     /**
      * 构造一个实例
+     *
      * @param group
      * @param client
      * @return
@@ -92,6 +93,7 @@ public class AsyncHttpClient {
 
     /**
      * 设置线程池
+     *
      * @param pool
      */
     public void setThreadPool(Pool pool) {
@@ -100,6 +102,7 @@ public class AsyncHttpClient {
 
     /**
      * 获取RetryHandler
+     *
      * @return
      */
     protected RetryHandler getRetryHandler() {
@@ -108,6 +111,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行get方法
+     *
      * @param context
      * @param url
      * @param responseHandler
@@ -118,6 +122,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行get方法
+     *
      * @param context
      * @param url
      * @param headers
@@ -139,6 +144,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行get方法
+     *
      * @param context
      * @param url
      * @param requestParams
@@ -159,6 +165,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行patch方法
+     *
      * @param context
      * @param url
      * @param responseHandler
@@ -169,6 +176,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行patch方法
+     *
      * @param context
      * @param url
      * @param headers
@@ -181,6 +189,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行post方法
+     *
      * @param context
      * @param url
      * @param responseHandler
@@ -191,6 +200,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行post方法
+     *
      * @param context
      * @param url
      * @param json
@@ -203,6 +213,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行post方法
+     *
      * @param context
      * @param url
      * @param requestParams
@@ -214,6 +225,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行post方法
+     *
      * @param context
      * @param url
      * @param headers
@@ -226,6 +238,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行put方法
+     *
      * @param context
      * @param url
      * @param responseHandler
@@ -236,6 +249,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行put方法
+     *
      * @param context
      * @param url
      * @param headers
@@ -248,6 +262,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行delete方法
+     *
      * @param context
      * @param url
      * @param responseHandler
@@ -258,6 +273,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行delete方法
+     *
      * @param context
      * @param url
      * @param headers
@@ -270,6 +286,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行方法
+     *
      * @param method
      * @param context
      * @param url
@@ -312,6 +329,7 @@ public class AsyncHttpClient {
 
     /**
      * 执行方法
+     *
      * @param method
      * @param context
      * @param url
@@ -361,7 +379,6 @@ public class AsyncHttpClient {
     }
 
     /**
-     *
      * @param method
      * @param context
      * @param url
@@ -412,6 +429,7 @@ public class AsyncHttpClient {
 
     /**
      * 取消请求
+     *
      * @param context
      * @param mayInterruptIfRunning
      */

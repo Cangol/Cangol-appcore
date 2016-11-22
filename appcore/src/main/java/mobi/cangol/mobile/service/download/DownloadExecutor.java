@@ -78,6 +78,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 下载对象转换为DownloadResource
+     *
      * @param t
      * @return
      */
@@ -85,6 +86,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * DownloadResource转换为下载对象
+     *
      * @param resource
      * @return
      */
@@ -92,6 +94,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 创建按一个状态栏通知
+     *
      * @param context
      * @param resource
      * @return
@@ -100,6 +103,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 扫描本地的下载任务资源
+     *
      * @return
      */
     protected ArrayList<DownloadResource> scanResource(File scanDir) {
@@ -115,6 +119,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 读取文件下载资源
+     *
      * @param filePath
      * @return
      */
@@ -134,6 +139,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 存除下载资源到本地
+     *
      * @param resource
      */
     protected void writeResource(DownloadResource resource) {
@@ -146,6 +152,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 通过唯一识别符获取下载资源
+     *
      * @param key
      * @return
      */
@@ -160,6 +167,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 开始下载
+     *
      * @param resource
      */
     public void start(DownloadResource resource) {
@@ -190,6 +198,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 停止下载
+     *
      * @param resource
      */
     public void stop(DownloadResource resource) {
@@ -209,6 +218,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 恢复下载
+     *
      * @param resource
      */
     public void resume(DownloadResource resource) {
@@ -224,6 +234,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 重启下载
+     *
      * @param resource
      */
     public void restart(DownloadResource resource) {
@@ -239,6 +250,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 添加下载任务
+     *
      * @param resource
      */
     public void add(DownloadResource resource) {
@@ -259,6 +271,7 @@ public abstract class DownloadExecutor<T> {
 
     /**
      * 移除下载任务
+     *
      * @param resource
      */
     public void remove(DownloadResource resource) {

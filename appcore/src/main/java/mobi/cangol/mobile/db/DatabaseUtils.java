@@ -27,8 +27,12 @@ import java.lang.reflect.Modifier;
 import mobi.cangol.mobile.logging.Log;
 
 public class DatabaseUtils {
+    private DatabaseUtils() {
+    }
+
     /**
      * 创建表
+     *
      * @param db
      * @param clazz
      */
@@ -75,6 +79,7 @@ public class DatabaseUtils {
 
     /**
      * 获取sqlite对应的数据类型
+     *
      * @param clazz
      * @return
      */
@@ -98,6 +103,7 @@ public class DatabaseUtils {
 
     /**
      * 删除表
+     *
      * @param db
      * @param clazz
      */
@@ -115,6 +121,7 @@ public class DatabaseUtils {
 
     /**
      * 获取主键的列名
+     *
      * @param clazz
      * @return
      */
@@ -138,6 +145,7 @@ public class DatabaseUtils {
 
     /**
      * 获取主键的值
+     *
      * @param obj
      * @return
      * @throws IllegalAccessException
@@ -164,6 +172,7 @@ public class DatabaseUtils {
 
     /**
      * 获取键值对象
+     *
      * @param object
      * @return
      * @throws IllegalAccessException
@@ -184,47 +193,62 @@ public class DatabaseUtils {
         return v;
     }
 
+    /**
+     * 查询记录的值，赋值给obj
+     *
+     * @param obj
+     * @param cursor
+     * @param <T>
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public static <T> T cursorToObject(T obj, Cursor cursor) throws InstantiationException, IllegalAccessException {
-        while (cursor.moveToNext()) {
-            Field[] fields = obj.getClass().getDeclaredFields();
-            String columnName = null;
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                    continue;
-                }
-                if (field.isAnnotationPresent(DatabaseField.class)) {
-                    DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                    columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                    setValue(obj, field, columnName, cursor);
-                }
-            }
-        }
-        return obj;
-    }
-
-    public static <T> T cursorToObject(Class<T> clazz, Cursor cursor) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Constructor constructor = clazz.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        T obj = (T) constructor.newInstance();
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = obj.getClass().getDeclaredFields();
         String columnName = null;
         for (Field field : fields) {
             field.setAccessible(true);
             if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
-
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                setValue(obj, field, columnName, cursor);
+                setFieldValue(obj, field, columnName, cursor);
             }
         }
         return obj;
     }
 
-    public static <T> void setValue(T t, Field field, String columnName, Cursor cursor) {
+    /**
+     * 查询记录的值，赋值给clazz的实例obj
+     *
+     * @param clazz
+     * @param cursor
+     * @param <T>
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     */
+    public static <T> T cursorToObject(Class<T> clazz, Cursor cursor) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        Constructor constructor = clazz.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        T obj = (T) constructor.newInstance();
+        return cursorToObject(obj, cursor);
+    }
+
+    /**
+     * field 赋值
+     *
+     * @param t
+     * @param field
+     * @param columnName
+     * @param cursor
+     * @param <T>
+     */
+    public static <T> void setFieldValue(T t, Field field, String columnName, Cursor cursor) {
         try {
             if (field.getType() == String.class) {
                 field.set(t, cursor.getString(cursor.getColumnIndex(columnName)));

@@ -68,7 +68,7 @@ public class SocketRetryHandler {
     }
 
     public boolean retryRequest(Exception exception, int executionCount, Socket socket) {
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "exception:" + exception.getClass() + " executionCount=" + executionCount);
         boolean retry = true;
         if (executionCount >= maxRetries) {

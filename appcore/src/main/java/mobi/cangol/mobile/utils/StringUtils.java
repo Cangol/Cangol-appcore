@@ -27,6 +27,9 @@ import mobi.cangol.mobile.logging.Log;
 public class StringUtils {
     public static final int INDEX_NOT_FOUND = -1;
 
+    private StringUtils() {
+    }
+
     /**
      * bytes to String
      *

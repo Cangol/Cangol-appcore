@@ -43,8 +43,12 @@ import mobi.cangol.mobile.logging.Log;
 public class Object2FileUtils {
     private final static String CHARSET = "UTF-8";
 
+    private Object2FileUtils() {
+    }
+
     /**
      * 写入json对象到文件
+     *
      * @param jsonObject
      * @param objPath
      */
@@ -70,6 +74,7 @@ public class Object2FileUtils {
 
     /**
      * 写入json对象到文件
+     *
      * @param jsonArray
      * @param objPath
      */
@@ -95,6 +100,7 @@ public class Object2FileUtils {
 
     /**
      * 读取文件到json对象
+     *
      * @param jsonFile
      * @return
      */
@@ -121,6 +127,7 @@ public class Object2FileUtils {
 
     /**
      * 读取文件到json对象
+     *
      * @param jsonFile
      * @return
      */
@@ -147,6 +154,7 @@ public class Object2FileUtils {
 
     /**
      * 写入json对象到输出流
+     *
      * @param jsonArray
      * @param os
      */
@@ -173,6 +181,7 @@ public class Object2FileUtils {
 
     /**
      * 写入json对象到输出流
+     *
      * @param jsonObject
      * @param os
      */
@@ -199,6 +208,7 @@ public class Object2FileUtils {
 
     /**
      * 从输入流读取json对象
+     *
      * @param is
      * @return
      */
@@ -233,6 +243,7 @@ public class Object2FileUtils {
 
     /**
      * 从输入流读取json对象
+     *
      * @param is
      * @return
      */
@@ -267,6 +278,7 @@ public class Object2FileUtils {
 
     /**
      * 将object对象写入输出流
+     *
      * @param obj
      * @param out
      */
@@ -292,6 +304,7 @@ public class Object2FileUtils {
 
     /**
      * 从输入流读取对象
+     *
      * @param is
      * @return
      */
@@ -327,6 +340,7 @@ public class Object2FileUtils {
 
     /**
      * 将对象写入文件
+     *
      * @param obj
      * @param objPath
      */
@@ -355,6 +369,7 @@ public class Object2FileUtils {
 
     /**
      * 从文件读取对象
+     *
      * @param file
      * @return
      */

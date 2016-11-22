@@ -19,7 +19,6 @@ import mobi.cangol.mobile.service.AppService;
 
 /**
  * @author Cangol
- *
  */
 public interface UpgradeService extends AppService {
 //	/**
@@ -66,21 +65,23 @@ public interface UpgradeService extends AppService {
     /**
      * 更新资源
      *
-     * @param filename 文件名 包含后缀，且是唯一的
-     * @param url 下载地址
+     * @param filename     文件名 包含后缀，且是唯一的
+     * @param url          下载地址
      * @param notification 是否通知栏显示
      */
     void upgrade(String filename, String url, boolean notification);
 
     /**
      * 取消更新
+     *
      * @param filename 文件名 包含后缀，且是唯一的
      */
     void cancel(String filename);
 
     /**
      * 设置更新监听接口
-     * @param filename 文件名 包含后缀，且是唯一的
+     *
+     * @param filename        文件名 包含后缀，且是唯一的
      * @param upgradeListener
      */
     void setOnUpgradeListener(String filename, OnUpgradeListener upgradeListener);

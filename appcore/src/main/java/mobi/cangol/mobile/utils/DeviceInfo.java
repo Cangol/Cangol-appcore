@@ -76,7 +76,9 @@ public final class DeviceInfo {
      */
     private static final String CHARSET = "UTF-8";
 
-    private DeviceInfo() { }
+    private DeviceInfo() {
+    }
+
     /**
      * 获取操作系统类型
      *
@@ -701,7 +703,7 @@ public final class DeviceInfo {
             //字节到十六进制的格式转换
             char[] hexArray = "0123456789ABCDEF".toCharArray();
             char[] hexChars = new char[publicKey.length * 2];
-            for ( int j = 0; j < publicKey.length; j++ ) {
+            for (int j = 0; j < publicKey.length; j++) {
                 int v = publicKey[j] & 0xFF;
                 hexChars[j * 2] = hexArray[v >>> 4];
                 hexChars[j * 2 + 1] = hexArray[v & 0x0F];
@@ -709,7 +711,7 @@ public final class DeviceInfo {
             return new String(hexChars);
         } catch (NameNotFoundException e) {
             Log.e("NameNotFoundException", e.toString());
-        }catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             Log.e("NoSuchAlgorithmException", e.toString());
         } catch (CertificateEncodingException e) {
             Log.e("CertificateEncodingException", e.toString());
@@ -769,6 +771,7 @@ public final class DeviceInfo {
 
     /**
      * 获取当前进程name
+     *
      * @param context
      * @return
      */
@@ -790,11 +793,12 @@ public final class DeviceInfo {
 
     /**
      * 是否是app当前进程
+     *
      * @param context
      * @return
      */
     public static boolean isAppProcess(Context context) {
-        if (context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext())) ) {
+        if (context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext()))) {
             return true;
         }
         return false;

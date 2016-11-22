@@ -72,12 +72,12 @@ class UpgradeServiceImpl implements UpgradeService {
 
     @Override
     public void onDestroy() {
-        if(debug)Log.d("onDestory");
+        if (debug) Log.d("onDestory");
         mDownloadHttpClient.cancelAll();
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         for (Integer id : mIds) {
             notificationManager.cancel(id);
-            if(debug)Log.d("notification cancel "+id);
+            if (debug) Log.d("notification cancel " + id);
         }
     }
 
@@ -124,7 +124,7 @@ class UpgradeServiceImpl implements UpgradeService {
     private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean load) {
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
         File saveFile = new File(savePath);
-        if(debug)Log.d("upgrade savePath:"+savePath);
+        if (debug) Log.d("upgrade savePath:" + savePath);
         if (saveFile.exists()) {
             saveFile.delete();
         }

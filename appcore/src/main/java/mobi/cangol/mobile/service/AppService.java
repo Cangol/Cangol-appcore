@@ -106,6 +106,7 @@ public interface AppService {
 
     /**
      * 生存一个默认的服务属性
+     *
      * @return
      */
     ServiceProperty defaultServiceProperty();

@@ -286,7 +286,7 @@ class SessionServiceImpl implements SessionService {
         StrictMode.setThreadPolicy(oldPolicy);
         mMap.putAll(map);
         if (debug) Log.d("scan cache file");
-        new AsyncTask<String, Void, List<File>>(){
+        new AsyncTask<String, Void, List<File>>() {
             @Override
             protected List<File> doInBackground(String... params) {
                 List<File> files = FileUtils.searchBySuffix(new File(params[0]), null, params[1], params[2], params[3]);

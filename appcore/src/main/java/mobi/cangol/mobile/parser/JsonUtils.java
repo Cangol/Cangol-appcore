@@ -24,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -46,14 +45,18 @@ import mobi.cangol.mobile.logging.Log;
 public class JsonUtils extends Converter {
     private final static String TAG = "JsonUtils";
 
+    private JsonUtils() {
+    }
+
     /**
      * 转换Object到JSONArray
+     *
      * @param <T>
      * @param obj
      * @return
      */
     public static <T> JSONArray toJSONArray(List<T> obj, boolean useAnnotation) {
-        JSONArray jsonArray=new JSONArray();
+        JSONArray jsonArray = new JSONArray();
         if (obj != null) {
             for (int i = 0; i < obj.size(); i++) {
                 if (isBaseClass(obj.get(i).getClass())) {
@@ -65,8 +68,10 @@ public class JsonUtils extends Converter {
         }
         return jsonArray;
     }
+
     /**
      * 转换Object到JSONObject
+     *
      * @param <T>
      * @param obj
      * @return
@@ -128,6 +133,7 @@ public class JsonUtils extends Converter {
 
     /**
      * 解析JSONObject格式字符串到 Object
+     *
      * @param c
      * @param str
      * @param useAnnotation
@@ -151,6 +157,7 @@ public class JsonUtils extends Converter {
 
     /**
      * 解析JSONArray格式字符串到 List
+     *
      * @param c
      * @param str
      * @param useAnnotation
@@ -173,7 +180,6 @@ public class JsonUtils extends Converter {
     }
 
     /**
-     *
      * @param c
      * @param urlStr
      * @param <T>
@@ -217,8 +223,8 @@ public class JsonUtils extends Converter {
         }
         T t = null;
         try {
-            Map<String,Class> typeMap=new HashMap<String,Class>();
-            for(TypeVariable type:c.getTypeParameters()){
+            Map<String, Class> typeMap = new HashMap<String, Class>();
+            for (TypeVariable type : c.getTypeParameters()) {
                 //typeMap.put("T",type);
             }
             Constructor constructor = c.getDeclaredConstructor();
@@ -233,15 +239,15 @@ public class JsonUtils extends Converter {
                 }
                 filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
-                    Class<?> filedClass=null;
+                    Class<?> filedClass = null;
 
-                    if(field.getGenericType() instanceof TypeVariable){
+                    if (field.getGenericType() instanceof TypeVariable) {
                         TypeVariable aType = (TypeVariable) field.getGenericType();
-                        filedClass=typeMap.get(aType.getName());
-                    }else{
-                        filedClass=field.getType();
+                        filedClass = typeMap.get(aType.getName());
+                    } else {
+                        filedClass = field.getType();
                     }
-                    field.set(t,getField(t, filedClass, filedName, jsonObject, useAnnotation));
+                    field.set(t, getField(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
@@ -282,9 +288,9 @@ public class JsonUtils extends Converter {
             try {
                 if (jsonArray.get(i) instanceof JSONObject) {
                     t = parserToObject(c, jsonArray.getJSONObject(i), useAnnotation);
-                } else if(jsonArray.get(i)!=null) {
+                } else if (jsonArray.get(i) != null) {
                     t = (T) jsonArray.get(i);
-                }else{
+                } else {
                     continue;
                 }
                 list.add(t);
@@ -312,15 +318,16 @@ public class JsonUtils extends Converter {
                 } else if (fieldClass == Float.class || fieldClass == float.class) {
                     value = getFloat(jsonObject, key, 0.0f);
                 }
-            }else {
+            } else {
                 value = parserToObject(fieldClass, getJSONObject(jsonObject, key), useAnnotation);
             }
         } catch (IllegalArgumentException e) {
-            throw new JSONParserException(t.getClass(),"Illegal Argument value=" + value, e);
-        }finally {
+            throw new JSONParserException(t.getClass(), "Illegal Argument value=" + value, e);
+        } finally {
             return value;
         }
     }
+
     public static ParameterizedType getType(final Class raw, final Type... args) {
         return new ParameterizedType() {
             public Type getRawType() {
@@ -336,6 +343,7 @@ public class JsonUtils extends Converter {
             }
         };
     }
+
     public static String formatJson(String json) {
         if (null != json && json.startsWith("{\"\"")) {
             json = json.replaceFirst("\"\"", "\"");
