@@ -97,12 +97,12 @@ public class CoreApplication extends Application {
     /**
      * 添加一个activity到管理列表里
      *
-     * @param act
+     * @param activity
      */
-    public void addActivityToManager(Activity act) {
-        for (final WeakReference<Activity> actR : mActivityManager) {
-            if (actR != null && !act.equals(actR.get())) {
-                mActivityManager.add(new WeakReference<Activity>(act));
+    public void addActivityToManager(Activity activity) {
+        for (final WeakReference<Activity> activityReference : mActivityManager) {
+            if (activityReference != null && !activity.equals(activityReference.get())) {
+                mActivityManager.add(new WeakReference<Activity>(activity));
             }
         }
     }
@@ -111,9 +111,9 @@ public class CoreApplication extends Application {
      * 关闭所有activity
      */
     public void closeAllActivities() {
-        for (final WeakReference<Activity> actR : mActivityManager) {
-            if (actR != null && actR.get() != null) {
-                actR.get().finish();
+        for (final WeakReference<Activity> activityReference : mActivityManager) {
+            if (activityReference != null && activityReference.get() != null) {
+                activityReference.get().finish();
             }
         }
     }
@@ -121,12 +121,12 @@ public class CoreApplication extends Application {
     /**
      * 删除activity从管理列表里
      *
-     * @param act
+     * @param activity
      */
-    public void delActivityFromManager(Activity act) {
-        for (final WeakReference<Activity> actR : mActivityManager) {
-            if (actR != null && act.equals(actR.get())) {
-                mActivityManager.remove(actR);
+    public void delActivityFromManager(Activity activity) {
+        for (final WeakReference<Activity> activityReference : mActivityManager) {
+            if (activityReference != null && activity.equals(activityReference.get())) {
+                mActivityManager.remove(activityReference);
             }
         }
     }
