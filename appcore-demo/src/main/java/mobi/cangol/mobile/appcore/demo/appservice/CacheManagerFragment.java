@@ -18,6 +18,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.cache.CacheLoader;
 import mobi.cangol.mobile.service.cache.CacheManager;
+import mobi.cangol.mobile.service.cache.CacheObject;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -55,7 +56,7 @@ public class CacheManagerFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 User user=new User(1,"Jick","12");
-                cacheManager.addContent(TAG,"user",user);
+                cacheManager.addContent(TAG,"user",user, CacheObject.TIME_MIN*1);
                 updateViews();
             }
         });

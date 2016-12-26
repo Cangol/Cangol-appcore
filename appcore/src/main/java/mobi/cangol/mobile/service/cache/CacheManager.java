@@ -51,6 +51,15 @@ public interface CacheManager extends AppService {
     void addContent(String context, String id, Serializable data);
 
     /**
+     * 添加缓存对象
+     *
+     * @param context 上下文标示，可当做分类
+     * @param id      缓存标示
+     * @param data    必须实现Serializable
+     * @param period  有效期(单位毫秒)
+     */
+    void addContent(String context, String id, Serializable data,long period);
+    /**
      * 移除缓存对象
      *
      * @param context

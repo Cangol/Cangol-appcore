@@ -19,22 +19,39 @@ package mobi.cangol.mobile.service.cache;
 
 import java.io.Serializable;
 
+import mobi.cangol.mobile.logging.Log;
+
 /**
  * Created by xuewu.wei on 2016/3/14.
  */
 public class CacheObject implements Serializable {
+    public static final int TIME_SEC =  1000;
+    public static final int TIME_MIN = 60 * 1000;
     public static final int TIME_HOUR = 60 * 60 * 1000;
     public static final int TIME_DAY = 24 * 60 * 60 * 1000;
     public static final int TIME_WEEK = 7 * 24 * 60 * 60 * 1000;
     public static final int TIME_MONTH = 30 * 24 * 60 * 60 * 1000;
     private String id;
-    private String tag;
-    private String timestamp;
-    private Period period;
-    private String deadline;
+    private String group;
+    private long timestamp;
+    private long period;
     private Serializable object;
 
     public CacheObject() {
+    }
+    public CacheObject(String group, String id, Serializable object) {
+        this.group = group;
+        this.id = id;
+        this.object = object;
+        this.timestamp=System.currentTimeMillis();
+        this.period=-1;
+    }
+    public CacheObject(String group, String id, Serializable object, long period) {
+        this.group = group;
+        this.id = id;
+        this.object = object;
+        this.period = period;
+        this.timestamp=System.currentTimeMillis();
     }
 
     public String getId() {
@@ -45,36 +62,28 @@ public class CacheObject implements Serializable {
         this.id = id;
     }
 
-    public String getTag() {
-        return tag;
+    public String getGroup() {
+        return group;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setGroup(String group) {
+        this.group = group;
     }
 
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Period getPeriod() {
+    public long getPeriod() {
         return period;
     }
 
-    public void setPeriod(Period period) {
+    public void setPeriod(long period) {
         this.period = period;
-    }
-
-    public String getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
     }
 
     public Serializable getObject() {
@@ -85,12 +94,14 @@ public class CacheObject implements Serializable {
         this.object = object;
     }
 
-    public enum Period {
-        HOUR,
-        DAY,
-        WEEK,
-        MONTH,
-        ANY
+    public boolean isExpired(){
+        if(period==-1){
+            return false;
+        }else if(timestamp+period<=System.currentTimeMillis()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
