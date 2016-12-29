@@ -98,15 +98,16 @@ public class DatabaseFragment extends Fragment {
 //        dataService.refresh(data);
 //        simpleAdapter.add(data);
         List<Data> list=new ArrayList<>();
+        int size=1000;
         Data data=null;
-        for (int i = 0; i < 1000; i++) {
-            data=new Data("name_" + atomicInteger.addAndGet(1));
+        for (int i = 0; i < size; i++) {
+            data=new Data("name_" + i);
             list.add(data);
         }
-        Log.d("idle start");
+        Log.e("idle start");
         long start=System.currentTimeMillis();
         dataService.createAll(list);
-        Log.d("idle end "+(System.currentTimeMillis()-start)+"ms");
+        Log.e("idle end "+(System.currentTimeMillis()-start)/size+"ms");
     }
 
     private void delData() {
