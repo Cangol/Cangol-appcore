@@ -4,6 +4,10 @@ dependencies {
     compile project(':appcore')
     compile project(':extra')
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //leak canary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
 android {
     compileSdkVersion 23
