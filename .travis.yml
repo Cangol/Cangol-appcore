@@ -1,6 +1,6 @@
 language: android
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 env:
   - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
 sudo: true
@@ -15,16 +15,16 @@ android:
     - sys-img-armeabi-v7a-android
 before_install:
     # Gradle
-    - wget -q http://services.gradle.org/distributions/gradle-2.10-all.zip
-    - unzip -q gradle-2.10-all.zip
-    - export GRADLE_HOME=$PWD/gradle-2.10
+    - wget -q http://services.gradle.org/distributions/gradle-2.14.1-all.zip
+    - unzip -q gradle-2.14.1-all.zip
+    - export GRADLE_HOME=$PWD/gradle-2.14.1
     - export PATH=$GRADLE_HOME/bin:$PATH
     - curl http://www.jpm4j.org/install/script > jpmInstall.sh
     - sudo sh jpmInstall.sh
     - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
 # Emulator Management: Create, Start and Wait
 before_script:
-  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
