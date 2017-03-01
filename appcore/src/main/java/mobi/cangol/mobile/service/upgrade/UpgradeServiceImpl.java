@@ -118,7 +118,7 @@ class UpgradeServiceImpl implements UpgradeService {
 //	}
     @Override
     public void upgrade(final String filename, String url, final boolean notification) {
-        upgrade(filename, url, notification, UpgradeType.OTHER, false);
+        upgrade(filename, url, notification, UpgradeType.APK, false);
     }
 
     private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean load) {

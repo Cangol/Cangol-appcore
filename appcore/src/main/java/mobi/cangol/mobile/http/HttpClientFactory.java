@@ -183,10 +183,10 @@ public class HttpClientFactory {
     public static OkHttpClient createUnSafeHttpClient() {
         SSLContext sslContext = null;
         SSLSocketFactory sslSocketFactory = null;
-        X509TrustManager trustManager = null;
+        X509TrustManager trustManager = new UnSafeTrustManager();
         try {
             sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[]{new UnSafeTrustManager()}, new SecureRandom());
+            sslContext.init(null, new TrustManager[]{trustManager}, new SecureRandom());
             sslSocketFactory = sslContext.getSocketFactory();
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
