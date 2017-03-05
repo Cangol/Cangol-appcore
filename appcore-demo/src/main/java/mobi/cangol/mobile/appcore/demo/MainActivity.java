@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
 public class MainActivity extends FragmentActivity {
@@ -19,6 +20,7 @@ public class MainActivity extends FragmentActivity {
         }
         Log.d("getMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(this));
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
+        StatAgent.getInstance(this).sendDevice();
     }
 
     @Override

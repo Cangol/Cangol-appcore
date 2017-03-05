@@ -31,7 +31,7 @@ public class StatsSession {
     private Context mContext;
 
     private StatsSession(Context context) {
-        this.mContext = context;
+        this.mContext = context.getApplicationContext();
         mLastTime = System.currentTimeMillis() / 1000;
         mQueue = new ConnectionQueue(onSessionListener);
         mTimer = new Timer();

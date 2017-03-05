@@ -41,7 +41,7 @@ import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
     private final static String SDK_VERSION = "1.0.7";
-    private final static String STAT_HOST_URL = "http://www.cangol.mobi/cmweb/";
+    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
     private final static String STAT_ACTION_EVENT = "api/countly/event.do";
     private final static String STAT_ACTION_TIMING = "api/countly/qos.do";
@@ -58,7 +58,7 @@ public class StatAgent {
     private AnalyticsService analyticsService;
     private SessionService sessionService;
     private CrashService crashService;
-
+    private String statServerURL=null;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     protected StatAgent(CoreApplication coreApplication) {
         this.context = coreApplication;
@@ -69,23 +69,30 @@ public class StatAgent {
 
         commonParams = this.getCommonParams();
     }
-
     public static StatAgent getInstance(Context context) {
         if (instance == null) {
             instance = new StatAgent((CoreApplication) context.getApplicationContext());
-            instance.init();
         }
         return instance;
     }
-
     public static void initInstance(CoreApplication coreApplication) {
         if (instance == null) {
             instance = new StatAgent(coreApplication);
             instance.init();
         }
     }
+    public void setStatServerURL(String statServerURL) {
+        this.statServerURL = statServerURL;
+    }
 
-    protected void init() {
+    private String getStatHostUrl(){
+        if(statServerURL==null||"".equals(statServerURL)){
+            return STAT_SERVER_URL;
+        }else{
+            return statServerURL;
+        }
+    }
+    private void init() {
         sendDevice();
         sendLaunch();
         StatsSession.getInstance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
@@ -95,7 +102,7 @@ public class StatAgent {
             }
         });
         StatsTraffic.getInstance(context).onCreated();
-        crashService.setReport(STAT_HOST_URL + STAT_ACTION_EXCEPTION, getCommonParams());
+        crashService.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, getCommonParams());
     }
 
     public void destroy() {
@@ -220,28 +227,28 @@ public class StatAgent {
         switch (eventBuilder.type) {
             case Device:
                 builder.setAll(getDeviceParams());
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_DEVICE);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_DEVICE);
                 break;
             case Event:
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_EVENT);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_EVENT);
                 break;
             case Timing:
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_TIMING);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_TIMING);
                 break;
             case Exception:
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_EXCEPTION);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_EXCEPTION);
                 break;
             case Launcher:
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_LAUNCH);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_LAUNCH);
                 break;
             case Session:
                 if ("1".equals(eventBuilder.get("beginSession"))) {
                     builder.setAll(getDeviceParams());
                 }
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_SESSION);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_SESSION);
                 break;
             case Traffic:
-                builder.setUrl(STAT_HOST_URL + STAT_ACTION_TRAFFIC);
+                builder.setUrl(getStatHostUrl() + STAT_ACTION_TRAFFIC);
                 break;
         }
         itracker.send(builder);

@@ -97,7 +97,7 @@ public class StatsTraffic {
     };
 
     private StatsTraffic(Context context) {
-        this.context = context;
+        this.context = context.getApplicationContext();
         this.onCreated();
     }
 

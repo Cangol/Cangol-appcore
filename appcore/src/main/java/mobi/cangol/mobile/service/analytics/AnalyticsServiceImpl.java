@@ -78,7 +78,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     @Override
     public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
         RequestParams params = new RequestParams(paramsMap);
-        if (mDebug) Log.v(TAG, "send " + url);
+        if (mDebug) Log.v(TAG, "send " + url+"?"+params.toString());
         if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
         mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
 
