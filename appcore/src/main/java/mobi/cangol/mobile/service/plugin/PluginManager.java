@@ -17,7 +17,6 @@
 
 package mobi.cangol.mobile.service.plugin;
 
-import mobi.cangol.mobile.plugin.PluginInfo;
 import mobi.cangol.mobile.service.AppService;
 
 /**

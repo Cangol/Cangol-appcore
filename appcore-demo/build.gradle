@@ -10,14 +10,14 @@ dependencies {
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
 
     defaultConfig {
-        minSdkVersion 9
-        versionCode 8
-        versionName "1.0.8"
+        minSdkVersion 14
+        versionCode 9
+        versionName "1.1.0"
     }
     lintOptions {
         abortOnError false

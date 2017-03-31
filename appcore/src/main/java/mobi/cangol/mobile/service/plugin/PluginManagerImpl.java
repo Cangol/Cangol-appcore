@@ -22,7 +22,6 @@ import android.app.Application;
 import java.util.HashMap;
 
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.plugin.PluginInfo;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.UrlUtils;

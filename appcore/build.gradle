@@ -9,21 +9,21 @@ apply from: '../config/coverage.gradle'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    compile 'com.android.support:support-v4:[23.0.0,)'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.android.support:support-v4:[25.0.0,)'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okio:okio:1.11.0'
     //compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
-        minSdkVersion 9
-        versionCode 8
-        versionName "1.0.8"
+        minSdkVersion 14
+        versionCode 9
+        versionName "1.1.0"
     }
 
     buildTypes {
