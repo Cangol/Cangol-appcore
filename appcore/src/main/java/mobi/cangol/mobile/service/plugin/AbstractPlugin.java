@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.plugin;
+package mobi.cangol.mobile.service.plugin;
 
 import java.util.HashMap;
 

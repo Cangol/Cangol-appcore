@@ -18,6 +18,7 @@
 package mobi.cangol.mobile.service.plugin;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.HashMap;
 
@@ -34,111 +35,48 @@ class PluginManagerImpl implements PluginManager {
     private final static String TAG = "PluginManager";
     private Application context = null;
     private boolean debug = false;
-    private HashMap<String, PluginInfo> pluginMap = new HashMap<String, PluginInfo>();
-    private ServiceProperty serviceProperty = null;
+    private HashMap<String, AbstractPlugin> mPluginHashMap = null;
+
+    public PluginManagerImpl(Application context) {
+        this.context=context;
+    }
+
+    public void registerPlugin(String pluginName, AbstractPlugin plugin) {
+        mPluginHashMap.put(pluginName, plugin);
+    }
 
     @Override
     public void onCreate(Application context) {
-        this.context = context;
+
     }
 
     @Override
     public String getName() {
-        return TAG;
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "destroyAllPlugin");
-        PluginInfo pluginInfo = null;
-        for (String name : pluginMap.keySet()) {
-            pluginInfo = pluginMap.get(name);
-            pluginInfo.onDestroy();
-        }
-    }
-
-    @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-        PluginInfo pluginInfo = null;
-        for (String name : pluginMap.keySet()) {
-            pluginInfo = pluginMap.get(name);
-            pluginInfo.setDebug(debug);
-        }
-    }
-
-    @Override
-    public void init(ServiceProperty serviceProperty) {
-        this.serviceProperty = serviceProperty;
-    }
-
-    @Override
-    public ServiceProperty getServiceProperty() {
-        return serviceProperty;
-    }
-
-    @Override
-    public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
-        return sp;
-    }
-
-    private PluginInfo initPlugin(String name, String path) {
-        PluginInfo pluginInfo = new PluginInfo(name, path);
-        pluginInfo.setContext(context);
-        pluginInfo.setDebug(debug);
-        return pluginInfo;
-    }
-
-    @Override
-    public void loadPlugin(String name) throws IllegalAccessException {
-        if (pluginMap.containsKey(name)) {
-            PluginInfo pluginInfo = pluginMap.get(name);
-            pluginInfo.launch();
-        } else {
-            throw new IllegalAccessException("Plugin " + name + " is exist!");
-        }
-    }
-
-    @Override
-    public void addPlugin(String name, String path, int flag) {
-        PluginInfo pluginInfo = null;
-        if (pluginMap.containsKey(name)) {
-            if (flag == 1) {
-                if (UrlUtils.isUrl(path)) {
-                    pluginInfo = downloadPlugin(path);
-                } else {
-                    pluginInfo = initPlugin(name, path);
-                }
-            } else {
-                pluginInfo = initPlugin(name, path);
-            }
-        } else {
-            pluginInfo = initPlugin(name, path);
-        }
-        if (pluginInfo != null) {
-            pluginMap.put(name, pluginInfo);
-        }
-    }
-
-    private PluginInfo downloadPlugin(String url) {
         return null;
     }
 
     @Override
-    public void removePlugin(String name) {
-        if (pluginMap.containsKey(name)) {
-            PluginInfo pluginInfo = pluginMap.get(name);
-            pluginInfo.onDestroy();
-            pluginMap.remove(name);
-        }
+    public void onDestroy() {
+
     }
 
     @Override
-    public PluginInfo getPlugin(String name) {
-        if (pluginMap.containsKey(name)) {
-            return pluginMap.get(name);
-        }
+    public void setDebug(boolean debug) {
+
+    }
+
+    @Override
+    public void init(ServiceProperty serviceProperty) {
+
+    }
+
+    @Override
+    public ServiceProperty getServiceProperty() {
+        return null;
+    }
+
+    @Override
+    public ServiceProperty defaultServiceProperty() {
         return null;
     }
 }
