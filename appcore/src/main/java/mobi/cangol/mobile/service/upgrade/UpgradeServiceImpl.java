@@ -121,6 +121,11 @@ class UpgradeServiceImpl implements UpgradeService {
         upgrade(filename, url, notification, UpgradeType.APK, false);
     }
 
+    @Override
+    public void upgrade(String filename, String url, boolean notification, boolean install) {
+        upgrade(filename, url, notification, UpgradeType.APK, install);
+    }
+
     private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean load) {
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
         File saveFile = new File(savePath);

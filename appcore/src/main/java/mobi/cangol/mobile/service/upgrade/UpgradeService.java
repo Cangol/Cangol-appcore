@@ -70,6 +70,15 @@ public interface UpgradeService extends AppService {
      * @param notification 是否通知栏显示
      */
     void upgrade(String filename, String url, boolean notification);
+    /**
+     * 更新资源
+     *
+     * @param filename     文件名 包含后缀，且是唯一的
+     * @param url          下载地址
+     * @param notification 是否通知栏显示
+     * @param install 是否安装
+     */
+    void upgrade(String filename, String url, boolean notification,boolean install);
 
     /**
      * 取消更新
