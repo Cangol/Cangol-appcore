@@ -135,7 +135,11 @@ public class TimeUtilsTest extends InstrumentationTestCase {
         assertNotNull(TimeUtils.convertLong("2012-12-12 00:00:"));
         assertNotNull(TimeUtils.convertLong("2012-12-12 00:00:00"));
     }
-
+    public void testFormatDateString() throws Exception {
+        assertNotNull(TimeUtils.formatDateString("2012-12-12 00:00:00"));
+        assertNotNull(TimeUtils.formatTimeString("2012-12-12 00:00:00"));
+        assertNotNull(TimeUtils.formatTimeString2("2012-12-12 00:00:00"));
+    }
     public void testGetFormatDate() throws Exception {
         assertNotNull(TimeUtils.getFormatDate(2012,12-1,12));
         assertEquals("2012-12-12",TimeUtils.getFormatDate(2012,12-1,12));

@@ -92,70 +92,70 @@ public interface SessionService extends AppService {
     Serializable getSerializable(String key);
 
     /**
-     * 存储int
+     * 存储int到内存和磁盘
      *
      * @param key
      */
     void saveInt(String key, int value);
 
     /**
-     * 存储boolean
+     * 存储boolean到内存和磁盘
      *
      * @param key
      */
     void saveBoolean(String key, boolean value);
 
     /**
-     * 存储Float
+     * 存储Float到内存和磁盘
      *
      * @param key
      */
     void saveFloat(String key, float value);
 
     /**
-     * 存储long
+     * 存储long到内存和磁盘
      *
      * @param key
      */
     void saveLong(String key, long value);
 
     /**
-     * 存储String
+     * 存储String到内存和磁盘
      *
      * @param key
      */
     void saveString(String key, String value);
 
     /**
-     * 存储StringSet
+     * 存储StringSet到内存和磁盘
      *
      * @param key
      */
     void saveStringSet(String key, Set<String> value);
 
     /**
-     * 存储JSONObject
+     * 存储JSONObject到内存和磁盘
      *
      * @param key
      */
     void saveJSONObject(String key, JSONObject value);
 
     /**
-     * 存储JSONArray
+     * 存储JSONArray到内存和磁盘
      *
      * @param key
      */
     void saveJSONArray(String key, JSONArray value);
 
     /**
-     * 存储Serializable
+     * 存储Serializable到内存和磁盘
      *
      * @param key
      */
     void saveSerializable(String key, Serializable value);
 
     /**
-     * 存储map
+     * 存储map到内存和磁盘
      *
      * @param map
      */
@@ -169,7 +169,7 @@ public interface SessionService extends AppService {
     Object get(String key);
 
     /**
-     * 缓存Object
+     * 缓存Object到内存
      *
      * @param key
      * @param value
@@ -177,7 +177,7 @@ public interface SessionService extends AppService {
     void put(String key, Object value);
 
     /**
-     * 缓存map
+     * 缓存map到内存
      *
      * @param map
      */

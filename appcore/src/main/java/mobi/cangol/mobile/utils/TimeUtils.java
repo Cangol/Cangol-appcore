@@ -330,7 +330,51 @@ public class TimeUtils {
         }
         return time;
     }
-
+    public static String formatDateString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
+    }
+    public static String formatDateString(String time) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+        } catch (ParseException e) {
+            Log.d(e.getMessage());
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(date);
+    }
+    public static String formatTimeString2(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        return formatter.format(date);
+    }
+    public static String formatTimeString2(String time) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+        } catch (ParseException e) {
+            Log.d(e.getMessage());
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        return formatter.format(date);
+    }
+    public static String formatTimeString(String time) {
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+        } catch (ParseException e) {
+            Log.d(e.getMessage());
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        return formatter.format(date);
+    }
+    public static String formatTimeString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        return formatter.format(date);
+    }
     /**
      * 计算距今的时间
      *
