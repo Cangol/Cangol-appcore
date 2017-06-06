@@ -21,9 +21,8 @@ before_install:
     - unzip -q gradle-3.3-all.zip
     - export GRADLE_HOME=$PWD/gradle-3.3
     - export PATH=$GRADLE_HOME/bin:$PATH
-    - curl http://www.jpm4j.org/install/script > jpmInstall.sh
-    - sudo sh jpmInstall.sh
-    - sudo jpm install com.codacy:codacy-coverage-reporter:assembly
+    - sudo apt-get install jq
+    - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
 # Emulator Management: Create, Start and Wait
 before_script:
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
@@ -35,7 +34,5 @@ before_script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
-  #- gradle jacocoReport
-  #- codacy-coverage-reporter -l Java -r appcore/build/reports/jacoco/jacocoReport/jacocoReport.xml
-  - codacy-coverage-reporter -l Java -r appcore/build/reports/coverage/debug/report.xml
+   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
 
