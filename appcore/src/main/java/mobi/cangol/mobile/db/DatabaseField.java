@@ -51,4 +51,11 @@ public @interface DatabaseField {
      * @return
      */
     boolean notNull() default false;
+
+    /**
+     * 是否唯一
+     *
+     * @return
+     */
+    boolean unique() default false;
 }

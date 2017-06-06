@@ -65,6 +65,9 @@ public class DatabaseUtils {
                     if (dbField.primaryKey()) {
                         sql.append(" PRIMARY KEY AUTOINCREMENT");
                     }
+                    if (dbField.unique()) {
+                        sql.append(" UNIQUE");
+                    }
                     if (dbField.notNull()) {
                         sql.append(" NOT NULL");
                     }
