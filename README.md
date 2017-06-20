@@ -19,12 +19,12 @@ Maven
      <dependency>
          <groupId>mobi.cangol.mobile</groupId>
          <artifactId>appcore</artifactId>
-         <version>1.1.2/version>
+         <version>1.1.3/version>
          <type>pom</type>
      </dependency>
 Gradle
  
-    compile 'mobi.cangol.mobile:appcore:1.1.2@jar'
+    compile 'mobi.cangol.mobile:appcore:1.1.3@jar'
  
 ##CoreApplication
 核心Application 提供整个库的初始化和一些方法，
