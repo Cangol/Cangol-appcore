@@ -19,9 +19,14 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,6 +137,12 @@ class UpgradeServiceImpl implements UpgradeService {
         if (debug) Log.d("upgrade savePath:" + savePath);
         if (saveFile.exists()) {
             saveFile.delete();
+        }else{
+            try {
+                saveFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         final DownloadNotification downloadNotification = new DownloadNotification(mContext, filename, savePath, createFinishIntent(savePath, upgradeType));
         if (notification) {
@@ -223,11 +234,22 @@ class UpgradeServiceImpl implements UpgradeService {
 
     private Intent createFinishIntent(String savePath, UpgradeType upgradeType) {
         Intent intent = null;
+        File file=new File(savePath);
         switch (upgradeType) {
             case APK:
-                Uri uri = Uri.fromFile(new File(savePath));
                 intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(uri, "application/vnd.android.package-archive");
+                //判断是否是AndroidN以及更高的版本
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    String authority=mContext.getPackageName()+".fileprovider";
+                    if (debug)Log.e("authority="+authority);
+                    Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
+                    if (debug)Log.e("uri="+contentUri);
+                    intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                } else {
+                    intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
                 break;
             case RES:
 

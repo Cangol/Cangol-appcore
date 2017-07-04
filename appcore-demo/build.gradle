@@ -16,8 +16,8 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 13
-        versionName "1.1.3"
+        versionCode Integer.decode("${POM_VERSION_CODE}")
+        versionName "${POM_VERSION}"
     }
     lintOptions {
         abortOnError false
