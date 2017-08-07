@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -285,38 +284,36 @@ class SessionServiceImpl implements SessionService {
         Map<String, ?> map = getShared().getAll();
         StrictMode.setThreadPolicy(oldPolicy);
         mMap.putAll(map);
-        if (debug) Log.d("scan cache file");
-        new AsyncTask<String, Void, List<File>>() {
-            @Override
-            protected List<File> doInBackground(String... params) {
-                List<File> files = FileUtils.searchBySuffix(new File(params[0]), null, params[1], params[2], params[3]);
-                //System.gc();
-                return files;
+        new Thread(){
+            public void run(){
+                mMap.putAll(importDiskMap());
             }
+        }.start();
+    }
 
-            @Override
-            protected void onPostExecute(List<File> files) {
-                super.onPostExecute(files);
-                for (File file : files) {
-                    if (file.getName().endsWith(JSON)) {
-                        JSONObject json = Object2FileUtils.readFile2JSONObject(file);
-                        String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
-                        mMap.put(key, json);
-                    } else if (file.getName().endsWith(JSONA)) {
-                        JSONObject jsona = Object2FileUtils.readFile2JSONObject(file);
-                        String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
-                        mMap.put(key, jsona);
-                    } else if (file.getName().endsWith(SER)) {
-                        Object obj = Object2FileUtils.readObject(file);
-                        String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
-                        mMap.put(key, obj);
-                    } else {
-                        //其他缓存方案
-                        Log.e("found cache file");
-                    }
-                }
+    private  Map<String, Object> importDiskMap(){
+        if (debug) Log.d("scan cache file");
+        List<File> files = FileUtils.searchBySuffix(mConfigService.getCacheDir(), null,JSON, JSONA, SER);
+        Map<String, Object> map = new ConcurrentHashMap<>();
+        for (File file : files) {
+            if (file.getName().endsWith(JSON)) {
+                JSONObject json = Object2FileUtils.readFile2JSONObject(file);
+                String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
+                map.put(key, json);
+            } else if (file.getName().endsWith(JSONA)) {
+                JSONObject jsona = Object2FileUtils.readFile2JSONObject(file);
+                String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
+                map.put(key, jsona);
+            } else if (file.getName().endsWith(SER)) {
+                Object obj = Object2FileUtils.readObject(file);
+                String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
+                map.put(key, obj);
+            } else {
+                //其他缓存方案
+                Log.e("found cache file");
             }
-        }.execute(mConfigService.getCacheDir().getAbsolutePath(), JSON, JSONA, SER);
+        }
+        return map;
     }
 
     @Override
