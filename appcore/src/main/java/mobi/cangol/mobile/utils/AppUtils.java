@@ -55,6 +55,21 @@ public class AppUtils {
      * 安装apk文件
      *
      * @param context
+     * @param apkUri
+     */
+    public static void install(Context context, Uri apkUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setDataAndType(apkUri,
+                "application/vnd.android.package-archive");
+        context.startActivity(intent);
+    }
+
+    /**
+     * 安装apk文件
+     *
+     * @param context
      * @param apkPath
      */
     public static void install(Context context, String apkPath) {

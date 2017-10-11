@@ -210,7 +210,14 @@ class UpgradeServiceImpl implements UpgradeService {
     private void makeLoad(String savePath, UpgradeType upgradeType) {
         switch (upgradeType) {
             case APK:
-                AppUtils.install(mContext, savePath);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    String authority=mContext.getPackageName()+".fileprovider";
+                    if (debug)Log.e("authority="+authority);
+                    Uri contentUri = FileProvider.getUriForFile(mContext, authority, new File(savePath));
+                    AppUtils.install(mContext, contentUri);
+                }else{
+                    AppUtils.install(mContext, savePath);
+                }
                 break;
             case RES:
 

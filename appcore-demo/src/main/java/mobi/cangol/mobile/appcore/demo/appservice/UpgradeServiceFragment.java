@@ -17,7 +17,8 @@ import mobi.cangol.mobile.service.upgrade.UpgradeService;
  * Created by weixuewu on 16/4/30.
  */
 public class UpgradeServiceFragment extends Fragment{
-    private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
+    //private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
+    private String url="https://pro-app-qn.fir.im/d5852a8288097d15e89c75a865d16e280ed91fb0.apk?attname=FR_2.2.0_build18_re937f380_20171011_alpha.apk_2.2.0.apk&e=1507694083&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:kHSDWbSVL2qCs2OBRU69NGysoiU=";
     private UpgradeService upgradeService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class UpgradeServiceFragment extends Fragment{
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upgradeService.upgrade("QQ.apk",url,true);
+                upgradeService.upgrade("QQ.apk",url,true,true);
             }
         });
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
