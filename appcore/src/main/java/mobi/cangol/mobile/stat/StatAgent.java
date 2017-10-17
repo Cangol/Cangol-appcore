@@ -170,7 +170,7 @@ public class StatAgent {
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("model", DeviceInfo.getDeviceModel());
         params.put("brand", DeviceInfo.getDeviceBrand());
-        params.put("carrier", DeviceInfo.getOperator(context));
+        params.put("carrier", DeviceInfo.getNetworkOperatorName(context));
         params.put("screenSize", DeviceInfo.getScreenSize(context));
         params.put("density", "" + DeviceInfo.getDensity(context));
         params.put("densityDpi", DeviceInfo.getDensityDpiStr(context));

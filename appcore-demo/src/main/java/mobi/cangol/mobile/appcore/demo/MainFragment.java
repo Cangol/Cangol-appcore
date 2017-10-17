@@ -17,11 +17,9 @@
 
 package mobi.cangol.mobile.appcore.demo;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -43,6 +41,7 @@ public class MainFragment extends ListFragment {
         fragments.add(ParserFragment.class);
         fragments.add(SecurityFragment.class);
         fragments.add(SoapFragment.class);
+        fragments.add(UtilsFragment.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {

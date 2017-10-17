@@ -141,17 +141,38 @@ public final class DeviceInfo {
     }
 
     /**
-     * 获取设备mem 大小 单位B
+     * 获取设备mem 总大小 单位B
      *
      * @return
      */
-    public static long getMemSize() {
+    public static long getMemTotalSize() {
         long result = 0;
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             String memStr = "MemTotal:";
+            String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
+            bufferedReader.close();
+            result = Long.parseLong(resultStr.trim()) * 1024;
+        } catch (IOException e) {
+            result = -1;
+        }
+        return result;
+    }
+    /**
+     * 获取设备mem 未使用大小 单位B
+     *
+     * @return
+     */
+    public static long getMemFreeSize() {
+        long result = 0;
+        try {
+            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
+            bufferedReader.readLine();
+            String str = bufferedReader.readLine();
+            String memStr = "MemFree:";
             String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
@@ -171,10 +192,13 @@ public final class DeviceInfo {
         try {
             Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
-            String str = bufferedReader.readLine();
+            String data = null;
+            StringBuffer sb=new StringBuffer();
+            while((data = bufferedReader.readLine())!=null){
+                sb.append("\n"+data);
+            }
             bufferedReader.close();
-            String memStr = "MemTotal:";
-            result = str.substring(str.indexOf(memStr) + memStr.length()).trim();
+            result = sb.toString();
         } catch (IOException e) {
             Log.d(e.getMessage());
         }
@@ -242,14 +266,27 @@ public final class DeviceInfo {
 
     /**
      * 获取状态栏高度
-     *
-     * @param activity
+     * @param context
      * @return
      */
-    public static int getStatusBarHeight(Activity activity) {
-        Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        return frame.top;
+    public static int getStatusBarHeight(Context context) {
+        final int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            return context.getResources().getDimensionPixelSize(resourceId);
+        else
+            return (int) Math.ceil((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 24 : 25) * context.getResources().getDisplayMetrics().density);
+    }
+    /**
+     * 获取导航栏高度
+     * @param context
+     * @return
+     */
+    public static int getNavigationBarHeight(Context context) {
+        int resourceId =context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
     public static DisplayMetrics getDisplayMetrics(Context context) {
@@ -331,10 +368,139 @@ public final class DeviceInfo {
      * @param context
      * @return
      */
-    public static String getOperator(Context context) {
-        TelephonyManager manager = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        return manager.getNetworkOperatorName();
+    public static String getNetworkOperatorName(Context context) {
+        String provider="";
+        try {
+            TelephonyManager manager = (TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            provider=manager.getNetworkOperatorName();
+        } catch (Exception e) {
+            Log.e("getNetworkOperatorName", ""+e.getMessage(),e);
+        }
+        return provider;
+    }
+
+    public static final int NETWORK_TYPE_UNAVAILABLE = -1;
+    public static final int NETWORK_TYPE_WIFI = -101;
+
+    public static int getNetworkType(Context context) {
+        int networkType=TelephonyManager.NETWORK_TYPE_UNKNOWN;
+        try {
+            final NetworkInfo network = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE))
+                    .getActiveNetworkInfo();
+            if (network != null && network.isAvailable() && network.isConnected()) {
+                int type = network.getType();
+                if (type == ConnectivityManager.TYPE_WIFI) {
+                    networkType = NETWORK_TYPE_WIFI;
+                } else if (type == ConnectivityManager.TYPE_MOBILE) {
+                    TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+                    networkType = telephonyManager.getNetworkType();
+                }
+            }else{
+                networkType = NETWORK_TYPE_UNAVAILABLE;
+            }
+        }catch (Exception e) {
+            Log.e("getNetworkType", ""+e.getMessage(),e);
+        }
+
+        return networkType;
+    }
+
+    public static String getNetworkTypeName(Context context) {
+        String typeName=null;
+        int networkType=getNetworkType(context);
+        if(networkType==NETWORK_TYPE_WIFI){
+            typeName= "WIFI";
+        }else if(networkType==NETWORK_TYPE_UNAVAILABLE){
+            typeName= "UNAVAILABLE";
+        }else{
+            TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+            try {
+                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName",Integer.class);
+                method.setAccessible(true);
+                typeName= (String) method.invoke(telephonyManager,networkType);
+            } catch (Exception e) {
+                Log.e("getNetworkTypeName", ""+e.getMessage(),e);
+            }
+        }
+        return typeName;
+    }
+
+    private static final int NETWORK_CLASS_WIFI = -101;
+    private static final int NETWORK_CLASS_UNAVAILABLE = -1;
+
+    public static int getNetworkClass(Context context) {
+        int networkClass=0;
+        int networkType=getNetworkType(context);
+        if(networkType==NETWORK_TYPE_WIFI){
+            networkClass=NETWORK_CLASS_WIFI;
+        }else if(networkType==NETWORK_TYPE_UNAVAILABLE){
+            networkClass=NETWORK_CLASS_UNAVAILABLE;
+        }else{
+            TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+            try {
+                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass",Integer.class);
+                method.setAccessible(true);
+                Integer classInteger= (Integer) method.invoke(telephonyManager,networkType);
+                networkClass=classInteger.intValue();
+            } catch (Exception e) {
+                Log.e("getNetworkClass", ""+e.getMessage(),e);
+            }
+        }
+        return networkClass;
+    }
+
+    public static String getNetworkClassName(Context context) {
+        int networkClass = getNetworkClass(context);
+        String type = "UNKNOWN";
+        switch (networkClass) {
+            case NETWORK_CLASS_UNAVAILABLE:
+                type = "UNAVAILABLE";
+                break;
+            case NETWORK_CLASS_WIFI:
+                type = "WIFI";
+                break;
+            case 1://TelephonyManager.NETWORK_CLASS_2_G
+                type = "2G";
+                break;
+            case 2://TelephonyManager.NETWORK_CLASS_3_G
+                type = "3G";
+                break;
+            case 3://TelephonyManager.NETWORK_CLASS_4_G
+                type = "4G";
+                break;
+            case 0://TelephonyManager.NETWORK_CLASS_UNKNOWN:
+                type = "UNKNOWN";
+                break;
+        }
+        return type;
+    }
+
+    public static int getWifiRssi(Context context) {
+        int asu = 85;
+        try {
+            final NetworkInfo network = ((ConnectivityManager)context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE))
+                    .getActiveNetworkInfo();
+            if (network != null && network.isAvailable()&& network.isConnected()) {
+                int type = network.getType();
+                if (type == ConnectivityManager.TYPE_WIFI) {
+                    WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if (wifiInfo != null) {
+                        asu = wifiInfo.getRssi();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("getWifiRssi", ""+e.getMessage(),e);
+        }
+        return asu;
+    }
+
+    public static String getWifiRssiString(Context context) {
+        return getWifiRssi(context) + "dBm";
     }
 
     /**
@@ -593,23 +759,6 @@ public final class DeviceInfo {
         }
         return did;
     }
-
-    /**
-     * 获取网络类型
-     *
-     * @param context
-     * @return
-     */
-    public static String getNetworkType(Context context) {
-        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null) {
-            return networkInfo.getTypeName();
-        } else {
-            return "UNKNOWN";
-        }
-    }
-
     /**
      * 判读WIFI网络是否连接
      *

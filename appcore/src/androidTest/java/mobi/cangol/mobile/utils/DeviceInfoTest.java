@@ -96,7 +96,7 @@ public class DeviceInfoTest extends AndroidTestCase {
     }
 
     public void testGetOperator() throws Exception {
-        assertNotNull(DeviceInfo.getOperator(getContext()));
+        assertNotNull(DeviceInfo.getNetworkOperatorName(getContext()));
     }
 
     public void testGetLocale() throws Exception {
