@@ -52,7 +52,7 @@ public class DeviceInfoTest extends AndroidTestCase {
     }
 
     public void testGetMemSize() throws Exception {
-        assertNotNull(DeviceInfo.getMemSize());
+        assertNotNull(DeviceInfo.getMemTotalSize());
     }
 
     public void testGetMemInfo() throws Exception {
