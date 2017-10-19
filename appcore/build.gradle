@@ -101,6 +101,9 @@ artifacts {
 tasks.coveralls {
     dependsOn 'check'
 }
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 coveralls {
     jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
 }

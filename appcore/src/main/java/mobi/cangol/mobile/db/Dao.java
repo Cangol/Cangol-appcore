@@ -79,11 +79,28 @@ public abstract interface Dao<T, ID> {
 
     /**
      * 更新数据对象
+     * @param paramT
+     * @param columns
+     * @return
+     */
+    public abstract int update(T paramT,String... columns) throws SQLException;
+
+    /**
+     * 更新数据对象
      *
      * @param paramT
      * @return
      */
     public abstract int update(Collection<T> paramT) throws SQLException;
+
+    /**
+     * 更新数据对象
+     *
+     * @param paramT
+     * @param columns
+     * @return
+     */
+    public abstract int update(Collection<T> paramT,String... columns) throws SQLException;
 
     /**
      * 更新数据对象根据
@@ -93,6 +110,16 @@ public abstract interface Dao<T, ID> {
      * @return
      */
     public abstract int updateById(T paramT, ID paramID) throws SQLException;
+
+    /**
+     * 更新数据对象根据
+     *
+     * @param paramT
+     * @param paramID
+     * @param columns
+     * @return
+     */
+    public abstract int updateById(T paramT, ID paramID,String... columns) throws SQLException;
 
     /**
      * 根据条件删除

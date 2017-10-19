@@ -23,6 +23,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -121,7 +124,21 @@ public class DatabaseUtils {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
-
+    /**
+     * 删除表
+     *
+     * @param db
+     * @param table
+     */
+    public static void dropTable(SQLiteDatabase db, String table) {
+        if (table!=null&&!"".equals(table.trim())) {
+            StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
+            sql.append(table);
+            db.execSQL(sql.toString());
+        } else {
+            throw new IllegalStateException(table + " not DatabaseTable Annotation");
+        }
+    }
     /**
      * 获取主键的列名
      *
@@ -183,12 +200,13 @@ public class DatabaseUtils {
      */
     public static ContentValues getContentValues(Object object) throws IllegalAccessException, IllegalArgumentException {
         ContentValues v = new ContentValues();
+        String filedName =null;
         for (Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 if (!dbField.primaryKey()) {
-                    String filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+                    filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     v.put(filedName, String.valueOf(field.get(object)));
                 }
             }
@@ -196,6 +214,30 @@ public class DatabaseUtils {
         return v;
     }
 
+    /**
+     * 获取键值对象
+     * @param object
+     * @param columns
+     * @return
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     */
+    public static ContentValues getContentValues(Object object, String[] columns)throws IllegalAccessException, IllegalArgumentException {
+        ContentValues v = new ContentValues();
+        String filedName =null;
+        Set<String> set = new HashSet<>(Arrays.asList(columns));
+        for (Field field : object.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.isAnnotationPresent(DatabaseField.class)) {
+                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+                if (!dbField.primaryKey()&&set.contains(filedName)) {
+                    v.put(filedName, String.valueOf(field.get(object)));
+                }
+            }
+        }
+        return v;
+    }
     /**
      * 查询记录的值，赋值给obj
      *
@@ -272,4 +314,5 @@ public class DatabaseUtils {
             Log.e(e.getMessage());
         }
     }
+
 }

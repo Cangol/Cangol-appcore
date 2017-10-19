@@ -194,6 +194,20 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
     }
 
     @Override
+    public int update(T paramT,String... columns) throws SQLException {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        int result = -1;
+        try {
+            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
+        } catch (Exception e) {
+            throw new SQLException(mTableName + " error=" + e.getMessage());
+        }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return result;
+    }
+
+    @Override
     public int update(Collection<T> paramTs) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
@@ -214,6 +228,26 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
     }
 
     @Override
+    public int update(Collection<T> paramTs,String... columns) throws SQLException {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        int result = -1;
+        try {
+            db.beginTransaction();
+            for (T paramT : paramTs) {
+                result = result + db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            throw new SQLException(mTableName + " error=" + e.getMessage());
+        } finally {
+            db.endTransaction();
+        }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return result;
+    }
+
+    @Override
     public int updateById(T paramT, ID paramID) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
 
@@ -221,6 +255,21 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         int result = -1;
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
+        } catch (Exception e) {
+            throw new SQLException(mTableName + " error=" + e.getMessage());
+        }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return result;
+    }
+
+    @Override
+    public int updateById(T paramT, ID paramID,String... columns) throws SQLException {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        int result = -1;
+        try {
+            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
         } catch (Exception e) {
             throw new SQLException(mTableName + " error=" + e.getMessage());
         }

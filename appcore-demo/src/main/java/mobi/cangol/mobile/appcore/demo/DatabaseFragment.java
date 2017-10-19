@@ -34,7 +34,7 @@ import mobi.cangol.mobile.logging.Log;
 public class DatabaseFragment extends Fragment {
     private static final String TAG = "DatabaseFragment";
     private ListView listView;
-    private Button button0,button1, button2;
+    private Button button0,button1, button2,button3;
     private DataService dataService;
     private AtomicInteger atomicInteger;
     private ArrayAdapter simpleAdapter;
@@ -78,6 +78,13 @@ public class DatabaseFragment extends Fragment {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                updateData();
+            }
+        });
+        button3 = (Button) this.getView().findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 delData();
             }
         });
@@ -98,10 +105,11 @@ public class DatabaseFragment extends Fragment {
 //        dataService.refresh(data);
 //        simpleAdapter.add(data);
         List<Data> list=new ArrayList<>();
-        int size=1000;
+        int size=10;
         Data data=null;
         for (int i = 0; i < size; i++) {
             data=new Data("name_" + i);
+            data.setNickname("nickname_"+i);
             list.add(data);
         }
         Log.e("idle start");
@@ -109,7 +117,17 @@ public class DatabaseFragment extends Fragment {
         dataService.createAll(list);
         Log.e("idle end "+(System.currentTimeMillis()-start)/size+"ms");
     }
-
+    private void updateData() {
+        List<Data> list=dataService.findListByName("1");
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setName(list.get(i).getName()+"a");
+            list.get(i).setNickname(list.get(i).getNickname()+"a");
+        }
+        Log.e("idle start");
+        long start=System.currentTimeMillis();
+        dataService.updateAll(list,"name");
+        Log.e("idle end "+(System.currentTimeMillis()-start)+"ms");
+    }
     private void delData() {
         if(simpleAdapter.getCount()>0){
             Data data= (Data) simpleAdapter.getItem(simpleAdapter.getCount()-1);
@@ -197,6 +215,16 @@ class DataService implements BaseService<Data> {
             android.util.Log.e(TAG, "DataService getCount fail!");
         }
         return -1;
+    }
+
+    public void updateAll(List<Data> list,String... columns) {
+        try {
+            dao.update(list,columns);
+        } catch (Exception e) {
+            e.printStackTrace();
+            android.util.Log.e(TAG, "DataService delete fail!");
+        }
+
     }
 
     public List<Data> getAllList() {
