@@ -99,6 +99,6 @@ public class SocketClient {
     }
 
     public void cancel(boolean mayInterruptIfRunning) {
-        threadPool.cancle(mayInterruptIfRunning);
+        threadPool.cancel(mayInterruptIfRunning);
     }
 }
