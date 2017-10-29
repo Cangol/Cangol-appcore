@@ -23,29 +23,6 @@ import java.util.List;
 
 public abstract interface Dao<T, ID> {
     /**
-     * 条件查询
-     *
-     * @param queryBuilder
-     * @return
-     */
-    public abstract List<T> query(QueryBuilder queryBuilder) throws SQLException;
-
-    /**
-     * 根据K查询
-     *
-     * @param paramK
-     * @return
-     */
-    public abstract T queryForId(ID paramK) throws SQLException;
-
-    /**
-     * 查询所有
-     *
-     * @return
-     */
-    public abstract List<T> queryForAll() throws SQLException;
-
-    /**
      * 新建一个数据对象
      *
      * @param paramT
@@ -62,12 +39,44 @@ public abstract interface Dao<T, ID> {
     public abstract int create(Collection<T> paramT) throws SQLException;
 
     /**
+     * 条件查询
+     *
+     * @param queryBuilder
+     * @return
+     */
+    public abstract List<T> query(QueryBuilder queryBuilder, String... columns) throws SQLException;
+
+    /**
+     * 根据K查询
+     *
+     * @param paramK
+     * @return
+     */
+    public abstract T queryForId(ID paramK, String... columns) throws SQLException;
+
+    /**
+     * 查询所有
+     *
+     * @return
+     */
+    public abstract List<T> queryForAll(String... columns) throws SQLException;
+
+    /**
      * 刷新数据对象
      *
      * @param paramT
      * @return
      */
-    public abstract T refresh(T paramT) throws SQLException;
+    public abstract T refresh(T paramT, String... columns) throws SQLException;
+
+    /**
+     * 更新数据
+     *
+     * @param updateBuilder
+     * @return
+     * @throws SQLException
+     */
+    public abstract int update(UpdateBuilder updateBuilder) throws SQLException;
 
     /**
      * 更新数据对象
@@ -75,23 +84,7 @@ public abstract interface Dao<T, ID> {
      * @param paramT
      * @return
      */
-    public abstract int update(T paramT) throws SQLException;
-
-    /**
-     * 更新数据对象
-     * @param paramT
-     * @param columns
-     * @return
-     */
-    public abstract int update(T paramT,String... columns) throws SQLException;
-
-    /**
-     * 更新数据对象
-     *
-     * @param paramT
-     * @return
-     */
-    public abstract int update(Collection<T> paramT) throws SQLException;
+    public abstract int update(T paramT, String... column) throws SQLException;
 
     /**
      * 更新数据对象
@@ -100,16 +93,7 @@ public abstract interface Dao<T, ID> {
      * @param columns
      * @return
      */
-    public abstract int update(Collection<T> paramT,String... columns) throws SQLException;
-
-    /**
-     * 更新数据对象根据
-     *
-     * @param paramT
-     * @param paramID
-     * @return
-     */
-    public abstract int updateById(T paramT, ID paramID) throws SQLException;
+    public abstract int update(Collection<T> paramT, String... columns) throws SQLException;
 
     /**
      * 更新数据对象根据
@@ -119,7 +103,7 @@ public abstract interface Dao<T, ID> {
      * @param columns
      * @return
      */
-    public abstract int updateById(T paramT, ID paramID,String... columns) throws SQLException;
+    public abstract int updateById(T paramT, ID paramID, String... columns) throws SQLException;
 
     /**
      * 根据条件删除
@@ -146,7 +130,7 @@ public abstract interface Dao<T, ID> {
     public abstract int delete(Collection<T> paramCollection) throws SQLException;
 
     /**
-     * 更具K删除
+     * 更具ID删除
      *
      * @param paramID
      * @return
@@ -154,7 +138,7 @@ public abstract interface Dao<T, ID> {
     public abstract int deleteById(ID paramID) throws SQLException;
 
     /**
-     * 根据K列表执行删除
+     * 根据ID列表执行删除
      *
      * @param paramCollection
      * @return

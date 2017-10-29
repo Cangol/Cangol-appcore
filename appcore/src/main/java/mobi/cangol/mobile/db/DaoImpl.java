@@ -45,102 +45,6 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         }
     }
 
-    private Cursor query(SQLiteDatabase db, QueryBuilder queryBuilder) {
-        return db.query(queryBuilder.isDistinctValue(),
-                queryBuilder.getTable(),
-                null,
-                queryBuilder.getSelection(),
-                queryBuilder.getSelectionArgs(),
-                queryBuilder.getGroupByValue(),
-                queryBuilder.getHavingValue(),
-                queryBuilder.getOrderByValue(),
-                queryBuilder.getLimitValue());
-    }
-
-    @Override
-    public List<T> query(QueryBuilder queryBuilder) {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        ArrayList<T> list = new ArrayList<T>();
-        try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            Cursor cursor = query(db, queryBuilder);
-            T obj = null;
-            while (cursor.moveToNext()) {
-                obj = DatabaseUtils.cursorToObject(mClazz, cursor);
-                list.add(obj);
-            }
-            cursor.close();
-        } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e.getMessage());
-        }
-        StrictMode.setThreadPolicy(oldPolicy);
-        return list;
-    }
-
-    @Override
-    public T queryForId(ID paramID) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        T obj = null;
-        try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
-            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
-            Cursor cursor = query(db, queryBuilder);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                obj = DatabaseUtils.cursorToObject(mClazz, cursor);
-            }
-            cursor.close();
-        } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e.getMessage());
-        }
-        StrictMode.setThreadPolicy(oldPolicy);
-        return obj;
-    }
-
-    @Override
-    public List<T> queryForAll() throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        ArrayList<T> list = new ArrayList<T>();
-        try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
-            Cursor cursor = query(db, queryBuilder);
-            T obj = null;
-            while (cursor.moveToNext()) {
-                obj = DatabaseUtils.cursorToObject(mClazz, cursor);
-                list.add(obj);
-            }
-            cursor.close();
-        } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e.getMessage());
-        }
-        StrictMode.setThreadPolicy(oldPolicy);
-        return list;
-    }
-
-    @Override
-    public T refresh(T paramT) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        T result = null;
-        try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
-            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
-            Cursor cursor = query(db, queryBuilder);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                result = DatabaseUtils.cursorToObject(paramT, cursor);
-            }
-            cursor.close();
-        } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e.getMessage());
-        }
-        StrictMode.setThreadPolicy(oldPolicy);
-        return result;
-    }
-
-
     @Override
     public int create(T paramT) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
@@ -179,17 +83,101 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         return (int) result;
     }
 
+    private Cursor query(SQLiteDatabase db, QueryBuilder queryBuilder,String... columns) {
+        return db.query(queryBuilder.isDistinctValue(),
+                queryBuilder.getTable(),
+                columns,
+                queryBuilder.getSelection(),
+                queryBuilder.getSelectionArgs(),
+                queryBuilder.getGroupByValue(),
+                queryBuilder.getHavingValue(),
+                queryBuilder.getOrderByValue(),
+                queryBuilder.getLimitValue());
+    }
     @Override
-    public int update(T paramT) throws SQLException {
+    public List<T> query(QueryBuilder queryBuilder,String... columns) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        int result = -1;
+        ArrayList<T> list = new ArrayList<T>();
         try {
-            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
+            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+            Cursor cursor = query(db, queryBuilder,columns);
+            T obj = null;
+            while (cursor.moveToNext()) {
+                obj = DatabaseUtils.cursorToClassObject(mClazz,cursor,columns);
+                list.add(obj);
+            }
+            cursor.close();
         } catch (Exception e) {
             throw new SQLException(mTableName + " error=" + e.getMessage());
         }
         StrictMode.setThreadPolicy(oldPolicy);
+        return list;
+    }
+    @Override
+    public T queryForId(ID paramID,String... columns) throws SQLException {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        T obj = null;
+        try {
+            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
+            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
+            Cursor cursor = query(db, queryBuilder);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                obj =  DatabaseUtils.cursorToClassObject(mClazz, cursor,columns);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            throw new SQLException(mTableName + " error=" + e.getMessage());
+        }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return obj;
+    }
+
+    @Override
+    public List<T> queryForAll(String... columns) throws SQLException {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        ArrayList<T> list = new ArrayList<T>();
+        try {
+            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
+            Cursor cursor = query(db, queryBuilder);
+            T obj = null;
+            while (cursor.moveToNext()) {
+                obj = DatabaseUtils.cursorToClassObject(mClazz, cursor,columns);
+                list.add(obj);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            throw new SQLException(mTableName + " error=" + e.getMessage());
+        }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return list;
+    }
+    @Override
+    public T refresh(T paramT,String... columns) throws SQLException {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        T result = null;
+        try {
+            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
+            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
+            Cursor cursor = query(db, queryBuilder);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                result = DatabaseUtils.cursorToObject(paramT, cursor,columns);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            throw new SQLException(mTableName + " error=" + e.getMessage());
+        }
+        StrictMode.setThreadPolicy(oldPolicy);
+        return result;
+    }
+    @Override
+    public int update(UpdateBuilder updateBuilder) throws SQLException {
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        int result = db.update(mTableName,updateBuilder.getContentValues(), updateBuilder.getWhere(), updateBuilder.getWhereArgs());
         return result;
     }
 
@@ -202,26 +190,6 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
         } catch (Exception e) {
             throw new SQLException(mTableName + " error=" + e.getMessage());
-        }
-        StrictMode.setThreadPolicy(oldPolicy);
-        return result;
-    }
-
-    @Override
-    public int update(Collection<T> paramTs) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        int result = -1;
-        try {
-            db.beginTransaction();
-            for (T paramT : paramTs) {
-                result = result + db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
-            }
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e.getMessage());
-        } finally {
-            db.endTransaction();
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -246,22 +214,6 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
     }
-
-    @Override
-    public int updateById(T paramT, ID paramID) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-        int result = -1;
-        try {
-            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
-        } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e.getMessage());
-        }
-        StrictMode.setThreadPolicy(oldPolicy);
-        return result;
-    }
-
     @Override
     public int updateById(T paramT, ID paramID,String... columns) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();

@@ -252,7 +252,7 @@ class DataService implements BaseService<Data> {
         QueryBuilder queryBuilder = new QueryBuilder(Data.class);
         queryBuilder.addQuery("name", name, "like",true);
         queryBuilder.addQuery("nickname", name, "like",true);
-        return dao.query(queryBuilder);
+        return dao.query(queryBuilder,"name");
     }
 
 }

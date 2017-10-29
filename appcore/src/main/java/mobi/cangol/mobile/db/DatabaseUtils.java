@@ -225,13 +225,13 @@ public class DatabaseUtils {
     public static ContentValues getContentValues(Object object, String[] columns)throws IllegalAccessException, IllegalArgumentException {
         ContentValues v = new ContentValues();
         String filedName =null;
-        Set<String> set = new HashSet<>(Arrays.asList(columns));
+        Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
         for (Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if (!dbField.primaryKey()&&set.contains(filedName)) {
+                if (!dbField.primaryKey()&&(set.isEmpty()||set.contains(filedName))) {
                     v.put(filedName, String.valueOf(field.get(object)));
                 }
             }
@@ -248,8 +248,9 @@ public class DatabaseUtils {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public static <T> T cursorToObject(T obj, Cursor cursor) throws InstantiationException, IllegalAccessException {
+    public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) throws InstantiationException, IllegalAccessException {
         Field[] fields = obj.getClass().getDeclaredFields();
+        Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
         String columnName = null;
         for (Field field : fields) {
             field.setAccessible(true);
@@ -259,12 +260,12 @@ public class DatabaseUtils {
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                setFieldValue(obj, field, columnName, cursor);
+                if(set.isEmpty()||set.contains(columnName))
+                    setFieldValue(obj, field, columnName, cursor);
             }
         }
         return obj;
     }
-
     /**
      * 查询记录的值，赋值给clazz的实例obj
      *
@@ -277,11 +278,11 @@ public class DatabaseUtils {
      * @throws NoSuchMethodException
      * @throws InvocationTargetException
      */
-    public static <T> T cursorToObject(Class<T> clazz, Cursor cursor) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public static <T> T cursorToClassObject(Class<T> clazz, Cursor cursor, String[] columns) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Constructor constructor = clazz.getDeclaredConstructor();
         constructor.setAccessible(true);
         T obj = (T) constructor.newInstance();
-        return cursorToObject(obj, cursor);
+        return cursorToObject(obj, cursor,columns);
     }
 
     /**
