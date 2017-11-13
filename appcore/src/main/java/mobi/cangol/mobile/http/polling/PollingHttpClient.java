@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.PoolManager;
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -50,7 +51,7 @@ public class PollingHttpClient {
     /**
      * 构造实例
      */
-    public PollingHttpClient() {
+    public PollingHttpClient(final String group) {
         httpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
                 .followRedirects(true)
@@ -59,11 +60,13 @@ public class PollingHttpClient {
                 .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                 .build();
-        threadPool = PoolManager.buildPool(TAG, DEFAULT_MAX);
-
+        threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
-
+    public static PollingHttpClient build(String group) {
+        PollingHttpClient asyncHttpClient = new PollingHttpClient(group);
+        return asyncHttpClient;
+    }
     /**
      * 发送轮询请求(get请求)
      *
@@ -139,7 +142,10 @@ public class PollingHttpClient {
             }
         }
     }
+    public  void shutdown() {
+        threadPool.getExecutorService().shutdownNow();
 
+    }
     class HttpRequestTask implements Runnable {
         private final PollingResponseHandler responseHandler;
         private OkHttpClient client;
@@ -169,9 +175,9 @@ public class PollingHttpClient {
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
                                 if (isSuccess = responseHandler.sendResponseMessage(response)) {
-                                    break;
+
                                 } else {
-                                    //
+                                    break;
                                 }
                             }
                         } else {

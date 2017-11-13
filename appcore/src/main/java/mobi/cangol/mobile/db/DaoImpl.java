@@ -282,9 +282,11 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = 0;
         try {
+            db.beginTransaction();
             for (ID id : paramCollection) {
                 result = result + db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + id});
             }
+            db.setTransactionSuccessful();
         } catch (Exception e) {
             throw new SQLException(mTableName + " error=" + e.getMessage());
         }

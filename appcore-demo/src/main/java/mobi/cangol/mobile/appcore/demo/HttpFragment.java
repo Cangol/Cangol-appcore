@@ -21,6 +21,8 @@ import mobi.cangol.mobile.http.JsonHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
+import mobi.cangol.mobile.http.polling.PollingHttpClient;
+import mobi.cangol.mobile.http.polling.PollingResponseHandler;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.conf.ConfigService;
@@ -33,12 +35,14 @@ public class HttpFragment extends Fragment {
     private static final String TAG="HttpFragment";
     private AsyncHttpClient mAsyncHttpClient;
     private String url="https://www.cangol.mobi/cmweb/api/station/sync.do";
+    private String pollUrl="https://hq.sinajs.cn/list=rt_hkHSI";
     private String download="http://ddmyapp.kw.tc.qq.com/16891/1AF80D6B4F5B3365D1A4B755BBC92FD2.apk?mkey=577cc4c4c20a8141&f=5401&c=0&fsname=com.tencent.mm_6.3.22_821.apk&p=.apk";
     private TextView textView1;
-    private Button button1,button2,button3;
+    private Button button1,button2,button3,button4,button5;
     private ConfigService configService;
     private DownloadHttpClient downloadHttpClient;
     private String saveFile;
+    private PollingHttpClient pollingHttpClient;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,23 @@ public class HttpFragment extends Fragment {
                 }
             }
         });
-
+        button4 = (Button) this.getView().findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    poll(pollUrl);
+            }
+        });
+        button5 = (Button) this.getView().findViewById(R.id.button5);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pollingHttpClient!=null){
+                    pollingHttpClient.cancelRequests(HttpFragment.this,true);
+                    pollingHttpClient.shutdown();
+                }
+            }
+        });
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.setText("--------------Request---------------\n");
         FileUtils.delete(saveFile);
@@ -174,5 +194,36 @@ public class HttpFragment extends Fragment {
                 printLog("onFailure "+content+"\n");
             }
         },0,saveFile);
+    }
+
+    private void poll(String url){
+        if(pollingHttpClient==null){
+            pollingHttpClient=PollingHttpClient.build("poll");
+        }
+        pollingHttpClient.send(TAG, url, new HashMap<String, String>(), new PollingResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                printLog("onStart\n");
+            }
+
+            @Override
+            public void onPollingFinish(int execTimes, String content) {
+                super.onPollingFinish(execTimes, content);
+                printLog("onPollingFinish execTimes"+execTimes+",content"+content);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, String content) {
+                super.onSuccess(statusCode, content);
+                printLog("onPollingFinish statusCode"+statusCode+",content"+content);
+            }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                super.onFailure(error, content);
+                printLog("onFailure error"+error.getMessage()+",content"+content);
+            }
+        },10,1000L);
     }
 }

@@ -40,6 +40,22 @@
             android:layout_height="wrap_content"
             android:text="stop download"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Polling Start"/>
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Polling Stop"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
