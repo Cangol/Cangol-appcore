@@ -104,6 +104,7 @@ public class HttpFragment extends Fragment {
                 if(pollingHttpClient!=null){
                     pollingHttpClient.cancelRequests(HttpFragment.this,true);
                     pollingHttpClient.shutdown();
+                    pollingHttpClient=null;
                 }
             }
         });

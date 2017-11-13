@@ -74,7 +74,6 @@ public abstract interface Dao<T, ID> {
      *
      * @param updateBuilder
      * @return
-     * @throws SQLException
      */
     public abstract int update(UpdateBuilder updateBuilder) throws SQLException;
 

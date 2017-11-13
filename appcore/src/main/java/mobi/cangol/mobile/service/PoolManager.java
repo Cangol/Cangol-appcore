@@ -88,7 +88,13 @@ public class PoolManager {
         if (!poolMap.containsKey(name)) {
             poolMap.put(name, new Pool(name, core));
         }
-        return poolMap.get(name);
+        Pool pool =  poolMap.get(name);
+
+        if(pool.isShutdown()||pool.isTerminated()||pool.isThreadPoolClose()){
+            pool=new Pool(name, core);
+            poolMap.put(name, pool);
+        }
+        return pool;
     }
 
     /**
@@ -100,7 +106,11 @@ public class PoolManager {
         }
         poolMap = null;
     }
-
+    public static void clear(String name) {
+        if (null != poolMap) {
+            poolMap.remove(name);
+        }
+    }
     public static class Pool {
         private ArrayList<Future<?>> futureTasks = null;
         private ExecutorService executorService = null;

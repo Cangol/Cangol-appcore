@@ -34,6 +34,7 @@ import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class PollingHttpClient {
@@ -99,6 +100,15 @@ public class PollingHttpClient {
         sendRequest(httpClient, request, responseHandler, tag, retryTimes, sleeptimes);
     }
 
+    public void send(Object tag, String url, RequestBody requestBody, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
+        Request request = new Request.Builder()
+                    .tag(tag)
+                    .url(url)
+                    .post(requestBody)
+                    .build();
+        sendRequest(httpClient, request, responseHandler, tag, retryTimes, sleeptimes);
+    }
+
     protected void sendRequest(OkHttpClient client, Request uriRequest, PollingResponseHandler responseHandler, Object context, int retryTimes, long sleeptimes) {
 
         Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, retryTimes, sleeptimes));
@@ -144,6 +154,7 @@ public class PollingHttpClient {
     }
     public  void shutdown() {
         threadPool.getExecutorService().shutdownNow();
+        PoolManager.clear();
 
     }
     class HttpRequestTask implements Runnable {
