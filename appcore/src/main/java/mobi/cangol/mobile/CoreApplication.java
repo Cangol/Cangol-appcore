@@ -45,6 +45,7 @@ public class CoreApplication extends Application {
     public List<WeakReference<Activity>> mActivityManager = new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
     private boolean mDevMode = false;
+    private boolean mAsyncInit = false;
     private PoolManager.Pool mSharePool;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -61,16 +62,29 @@ public class CoreApplication extends Application {
                 Log.setLogLevelFormat(android.util.Log.WARN, true);
             }
             mSharePool=PoolManager.buildPool("share",2);
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    initAppServiceManager();
-                    StatAgent.initInstance((CoreApplication) getApplicationContext());
-                }
-            });
+            if(mAsyncInit){
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        initAppServiceManager();
+                        StatAgent.initInstance((CoreApplication) getApplicationContext());
+                        init();
+                    }
+                });
+            }else{
+                initAppServiceManager();
+                StatAgent.initInstance((CoreApplication) getApplicationContext());
+                init();
+            }
         } else {
             Log.i("cur process is not app' process");
         }
+    }
+
+    protected void init(){}
+
+    public void setAsyncInit(boolean asyncInit) {
+        this.mAsyncInit = asyncInit;
     }
 
     /**

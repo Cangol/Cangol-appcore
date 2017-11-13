@@ -13,15 +13,12 @@ import mobi.cangol.mobile.CoreApplication;
 public class MobileApplication extends CoreApplication {
     public void onCreate() {
         this.setDevMode(true);
+        this.setAsyncInit(true);
         super.onCreate();
-        post(new Runnable() {
-            @Override
-            public void run() {
-                initLeak();
-            }
-        });
     }
-    private void initLeak(){
+
+    @Override
+    public void init() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
