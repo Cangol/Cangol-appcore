@@ -108,7 +108,11 @@ public class PollingResponseHandler {
         String content = null;
         if (response.isSuccessful()) {
             if (responseBody != null) {
-                content = responseBody.toString();
+                try {
+                    content = responseBody.string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             if (isFailResponse(content)) {
                 sendFailureMessage(new IOException("code=" + response.code()), content);
