@@ -10,6 +10,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
         classpath "net.saliman:gradle-cobertura-plugin:2.3.2"
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
     }
 
 

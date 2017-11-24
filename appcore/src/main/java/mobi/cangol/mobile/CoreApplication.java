@@ -24,11 +24,13 @@ import android.os.StrictMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
+import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.session.SessionService;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
@@ -42,7 +44,8 @@ public class CoreApplication extends Application {
     public List<WeakReference<Activity>> mActivityManager = new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
     private boolean mDevMode = false;
-
+    private boolean mAsyncInit = false;
+    private PoolManager.Pool mSharePool;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void onCreate() {
@@ -57,10 +60,30 @@ public class CoreApplication extends Application {
             } else {
                 Log.setLogLevelFormat(android.util.Log.WARN, true);
             }
-            initAppServiceManager();
+            mSharePool=PoolManager.buildPool("share",2);
+            if(mAsyncInit){
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        initAppServiceManager();
+                        StatAgent.initInstance((CoreApplication) getApplicationContext());
+                        init();
+                    }
+                });
+            }else{
+                initAppServiceManager();
+                StatAgent.initInstance((CoreApplication) getApplicationContext());
+                init();
+            }
         } else {
             Log.i("cur process is not app' process");
         }
+    }
+
+    protected void init(){}
+
+    public void setAsyncInit(boolean asyncInit) {
+        this.mAsyncInit = asyncInit;
     }
 
     /**
@@ -92,6 +115,31 @@ public class CoreApplication extends Application {
         return null;
     }
 
+    /**
+     * 获取独立的线程池
+     * @param name
+     * @param core
+     * @return
+     */
+    public PoolManager.Pool getPool(String name, int core){
+        return PoolManager.buildPool(name,core);
+    }
+
+    /**
+     * 获取共享线程池
+     * @return
+     */
+    public PoolManager.Pool getSharePool(){
+        return mSharePool;
+    }
+
+    /**
+     * 提交一个后台线程任务
+     * @param runnable
+     */
+    public void post(Runnable runnable){
+        mSharePool.submit(runnable);
+    }
     /**
      * 添加一个activity到管理列表里
      *
@@ -157,6 +205,7 @@ public class CoreApplication extends Application {
         if (mAppServiceManager != null) {
             mAppServiceManager.destroy();
         }
+        PoolManager.cancelAll();
         // 0 正常推退出
         System.exit(0);
     }

@@ -463,6 +463,6 @@ public class AsyncHttpClient {
      */
     public void cancelAll() {
         httpClient.dispatcher().cancelAll();
-        threadPool.cancle(true);
+        threadPool.cancel(true);
     }
 }
