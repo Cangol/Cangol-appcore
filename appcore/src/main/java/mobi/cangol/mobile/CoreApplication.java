@@ -30,7 +30,6 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.session.SessionService;
-import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
@@ -59,7 +58,6 @@ public class CoreApplication extends Application {
                 Log.setLogLevelFormat(android.util.Log.WARN, true);
             }
             initAppServiceManager();
-            StatAgent.initInstance(this);
         } else {
             Log.i("cur process is not app' process");
         }
@@ -154,7 +152,6 @@ public class CoreApplication extends Application {
      * 退出应用
      */
     public void exit() {
-        StatAgent.getInstance(this).destroy();
         getSession().saveString(Constants.KEY_EXIT_CODE, "0");
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));
         if (mAppServiceManager != null) {
