@@ -40,7 +40,7 @@ public class PoolManager {
     private static ExecutorService generateExecutorService(final String name, int core) {
 
         ExecutorService executorService = new ThreadPoolExecutor(core, core * 2 + 1, KEEP_ALIVE,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), new ThreadFactory() {
+                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
             private final AtomicInteger mCount = new AtomicInteger(1);
 
             public Thread newThread(final Runnable r) {
@@ -52,7 +52,7 @@ public class PoolManager {
 
     private static ExecutorService generateExecutorService(final String name) {
         ExecutorService executorService = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(128), new ThreadFactory() {
+                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
             private final AtomicInteger mCount = new AtomicInteger(1);
 
             public Thread newThread(final Runnable r) {
