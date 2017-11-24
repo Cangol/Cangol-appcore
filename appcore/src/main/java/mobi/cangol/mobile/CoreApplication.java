@@ -24,7 +24,6 @@ import android.os.StrictMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
@@ -66,13 +65,11 @@ public class CoreApplication extends Application {
                     @Override
                     public void run() {
                         initAppServiceManager();
-                        StatAgent.initInstance((CoreApplication) getApplicationContext());
                         init();
                     }
                 });
             }else{
                 initAppServiceManager();
-                StatAgent.initInstance((CoreApplication) getApplicationContext());
                 init();
             }
         } else {
