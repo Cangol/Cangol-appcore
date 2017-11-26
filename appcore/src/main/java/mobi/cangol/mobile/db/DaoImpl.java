@@ -45,6 +45,27 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         }
     }
 
+    /**
+     *异步执行操作
+     */
+    @Override
+    public  void async(Object[] params,final DbProcessor processor) throws SQLException{
+        DbTask dbTask=new DbTask(mTableName){
+
+            @Override
+            public Object doInBackground(Object[] mP) {
+                return processor.process(DaoImpl.this);
+            }
+
+            @Override
+            protected void onPostExecute(Object result) {
+                super.onPostExecute(result);
+                processor.completed(result);
+            }
+        };
+        dbTask.execute(params);
+    }
+
     @Override
     public int create(T paramT) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();

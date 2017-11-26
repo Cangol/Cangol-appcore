@@ -22,6 +22,11 @@ import java.util.Collection;
 import java.util.List;
 
 public abstract interface Dao<T, ID> {
+
+    /**
+     *异步执行操作
+     */
+    public abstract void async(Object[] params,final DbProcessor processor) throws SQLException;
     /**
      * 新建一个数据对象
      *
