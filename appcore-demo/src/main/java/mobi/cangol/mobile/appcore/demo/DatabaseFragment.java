@@ -146,6 +146,7 @@ class DataService implements BaseService<Data> {
             DatabaseHelper dbHelper = DatabaseHelper
                     .createDataBaseHelper(context);
             dao = dbHelper.getDao(Data.class);
+            dao.showSql(true);
         } catch (SQLException e) {
             e.printStackTrace();
             android.util.Log.e(TAG, "DataService init fail!");

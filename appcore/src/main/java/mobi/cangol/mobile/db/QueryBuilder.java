@@ -170,6 +170,26 @@ public class QueryBuilder {
 
     }
 
+    protected String getWhere() {
+        StringBuffer sql = new StringBuffer();
+        String str=null;
+        if (paraKey != null) {
+            for (int i = 0; i < paraKey.size(); i++) {
+                if (i == 0) {
+                    ;
+                } else {
+                    sql.append(condList.get(i));
+                }
+                str=paraKey.get(i);
+                sql.append(str.replace("?",String.valueOf(paraValue.get(i))));
+            }
+            return sql.toString();
+        } else {
+            return null;
+        }
+    }
+
+
     protected boolean isDistinctValue() {
         return distinctValue;
     }

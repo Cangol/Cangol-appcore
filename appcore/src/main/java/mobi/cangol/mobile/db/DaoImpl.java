@@ -19,6 +19,7 @@ import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -33,7 +34,7 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
     private CoreSQLiteOpenHelper mDatabaseHelper;
     private String mTableName;
     private Class<T> mClazz;
-
+    private boolean mShowSql;
     public DaoImpl(CoreSQLiteOpenHelper databaseHelper, Class<T> clazz) {
         this.mDatabaseHelper = databaseHelper;
         this.mClazz = clazz;
@@ -43,6 +44,11 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
         } else {
             Log.e("has no Annotation DatabaseTable clazz=" + clazz.getSimpleName());
         }
+    }
+
+    @Override
+    public void showSql(boolean showSql) throws SQLException {
+        mShowSql=showSql;
     }
 
     /**
@@ -105,6 +111,17 @@ class DaoImpl<T, ID> implements Dao<T, ID> {
     }
 
     private Cursor query(SQLiteDatabase db, QueryBuilder queryBuilder,String... columns) {
+        if(mShowSql){
+            Log.d(mTableName,SQLiteQueryBuilder.buildQueryString(queryBuilder.isDistinctValue(),
+                    queryBuilder.getTable(),
+                    columns,
+                    queryBuilder.getWhere(),
+                    queryBuilder.getGroupByValue(),
+                    queryBuilder.getHavingValue(),
+                    queryBuilder.getOrderByValue(),
+                    queryBuilder.getLimitValue()));
+        }
+
         return db.query(queryBuilder.isDistinctValue(),
                 queryBuilder.getTable(),
                 columns,

@@ -24,6 +24,11 @@ import java.util.List;
 public abstract interface Dao<T, ID> {
 
     /**
+     * 设置是否显示执行的sql语句
+     * @param showSql
+     */
+    public abstract void showSql(boolean showSql) throws SQLException;
+    /**
      *异步执行操作
      */
     public abstract void async(Object[] params,final DbProcessor processor) throws SQLException;
