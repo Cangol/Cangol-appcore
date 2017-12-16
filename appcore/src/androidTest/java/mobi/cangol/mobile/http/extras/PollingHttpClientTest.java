@@ -19,6 +19,8 @@ package mobi.cangol.mobile.http.extras;
 
 import android.test.AndroidTestCase;
 
+import java.util.HashMap;
+
 import mobi.cangol.mobile.http.polling.PollingHttpClient;
 import mobi.cangol.mobile.http.polling.PollingResponseHandler;
 
@@ -30,8 +32,8 @@ public class PollingHttpClientTest extends AndroidTestCase {
     private String url = "http://www.cangol.mobi/cmweb/api/station/sync.do";
 
     public void testGet() throws Exception {
-        PollingHttpClient httpClient = new PollingHttpClient();
-        httpClient.send(getContext(), url, null, new PollingResponseHandler(){
+        PollingHttpClient httpClient = new PollingHttpClient("polling");
+        httpClient.send(getContext(), url, new HashMap<String, String>(), new PollingResponseHandler(){
             @Override
             public void onStart() {
                 super.onStart();
