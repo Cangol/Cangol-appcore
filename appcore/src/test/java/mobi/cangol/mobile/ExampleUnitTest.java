@@ -28,9 +28,7 @@ import static junit.framework.Assert.assertEquals;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        String[] columns=null;
-        Set<String> set = new HashSet<>(Arrays.asList(columns));
-        System.out.print("set="+set.isEmpty());
+
     }
 }
 

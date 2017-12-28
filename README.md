@@ -19,12 +19,12 @@ Maven
      <dependency>
          <groupId>mobi.cangol.mobile</groupId>
          <artifactId>appcore</artifactId>
-         <version>1.1.3/version>
+         <version>1.1.13/version>
          <type>pom</type>
      </dependency>
 Gradle
  
-    compile 'mobi.cangol.mobile:appcore:1.1.3@jar'
+    compile 'mobi.cangol.mobile:appcore:1.1.13@aar'
  
 ##CoreApplication
 核心Application 提供整个库的初始化和一些方法，
@@ -80,8 +80,8 @@ Gradle
 
 修正AsyncHttpClient的部分bug，优化请求参数配置，扩展超时自动重试机制，增加gzip的支持。并扩展：
 
-* [PollingHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/extras/PollingHttpClient.html) 可轮询请求的httpclient
-* [RouteHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/extras/RouteHttpClient.html) 可设置不同host的httpclient
+* [PollingHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/polling/PollingHttpClient.html) 可轮询请求的httpclient
+* [RouteHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/route/RouteHttpClient.html) 可设置不同host的httpclient
 
 ###WebService请求
 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar 对Soap进行异步封装。[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/soap/SoapClient.html)
