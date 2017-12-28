@@ -86,7 +86,7 @@ task javadoc(type: Javadoc) {
     exclude '**/BuildConfig.java'
     exclude '**/R.java'
     exclude '**/properties.xml'
-
+    destinationDir = file("../docs/")
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
