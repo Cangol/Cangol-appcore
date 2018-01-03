@@ -32,7 +32,7 @@ public class SocketClientTest extends AndroidTestCase {
 
             @Override
             protected void onFail(Object obj, Exception e) {
-                socketClient.cancel(true);
+                socketClient.close(true);
             }
         });
         socketClient.connect(getContext(), "127.0.0.1", 8080, true, 10 * 1000, new SocketSerializableHandler() {

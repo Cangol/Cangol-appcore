@@ -202,7 +202,7 @@ public class CoreApplication extends Application {
         if (mAppServiceManager != null) {
             mAppServiceManager.destroy();
         }
-        PoolManager.cancelAll();
+        PoolManager.closeAll();
         // 0 正常推退出
         System.exit(0);
     }

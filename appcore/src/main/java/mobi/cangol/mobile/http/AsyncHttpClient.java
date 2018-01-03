@@ -463,6 +463,9 @@ public class AsyncHttpClient {
      */
     public void cancelAll() {
         httpClient.dispatcher().cancelAll();
-        threadPool.cancel(true);
+    }
+
+    public void close() {
+        threadPool.close(false);
     }
 }

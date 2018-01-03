@@ -334,7 +334,7 @@ public abstract class DownloadExecutor<T> {
             }
         }
         mDownloadRes.clear();
-        mPool.close();
+        mPool.close(false);
     }
 
     /**

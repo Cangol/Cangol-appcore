@@ -111,13 +111,13 @@ public class PoolManager {
     /**
      * 停止所有线程池
      */
-    public static void cancelAll() {
+    public static void closeAll() {
         if (null != poolMap) {
             Pool pool=null;
             for(String name:poolMap.keySet()){
                 pool=poolMap.get(name);
                 if(pool!=null)
-                    pool.cancel(true);
+                    pool.close(false);
 
             }
             poolMap.clear();
@@ -130,7 +130,6 @@ public class PoolManager {
         }
     }
     public static class Pool {
-        private ArrayList<Future<?>> futureTasks = null;
         private ExecutorService executorService = null;
         private boolean threadPoolClose = false;
         private String name = null;
@@ -138,45 +137,32 @@ public class PoolManager {
         Pool(String name, int core) {
             this.name = name;
             this.executorService = PoolManager.generateExecutorService(name, core);
-
-            this.futureTasks = new ArrayList<Future<?>>();
             this.threadPoolClose = false;
         }
 
         Pool(String name) {
             this.name = name;
             this.executorService = PoolManager.generateExecutorService(name);
-
-            this.futureTasks = new ArrayList<Future<?>>();
             this.threadPoolClose = false;
         }
 
-        public void close() {
-            this.executorService.shutdownNow();
-            this.futureTasks.clear();
+        public void close(boolean shutDownNow) {
+            if(shutDownNow)
+                this.executorService.shutdownNow();
+            else
+                this.executorService.shutdown();
+
             this.threadPoolClose = true;
             this.executorService = null;
         }
-
-        public void cancel(boolean mayInterruptIfRunning) {
-            for (Future<?> future : futureTasks) {
-                future.cancel(mayInterruptIfRunning);
-            }
-        }
         public  Future<?> submit(Runnable task) {
-            Future<?> future = this.executorService.submit(task);
-            futureTasks.add(future);
-            return future;
+            return this.executorService.submit(task);
         }
         public <T> Future<T> submit(Callable<T> task) {
-            Future<T> future = this.executorService.submit(task);
-            futureTasks.add(future);
-            return future;
+            return this.executorService.submit(task);
         }
         public <T> Future<T> submit(Runnable task, T result){
-            Future<T> future = this.executorService.submit(task,result);
-            futureTasks.add(future);
-            return future;
+            return this.executorService.submit(task,result);
         }
         public boolean isTerminated() {
             return this.executorService.isTerminated();
@@ -186,13 +172,6 @@ public class PoolManager {
             return this.executorService.isShutdown();
         }
 
-        public ArrayList<Future<?>> getFutureTasks() {
-            return futureTasks;
-        }
-
-        public void setFutureTasks(ArrayList<Future<?>> futureTasks) {
-            this.futureTasks = futureTasks;
-        }
 
         public ExecutorService getExecutorService() {
             return executorService;

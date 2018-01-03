@@ -117,7 +117,6 @@ public class DownloadTask {
     protected void start() {
         downloadResource.setStatus(Download.STATUS_WAIT);
         future = exec(downloadResource, responseHandler);
-        pool.getFutureTasks().add(future);
         running = true;
     }
 
@@ -133,7 +132,6 @@ public class DownloadTask {
     public void resume() {
         downloadResource.setStatus(Download.STATUS_WAIT);
         future = exec(downloadResource, responseHandler);
-        pool.getFutureTasks().add(future);
         sendDownloadMessage(Download.ACTION_DOWNLOAD_CONTINUE, downloadResource);
         running = true;
     }

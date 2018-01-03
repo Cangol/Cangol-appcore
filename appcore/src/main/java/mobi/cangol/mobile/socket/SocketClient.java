@@ -98,7 +98,7 @@ public class SocketClient {
         requestMap.remove(context);
     }
 
-    public void cancel(boolean mayInterruptIfRunning) {
-        threadPool.cancel(mayInterruptIfRunning);
+    public void close(boolean shutDownNow) {
+        threadPool.close(shutDownNow);
     }
 }
