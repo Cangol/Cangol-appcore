@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -301,18 +302,6 @@ public class TimeUtils {
     }
 
     /**
-     * 将long形式改成YYYYMMDD
-     *
-     * @param time
-     * @return
-     */
-    public static String convertString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return formatter.format(date);
-    }
-
-    /**
      * 转换时间yyyy-MM-dd HH:mm:ss到毫秒数
      *
      * @param str
@@ -330,11 +319,6 @@ public class TimeUtils {
         }
         return time;
     }
-    public static String formatDateString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        return formatter.format(date);
-    }
     public static String formatDateString(String time) {
         Date date = null;
         try {
@@ -345,11 +329,7 @@ public class TimeUtils {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(date);
     }
-    public static String formatTimeString2(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        return formatter.format(date);
-    }
+
     public static String formatTimeString2(String time) {
         Date date = null;
         try {
@@ -370,11 +350,114 @@ public class TimeUtils {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         return formatter.format(date);
     }
-    public static String formatTimeString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        return formatter.format(date);
+    /**
+     * 将long形式改成YYYY MM-dd HH:mm:ss
+     * @param time
+     * @param zone
+     * @return
+     */
+    public static String formatYmdHms(long time, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("YYYY MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        return formatter.format(new Date(time));
     }
+    /**
+     * 将long形式改成MM-dd HH:mm:ss
+     * @param time
+     * @param zone
+     * @return
+     */
+    public static String formatMdHms(long time, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成MM-dd HH:mm:ss
+     * @param time
+     * @param zone
+     * @return
+     */
+    public static String formatHms(long time, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成mm:ss
+     * @param time
+     * @param zone
+     * @return
+     */
+    public static String formatMs(long time, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成pattern
+     * @param time
+     * @param pattern
+     * @param zone
+     * @return
+     */
+    public static String format(long time,String pattern, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成YYYY MM-dd HH:mm:ss
+     * @param time
+     * @return
+     */
+    public static String formatYmdHms(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("YYYY MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成MM-dd HH:mm:ss
+     * @param time
+     * @return
+     */
+    public static String formatMdHms(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成HH:mm:ss
+     * @param time
+     * @return
+     */
+    public static String formatHms(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成mm:ss
+     * @param time
+     * @return
+     */
+    public static String formatMs(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成pattern
+     * @param time
+     * @param pattern
+     * @return
+     */
+    public static String format(long time,String pattern) {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+
     /**
      * 计算距今的时间
      *
