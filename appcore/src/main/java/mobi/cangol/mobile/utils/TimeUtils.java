@@ -384,6 +384,17 @@ public class TimeUtils {
         return formatter.format(new Date(time));
     }
     /**
+     * 将long形式改成MM-dd HH:mm
+     * @param time
+     * @param zone
+     * @return
+     */
+    public static String formatHm(long time, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        return formatter.format(new Date(time));
+    }
+    /**
      * 将long形式改成mm:ss
      * @param time
      * @param zone
@@ -433,6 +444,16 @@ public class TimeUtils {
      */
     public static String formatHms(long time) {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成HH:mm
+     * @param time
+     * @return
+     */
+    public static String formatHm(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
         formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
         return formatter.format(new Date(time));
     }
