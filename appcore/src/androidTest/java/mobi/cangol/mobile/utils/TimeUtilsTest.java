@@ -107,7 +107,7 @@ public class TimeUtilsTest extends InstrumentationTestCase {
     }
 
     public void testConvertString() throws Exception {
-        assertNotNull(TimeUtils.convertString(System.currentTimeMillis()));
+        assertNotNull(TimeUtils.formatHm(System.currentTimeMillis()));
     }
 
     public void testConvert8Bit() throws Exception {

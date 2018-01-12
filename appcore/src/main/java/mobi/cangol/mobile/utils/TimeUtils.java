@@ -351,13 +351,24 @@ public class TimeUtils {
         return formatter.format(date);
     }
     /**
-     * 将long形式改成YYYY MM-dd HH:mm:ss
+     * 将long形式改成yyyy-MM-dd HH:mm:ss
      * @param time
      * @param zone
      * @return
      */
     public static String formatYmdHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("YYYY MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成yyyy-MM-dd
+     * @param time
+     * @param zone
+     * @return
+     */
+    public static String formatYmd(long time, int zone) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
         return formatter.format(new Date(time));
     }
@@ -365,6 +376,7 @@ public class TimeUtils {
      * 将long形式改成MM-dd HH:mm:ss
      * @param time
      * @param zone
+     *
      * @return
      */
     public static String formatMdHms(long time, int zone) {
@@ -418,12 +430,21 @@ public class TimeUtils {
         return formatter.format(new Date(time));
     }
     /**
-     * 将long形式改成YYYY MM-dd HH:mm:ss
+     * 将long形式改成yyyy-MM-dd HH:mm:ss
      * @param time
      * @return
      */
     public static String formatYmdHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("YYYY MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        return formatter.format(new Date(time));
+    }
+    /**
+     * 将long形式改成yyyy-MM-dd
+     * @return
+     */
+    public static String formatYmd(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
         return formatter.format(new Date(time));
     }
