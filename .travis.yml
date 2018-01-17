@@ -4,14 +4,15 @@ jdk:
 env:
   - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
 sudo: true
+group: deprecated-2017Q4
 android:
   components:
      - tools
      - platform-tools
      - tools
-     - build-tools-26.0.2
+     - build-tools-25.0.0
      - android-22
-     - android-26
+     - android-25
      - extra-android-m2repository
      - extra-android-support
      - sys-img-armeabi-v7a-android-22
