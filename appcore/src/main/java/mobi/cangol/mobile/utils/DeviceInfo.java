@@ -15,7 +15,6 @@
  */
 package mobi.cangol.mobile.utils;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,7 +24,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -71,6 +69,11 @@ public final class DeviceInfo {
      * 默认ANDROID_ID
      */
     private static final String SPECIAL_ANDROID_ID = "9774d56d682e549c";
+
+    /**
+     * 默认MAC(小米)
+     */
+    private static final String SPECIAL_MAC = "02:00:00:00:00:00";
     /**
      * 默认CHARSET
      */
@@ -722,20 +725,32 @@ public final class DeviceInfo {
         }
     }
 
+    public static String getSerialNumber() {
+        return android.os.Build.SERIAL;
+    }
+
     public static String getDeviceId(Context context) {
         String did = "";
         WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = manager.getConnectionInfo();
         String macAddress = wifiInfo.getMacAddress();
-        if (null != macAddress) {
+        Log.i("macAddress did:"+macAddress);
+        if (null != macAddress&&!SPECIAL_MAC.equals(macAddress)) {
             did = macAddress.replace(".", "").replace(":", "")
                     .replace("-", "").replace("_", "");
+            Log.i("macAddress did:"+did);
         } else {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            String imei = tm.getDeviceId();
+            String imei=null;
+            try {
+                imei = tm.getDeviceId();
+            }catch (SecurityException e){
+                //
+            }
             // no sim: sdk|any pad
             if (null != imei && !SPECIAL_IMEI.equals(imei)) {
                 did = imei;
+                Log.i("imei did:"+did);
             } else {
                 String deviceId = Secure.getString(context.getContentResolver(),
                         Secure.ANDROID_ID);
@@ -743,6 +758,7 @@ public final class DeviceInfo {
                 if (null != deviceId
                         && !SPECIAL_ANDROID_ID.equals(deviceId)) {
                     did = deviceId;
+                    Log.i("ANDROID_ID did:"+did);
                 } else {
                     SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
                     String uid = sp.getString("uid", null);
@@ -751,6 +767,7 @@ public final class DeviceInfo {
                         uid = UUID.randomUUID().toString().replace("-", "");
                         editor.putString("uid", uid);
                         editor.commit();
+                        Log.i("uid did:"+did);
                     }
 
                     did = uid;
