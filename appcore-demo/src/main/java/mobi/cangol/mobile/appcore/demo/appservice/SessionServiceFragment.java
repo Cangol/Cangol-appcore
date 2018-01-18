@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +28,7 @@ public class SessionServiceFragment extends Fragment{
     private static String  TAG="SessionServiceFragment";
     private SessionService sessionService;
     private TextView textView1;
-    private Button button1, button2,button3,button4,button5;
+    private Button button1, button2,button3,button33,button4,button5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class SessionServiceFragment extends Fragment{
         button1 = (Button) this.getView().findViewById(R.id.button1);
         button2 = (Button) this.getView().findViewById(R.id.button2);
         button3 = (Button) this.getView().findViewById(R.id.button3);
+        button33= (Button) this.getView().findViewById(R.id.button33);
         button4 = (Button) this.getView().findViewById(R.id.button4);
         button5 = (Button) this.getView().findViewById(R.id.button5);
         button1.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +80,27 @@ public class SessionServiceFragment extends Fragment{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                sessionService.put(TAG,jsonObject);
+                sessionService.saveJSONObject(TAG,jsonObject);
+                updateViews();
+            }
+        });
+        button33.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONArray jsonArray=new JSONArray();
+                for (int i = 0; i < 4; i++) {
+                    JSONObject jsonObject=new JSONObject();
+                    try {
+                        jsonObject.put("id",i);
+                        jsonObject.put("name","Rose"+i);
+                        jsonObject.put("age","18");
+                        jsonArray.put(jsonObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                sessionService.saveJSONArray(TAG,jsonArray);
+                sessionService.refresh();
                 updateViews();
             }
         });

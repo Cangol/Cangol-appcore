@@ -25,6 +25,7 @@ import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.Object2FileUtils;
+import mobi.cangol.mobile.utils.StringUtils;
 
 /**
  * Created by weixuewu on 15/10/24.
@@ -207,18 +208,24 @@ class SessionServiceImpl implements SessionService {
     @Override
     public void saveJSONObject(String key, JSONObject value) {
         Object2FileUtils.writeJSONObject2File(value, mConfigService.getCacheDir() + File.separator + key + JSON);
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSONA);
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + SER);
         mMap.put(key, value);
     }
 
     @Override
     public void saveJSONArray(String key, JSONArray value) {
         Object2FileUtils.writeJSONArray2File(value, mConfigService.getCacheDir() + File.separator + key + JSONA);
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSON);
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + SER);
         mMap.put(key, value);
     }
 
     @Override
     public void saveSerializable(String key, Serializable value) {
         Object2FileUtils.writeObject(value, mConfigService.getCacheDir() + File.separator + key + SER);
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSON);
+        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSONA);
         mMap.put(key, value);
     }
 
@@ -299,15 +306,18 @@ class SessionServiceImpl implements SessionService {
             if (file.getName().endsWith(JSON)) {
                 JSONObject json = Object2FileUtils.readFile2JSONObject(file);
                 String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
-                map.put(key, json);
+                if(json!=null&& StringUtils.isNotBlank(key))
+                    map.put(key, json);
             } else if (file.getName().endsWith(JSONA)) {
-                JSONObject jsona = Object2FileUtils.readFile2JSONObject(file);
+                JSONArray jsona = Object2FileUtils.readFile2JSONArray(file);
                 String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
-                map.put(key, jsona);
+                if(jsona!=null&& StringUtils.isNotBlank(key))
+                    map.put(key, jsona);
             } else if (file.getName().endsWith(SER)) {
                 Object obj = Object2FileUtils.readObject(file);
                 String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
-                map.put(key, obj);
+                if(obj!=null&& StringUtils.isNotBlank(key))
+                    map.put(key, obj);
             } else {
                 //其他缓存方案
                 Log.e("found cache file");

@@ -24,6 +24,7 @@ android {
         minSdkVersion 14
         versionCode Integer.decode("${POM_VERSION_CODE}")
         versionName "${POM_VERSION}"
+        multiDexEnabled true
     }
 
     buildTypes {
