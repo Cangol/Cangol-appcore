@@ -1,9 +1,7 @@
 language: android
 jdk:
   - oraclejdk8
-env:
-  - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
-sudo: true
+sudo: false
 group: deprecated-2017Q4
 android:
   components:
