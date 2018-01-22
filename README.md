@@ -1,4 +1,4 @@
-#Cangol-appcore
+# Cangol-appcore
 
 
 
@@ -11,9 +11,9 @@
 这是一个Android 应用核心库，将应用的常用功能模块化，以便提高开发效率。
 [详细文档](http://cangol.github.io/Cangol-appcore)  
 
-####QQ Group: 515488807
+### QQ Group: 515488807
 
-##引用方式
+## 引用方式
 Maven
 
      <dependency>
@@ -26,11 +26,11 @@ Gradle
  
     compile 'mobi.cangol.mobile:appcore:1.1.13@aar'
  
-##CoreApplication
+## CoreApplication
 核心Application 提供整个库的初始化和一些方法，
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/CoreApplication.html)
 
-##AppService
+## AppService
 应用服务:实现方式为依赖注入，这是整个框架的核心内容
 
 *   [AnalyticsService](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/service/analytics/AnalyticsService.html) 统计服务
@@ -52,43 +52,43 @@ Gradle
 	p.putString(ConfigService.APP_DIR, Constants.APP_DIR);
 	p.putString(ConfigService.SHARED_NAME, Constants.SHARED);
 			
-##数据库ORM
+## 数据库ORM
 
 * 实现数据库的orm
 * 数据表的创建删除在无需SQL
 * 对数据对象的CRUD均无需SQL语句，并支持复杂条件租车查询。
 
-##日志Log
+## 日志Log
 封装并重写部分方法，是的日志输出更格式化，并提供可控制“开发”和”发布“模式的开关。
 [详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/logging/Log.html)
 
-##数据解析
+## 数据解析
 利用注解和反射实现对XML和JSON对象化数据解析  
  轻量级解析库，无需引入fastjson或gson，比这些更轻量级，而且同样支持xml的解析。
  
 * [JsonUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/parser/JsonUtils.html)
 * [XmlUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/parser/XmlUtils.html)
 
-##安全模块
+## 安全模块
 提供三种方式的工具类
 
 * [AESUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/AESUtils.html)
 * [Base64](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/Base64.html)
 * [RSAUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/security/RSAUtils.html)
 
-###网络Http请求
+### 网络Http请求
 
 修正AsyncHttpClient的部分bug，优化请求参数配置，扩展超时自动重试机制，增加gzip的支持。并扩展：
 
 * [PollingHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/polling/PollingHttpClient.html) 可轮询请求的httpclient
 * [RouteHttpClient](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/http/route/RouteHttpClient.html) 可设置不同host的httpclient
 
-###WebService请求
+### WebService请求
 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar 对Soap进行异步封装。[详细文档](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/soap/SoapClient.html)
 
 
 
-###Utils工具类
+### Utils工具类
 
 *   [AppUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/AppUtils.html) 应用管理工具类
 * 	[BitmapUtils](http://cangol.github.io/Cangol-appcore/mobi/cangol/mobile/utils/BitmapUtils.html) 图像工具类
