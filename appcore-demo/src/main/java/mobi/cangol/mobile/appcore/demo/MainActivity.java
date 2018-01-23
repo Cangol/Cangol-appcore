@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
@@ -24,11 +25,13 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onNavigateUp() {
         FragmentManager fm = this.getSupportFragmentManager();
-        if(fm.getBackStackEntryCount()>0){
+        if(fm.getBackStackEntryCount()>1){
             fm.popBackStack();
             return true;
+        }else{
+            super.onBackPressed();
+            return true;
         }
-        return super.onNavigateUp();
     }
     protected void toFragment(Class<? extends Fragment> fragmentClass) {
         FragmentManager fm = this.getSupportFragmentManager();
@@ -36,6 +39,17 @@ public class MainActivity extends FragmentActivity {
                 .replace(R.id.framelayout, Fragment.instantiate(this, fragmentClass.getName(), null))
                 .addToBackStack(fragmentClass.getName())
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((CoreApplication)getApplication()).exit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
 

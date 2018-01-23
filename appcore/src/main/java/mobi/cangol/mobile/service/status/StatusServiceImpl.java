@@ -183,7 +183,7 @@ class StatusServiceImpl implements StatusService {
     public void onDestroy() {
         mContext.unregisterReceiver(networkStatusReceiver);
         mContext.unregisterReceiver(storageStatusReceiver);
-        mTelephonyManager.listen(null, PhoneStateListener.LISTEN_NONE);
+        mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
     @Override
