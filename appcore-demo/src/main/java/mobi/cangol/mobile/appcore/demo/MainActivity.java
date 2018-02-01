@@ -33,6 +33,15 @@ public class MainActivity extends FragmentActivity {
             return true;
         }
     }
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = this.getSupportFragmentManager();
+        if(fm.getBackStackEntryCount()>1){
+            super.onBackPressed();
+        }else{
+            finish();
+        }
+    }
     protected void toFragment(Class<? extends Fragment> fragmentClass) {
         FragmentManager fm = this.getSupportFragmentManager();
         fm.beginTransaction()
@@ -45,11 +54,6 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         ((CoreApplication)getApplication()).exit();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }
 
