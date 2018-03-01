@@ -22,6 +22,7 @@ package mobi.cangol.mobile.utils;
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -580,7 +581,45 @@ public class FileUtils {
         }
         return -1;
     }
+    /**
+     * 获取文件类型或后缀
+     * @param filePath
+     * @return
+     */
+    public static String getFileSuffix(String filePath) {
+        String[] arrays = filePath.split("\\.");
+        if (arrays.length >= 2) {
+            return arrays[arrays.length - 1];
+        } else {
+            return "UNKNOWN";
+        }
+    }
 
+    /**
+     * 获取mimeType
+     * @param file
+     * @return
+     */
+    public static String getMIMEType(File file) {
+        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1, file.getName().length()).toLowerCase();
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
+        return mimeType;
+    }
+
+    /**
+     * 获取文件名
+     * @param filePath
+     * @return
+     */
+    public static String getFileName(String filePath) {
+        String fileName = new File(filePath).getName();
+        String[] arrays = filePath.split("\\_");
+        if (arrays.length >= 2) {
+            return arrays[arrays.length - 1];
+        } else {
+            return fileName;
+        }
+    }
     /**
      * 获取文件夹中总文件大小
      *
