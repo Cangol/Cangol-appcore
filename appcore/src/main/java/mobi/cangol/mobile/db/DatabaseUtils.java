@@ -32,7 +32,43 @@ import mobi.cangol.mobile.logging.Log;
 public class DatabaseUtils {
     private DatabaseUtils() {
     }
-
+    /**
+     * 创建表索引
+     *
+     * @param db
+     * @param clazz
+     */
+    public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName,String... fieldNames) {
+        if (clazz.isAnnotationPresent(DatabaseTable.class)) {
+            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            StringBuilder sql = new StringBuilder("CREATE INDEX ");
+            sql.append(indexName).append(" on ").append(tableName).append('(');
+            Field field =null;
+            String columnName=null;
+            for (int i = 0; i <fieldNames.length ; i++) {
+                try {
+                    field=clazz.getDeclaredField(fieldNames[i]);
+                    field.setAccessible(true);
+                    if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                        continue;
+                    }else  if (field.isAnnotationPresent(DatabaseField.class)) {
+                        DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                        columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+                        sql.append(columnName);
+                        if(i <fieldNames.length-1)
+                            sql.append(',');
+                    }
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+            sql.append(')');
+            db.execSQL(sql.toString());
+        } else {
+            throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
+        }
+    }
     /**
      * 创建表
      *
