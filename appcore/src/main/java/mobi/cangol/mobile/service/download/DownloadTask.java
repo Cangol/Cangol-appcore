@@ -97,7 +97,9 @@ public class DownloadTask {
         }
 
     };
-
+    public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler) {
+        this(downloadResource,pool,handler,true);
+    }
     public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler,boolean safe) {
         this.downloadResource = downloadResource;
         this.pool = pool;
