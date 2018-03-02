@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.core.BuildConfig;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.analytics.AnalyticsService;
@@ -40,7 +41,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String SDK_VERSION = "1.0.7";
+    private final static String SDK_VERSION = BuildConfig.VERSION_NAME;
     private final static String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
     private final static String STAT_ACTION_EVENT = "api/countly/event.do";
