@@ -90,6 +90,7 @@ public class AppUtils {
     public static void unInstall(Context context, String packageName) {
         Uri uri = Uri.parse("package:" + packageName);
         Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -101,8 +102,7 @@ public class AppUtils {
      */
     public static void launch(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
-        Intent intent = new Intent();
-        intent = packageManager.getLaunchIntentForPackage(packageName);
+        Intent intent = packageManager.getLaunchIntentForPackage(packageName);
         context.startActivity(intent);
     }
 
