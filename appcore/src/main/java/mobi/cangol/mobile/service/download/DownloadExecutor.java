@@ -42,11 +42,14 @@ public abstract class DownloadExecutor<T> {
     private String name;
     private DownloadEvent mDownloadEvent;
     private ExecutorHandler mHandler;
-
+    private boolean mHttpSafe=true;
     public DownloadExecutor(String name) {
         this.name = name;
         this.mHandler = new ExecutorHandler(this);
         this.mTag = "DownloadExecutor_" + name;
+    }
+    public void setHttpSafe(boolean safe) {
+        this.mHttpSafe = safe;
     }
 
     protected void setContext(Context context) {
@@ -178,7 +181,7 @@ public abstract class DownloadExecutor<T> {
         if (mDownloadRes.contains(resource)) {
             DownloadTask downloadTask = resource.getDownloadTask();
             if (downloadTask == null) {
-                downloadTask = new DownloadTask(resource, mPool, mHandler);
+                downloadTask = new DownloadTask(resource, mPool, mHandler,true);
                 resource.setDownloadTask(downloadTask);
                 downloadTask.setDownloadNotification(notification(mContext, resource));
             }
@@ -186,7 +189,7 @@ public abstract class DownloadExecutor<T> {
                 downloadTask.start();
             }
         } else {
-            DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler);
+            DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler,true);
             resource.setDownloadTask(downloadTask);
             downloadTask.setDownloadNotification(notification(mContext, resource));
             downloadTask.start();
@@ -259,7 +262,7 @@ public abstract class DownloadExecutor<T> {
             return;
         }
         if (!mDownloadRes.contains(resource)) {
-            DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler);
+            DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler,mHttpSafe);
             resource.setDownloadTask(downloadTask);
             downloadTask.setDownloadNotification(notification(mContext, resource));
             downloadTask.start();

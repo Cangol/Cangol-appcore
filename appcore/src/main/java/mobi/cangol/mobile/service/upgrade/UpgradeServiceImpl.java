@@ -19,8 +19,6 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
@@ -61,7 +59,6 @@ class UpgradeServiceImpl implements UpgradeService {
     public void onCreate(Application context) {
         mContext = context;
         mConfigService = (ConfigService) ((CoreApplication) mContext).getAppService(AppService.CONFIG_SERVICE);
-        mDownloadHttpClient = DownloadHttpClient.build(TAG);
         mOnUpgradeListeners = new HashMap<String, OnUpgradeListener>();
     }
 
@@ -78,7 +75,8 @@ class UpgradeServiceImpl implements UpgradeService {
     @Override
     public void onDestroy() {
         if (debug) Log.d("onDestory");
-        mDownloadHttpClient.cancelAll();
+        if(mDownloadHttpClient!=null)
+            mDownloadHttpClient.cancelAll();
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         for (Integer id : mIds) {
             notificationManager.cancel(id);
@@ -123,15 +121,18 @@ class UpgradeServiceImpl implements UpgradeService {
 //	}
     @Override
     public void upgrade(final String filename, String url, final boolean notification) {
-        upgrade(filename, url, notification, UpgradeType.APK, false);
+        upgrade(filename, url, notification, UpgradeType.APK, false,true);
     }
 
     @Override
     public void upgrade(String filename, String url, boolean notification, boolean install) {
-        upgrade(filename, url, notification, UpgradeType.APK, install);
+        upgrade(filename, url, notification, UpgradeType.APK, install,true);
     }
-
-    private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean load) {
+    @Override
+    public void upgrade(String filename, String url, boolean notification, boolean install, boolean safe) {
+        upgrade(filename, url, notification, UpgradeType.APK, install,safe);
+    }
+    private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean install, final boolean safe) {
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
         File saveFile = new File(savePath);
         if (debug) Log.d("upgrade savePath:" + savePath);
@@ -148,6 +149,7 @@ class UpgradeServiceImpl implements UpgradeService {
         if (notification) {
             mIds.add(downloadNotification.getId());
         }
+        mDownloadHttpClient= DownloadHttpClient.build(TAG,safe);
         mDownloadHttpClient.send(filename, url, new DownloadResponseHandler() {
             @Override
             public void onWait() {
@@ -178,7 +180,7 @@ class UpgradeServiceImpl implements UpgradeService {
                 if (notification) {
                     downloadNotification.finishNotification();
                 }
-                if (load) {
+                if (install) {
                     makeLoad(savePath, upgradeType);
                 }
 

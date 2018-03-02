@@ -23,6 +23,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import mobi.cangol.mobile.http.HttpClientFactory;
 import mobi.cangol.mobile.service.PoolManager;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -42,16 +43,9 @@ public class DownloadHttpClient {
     private DownloadRetryHandler downloadRetryHandler;
     private String group;
 
-    protected DownloadHttpClient(final String group) {
+    protected DownloadHttpClient(final String group,boolean safe) {
         this.group = group;
-        httpClient = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+        httpClient = safe? HttpClientFactory.createDefaultHttpClient():HttpClientFactory.createUnSafeHttpClient();
         threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
         requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
         this.downloadRetryHandler = new DownloadRetryHandler(DEFAULT_RETRYTIMES);
@@ -65,10 +59,19 @@ public class DownloadHttpClient {
      * @return
      */
     public static DownloadHttpClient build(String group) {
-        DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group);
-        return asyncHttpClient;
+        return build(group, true);
     }
 
+    /**
+     * 构造实例
+     * @param group
+     * @param safe
+     * @return
+     */
+    public static DownloadHttpClient build(String group,boolean safe) {
+        DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group,safe);
+        return asyncHttpClient;
+    }
     /**
      * 设置线程池
      *
