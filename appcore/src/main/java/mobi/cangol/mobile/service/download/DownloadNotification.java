@@ -77,7 +77,7 @@ public class DownloadNotification {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
                 .setOngoing(true)
-                .setSmallIcon(android.R.drawable.stat_sys_download);
+                .setSmallIcon(context.getApplicationInfo().icon);
 
         notificationManager.notify(id, builder.build());
     }
@@ -92,7 +92,7 @@ public class DownloadNotification {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
                 .setOngoing(true)
-                .setSmallIcon(android.R.drawable.stat_sys_download);
+                .setSmallIcon(context.getApplicationInfo().icon);
         notificationManager.notify(id, builder.build());
     }
 
@@ -107,7 +107,7 @@ public class DownloadNotification {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 .setOngoing(false)
-                .setSmallIcon(android.R.drawable.stat_sys_download);
+                .setSmallIcon(context.getApplicationInfo().icon);
         notificationManager.notify(id, builder.build());
     }
 
@@ -120,7 +120,7 @@ public class DownloadNotification {
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
                 .setOngoing(false)
-                .setSmallIcon(android.R.drawable.stat_sys_download);
+                .setSmallIcon(context.getApplicationInfo().icon);
 
         notificationManager.notify(id, builder.build());
     }
