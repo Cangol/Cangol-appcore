@@ -287,6 +287,7 @@ class DatabaseHelper extends CoreSQLiteOpenHelper {
         Log.d(TAG, "onCreate");
         DatabaseUtils.createTable(db, Data.class);
         DatabaseUtils.createIndex(db,Data.class,"teIndex","name","nickname");
+        DatabaseUtils.addColumn(db,Data.class,"nickname1");
     }
 
     @Override

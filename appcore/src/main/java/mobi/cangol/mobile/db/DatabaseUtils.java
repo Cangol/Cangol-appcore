@@ -18,13 +18,16 @@ package mobi.cangol.mobile.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import mobi.cangol.mobile.logging.Log;
@@ -175,12 +178,55 @@ public class DatabaseUtils {
             throw new IllegalStateException(table + " not DatabaseTable Annotation");
         }
     }
+
     /**
-     * 获取主键的列名
+     * 表添加列
+     *
+     * @param db
+     * @param clazz
+     */
+    public static void addColumn(SQLiteDatabase db, Class<?> clazz,String... columns) {
+        Log.d("addColumn ");
+        if (clazz.isAnnotationPresent(DatabaseTable.class)) {
+            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+
+            Map<String,Field> map=getColumnNames(clazz);
+            for (int i = 0; i <columns.length ; i++) {
+                if(!TextUtils.isEmpty(columns[i])&&map.containsKey(columns[i])){
+                    StringBuilder sql = new StringBuilder("ALTER TABLE ").append(tableName).append(" ADD COLUMN ");
+                    sql.append(columns[i]);
+                    sql.append("　");
+                    sql.append(getDbType(map.get(columns[i]).getType()));
+                    sql.append(";");
+                    db.execSQL(sql.toString());
+                    Log.d(""+sql.toString());
+                }else{
+                    throw new IllegalStateException("column "+columns[i] + " is exist!");
+                }
+            }
+        } else {
+            throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
+        }
+    }
+    /**
+     * 获取所有要数据库化的列名
      *
      * @param clazz
      * @return
      */
+    public static Map<String,Field> getColumnNames(Class<?> clazz) {
+        Map<String,Field> map=new HashMap<>();
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.isAnnotationPresent(DatabaseField.class)) {
+                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                map.put("".equals(dbField.value()) ? field.getName() : dbField.value(),field);
+            }
+        }
+        return map;
+    }
+
     public static <T> String getIdColumnName(Class<?> clazz) {
         String columnName = null;
         for (Field field : clazz.getDeclaredFields()) {
