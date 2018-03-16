@@ -40,6 +40,7 @@ public class DownloadNotification {
     private Context context;
     private Intent finishIntent;
 
+    @TargetApi(Build.VERSION_CODES.O)
     public DownloadNotification(Context context, String title, String savePath, Intent finishIntent, String successText, String failureText) {
         this.context = context;
         this.savePath = savePath;
@@ -49,6 +50,11 @@ public class DownloadNotification {
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+        channel=new NotificationChannel("101","channel_1", NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription("channel_1");
+        channel.enableLights(false);
+        channel.enableVibration(false);
+        notificationManager.createNotificationChannel(channel);
 
     }
     @TargetApi(Build.VERSION_CODES.O)
@@ -62,6 +68,9 @@ public class DownloadNotification {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         channel=new NotificationChannel("101","channel_1", NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription("channel_1");
+        channel.enableLights(false);
+        channel.enableVibration(false);
         notificationManager.createNotificationChannel(channel);
 
     }

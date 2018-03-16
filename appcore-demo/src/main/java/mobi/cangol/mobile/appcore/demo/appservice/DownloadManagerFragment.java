@@ -138,9 +138,9 @@ public class DownloadManagerFragment extends Fragment {
         textView2.setMovementMethod(ScrollingMovementMethod.getInstance());
 
 
-        String path="/sdcard/appcore";
-        boolean result=configService.setCustomAppDir(path);
-        Log.d("setCustomAppDir " + (result ? "success" : "fail")+" "  + path);
+        //String path="/sdcard/appcore";
+       // boolean result=configService.setCustomAppDir(path);
+        //Log.d("setCustomAppDir " + (result ? "success" : "fail")+" "  + path);
 
         downloadManager.registerExecutor("app", AppDownloadExecutor.class, 2);
         downloadExecutor = (AppDownloadExecutor) downloadManager.getDownloadExecutor("app");
