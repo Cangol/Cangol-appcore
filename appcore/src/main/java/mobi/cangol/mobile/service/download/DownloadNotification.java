@@ -40,7 +40,6 @@ public class DownloadNotification {
     private Context context;
     private Intent finishIntent;
 
-    @TargetApi(Build.VERSION_CODES.O)
     public DownloadNotification(Context context, String title, String savePath, Intent finishIntent, String successText, String failureText) {
         this.context = context;
         this.savePath = savePath;
@@ -50,14 +49,15 @@ public class DownloadNotification {
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        channel=new NotificationChannel("101","channel_1", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription("channel_1");
-        channel.enableLights(false);
-        channel.enableVibration(false);
-        notificationManager.createNotificationChannel(channel);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = new NotificationChannel("101", "channel_1", NotificationManager.IMPORTANCE_LOW);
+            channel.setDescription("channel_1");
+            channel.enableLights(false);
+            channel.enableVibration(false);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
-    @TargetApi(Build.VERSION_CODES.O)
+
     public DownloadNotification(Context context, String title, String savePath, Intent finishIntent) {
         this.context = context;
         this.savePath = savePath;
@@ -67,23 +67,28 @@ public class DownloadNotification {
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        channel=new NotificationChannel("101","channel_1", NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription("channel_1");
-        channel.enableLights(false);
-        channel.enableVibration(false);
-        notificationManager.createNotificationChannel(channel);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = new NotificationChannel("101", "channel_1", NotificationManager.IMPORTANCE_LOW);
+            channel.setDescription("channel_1");
+            channel.enableLights(false);
+            channel.enableVibration(false);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public int getId() {
         return id;
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
     public void createNotification() {
         id = new Random().nextInt(10000);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(context,channel.getId());
+        NotificationCompat.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(context, channel.getId());
+        } else {
+            builder = new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText("")
                 .setContentInfo("")
@@ -96,9 +101,14 @@ public class DownloadNotification {
 
         notificationManager.notify(id, builder.build());
     }
-    @TargetApi(Build.VERSION_CODES.O)
+
     public void updateNotification(int progress, int speed) {
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(context,channel.getId());
+        NotificationCompat.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(context, channel.getId());
+        } else {
+            builder = new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText(FileUtils.formatSize(speed) + "/s")
                 .setContentInfo(progress + "%")
@@ -110,10 +120,14 @@ public class DownloadNotification {
         notificationManager.notify(id, builder.build());
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
     public void finishNotification() {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(context,channel.getId());
+        NotificationCompat.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(context, channel.getId());
+        } else {
+            builder = new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText(successText)
                 .setContentInfo("")
@@ -124,9 +138,14 @@ public class DownloadNotification {
                 .setSmallIcon(context.getApplicationInfo().icon);
         notificationManager.notify(id, builder.build());
     }
-    @TargetApi(Build.VERSION_CODES.O)
+
     public void failureNotification() {
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(context,channel.getId());
+        NotificationCompat.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(context, channel.getId());
+        } else {
+            builder = new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText(failureText)
                 .setContentInfo("")
