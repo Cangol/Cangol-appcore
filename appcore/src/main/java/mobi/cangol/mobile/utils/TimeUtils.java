@@ -655,4 +655,54 @@ public class TimeUtils {
         }
         return str;
     }
+
+    /**
+     * 判断是同一天
+     * @param time1
+     * @param time2
+     * @return
+     */
+    public static boolean isSameDay(long time1, long time2) {
+        Calendar calDateA = Calendar.getInstance();
+        calDateA.setTimeInMillis(time1);
+
+        Calendar calDateB = Calendar.getInstance();
+        calDateB.setTimeInMillis(time2);
+
+        return calDateA.get(Calendar.YEAR) == calDateB.get(Calendar.YEAR)
+                && calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)
+                && calDateA.get(Calendar.DAY_OF_MONTH) == calDateB
+                .get(Calendar.DAY_OF_MONTH);
+    }
+    /**
+     * 判断是同一月
+     * @param time1
+     * @param time2
+     * @return
+     */
+    public static boolean isSameMonth(long time1, long time2) {
+        Calendar time1Ca = Calendar.getInstance();
+        time1Ca.setFirstDayOfWeek(Calendar.MONDAY);
+        time1Ca.setTimeInMillis(time1);
+        Calendar time2Ca = Calendar.getInstance();
+        time2Ca.setFirstDayOfWeek(Calendar.MONDAY);
+        time2Ca.setTimeInMillis(time2);
+        return time1Ca.get(Calendar.YEAR) == time2Ca.get(Calendar.YEAR)
+                && time1Ca.get(Calendar.MONTH) ==time2Ca.get(Calendar.MONTH);
+    }
+    /**
+     * 判断是同一周
+     * @param time1
+     * @param time2
+     * @return
+     */
+    public static boolean isSameWeek(long time1, long time2) {
+        Calendar time1Ca = Calendar.getInstance();
+        time1Ca.setFirstDayOfWeek(Calendar.MONDAY);
+        time1Ca.setTimeInMillis(time1);
+        Calendar time2Ca = Calendar.getInstance();
+        time2Ca.setFirstDayOfWeek(Calendar.MONDAY);
+        time2Ca.setTimeInMillis(time2);
+        return time1Ca.get(Calendar.WEEK_OF_YEAR)==time2Ca.get(Calendar.WEEK_OF_YEAR);
+    }
 }

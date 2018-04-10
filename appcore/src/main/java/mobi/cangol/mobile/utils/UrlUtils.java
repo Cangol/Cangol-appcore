@@ -88,4 +88,32 @@ public class UrlUtils {
         }
         return queries;
     }
+
+    /**
+     * @param url
+     * @return
+     */
+    public static String getPath(String url) {
+        String command = null;
+        if (url != null && url.contains("://")) {
+            if (url.contains("?")) {
+                command = url.substring(url.indexOf("://") + 3, url.indexOf("?"));
+            } else {
+                command = url.substring(url.indexOf("://") + 3, url.length());
+            }
+        }
+        return command;
+    }
+
+    /**
+     * @param url
+     * @return
+     */
+    public static String getScheme(String url) {
+        String command = null;
+        if (url != null && url.contains("://")) {
+            command = url.substring(0, url.indexOf("://"));
+        }
+        return command;
+    }
 }
