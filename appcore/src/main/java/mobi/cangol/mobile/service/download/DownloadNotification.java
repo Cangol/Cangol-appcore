@@ -17,7 +17,6 @@
 
 package mobi.cangol.mobile.service.download;
 
-import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -32,6 +31,8 @@ import mobi.cangol.mobile.utils.FileUtils;
 
 
 public class DownloadNotification {
+    public static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID="101";
+    public static final String DOWNLOAD_NOTIFICATION_CHANNEL_NAME="channel_1";
     private NotificationManager notificationManager;
     private NotificationChannel channel;
     private int id;
@@ -50,7 +51,7 @@ public class DownloadNotification {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = new NotificationChannel("101", "channel_1", NotificationManager.IMPORTANCE_LOW);
+            channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, DOWNLOAD_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
             channel.setDescription("channel_1");
             channel.enableLights(false);
             channel.enableVibration(false);
@@ -68,7 +69,7 @@ public class DownloadNotification {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = new NotificationChannel("101", "channel_1", NotificationManager.IMPORTANCE_LOW);
+            channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID,DOWNLOAD_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
             channel.setDescription("channel_1");
             channel.enableLights(false);
             channel.enableVibration(false);
@@ -83,12 +84,7 @@ public class DownloadNotification {
     public void createNotification() {
         id = new Random().nextInt(10000);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(context, channel.getId());
-        } else {
-            builder = new NotificationCompat.Builder(context);
-        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(titleText)
                 .setContentText("")
                 .setContentInfo("")
@@ -103,12 +99,7 @@ public class DownloadNotification {
     }
 
     public void updateNotification(int progress, int speed) {
-        NotificationCompat.Builder builder = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(context, channel.getId());
-        } else {
-            builder = new NotificationCompat.Builder(context);
-        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(titleText)
                 .setContentText(FileUtils.formatSize(speed) + "/s")
                 .setContentInfo(progress + "%")
@@ -122,12 +113,7 @@ public class DownloadNotification {
 
     public void finishNotification() {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(context, channel.getId());
-        } else {
-            builder = new NotificationCompat.Builder(context);
-        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(titleText)
                 .setContentText(successText)
                 .setContentInfo("")
@@ -140,12 +126,7 @@ public class DownloadNotification {
     }
 
     public void failureNotification() {
-        NotificationCompat.Builder builder = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(context, channel.getId());
-        } else {
-            builder = new NotificationCompat.Builder(context);
-        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(titleText)
                 .setContentText(failureText)
                 .setContentInfo("")
