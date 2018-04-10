@@ -43,6 +43,7 @@ public class CoreApplication extends Application {
     public List<WeakReference<Activity>> mActivityManager = new ArrayList<WeakReference<Activity>>();
     private AppServiceManager mAppServiceManager;
     private boolean mDevMode = false;
+    private boolean mStrictMode = false;
     private boolean mAsyncInit = false;
     private PoolManager.Pool mSharePool;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -50,7 +51,7 @@ public class CoreApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if (DeviceInfo.isAppProcess(this)) {
-            if (mDevMode && Build.VERSION.SDK_INT >= 9) {
+            if (mStrictMode && Build.VERSION.SDK_INT >= 9) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
             }
@@ -223,5 +224,14 @@ public class CoreApplication extends Application {
      */
     public void setDevMode(boolean devMode) {
         this.mDevMode = devMode;
+    }
+
+
+    public boolean isStrictMode() {
+        return mStrictMode;
+    }
+
+    public void setStrictMode(boolean mStrictMode) {
+        this.mStrictMode = mStrictMode;
     }
 }
