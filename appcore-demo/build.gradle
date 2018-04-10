@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
 dependencies {
     compile project(':appcore')
-    compile project(':extra')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //leak canary
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
