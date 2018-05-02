@@ -95,7 +95,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 
     private void initServiceMap(List<Class<? extends AppService>> classList) {
         for (Class<? extends AppService> clazz : classList) {
-            registeService(clazz);
+            registerService(clazz);
         }
     }
 
@@ -138,7 +138,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
     }
 
     @Override
-    public void registeService(Class<? extends AppService> clazz) {
+    public void registerService(Class<? extends AppService> clazz) {
         try {
             if (mUseAnnotation) {
                 if (clazz.isAnnotationPresent(Service.class)) {
