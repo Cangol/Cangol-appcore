@@ -3,29 +3,18 @@ package mobi.cangol.mobile.service.session;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.StrictMode;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
-import mobi.cangol.mobile.service.conf.ConfigService;
-import mobi.cangol.mobile.utils.FileUtils;
-import mobi.cangol.mobile.utils.Object2FileUtils;
-import mobi.cangol.mobile.utils.StringUtils;
 
 /**
  * Created by weixuewu on 15/10/24.
@@ -37,22 +26,16 @@ class SessionServiceImpl implements SessionService {
     private final static String JSONA = ".jsona";
     private final static String SER = ".ser";
     private Application mContext = null;
-    private ConfigService mConfigService = null;
     private ServiceProperty mServiceProperty = null;
     private boolean debug = false;
-    private Map<String, Object> mMap = null;
-
+    private Map<String, Session> mSessionMap =null;
+    private Session mSession = null;
     @Override
     public void onCreate(Application context) {
         mContext = context;
         //这里使用application中的session也可实例化一个新的
-        mMap = new ConcurrentHashMap<String, Object>();
-        mConfigService = (ConfigService) ((CoreApplication) mContext).getAppService(AppService.CONFIG_SERVICE);
-        refresh();
-    }
-
-    private SharedPreferences getShared() {
-        return mContext.getSharedPreferences(mConfigService.getSharedName(), Context.MODE_MULTI_PROCESS);
+        mSessionMap = new ConcurrentHashMap<String, Session>();
+        mSession = newSession(mContext,"default");
     }
 
     @Override
@@ -62,7 +45,13 @@ class SessionServiceImpl implements SessionService {
 
     @Override
     public void onDestroy() {
-        mMap.clear();
+        mSession.clear();
+        for (Map.Entry<String, Session> entry :  mSessionMap.entrySet()) {
+            Session session = entry.getValue();
+            if(session!=null){
+                session.clear();
+            }
+        }
     }
 
     @Override
@@ -87,249 +76,151 @@ class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    public Session getUserSession(String name) {
+        if(mSessionMap.containsKey(name)){
+            return mSessionMap.get(name);
+        }else{
+            return newSession(mContext,name);
+        }
+    }
+
+    private Session newSession(Context context,String name) {
+        Session session=new Session(context,name);
+        mSessionMap.put(name,session);
+        session.refresh();
+        return session;
+    }
+    @Override
     public boolean containsKey(String key) {
-        return mMap.containsKey(key);
+        return mSession.containsKey(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return mMap.containsValue(value);
+        return mSession.containsValue(value);
     }
 
     @Override
     public int getInt(String key, int defValue) {
-        if (mMap.containsKey(key)) {
-            return (int) mMap.get(key);
-        }
-        return defValue;
+        return mSession.getInt(key, defValue);
     }
 
     @Override
     public boolean getBoolean(String key, boolean defValue) {
-        if (mMap.containsKey(key)) {
-            return (boolean) mMap.get(key);
-        }
-        return defValue;
+        return mSession.getBoolean(key, defValue);
     }
 
     @Override
     public long getLong(String key, long defValue) {
-        if (mMap.containsKey(key)) {
-            return (long) mMap.get(key);
-        }
-        return defValue;
+        return mSession.getLong(key, defValue);
     }
 
     @Override
     public float getFloat(String key, float defValue) {
-        if (mMap.containsKey(key)) {
-            return (float) mMap.get(key);
-        }
-        return defValue;
+        return mSession.getFloat(key, defValue);
     }
 
     @Override
     public String getString(String key, String defValue) {
-        if (mMap.containsKey(key)) {
-            return (String) mMap.get(key);
-        }
-        return defValue;
+        return mSession.getString(key, defValue);
     }
 
     @Override
     public Set<String> getStringSet(String key, Set<String> defValue) {
-        if (mMap.containsKey(key)) {
-            return (Set<String>) mMap.get(key);
-        }
-        return defValue;
+        return mSession.getStringSet(key, defValue);
     }
 
     @Override
     public JSONObject getJSONObject(String key) {
-        if (mMap.containsKey(key)) {
-            return (JSONObject) mMap.get(key);
-        }
-        return null;
+        return mSession.getJSONObject(key);
     }
 
     @Override
     public JSONArray getJSONArray(String key) {
-        if (mMap.containsKey(key)) {
-            return (JSONArray) mMap.get(key);
-        }
-        return null;
+        return mSession.getJSONArray(key);
     }
 
     @Override
     public Serializable getSerializable(String key) {
-        if (mMap.containsKey(key)) {
-            return (Serializable) mMap.get(key);
-        }
-        return null;
+        return mSession.getSerializable(key);
     }
 
     @Override
     public void saveInt(String key, int value) {
-        getShared().edit().putInt(key, value).commit();
-        mMap.put(key, value);
+        mSession.saveInt(key, value);
     }
 
     @Override
     public void saveBoolean(String key, boolean value) {
-        getShared().edit().putBoolean(key, value).commit();
-        mMap.put(key, value);
+        mSession.saveBoolean(key, value);
     }
 
     @Override
     public void saveFloat(String key, float value) {
-        getShared().edit().putFloat(key, value).commit();
-        mMap.put(key, value);
+        mSession.saveFloat(key, value);
     }
 
     @Override
     public void saveLong(String key, long value) {
-        getShared().edit().putLong(key, value).commit();
-        mMap.put(key, value);
+        mSession.saveLong(key, value);
     }
 
     @Override
     public void saveString(String key, String value) {
-        getShared().edit().putString(key, value).commit();
-        mMap.put(key, value);
+        mSession.saveString(key, value);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void saveStringSet(String key, Set<String> value) {
-        getShared().edit().putStringSet(key, value).commit();
-        mMap.put(key, value);
+        mSession.saveStringSet(key, value);
     }
 
     @Override
     public void saveJSONObject(String key, JSONObject value) {
-        Object2FileUtils.writeJSONObject2File(value, mConfigService.getCacheDir() + File.separator + key + JSON);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSONA);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + SER);
-        mMap.put(key, value);
+        mSession.saveJSONObject(key, value);
     }
 
     @Override
     public void saveJSONArray(String key, JSONArray value) {
-        Object2FileUtils.writeJSONArray2File(value, mConfigService.getCacheDir() + File.separator + key + JSONA);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSON);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + SER);
-        mMap.put(key, value);
+        mSession.saveJSONArray(key, value);
     }
 
     @Override
     public void saveSerializable(String key, Serializable value) {
-        Object2FileUtils.writeObject(value, mConfigService.getCacheDir() + File.separator + key + SER);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSON);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSONA);
-        mMap.put(key, value);
+        mSession.saveSerializable(key, value);
     }
 
     @Override
     public void saveAll(Map<String, ?> map) {
-        for (String key : map.keySet()) {
-            if (map.get(key) instanceof Float) {
-                saveFloat(key, (Float) map.get(key));
-            } else if (map.get(key) instanceof Boolean) {
-                saveBoolean(key, (Boolean) map.get(key));
-            } else if (map.get(key) instanceof String) {
-                saveString(key, (String) map.get(key));
-            } else if (map.get(key) instanceof Integer) {
-                saveInt(key, (Integer) map.get(key));
-            } else if (map.get(key) instanceof Long) {
-                saveLong(key, (Long) map.get(key));
-            } else if (map.get(key) instanceof Set && Build.VERSION.SDK_INT >= 11) {
-                saveStringSet(key, (Set<String>) map.get(key));
-            } else if (map.get(key) instanceof JSONObject) {
-                saveJSONObject(key, (JSONObject) map.get(key));
-            } else if (map.get(key) instanceof JSONArray) {
-                saveJSONArray(key, (JSONArray) map.get(key));
-            } else if (Serializable.class.isAssignableFrom(map.get(key).getClass())) {
-                saveSerializable(key, (Serializable) map.get(key));
-            } else {
-                //其他缓存方案
-                throw new IllegalArgumentException(map.get(key).getClass() + " is not cache type");
-            }
-        }
+        mSession.saveAll(map);
     }
 
     @Override
     public Object get(String key) {
-        if (mMap.containsKey(key)) {
-            return mMap.get(key);
-        }
-        return null;
+        return mSession.get(key);
     }
 
     @Override
     public void put(String key, Object value) {
-        mMap.put(key, value);
+        mSession.put(key, value);
     }
 
     @Override
     public void putAll(Map<String, ?> map) {
-        mMap.putAll(map);
+        mSession.putAll(map);
     }
 
     @Override
     public void remove(String key) {
-        mMap.remove(key);
-        getShared().edit().remove(key).commit();
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSON);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + JSONA);
-        FileUtils.delete(mConfigService.getCacheDir() + File.separator + key + SER);
+        mSession.remove(key);
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    @Override
     public void refresh() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        Map<String, ?> map = getShared().getAll();
-        StrictMode.setThreadPolicy(oldPolicy);
-        mMap.putAll(map);
-        new Thread(){
-            public void run(){
-                mMap.putAll(importDiskMap());
-            }
-        }.start();
+        mSession.refresh();
     }
-
-    private  Map<String, Object> importDiskMap(){
-        if (debug) Log.d("scan cache file");
-        List<File> files = FileUtils.searchBySuffix(mConfigService.getCacheDir(), null,JSON, JSONA, SER);
-        Map<String, Object> map = new ConcurrentHashMap<>();
-        for (File file : files) {
-            if (file.getName().endsWith(JSON)) {
-                JSONObject json = Object2FileUtils.readFile2JSONObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
-                if(json!=null&& StringUtils.isNotBlank(key))
-                    map.put(key, json);
-            } else if (file.getName().endsWith(JSONA)) {
-                JSONArray jsona = Object2FileUtils.readFile2JSONArray(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
-                if(jsona!=null&& StringUtils.isNotBlank(key))
-                    map.put(key, jsona);
-            } else if (file.getName().endsWith(SER)) {
-                Object obj = Object2FileUtils.readObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
-                if(obj!=null&& StringUtils.isNotBlank(key))
-                    map.put(key, obj);
-            } else {
-                //其他缓存方案
-                Log.e("found cache file");
-            }
-        }
-        return map;
-    }
-
     @Override
     public void clearAll() {
-        mMap.clear();
-        getShared().edit().clear().commit();
-        FileUtils.delAllFile(mConfigService.getCacheDir().getAbsolutePath());
+        mSession.clearAll();
     }
 }

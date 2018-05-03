@@ -18,6 +18,7 @@ import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.session.Session;
 import mobi.cangol.mobile.service.session.SessionService;
 
 /**
@@ -29,11 +30,12 @@ public class SessionServiceFragment extends Fragment{
     private SessionService sessionService;
     private TextView textView1;
     private Button button1, button2,button3,button33,button4,button5;
-
+    private Session mUserSession;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionService = (SessionService) ((CoreApplication) this.getActivity().getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
+        mUserSession=sessionService.getUserSession("test");
     }
 
     @Override
