@@ -104,4 +104,14 @@ public class CacheObject implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "CacheObject{" +
+                "id='" + id + '\'' +
+                ", group='" + group + '\'' +
+                ", timestamp=" + timestamp +
+                ", period=" + period +
+                ", object=" + object +
+                '}';
+    }
 }
