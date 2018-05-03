@@ -15,9 +15,6 @@
  */
 package mobi.cangol.mobile.service;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -36,14 +33,12 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.Task;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.ClassUtils;
 
@@ -214,7 +209,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 
     @Override
     public void destroyAllService() {
-        Log.d(TAG, "destoryAllService");
+        Log.d(TAG, "destroyAllService");
         AppService appService = null;
         for (String name : mRunServiceMap.keySet()) {
             appService = mRunServiceMap.get(name);
@@ -235,23 +230,22 @@ public class AppServiceManagerImpl extends AppServiceManager {
     @Override
     public void setScanPackage(final String... packageName) {
         if (packageName.length > 0) {
-            Future<List<Class<? extends AppService>>> future=mContext.post(new Callable<List<Class<? extends AppService>>>() {
+            mContext.post(new Task<List<Class<? extends AppService>>>() {
+
                 @Override
                 public List<Class<? extends AppService>> call(){
                     List<Class<? extends AppService>> classList = new ArrayList<Class<? extends AppService>>();
                     for (String name : packageName) {
-                         classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
+                        classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
                     }
                     return classList;
                 }
+
+                @Override
+                public void result(List<Class<? extends AppService>> list) {
+                    initServiceMap(list);
+                }
             });
-            try {
-                initServiceMap(future.get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
         }
     }
 

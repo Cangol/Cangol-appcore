@@ -29,10 +29,6 @@ public abstract interface Dao<T, ID> {
      */
     public abstract void showSql(boolean showSql) throws SQLException;
     /**
-     *异步执行操作
-     */
-    public abstract void async(Object[] params,final DbProcessor processor) throws SQLException;
-    /**
      * 新建一个数据对象
      *
      * @param paramT

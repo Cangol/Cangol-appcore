@@ -152,6 +152,13 @@ public class CoreApplication extends Application {
     public <T> Future<T> post(Callable<T> callable){
         return mSharePool.submit(callable);
     }
+    /**
+     * 提交一个后台回调任务
+     * @param task
+     */
+    public Future<?>  post(Task task){
+        return mSharePool.submit(task);
+    }
 
     /**
      * 添加一个activity到管理列表里

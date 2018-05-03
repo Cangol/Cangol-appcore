@@ -17,10 +17,7 @@ package mobi.cangol.mobile.service.cache;
 
 import android.annotation.TargetApi;
 import android.app.Application;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
 
@@ -35,9 +32,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.Task;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.utils.Object2FileUtils;
 
 /**
@@ -57,11 +58,11 @@ class CacheManagerImpl implements CacheManager {
     private File mDiskCacheDir;
     private long mDiskCacheSize;
     private ServiceProperty mServiceProperty;
-    private Application mContext;
+    private CoreApplication mApplication;
 
     @Override
     public void onCreate(Application context) {
-        this.mContext = context;
+        this.mApplication = (CoreApplication) context;
     }
 
     @Override
@@ -69,9 +70,9 @@ class CacheManagerImpl implements CacheManager {
         this.mServiceProperty = serviceProperty;
         String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
         long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
-        setDiskCache(
-                !TextUtils.isEmpty(dir) ? getDiskCacheDir(mContext, dir) : getDiskCacheDir(mContext, "ContentCache"),
-                size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
+        ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
+        String cacheDir=configService.getCacheDir().getAbsolutePath()+File.separator+ (!TextUtils.isEmpty(dir)?dir:"contentCache");
+        setDiskCache(new File(cacheDir),size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
     }
 
     /**
@@ -128,70 +129,66 @@ class CacheManagerImpl implements CacheManager {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject obj = contextMap.get(id);
-        if (obj == null) {
-            obj = getContentFromDiskCache(id);
-            if (obj != null) {
-                contextMap.put(id, obj);
+        CacheObject cacheObject = contextMap.get(id);
+        if (cacheObject == null) {
+            cacheObject = getContentFromDiskCache(id);
+            if (cacheObject != null) {
+                contextMap.put(id, cacheObject);
             }
         }
-        if(obj!=null&&obj.isExpired()){
-            Log.e(TAG, "is expired & remove ");
-            removeContent(context,id);
-            obj=null;
+        if(cacheObject!=null){
+            if(cacheObject.isExpired()){
+                Log.e(TAG, "is expired & remove ");
+                removeContent(context,id);
+                return null;
+            }else{
+                return cacheObject.getObject();
+            }
+        }else{
+            return null;
         }
-
-        return obj==null?null:obj.getObject();
     }
 
     @Override
     public void getContent(final String context, final String id, final CacheLoader cacheLoader) {
+        if (cacheLoader != null)cacheLoader.loading();
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject obj = contextMap.get(id);
-        if (obj == null) {
-            new AsyncTask<String, Void, CacheObject>() {
+        CacheObject cacheObject =contextMap.get(id);
+        if (cacheObject == null) {
+            mApplication.post(new Task<CacheObject>() {
+
                 @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    if (cacheLoader != null) {
-                        cacheLoader.loading();
-                    }
+                public CacheObject call(){
+                    return getContentFromDiskCache(id);
                 }
 
                 @Override
-                protected CacheObject doInBackground(String... params) {
-                    return getContentFromDiskCache(params[0]);
-                }
-
-                @Override
-                protected void onPostExecute(CacheObject result) {
-                    super.onPostExecute(result);
-                    if (result != null) {
-                        addContentToMem(context, id, result);
+                public void result(CacheObject cacheObject) {
+                    if (cacheObject != null) {
+                        if(cacheObject.isExpired()){
+                            Log.e(TAG, "is expired & remove ");
+                            removeContent(context,id);
+                            if (cacheLoader != null) cacheLoader.returnContent(null);
+                        }else{
+                            addContentToMem(context, id, cacheObject.getObject(),cacheObject.getPeriod());
+                            if (cacheLoader != null) cacheLoader.returnContent(cacheObject.getObject());
+                        }
+                    }else{
+                        if (cacheLoader != null) cacheLoader.returnContent(null);
                     }
-                    if(result!=null&&result.isExpired()){
-                        Log.e(TAG, "is expired & remove ");
-                        removeContent(context,id);
-                        result=null;
-                    }
-                    if (cacheLoader != null)
-                        cacheLoader.returnContent(result==null?null:result.getObject());
-
                 }
-            }.execute(id);
-
-        } else  {
-            if(obj!=null&&obj.isExpired()){
+            });
+        }else{
+            if(cacheObject.isExpired()){
                 Log.e(TAG, "is expired & remove ");
                 removeContent(context,id);
-                obj=null;
-            }
-            if (cacheLoader != null){
-                cacheLoader.returnContent(obj==null?null:obj.getObject());
+                if (cacheLoader != null) cacheLoader.returnContent(null);
+            }else{
+                if (cacheLoader != null) cacheLoader.returnContent(cacheObject.getObject());
             }
         }
     }
@@ -203,11 +200,11 @@ class CacheManagerImpl implements CacheManager {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject obj = contextMap.get(id);
-        if (obj == null) {
+        CacheObject cacheObject = contextMap.get(id);
+        if (cacheObject == null) {
             return hasContentFromDiskCache(id);
         } else {
-            if(obj.isExpired()){
+            if(cacheObject.isExpired()){
                 Log.e(TAG, "is expired & remove ");
                 removeContent(context,id);
                 return false;
@@ -273,6 +270,7 @@ class CacheManagerImpl implements CacheManager {
      * @return
      */
     private CacheObject getContentFromDiskCache(String id) {
+        Log.i(TAG, "getContentFromDiskCache "+id);
         final String key = hashKeyForDisk(id);
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -386,25 +384,24 @@ class CacheManagerImpl implements CacheManager {
      * 异步添加到磁盘缓存
      *
      * @param id
-     * @param data
+     * @param cacheObject
      */
-    private void asyncAddContentToDiskCache(final String id, final CacheObject data) {
-        new AsyncTask<Void, Void, Void>() {
+    private void asyncAddContentToDiskCache(final String id, final CacheObject cacheObject) {
+        mApplication.post(new Runnable() {
             @Override
-            protected Void doInBackground(Void... params) {
-                addContentToDiskCache(id, data);
-                return null;
+            public void run() {
+                addContentToDiskCache(id, cacheObject);
             }
-        }.execute();
+        });
     }
 
     /**
      * 添加到磁盘缓存
      *
      * @param id
-     * @param data
+     * @param cacheObject
      */
-    private void addContentToDiskCache(String id, CacheObject data) {
+    private void addContentToDiskCache(String id, CacheObject cacheObject) {
 
         synchronized (mDiskCacheLock) {
             // Add to disk cache
@@ -418,7 +415,7 @@ class CacheManagerImpl implements CacheManager {
                         if (editor != null) {
                             out = editor.newOutputStream(DISK_CACHE_INDEX);
                             // 写入out流
-                            Object2FileUtils.writeObject(data, out);
+                            Object2FileUtils.writeObject(cacheObject, out);
                             editor.commit();
                             out.close();
                             flush();
@@ -584,45 +581,6 @@ class CacheManagerImpl implements CacheManager {
             sb.append(hex);
         }
         return sb.toString();
-    }
-
-    private File getDiskCacheDir(Context context, String uniqueName) {
-        // Check if media is mounted or storage is built-in, if so, try and use
-        // external cache dir
-        // otherwise use internal cache dir
-        String cachePath = null;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable()) {
-            cachePath = getExternalCacheDir(context).getPath();
-        } else {
-            cachePath = context.getCacheDir().getPath();
-        }
-
-        return new File(cachePath + File.separator + uniqueName);
-    }
-
-    @TargetApi(9)
-    private boolean isExternalStorageRemovable() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            return Environment.isExternalStorageRemovable();
-        }
-        return true;
-    }
-
-    @TargetApi(8)
-    private File getExternalCacheDir(Context context) {
-        File file = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            file = context.getExternalCacheDir();
-        }
-        if (file == null) {
-            // Before Froyo we need to construct the external cache dir
-            // ourselves
-            final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
-            file = new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
-            file.mkdirs();
-            return file;
-        }
-        return file;
     }
 
     @TargetApi(9)
