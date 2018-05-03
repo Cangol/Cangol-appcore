@@ -137,20 +137,22 @@ public class CoreApplication extends Application {
      * 提交一个后台线程任务
      * @param runnable
      */
-    public void post(Runnable runnable){
-        mSharePool.submit(runnable);
-    }
-    /**
-     * 提交一个回调任务
-     * @param callable
-     */
-    public void post(Callable callable){
-        mSharePool.submit(callable);
+    public Future<?> post(Runnable runnable){
+        return mSharePool.submit(runnable);
     }
     /**
      * 提交一个后台线程任务
      * @param runnable
      */
+    public <T> Future<T> post(Runnable runnable,T result){return mSharePool.submit(runnable,result);}
+    /**
+     * 提交一个后台回调任务
+     * @param callable
+     */
+    public <T> Future<T> post(Callable<T> callable){
+        return mSharePool.submit(callable);
+    }
+
     /**
      * 添加一个activity到管理列表里
      *
