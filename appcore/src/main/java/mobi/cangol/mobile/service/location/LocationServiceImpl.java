@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service.location;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
@@ -53,6 +54,7 @@ class LocationServiceImpl implements LocationService {
     private volatile ServiceHandler mServiceHandler;
     private volatile Looper mServiceLooper;
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onCreate(Application context) {
         this.mContext = context;
@@ -107,6 +109,7 @@ class LocationServiceImpl implements LocationService {
         getLocationAddress(mLocation);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void requestLocationUpdates() {
         if (null != mLocationListener) {
@@ -163,6 +166,7 @@ class LocationServiceImpl implements LocationService {
 
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void removeLocationUpdates() {
         if (mLocationListener != null && !isRemove) {
