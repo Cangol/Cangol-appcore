@@ -84,7 +84,12 @@ public class DownloadNotification {
     public void createNotification() {
         id = new Random().nextInt(10000);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder =null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        }else{
+            builder=new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText("")
                 .setContentInfo("")
@@ -99,7 +104,12 @@ public class DownloadNotification {
     }
 
     public void updateNotification(int progress, int speed) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder =null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        }else{
+            builder=new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText(FileUtils.formatSize(speed) + "/s")
                 .setContentInfo(progress + "%")
@@ -113,7 +123,12 @@ public class DownloadNotification {
 
     public void finishNotification() {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder =null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        }else{
+            builder=new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText(successText)
                 .setContentInfo("")
@@ -126,7 +141,12 @@ public class DownloadNotification {
     }
 
     public void failureNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder =null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        }else{
+            builder=new NotificationCompat.Builder(context);
+        }
         builder.setContentTitle(titleText)
                 .setContentText(failureText)
                 .setContentInfo("")
