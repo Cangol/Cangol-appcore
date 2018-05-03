@@ -24,6 +24,8 @@ import android.os.StrictMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
@@ -138,6 +140,17 @@ public class CoreApplication extends Application {
     public void post(Runnable runnable){
         mSharePool.submit(runnable);
     }
+    /**
+     * 提交一个回调任务
+     * @param callable
+     */
+    public void post(Callable callable){
+        mSharePool.submit(callable);
+    }
+    /**
+     * 提交一个后台线程任务
+     * @param runnable
+     */
     /**
      * 添加一个activity到管理列表里
      *
