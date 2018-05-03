@@ -63,10 +63,12 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void onCreate(Application context) {
         this.mApplication = (CoreApplication) context;
+        if(mDebug)Log.d(TAG, "onCreate");
     }
 
     @Override
     public void init(ServiceProperty serviceProperty) {
+        if(mDebug)Log.d(TAG, "init "+serviceProperty);
         this.mServiceProperty = serviceProperty;
         String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
         long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
@@ -82,10 +84,10 @@ class CacheManagerImpl implements CacheManager {
      * @param cacheSize
      */
     private void setDiskCache(File cacheDir, long cacheSize) {
+        if(mDebug)Log.d(TAG, "setDiskCache dir="+cacheDir+",size="+cacheSize);
         this.mDiskCacheDir = cacheDir;
         this.mDiskCacheSize = cacheSize;
-        mDiskCacheStarting = true;
-        Log.i(TAG, "mDiskCacheDir:" + mDiskCacheDir);
+        this.mDiskCacheStarting = true;
         initDiskCache(mDiskCacheDir, mDiskCacheSize);
     }
 
@@ -96,6 +98,7 @@ class CacheManagerImpl implements CacheManager {
      * @param diskCacheSize
      */
     private void initDiskCache(File diskCacheDir, long diskCacheSize) {
+        if(mDebug)Log.d(TAG, "initDiskCache dir="+diskCacheDir+",size="+diskCacheSize);
         // Set up disk cache
         synchronized (mDiskCacheLock) {
             if (mDiskLruCache == null || mDiskLruCache.isClosed()) {
@@ -124,6 +127,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public Serializable getContent(String context, String id) {
+        if(mDebug)Log.d(TAG, "getContent context="+context+",id="+id);
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
@@ -151,6 +155,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public void getContent(final String context, final String id, final CacheLoader cacheLoader) {
+        if(mDebug)Log.d(TAG, "getContent context="+context+",id="+id+",cacheLoader="+cacheLoader);
         if (cacheLoader != null)cacheLoader.loading();
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
@@ -195,6 +200,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public boolean hasContent(String context, String id) {
+        if(mDebug)Log.d(TAG, "hasContent context="+context+",id="+id);
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
@@ -221,6 +227,7 @@ class CacheManagerImpl implements CacheManager {
      * @return
      */
     private boolean hasContentFromDiskCache(String id) {
+        if(mDebug)Log.d(TAG, "hasContentFromDiskCache id="+id);
         final String key = hashKeyForDisk(id);
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -270,7 +277,7 @@ class CacheManagerImpl implements CacheManager {
      * @return
      */
     private CacheObject getContentFromDiskCache(String id) {
-        Log.i(TAG, "getContentFromDiskCache "+id);
+        if(mDebug)Log.d(TAG, "getContentFromDiskCache id="+id);
         final String key = hashKeyForDisk(id);
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -343,7 +350,7 @@ class CacheManagerImpl implements CacheManager {
      */
     @Override
     public void addContent(String context, String id, Serializable data) {
-        Log.i(TAG, "addContent:" + id + "," + data);
+        if(mDebug)Log.d(TAG, "addContent:" + id + "," + data);
         removeContent(context, id);
         addContentToMem(context, id, data);
         // addContentToDiskCache(id,new CacheObject(context,id,data));
@@ -352,7 +359,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public void addContent(String context, String id, Serializable data, long period) {
-        Log.i(TAG, "addContent:" + id + "," + data+","+period);
+        if(mDebug) Log.d(TAG, "addContent:" + id + "," + data+","+period);
         removeContent(context, id);
         addContentToMem(context, id, data,period);
         // addContentToDiskCache(id,new CacheObject(context,id,data,period));
