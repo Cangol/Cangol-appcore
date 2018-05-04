@@ -13,8 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.service.conf.ConfigService;
 
 /**
  * Created by weixuewu on 15/10/24.
@@ -25,17 +28,18 @@ class SessionServiceImpl implements SessionService {
     private final static String JSON = ".json";
     private final static String JSONA = ".jsona";
     private final static String SER = ".ser";
-    private Application mContext = null;
+    private CoreApplication mContext = null;
     private ServiceProperty mServiceProperty = null;
     private boolean debug = false;
     private Map<String, Session> mSessionMap =null;
     private Session mSession = null;
     @Override
     public void onCreate(Application context) {
-        mContext = context;
+        mContext = (CoreApplication) context;
         //这里使用application中的session也可实例化一个新的
         mSessionMap = new ConcurrentHashMap<String, Session>();
-        mSession = newSession(mContext,"default");
+        ConfigService configService = (ConfigService) mContext.getAppService(AppService.CONFIG_SERVICE);
+        mSession = newSession(mContext,configService.getSharedName());
     }
 
     @Override
