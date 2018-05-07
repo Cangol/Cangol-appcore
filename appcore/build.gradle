@@ -8,12 +8,12 @@ apply from: '../config/quality.gradle'
 apply from: '../config/coverage.gradle'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    implementation 'com.android.support:support-v4:26.0.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
-    implementation 'com.squareup.okio:okio:1.11.0'
-    //implementation 'com.android.support:multidex:1.0.1'
-    implementation 'junit:junit:4.12'
+    api fileTree(dir: 'libs', include: ['*.jar', '*.so'])
+    api 'com.android.support:support-v4:26.0.2'
+    api 'com.squareup.okhttp3:okhttp:3.6.0'
+    api 'com.squareup.okio:okio:1.11.0'
+    //api 'com.android.support:multidex:1.0.1'
+    api 'junit:junit:4.12'
 }
 
 android {
