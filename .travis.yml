@@ -1,6 +1,5 @@
 language: android
-jdk:
-  - oraclejdk8
+jdk: oraclejdk8
 sudo: false
 android:
   components:
@@ -49,5 +48,5 @@ before_script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
-   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
 
