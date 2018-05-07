@@ -1,9 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
 dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
-    api 'com.squareup.leakcanary:leakcanary-android:1.5'
-    api project(':appcore')
+    implementation 'com.squareup.leakcanary:leakcanary-android:1.5'
+    implementation 'com.android.support:support-v4:26.0.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+    implementation 'com.squareup.okio:okio:1.11.0'
+    implementation project(':appcore')
 }
 android {
     compileSdkVersion 26
