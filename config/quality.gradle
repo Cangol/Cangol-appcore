@@ -45,12 +45,6 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     reports {
         xml.enabled = false
         html.enabled = true
-        xml {
-            destination "build/reports/findbugs/findbugs.xml"
-        }
-        html {
-            destination "build/reports/findbugs/findbugs.html"
-        }
     }
 
     classpath = files()
@@ -68,26 +62,13 @@ task pmd(type: Pmd) {
     reports {
         xml.enabled = false
         html.enabled = true
-        xml {
-            destination "build/reports/pmd/pmd.xml"
-        }
-        html {
-            destination "build/reports/pmd/pmd.html"
-        }
     }
 }
 //
 task jdepend(type: JDepend, dependsOn: 'compileDebugSources') {
-    classesDir file("build/intermediates/classes")
     reports {
         xml.enabled = false
-        text.enabled=true
-        xml {
-            destination 'build/reports/jdepend/jdepend.xml'
-        }
-        text {
-            destination 'build/reports/jdepend/jdepend.txt'
-        }
+        text.enabled = true
     }
 }
 android {
