@@ -26,12 +26,6 @@ android {
         versionName "${POM_VERSION}"
         multiDexEnabled true
     }
-
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-    }
     lintOptions {
         abortOnError false
     }
