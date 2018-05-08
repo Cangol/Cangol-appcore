@@ -20,8 +20,6 @@ public class MainActivity extends FragmentActivity {
         }
         Log.d("getMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(this));
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
-
-
     }
 
     @Override
