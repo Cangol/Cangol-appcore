@@ -70,10 +70,7 @@ public class StatAgent {
 
         commonParams = this.getCommonParams();
     }
-    public static StatAgent getInstance(Context context) {
-        if (instance == null) {
-            instance = new StatAgent((CoreApplication) context.getApplicationContext());
-        }
+    public static StatAgent getInstance() {
         return instance;
     }
     public static void initInstance(CoreApplication coreApplication) {
