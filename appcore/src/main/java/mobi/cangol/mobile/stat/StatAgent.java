@@ -71,6 +71,9 @@ public class StatAgent {
         commonParams = this.getCommonParams();
     }
     public static StatAgent getInstance() {
+        if(instance==null){
+            throw new IllegalStateException("Please invoke initInstance in first!");
+        }
         return instance;
     }
     public static void initInstance(CoreApplication coreApplication) {
