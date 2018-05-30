@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import com.testfairy.TestFairy;
+
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.DeviceInfo;
@@ -18,6 +20,7 @@ public class MainActivity extends FragmentActivity {
         if (savedInstanceState == null) {
             toFragment(MainFragment.class);
         }
+        TestFairy.begin(this, "47ea7365f8383a1cb728d0f84a918503f8acaae4");
         Log.d("getMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(this));
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
     }
