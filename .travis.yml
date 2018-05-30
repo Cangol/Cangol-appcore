@@ -50,3 +50,7 @@ after_success:
   - gradle cobertura coveralls
   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
 
+deploy:
+  provider: testfairy
+  api-key: "47ea7365f8383a1cb728d0f84a918503f8acaae4"
+  app-file: Path to the app file (APK/IPA)
