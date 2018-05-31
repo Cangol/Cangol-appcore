@@ -5,6 +5,8 @@ import com.squareup.leakcanary.LeakCanary;
 
 import hugo.weaving.DebugLog;
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.stat.StatAgent;
+import mobi.cangol.mobile.utils.DeviceInfo;
 
 /**
  * Created by weixuewu on 15/9/14.
@@ -20,6 +22,8 @@ public class MobileApplication extends CoreApplication {
     @Override
     public void init() {
         initLeakCanary();
+        if(DeviceInfo.isAppProcess(this))
+            StatAgent.initInstance(this);
     }
     private void initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
