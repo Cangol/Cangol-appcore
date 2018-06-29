@@ -121,4 +121,4 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore.svg?type=large)]
+
