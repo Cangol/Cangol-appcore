@@ -2,7 +2,8 @@
 
 
 
-[![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) ](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
+[![Download](https://api.bintray.com/packages/cangol/maven/Cangol-appcore/images/download.svg) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore?ref=badge_shield)
+](https://bintray.com/cangol/maven/Cangol-appcore/_latestVersion)
 [![Build Status](https://travis-ci.org/Cangol/Cangol-appcore.svg?branch=master)](https://travis-ci.org/Cangol/Cangol-appcore)
 [![codecov](https://codecov.io/gh/Cangol/Cangol-appcore/branch/master/graph/badge.svg)](https://codecov.io/gh/Cangol/Cangol-appcore)
 [![Join the chat at https://gitter.im/Cangol/Cangol-appcore](https://badges.gitter.im/Cangol/Cangol-appcore.svg)](https://gitter.im/Cangol/Cangol-appcore?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -121,3 +122,6 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
 
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore?ref=badge_large)
