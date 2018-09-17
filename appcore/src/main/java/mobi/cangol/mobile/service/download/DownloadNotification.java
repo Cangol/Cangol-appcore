@@ -35,7 +35,6 @@ import mobi.cangol.mobile.utils.FileUtils;
 public class DownloadNotification {
     private static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "notification_channel_upgrade";
     private NotificationManager notificationManager;
-    private NotificationChannel channel;
     private int id;
     private String titleText, successText, failureText;
     private String savePath;
@@ -51,9 +50,7 @@ public class DownloadNotification {
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = createNotificationChannel(context);
-        }
+        createNotificationChannel(context);
     }
 
 
@@ -66,19 +63,19 @@ public class DownloadNotification {
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = createNotificationChannel(context);
-        }
+        createNotificationChannel(context);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public NotificationChannel createNotificationChannel(Context context) {
-        NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_upgrade_name), NotificationManager.IMPORTANCE_LOW);
-        channel.setDescription(context.getString(R.string.notification_channel_upgrade_desc));
-        channel.enableLights(false);
-        channel.enableVibration(false);
-        notificationManager.createNotificationChannel(channel);
-        return channel;
+    public void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if(notificationManager.getNotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID)==null){
+                NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_upgrade_name), NotificationManager.IMPORTANCE_LOW);
+                channel.setDescription(context.getString(R.string.notification_channel_upgrade_desc));
+                channel.enableLights(false);
+                channel.enableVibration(false);
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
     public int getId() {
