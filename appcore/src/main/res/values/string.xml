@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_upgrade_name">更新提醒</string>
+    <string name="notification_channel_upgrade_desc">应用更新提醒</string>
+    <string name="upgrade_failure">下载失败!</string>
+    <string name="upgrade_success">下载成功!</string>
+</resources>
