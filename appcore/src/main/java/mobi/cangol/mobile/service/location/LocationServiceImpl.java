@@ -51,7 +51,6 @@ class LocationServiceImpl implements LocationService {
     private BetterLocationListener mMyLocationListener;
     private String mAddress;
     private volatile ServiceHandler mServiceHandler;
-    private volatile Looper mServiceLooper;
 
     @Override
     public void onCreate(Application context) {
@@ -78,7 +77,6 @@ class LocationServiceImpl implements LocationService {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
-        mServiceLooper.quit();
     }
 
     @Override
