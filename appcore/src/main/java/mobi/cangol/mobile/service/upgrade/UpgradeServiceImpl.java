@@ -281,6 +281,7 @@ class UpgradeServiceImpl implements UpgradeService {
 
     @Override
     public void cancel(String filename) {
+        if(mDownloadHttpClient!=null)
         mDownloadHttpClient.cancelRequests(filename, true);
     }
 

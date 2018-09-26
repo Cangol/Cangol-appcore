@@ -153,4 +153,12 @@ public class ServiceProperty {
             return defaultValue;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ServiceProperty{" +
+                "mName='" + mName + '\'' +
+                ", mMap=" + mMap.toString() +
+                '}';
+    }
 }

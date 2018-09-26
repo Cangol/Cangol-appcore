@@ -26,3 +26,6 @@
 #
 #-dontwarn mobi.cangol.mobile.**
 #-keep  class mobi.cangol.mobile.** {*;}
+-keep class com.testfairy.** { *; }
+-dontwarn com.testfairy.**
+-keepattributes Exceptions, Signature, LineNumberTable

@@ -1,19 +1,18 @@
 language: android
-jdk:
-  - oraclejdk8
+jdk: oraclejdk8
 sudo: false
-group: deprecated-2017Q4
 android:
   components:
      - tools
      - platform-tools
-     - tools
-     - build-tools-25.0.0
+     - build-tools-26.0.2
+     - android-26
      - android-22
-     - android-25
      - extra-android-m2repository
      - extra-android-support
      - sys-img-armeabi-v7a-android-22
+     - add-on
+     - extra
   licenses:
       - 'android-sdk-preview-license-52d11cd2'
       - 'android-sdk-license-.+'
@@ -29,9 +28,9 @@ cache:
     - $HOME/.android/build-cache
 before_install:
     # Gradle
-    - wget -q http://services.gradle.org/distributions/gradle-3.3-all.zip
-    - unzip -q gradle-3.3-all.zip
-    - export GRADLE_HOME=$PWD/gradle-3.3
+    - wget -q http://services.gradle.org/distributions/gradle-4.1-all.zip
+    - unzip -q gradle-4.1-all.zip
+    - export GRADLE_HOME=$PWD/gradle-4.1
     - export PATH=$GRADLE_HOME/bin:$PATH
     - sudo apt-get install jq
     - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
@@ -49,5 +48,9 @@ before_script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
-   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
 
+#deploy:
+#  provider: testfairy
+#  api-key: "47ea7365f8383a1cb728d0f84a918503f8acaae4"
+#  app-file: Path to the app file (APK/IPA)

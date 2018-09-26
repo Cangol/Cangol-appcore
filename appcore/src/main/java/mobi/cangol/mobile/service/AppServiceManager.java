@@ -37,7 +37,7 @@ public abstract class AppServiceManager {
      *
      * @param clazz
      */
-    public abstract void registeService(Class<? extends AppService> clazz);
+    public abstract void registerService(Class<? extends AppService> clazz);
 
     /**
      * 销毁所有服务

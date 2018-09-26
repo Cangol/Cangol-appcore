@@ -17,7 +17,6 @@ package mobi.cangol.mobile.service.crash;
 
 import android.annotation.TargetApi;
 import android.app.Application;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
 import android.text.TextUtils;
@@ -32,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.Task;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
@@ -56,25 +56,25 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     private final static String _CRASH = ".crash";
     private boolean debug = true;
     private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
-    private Application mContext;
+    private CoreApplication mApplication;
     private SessionService mSessionService;
-    private ConfigService mConfigService;
     private ServiceProperty mServiceProperty = null;
     private AsyncHttpClient asyncHttpClient;
     private String mUrl;
     private Map<String, String> mParams;
-
+    private String mCrashDir;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public void onCreate(Application context) {
-        mContext = context;
+        mApplication = (CoreApplication) context;
         mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        CoreApplication app = (CoreApplication) mContext;
-        mSessionService = (SessionService) app.getAppService(AppService.SESSION_SERVICE);
-        mConfigService = (ConfigService) app.getAppService(AppService.CONFIG_SERVICE);
+        mSessionService = (SessionService) mApplication.getAppService(AppService.SESSION_SERVICE);
+        ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
+        mCrashDir =configService.getTempDir().getAbsolutePath()+File.separator+ "crash";
+
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        FileUtils.newFolder(mConfigService.getTempDir().getAbsolutePath());
+        FileUtils.newFolder(mCrashDir);
         StrictMode.setThreadPolicy(oldPolicy);
     }
 
@@ -92,7 +92,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
 
     @Override
     public void onDestroy() {
-        asyncHttpClient.cancelRequests(mContext, true);
+        asyncHttpClient.cancelRequests(mApplication, true);
     }
 
     @Override
@@ -136,7 +136,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_CONTEXT), report.context);
         params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_TIMESTAMP), report.timestamp);
         params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_FATAL), report.fatal);
-        asyncHttpClient.post(mContext, mUrl, params, new AsyncHttpResponseHandler() {
+        asyncHttpClient.post(mApplication, mUrl, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -146,7 +146,12 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
             @Override
             public void onSuccess(String content) {
                 super.onSuccess(content);
-                FileUtils.delFileAsync(report.path);
+                mApplication.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileUtils.delFile(report.path);
+                    }
+                });
             }
 
             @Override
@@ -175,7 +180,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         error.context = throwableToString(ex);
         error.timestamp = timestamp;
         error.fatal = "0";
-        error.path = mConfigService.getTempDir() + File.separator + filename + _CRASH;
+        error.path = mCrashDir + File.separator + filename + _CRASH;
         return error;
     }
 
@@ -190,18 +195,33 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         Object2FileUtils.writeObject(error, error.path);
         //System.gc();
         mSessionService.saveString("exitCode", "1");
-        mSessionService.saveString("exitVersion", DeviceInfo.getAppVersion(mContext));
+        mSessionService.saveString("exitVersion", DeviceInfo.getAppVersion(mApplication));
         //0 正常推退出  1异常退出
         System.exit(0);
     }
 
     @Override
     public void report(final CrashReportListener crashReportListener) {
-        new AsyncErrorScan() {
+        mApplication.post(new Task<List<ReportError>>() {
+            @Override
+            public List<ReportError> call() {
+                List<File> files = FileUtils.searchBySuffix(new File(mCrashDir), null, _CRASH);
+                //System.gc();
+                List<ReportError> reports = new ArrayList<ReportError>();
+                Object obj = null;
+                for (final File file : files) {
+                    obj = FileUtils.readObject(file);
+                    if (obj != null) {
+                        reports.add((ReportError) obj);
+                    } else {
+                        FileUtils.delFile(file.getAbsolutePath());
+                    }
+                }
+                return reports;
+            }
 
             @Override
-            protected void onPostExecute(List<ReportError> result) {
-                super.onPostExecute(result);
+            public void result(List<ReportError> result) {
                 for (final ReportError errorReport : result) {
                     if (!TextUtils.isEmpty(mUrl)) {
                         report(errorReport);
@@ -216,8 +236,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
                     }
                 }
             }
-
-        }.execute(mConfigService.getTempDir().getAbsolutePath());
+        });
     }
 
 
@@ -230,27 +249,6 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         String fatal;
         String path;
 
-        ReportError() {
-        }
-    }
-
-    static class AsyncErrorScan extends AsyncTask<String, Void, List<ReportError>> {
-
-        @Override
-        protected List<ReportError> doInBackground(String... params) {
-            List<File> files = FileUtils.searchBySuffix(new File(params[0]), null, _CRASH);
-            //System.gc();
-            List<ReportError> reports = new ArrayList<ReportError>();
-            Object obj = null;
-            for (final File file : files) {
-                obj = FileUtils.readObject(file);
-                if (obj != null) {
-                    reports.add((ReportError) obj);
-                } else {
-                    FileUtils.delFileAsync(file.getAbsolutePath());
-                }
-            }
-            return reports;
-        }
+        ReportError() {}
     }
 }

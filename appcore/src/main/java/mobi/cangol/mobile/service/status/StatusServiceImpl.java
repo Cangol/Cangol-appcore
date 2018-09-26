@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service.status;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,6 +38,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
  * @author Cangol
  */
 @Service("StatusService")
+@SuppressLint("MissingPermission")
 class StatusServiceImpl implements StatusService {
     private final static String TAG = "StatusService";
     protected ArrayList<StatusListener> listeners = new ArrayList<StatusListener>();

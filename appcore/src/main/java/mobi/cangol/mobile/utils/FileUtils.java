@@ -20,7 +20,6 @@ package mobi.cangol.mobile.utils;
  */
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -218,16 +217,6 @@ public class FileUtils {
         } catch (Exception e) {
             Log.d(e.getMessage());
         }
-
-    }
-
-    /**
-     * 异步删除
-     *
-     * @param filePathAndName String 文件路径及名称 如c:/fqf.txt
-     */
-    public static void delFileAsync(String filePathAndName) {
-        new FileDeleter().execute(filePathAndName);
 
     }
 
@@ -641,14 +630,5 @@ public class FileUtils {
             Log.d(e.getMessage());
         }
         return size;
-    }
-
-    static class FileDeleter extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected Void doInBackground(String... params) {
-            delFile(params[0]);
-            return null;
-        }
     }
 }

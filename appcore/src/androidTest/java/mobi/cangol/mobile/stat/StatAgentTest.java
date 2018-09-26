@@ -20,43 +20,43 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication=getApplication();
+        StatAgent.initInstance(coreApplication);
     }
-
     public void testSetDebug() throws Exception {
-        StatAgent.getInstance(getApplication()).setDebug(true);
+        StatAgent.getInstance().setDebug(true);
 
     }
     public void testSend() throws Exception {
-        StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createAppView(TAG));
-        StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
-        StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createEvent("test", TAG, "test", null, null));
-        StatAgent.getInstance(getApplication()).send(StatAgent.Builder.createTiming(TAG, 1000L));
+        StatAgent.getInstance().send(StatAgent.Builder.createAppView(TAG));
+        StatAgent.getInstance().send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
+        StatAgent.getInstance().send(StatAgent.Builder.createEvent("test", TAG, "test", null, null));
+        StatAgent.getInstance().send(StatAgent.Builder.createTiming(TAG, 1000L));
     }
 
     public void testSendLaunch() throws Exception {
-        StatAgent.getInstance(getApplication()).sendLaunch();
+        StatAgent.getInstance().sendLaunch();
     }
 
     public void testSendDevice() throws Exception {
-        StatAgent.getInstance(getApplication()).sendDevice();
+        StatAgent.getInstance().sendDevice();
     }
 
     public void testSendTraffic() throws Exception {
-        StatAgent.getInstance(getApplication()).sendTraffic();
+        StatAgent.getInstance().sendTraffic();
     }
 
     public void testOnActivityResume() throws Exception {
-        StatAgent.getInstance(getApplication()).onActivityResume(TAG);
+        StatAgent.getInstance().onActivityResume(TAG);
     }
 
     public void testOnActivityPause() throws Exception {
-        StatAgent.getInstance(getApplication()).onActivityPause(TAG);
+        StatAgent.getInstance().onActivityPause(TAG);
     }
 
     public void testOnFragmentResume() throws Exception {
-        StatAgent.getInstance(getApplication()).onFragmentResume(TAG);
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
     public void testOnFragmentPause() throws Exception {
-        StatAgent.getInstance(getApplication()).onFragmentPause(TAG);
+        StatAgent.getInstance().onFragmentPause(TAG);
     }
 }
