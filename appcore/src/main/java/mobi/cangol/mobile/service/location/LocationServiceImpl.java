@@ -52,7 +52,6 @@ class LocationServiceImpl implements LocationService {
     private BetterLocationListener mMyLocationListener;
     private String mAddress;
     private volatile ServiceHandler mServiceHandler;
-    private volatile Looper mServiceLooper;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -80,7 +79,6 @@ class LocationServiceImpl implements LocationService {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
-        mServiceLooper.quit();
     }
 
     @Override
