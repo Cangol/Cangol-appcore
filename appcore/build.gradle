@@ -38,6 +38,11 @@ android {
         //dexInProcess  true
         jumboMode true
     }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+    }
 }
 
 android.libraryVariants.all { variant ->

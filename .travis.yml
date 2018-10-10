@@ -43,13 +43,13 @@ before_script:
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
-#script:
-#
+script:
+  -  gradle build connectedCheck
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
-
+  - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
 #deploy:
 #  provider: testfairy
 #  api-key: "47ea7365f8383a1cb728d0f84a918503f8acaae4"

@@ -35,7 +35,7 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     ignoreFailures = false
     effort = "max"
     reportLevel = "high"
-    excludeFilter = new File("config/quality/findbugs/findbugs-filter.xml")
+    excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
     classes = files("build/intermediates/classes")
 
     source 'src'
@@ -52,7 +52,7 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
 
 task pmd(type: Pmd) {
     ignoreFailures = false
-    ruleSetFiles = files("config/quality/pmd/pmd-ruleset.xml")
+    ruleSetFiles = files("${project.rootDir}/config/quality/pmd/pmd-ruleset.xml")
     ruleSets = []
 
     source 'src/main'
@@ -76,7 +76,7 @@ android {
         abortOnError false
         xmlReport false
         htmlReport true
-        lintConfig file("config/quality/lint/lint.xml")
+        lintConfig file("${project.rootDir}/config/quality/lint/lint.xml")
         htmlOutput file("build/reports/lint/lint-result.html")
         xmlOutput file("build/reports/lint/lint-result.xml")
     }
