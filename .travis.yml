@@ -7,10 +7,10 @@ android:
      - platform-tools
      - build-tools-26.0.2
      - android-26
-     - android-22
+     - android-24
      - extra-android-m2repository
      - extra-android-support
-     - sys-img-armeabi-v7a-android-22
+     - sys-img-x86_64-android-24
      - add-on
      - extra
   licenses:
@@ -39,7 +39,7 @@ before_install:
     - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 # Emulator Management: Create, Start and Wait
 before_script:
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-24 --abi x86_64
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
@@ -49,7 +49,6 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
   - gradle cobertura coveralls
   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
-  - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
 #deploy:
 #  provider: testfairy
 #  api-key: "47ea7365f8383a1cb728d0f84a918503f8acaae4"
