@@ -17,6 +17,8 @@ package mobi.cangol.mobile.utils;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -33,6 +35,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -53,6 +56,8 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -258,16 +263,14 @@ public final class DeviceInfo {
      * @return
      */
     public static String getResolution(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point point = new Point();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            display.getRealSize(point);
-            return point.y + "x" + point.x;
-        } else {
-            DisplayMetrics dm = context.getResources().getDisplayMetrics();
-            return dm.heightPixels + "x" + dm.widthPixels;
+            wm.getDefaultDisplay().getRealMetrics(dm);
+        }else{
+            wm.getDefaultDisplay().getMetrics(dm);
         }
+        return dm.widthPixels + "x" + dm.heightPixels;
     }
 
     /**
@@ -920,22 +923,47 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isForegroundApplication(String packageName, Context context) {
-        boolean result = false;
-        ActivityManager am = (ActivityManager) context
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
-        if (appProcesses != null) {
-            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
-                if (runningAppProcessInfo.processName.equals(packageName)) {
-                    int status = runningAppProcessInfo.importance;
-                    if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
-                            || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                        result = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            class RecentUseComparator implements Comparator<UsageStats> {
+                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public int compare(UsageStats lhs, UsageStats rhs) {
+                    return (lhs.getLastTimeUsed() > rhs.getLastTimeUsed()) ? -1 : (lhs.getLastTimeUsed() == rhs.getLastTimeUsed()) ? 0 : 1;
+                }
+            }
+            RecentUseComparator mRecentComp = new RecentUseComparator();
+            UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+            long ts = System.currentTimeMillis();
+            List<UsageStats> usageStats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST, ts - 1000 * 60, ts);
+            Collections.sort(usageStats, mRecentComp);
+            if(usageStats.size()>0){
+                String currentTopPackage = usageStats.get(0).getPackageName();
+                if (currentTopPackage.equals(packageName)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }else{
+            boolean result = false;
+            ActivityManager am = (ActivityManager) context
+                    .getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
+            if (appProcesses != null) {
+                for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
+                    if (runningAppProcessInfo.processName.equals(packageName)) {
+                        int status = runningAppProcessInfo.importance;
+                        if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
+                                || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                            result = true;
+                        }
                     }
                 }
             }
+            return result;
         }
-        return result;
     }
 
     /**
