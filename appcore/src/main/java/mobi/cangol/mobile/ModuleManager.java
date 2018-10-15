@@ -75,6 +75,14 @@ public class ModuleManager {
         }
     }
 
+    public void addLazy(ModuleApplication moduleApplication) {
+        if (!mModuleApplications.contains(moduleApplication)) {
+            mModuleApplications.add(moduleApplication);
+            moduleApplication.setCoreApplication(mCoreApplication);
+            moduleApplication.onCreate();
+        }
+    }
+
     public void onExit() {
         for (ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.onExit();
