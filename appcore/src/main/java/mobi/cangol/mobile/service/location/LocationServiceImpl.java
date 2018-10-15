@@ -50,7 +50,6 @@ class LocationServiceImpl implements LocationService {
     private Location mLocation;
     private boolean isRemove;
     private BetterLocationListener mMyLocationListener;
-    private String mAddress;
     private volatile ServiceHandler mServiceHandler;
 
     @SuppressLint("MissingPermission")
@@ -89,7 +88,6 @@ class LocationServiceImpl implements LocationService {
     @Override
     public ServiceProperty defaultServiceProperty() {
         ServiceProperty sp = new ServiceProperty(TAG);
-        sp.putString(LOCATIONSERVICE_BAIDU_AK, "694639beed8fa216ffae5d78d8cd51e0");
         sp.putInt(LOCATIONSERVICE_BETTERTIME, 120000);
         sp.putInt(LOCATIONSERVICE_TIMEOUT, 300000);
         sp.putInt(LOCATIONSERVICE_GPS_MINTIME, 1000);
@@ -104,7 +102,6 @@ class LocationServiceImpl implements LocationService {
         if (mMyLocationListener != null) {
             mMyLocationListener.onBetterLocation(mLocation);
         }
-        getLocationAddress(mLocation);
     }
 
     @SuppressLint("MissingPermission")
@@ -158,10 +155,6 @@ class LocationServiceImpl implements LocationService {
     private void getLocationAddress(Location location) {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
-        //执行网络请求反查地址（百度地图API|Google地图API）
-        mAddress = LocationUtils.getAddressByBaidu(lat, lng, mServiceProperty.getString(LOCATIONSERVICE_BAIDU_AK));
-        //LocationUtils.getAddressByGoogle(lat, lng);
-
     }
 
     @SuppressLint("MissingPermission")
@@ -187,11 +180,6 @@ class LocationServiceImpl implements LocationService {
         long timeDelta = System.currentTimeMillis() - location.getTime();
         Log.d(TAG, "location time :" + TimeUtils.formatYmdHms(location.getTime()));
         return (timeDelta < mBetterTime);
-    }
-
-    @Override
-    public String getAddress() {
-        return mAddress;
     }
 
     @Override
