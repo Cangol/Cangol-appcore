@@ -29,7 +29,6 @@ import android.util.Log;
 
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
-import mobi.cangol.mobile.utils.LocationUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
