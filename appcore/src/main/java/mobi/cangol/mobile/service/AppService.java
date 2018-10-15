@@ -19,6 +19,10 @@ import android.app.Application;
 
 public interface AppService {
     /**
+     * 路由服务
+     */
+    String ROUTE_SERVICE = "RouteService";
+    /**
      * 状态监听服务
      */
     String STATUS_SERVICE = "StatusService";

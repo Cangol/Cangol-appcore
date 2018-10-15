@@ -15,7 +15,6 @@
  */
 package mobi.cangol.mobile;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Build;
@@ -41,14 +40,23 @@ import mobi.cangol.mobile.utils.DeviceInfo;
  */
 
 public class CoreApplication extends Application {
-
-    public List<WeakReference<Activity>> mActivityManager = new ArrayList<WeakReference<Activity>>();
-    private AppServiceManager mAppServiceManager;
     private boolean mDevMode = false;
     private boolean mStrictMode = false;
     private boolean mAsyncInit = false;
+    private AppServiceManager mAppServiceManager;
     private PoolManager.Pool mSharePool;
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    private ModuleManager mModuleManager;
+    public final  List<WeakReference<Activity>> mActivityManager = new ArrayList<>();
+
+    public CoreApplication() {
+        super();
+        mModuleManager=new ModuleManager(this);
+    }
+
+    public ModuleManager getModuleManager() {
+        return mModuleManager;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,34 +70,108 @@ public class CoreApplication extends Application {
             } else {
                 Log.setLogLevelFormat(android.util.Log.WARN, true);
             }
-            mSharePool=PoolManager.buildPool("share",2);
-            if(mAsyncInit){
+            mSharePool = PoolManager.buildPool("share", 2);
+            initAppServiceManager();
+            if (mAsyncInit) {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        initAppServiceManager();
                         init();
+                        mModuleManager.init();
                     }
                 });
-            }else{
-                initAppServiceManager();
+            } else {
                 init();
+                mModuleManager.init();
             }
         } else {
             Log.i("cur process is not app' process");
         }
     }
 
-    protected void init(){}
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        mModuleManager.onTerminate();
+    }
 
-    public void setAsyncInit(boolean asyncInit) {
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mModuleManager.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        mModuleManager.onTrimMemory(level);
+    }
+
+    /**
+     * 设置是否异步初始化(在super.onCreate方法之前调用才有效)
+     *
+     * @param asyncInit
+     */
+    protected final void setAsyncInit(boolean asyncInit) {
         this.mAsyncInit = asyncInit;
+    }
+
+    /**
+     * 获取是否异步初始化
+     *
+     * @return
+     */
+    protected final boolean isAsyncInit() {
+        return mAsyncInit;
+    }
+
+    /**
+     * 初始化方法，当setAsyncInit为true 此处执行异步init
+     */
+    protected void init() {
+
+    }
+
+    /**
+     * 获取当前是否研发模式 研发模式log级别为VERBOSE，非研发模式log级别为WARN
+     *
+     * @return
+     */
+    protected final boolean isDevMode() {
+        return mDevMode;
+    }
+
+    /**
+     * 设置研发模式 (在super.onCreate方法之前调用才有效)
+     *
+     * @param devMode
+     */
+    protected final void setDevMode(boolean devMode) {
+        this.mDevMode = devMode;
+    }
+
+    /**
+     * 是否严格模式
+     *
+     * @return
+     */
+    protected final boolean isStrictMode() {
+        return mStrictMode;
+    }
+
+    /**
+     * 设置是否严格模式 (在super.onCreate方法之前调用才有效)
+     *
+     * @param mStrictMode
+     */
+    protected final void setStrictMode(boolean mStrictMode) {
+        this.mStrictMode = mStrictMode;
     }
 
     /**
      * 初始化应用服务管理器
      */
-    private void initAppServiceManager() {
+    private final void initAppServiceManager() {
         mAppServiceManager = new AppServiceManagerImpl(this);
     }
 
@@ -98,7 +180,7 @@ public class CoreApplication extends Application {
      *
      * @return
      */
-    public AppServiceManager getAppServiceManager() {
+    protected final AppServiceManager getAppServiceManager() {
         return mAppServiceManager;
     }
 
@@ -108,7 +190,7 @@ public class CoreApplication extends Application {
      * @param name
      * @return
      */
-    public AppService getAppService(String name) {
+    public final AppService getAppService(String name) {
         if (mAppServiceManager != null) {
             return mAppServiceManager.getAppService(name);
         }
@@ -116,59 +198,60 @@ public class CoreApplication extends Application {
     }
 
     /**
-     * 获取独立的线程池
-     * @param name
-     * @param core
-     * @return
-     */
-    public PoolManager.Pool getPool(String name, int core){
-        return PoolManager.buildPool(name,core);
-    }
-
-    /**
      * 获取共享线程池
+     *
      * @return
      */
-    public PoolManager.Pool getSharePool(){
+    public final PoolManager.Pool getSharePool() {
         return mSharePool;
     }
 
     /**
      * 提交一个后台线程任务
+     *
      * @param runnable
      */
-    public Future<?> post(Runnable runnable){
-        return mSharePool.submit(runnable);
+    public final Future<?> post(Runnable runnable) {
+        return getSharePool().submit(runnable);
     }
+
     /**
      * 提交一个后台线程任务
+     *
      * @param runnable
      */
-    public <T> Future<T> post(Runnable runnable,T result){return mSharePool.submit(runnable,result);}
+    public final <T> Future<T> post(Runnable runnable, T result) {
+        return getSharePool().submit(runnable, result);
+    }
+
     /**
      * 提交一个后台回调任务
+     *
      * @param callable
      */
-    public <T> Future<T> post(Callable<T> callable){
-        return mSharePool.submit(callable);
+    public final <T> Future<T> post(Callable<T> callable) {
+        return getSharePool().submit(callable);
     }
+
     /**
      * 提交一个后台回调任务
+     *
      * @param task
      */
-    public Future<?>  post(Task task){
-        return mSharePool.submit(task);
+    public final Future<?> post(Task task) {
+        return getSharePool().submit(task);
     }
+
 
     /**
      * 添加一个activity到管理列表里
      *
      * @param activity
      */
-    public void addActivityToManager(Activity activity) {
-        for (final WeakReference<Activity> activityReference : mActivityManager) {
+    public final void addActivityToManager(Activity activity) {
+        for (final WeakReference<Activity> activityReference : getActivityManager()) {
             if (activityReference != null && !activity.equals(activityReference.get())) {
-                mActivityManager.add(new WeakReference<Activity>(activity));
+                getActivityManager().add(new WeakReference<Activity>(activity));
             }
         }
     }
@@ -176,8 +259,8 @@ public class CoreApplication extends Application {
     /**
      * 关闭所有activity
      */
-    public void closeAllActivities() {
-        for (final WeakReference<Activity> activityReference : mActivityManager) {
+    public final void closeAllActivities() {
+        for (final WeakReference<Activity> activityReference : getActivityManager()) {
             if (activityReference != null && activityReference.get() != null) {
                 activityReference.get().finish();
             }
@@ -189,10 +272,10 @@ public class CoreApplication extends Application {
      *
      * @param activity
      */
-    public void delActivityFromManager(Activity activity) {
-        for (final WeakReference<Activity> activityReference : mActivityManager) {
+    public final void delActivityFromManager(Activity activity) {
+        for (final WeakReference<Activity> activityReference : getActivityManager()) {
             if (activityReference != null && activity.equals(activityReference.get())) {
-                mActivityManager.remove(activityReference);
+                getActivityManager().remove(activityReference);
             }
         }
     }
@@ -203,7 +286,7 @@ public class CoreApplication extends Application {
      * @return
      */
 
-    public List<WeakReference<Activity>> getActivityManager() {
+    public final List<WeakReference<Activity>> getActivityManager() {
         return mActivityManager;
     }
 
@@ -212,14 +295,15 @@ public class CoreApplication extends Application {
      *
      * @return
      */
-    public SessionService getSession() {
+    public final SessionService getSession() {
         return (SessionService) getAppService(AppService.SESSION_SERVICE);
     }
 
     /**
      * 退出应用
      */
-    public void exit() {
+    public final void exit() {
+        mModuleManager.onExit();
         getSession().saveString(Constants.KEY_EXIT_CODE, "0");
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));
         if (mAppServiceManager != null) {
@@ -230,30 +314,5 @@ public class CoreApplication extends Application {
         System.exit(0);
     }
 
-    /**
-     * 获取当前是否研发模式 研发模式log级别为VERBOSE，非研发模式log级别为WARN
-     *
-     * @return
-     */
-    public boolean isDevMode() {
-        return mDevMode;
-    }
 
-    /**
-     * 设置研发模式
-     *
-     * @param devMode
-     */
-    public void setDevMode(boolean devMode) {
-        this.mDevMode = devMode;
-    }
-
-
-    public boolean isStrictMode() {
-        return mStrictMode;
-    }
-
-    public void setStrictMode(boolean mStrictMode) {
-        this.mStrictMode = mStrictMode;
-    }
 }

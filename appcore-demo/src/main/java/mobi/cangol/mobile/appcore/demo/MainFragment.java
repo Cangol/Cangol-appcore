@@ -28,6 +28,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
+
 /**
  * Created by xuewu.wei on 2016/8/31.
  */
@@ -42,6 +44,7 @@ public class MainFragment extends ListFragment {
         fragments.add(SecurityFragment.class);
         fragments.add(SoapFragment.class);
         fragments.add(UtilsFragment.class);
+        fragments.add(LibTestFragment.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
