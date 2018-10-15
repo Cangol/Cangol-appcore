@@ -67,7 +67,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
          //2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
          }else**/
         {
-            classList = new ArrayList<Class<? extends AppService>>();
+            classList = new ArrayList<>();
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.cache.CacheManagerImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.conf.ConfigServiceImpl"));
@@ -77,7 +77,6 @@ public class AppServiceManagerImpl extends AppServiceManager {
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.session.SessionServiceImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.status.StatusServiceImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.plugin.PluginManagerImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.event.ObserverManagerImpl"));
         }
         Log.d(TAG, "classList size=" + classList.size());
