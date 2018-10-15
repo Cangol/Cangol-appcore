@@ -19,10 +19,6 @@ import android.app.Application;
 
 public interface AppService {
     /**
-     * 路由服务
-     */
-    String ROUTE_SERVICE = "RouteService";
-    /**
      * 状态监听服务
      */
     String STATUS_SERVICE = "StatusService";
@@ -58,11 +54,6 @@ public interface AppService {
      * Session服务
      */
     String SESSION_SERVICE = "SessionService";
-    /**
-     * PluginManager
-     */
-    //String PLUGIN_MANAGER = "PluginManager";
-
     /**
      * ObserverManager
      */
