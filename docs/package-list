@@ -15,7 +15,6 @@ mobi.cangol.mobile.service.crash
 mobi.cangol.mobile.service.download
 mobi.cangol.mobile.service.event
 mobi.cangol.mobile.service.location
-mobi.cangol.mobile.service.plugin
 mobi.cangol.mobile.service.session
 mobi.cangol.mobile.service.status
 mobi.cangol.mobile.service.upgrade
