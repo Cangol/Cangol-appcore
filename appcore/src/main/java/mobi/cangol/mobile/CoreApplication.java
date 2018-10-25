@@ -302,7 +302,7 @@ public class CoreApplication extends Application {
     /**
      * 退出应用
      */
-    public final void exit() {
+    public void exit() {
         mModuleManager.onExit();
         getSession().saveString(Constants.KEY_EXIT_CODE, "0");
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));
