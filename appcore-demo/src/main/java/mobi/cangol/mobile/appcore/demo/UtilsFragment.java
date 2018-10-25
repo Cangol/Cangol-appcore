@@ -88,7 +88,8 @@ public class UtilsFragment extends Fragment {
                 sb.append("\nWifiRssiString="+DeviceInfo.getWifiRssiString(getContext()));
                 sb.append("\nWifiRssi="+DeviceInfo.getWifiRssi(getContext()));
 
-
+                sb.append("\nisAppProcess="+DeviceInfo.isAppProcess(getContext()));
+                sb.append("\nisProxy="+DeviceInfo.isProxy(getContext()));
 
                 printLog(sb.toString());
             }

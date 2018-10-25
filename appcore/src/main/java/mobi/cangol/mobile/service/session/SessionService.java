@@ -15,6 +15,12 @@ import mobi.cangol.mobile.service.AppService;
 public interface SessionService extends AppService {
 
     /**
+     * 获取用户Session
+     *
+     * @param name
+     */
+    Session getUserSession(String name);
+    /**
      * 是否包含
      *
      * @param key

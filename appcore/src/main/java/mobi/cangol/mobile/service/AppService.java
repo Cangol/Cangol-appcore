@@ -55,11 +55,6 @@ public interface AppService {
      */
     String SESSION_SERVICE = "SessionService";
     /**
-     * PluginManager
-     */
-    //String PLUGIN_MANAGER = "PluginManager";
-
-    /**
      * ObserverManager
      */
     String OBSERVER_MANAGER = "ObserverManager";

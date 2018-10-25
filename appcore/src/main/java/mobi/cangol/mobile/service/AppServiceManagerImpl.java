@@ -15,9 +15,6 @@
  */
 package mobi.cangol.mobile.service;
 
-import android.app.Application;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
 
@@ -41,19 +38,18 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.Task;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 public class AppServiceManagerImpl extends AppServiceManager {
     private final static String TAG = "AppServiceManager";
-    public Application mContext;
+    public  CoreApplication mContext;
     private Map<String, AppService> mRunServiceMap = new Hashtable<String, AppService>();
     private Map<String, Class<? extends AppService>> mServiceMap = new Hashtable<String, Class<? extends AppService>>();
     private boolean mUseAnnotation = true;
-    private List<String> mPackageNames = new ArrayList<String>();
     private Map<String, ServiceProperty> mProperties = new HashMap<String, ServiceProperty>();
     private boolean debug = false;
-    private AsyncClassScan mAsyncClassScan;
 
     public AppServiceManagerImpl(CoreApplication context) {
         this.mContext = context;
@@ -71,7 +67,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
          //2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
          }else**/
         {
-            classList = new ArrayList<Class<? extends AppService>>();
+            classList = new ArrayList<>();
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.cache.CacheManagerImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.conf.ConfigServiceImpl"));
@@ -81,7 +77,6 @@ public class AppServiceManagerImpl extends AppServiceManager {
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.session.SessionServiceImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.status.StatusServiceImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.plugin.PluginManagerImpl"));
             classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.event.ObserverManagerImpl"));
         }
         Log.d(TAG, "classList size=" + classList.size());
@@ -95,7 +90,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 
     private void initServiceMap(List<Class<? extends AppService>> classList) {
         for (Class<? extends AppService> clazz : classList) {
-            registeService(clazz);
+            registerService(clazz);
         }
     }
 
@@ -138,7 +133,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
     }
 
     @Override
-    public void registeService(Class<? extends AppService> clazz) {
+    public void registerService(Class<? extends AppService> clazz) {
         try {
             if (mUseAnnotation) {
                 if (clazz.isAnnotationPresent(Service.class)) {
@@ -213,7 +208,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
 
     @Override
     public void destroyAllService() {
-        Log.d(TAG, "destoryAllService");
+        Log.d(TAG, "destroyAllService");
         AppService appService = null;
         for (String name : mRunServiceMap.keySet()) {
             appService = mRunServiceMap.get(name);
@@ -226,26 +221,30 @@ public class AppServiceManagerImpl extends AppServiceManager {
     @Override
     public void destroy() {
         Log.d(TAG, "destroy");
-        if (mAsyncClassScan != null) {
-            mAsyncClassScan.cancel(true);
-        }
         destroyAllService();
         mProperties.clear();
         mServiceMap.clear();
-        mPackageNames.clear();
     }
 
     @Override
-    public void setScanPackage(String... packageName) {
+    public void setScanPackage(final String... packageName) {
         if (packageName.length > 0) {
-            List<Class<? extends AppService>> classList = new ArrayList<Class<? extends AppService>>();
-            for (String name : packageName) {
-                mPackageNames.add(name);
-                classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
-                // 2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
-                //System.gc();
-            }
-            initServiceMap(classList);
+            mContext.post(new Task<List<Class<? extends AppService>>>() {
+
+                @Override
+                public List<Class<? extends AppService>> call(){
+                    List<Class<? extends AppService>> classList = new ArrayList<Class<? extends AppService>>();
+                    for (String name : packageName) {
+                        classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
+                    }
+                    return classList;
+                }
+
+                @Override
+                public void result(List<Class<? extends AppService>> list) {
+                    initServiceMap(list);
+                }
+            });
         }
     }
 
@@ -297,19 +296,4 @@ public class AppServiceManagerImpl extends AppServiceManager {
             }
         }
     }
-
-    static class AsyncClassScan extends AsyncTask<String, Void, List<Class<? extends AppService>>> {
-        Context context;
-
-        AsyncClassScan(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected List<Class<? extends AppService>> doInBackground(String... params) {
-            return ClassUtils.getAllClassByInterface(AppService.class, context, params[0]);
-        }
-
-    }
-
 }

@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
 dependencies {
-    compile project(':appcore')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    //leak canary
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    implementation 'com.squareup.leakcanary:leakcanary-android:1.5'
+    implementation 'com.android.support:support-v4:26.0.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+    implementation 'com.squareup.okio:okio:1.11.0'
+    //implementation 'testfairy:testfairy-android-sdk:1.+@aar'
+    implementation project(':appcore')
+    implementation project(':libdemo')
 }
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.3'
+    buildToolsVersion '26.0.2'
 
 
     defaultConfig {

@@ -29,10 +29,6 @@ public interface LocationService extends AppService {
      */
     String LOCATIONSERVICE_TIMEOUT = "timeout";
     /**
-     * 百度LBS 的apikey
-     */
-    String LOCATIONSERVICE_BAIDU_AK = "baidu_ak";
-    /**
      * GPS定位 最小时间间隔,单位豪秒
      */
     String LOCATIONSERVICE_GPS_MINTIME = "gps_min_time";
@@ -80,11 +76,4 @@ public interface LocationService extends AppService {
      * @param locationListener
      */
     void setBetterLocationListener(BetterLocationListener locationListener);
-
-    /**
-     * 获取地址
-     *
-     * @return
-     */
-    String getAddress();
 }

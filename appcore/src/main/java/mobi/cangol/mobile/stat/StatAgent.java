@@ -70,9 +70,9 @@ public class StatAgent {
 
         commonParams = this.getCommonParams();
     }
-    public static StatAgent getInstance(Context context) {
-        if (instance == null) {
-            instance = new StatAgent((CoreApplication) context.getApplicationContext());
+    public static StatAgent getInstance() {
+        if(instance==null){
+            throw new IllegalStateException("Please invoke initInstance in first!");
         }
         return instance;
     }

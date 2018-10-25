@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service.location;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
@@ -28,7 +29,6 @@ import android.util.Log;
 
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
-import mobi.cangol.mobile.utils.LocationUtils;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
@@ -49,10 +49,9 @@ class LocationServiceImpl implements LocationService {
     private Location mLocation;
     private boolean isRemove;
     private BetterLocationListener mMyLocationListener;
-    private String mAddress;
     private volatile ServiceHandler mServiceHandler;
-    private volatile Looper mServiceLooper;
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onCreate(Application context) {
         this.mContext = context;
@@ -78,7 +77,6 @@ class LocationServiceImpl implements LocationService {
     @Override
     public void onDestroy() {
         removeLocationUpdates();
-        mServiceLooper.quit();
     }
 
     @Override
@@ -89,7 +87,6 @@ class LocationServiceImpl implements LocationService {
     @Override
     public ServiceProperty defaultServiceProperty() {
         ServiceProperty sp = new ServiceProperty(TAG);
-        sp.putString(LOCATIONSERVICE_BAIDU_AK, "694639beed8fa216ffae5d78d8cd51e0");
         sp.putInt(LOCATIONSERVICE_BETTERTIME, 120000);
         sp.putInt(LOCATIONSERVICE_TIMEOUT, 300000);
         sp.putInt(LOCATIONSERVICE_GPS_MINTIME, 1000);
@@ -104,9 +101,9 @@ class LocationServiceImpl implements LocationService {
         if (mMyLocationListener != null) {
             mMyLocationListener.onBetterLocation(mLocation);
         }
-        getLocationAddress(mLocation);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void requestLocationUpdates() {
         if (null != mLocationListener) {
@@ -157,12 +154,9 @@ class LocationServiceImpl implements LocationService {
     private void getLocationAddress(Location location) {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
-        //执行网络请求反查地址（百度地图API|Google地图API）
-        mAddress = LocationUtils.getAddressByBaidu(lat, lng, mServiceProperty.getString(LOCATIONSERVICE_BAIDU_AK));
-        //LocationUtils.getAddressByGoogle(lat, lng);
-
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void removeLocationUpdates() {
         if (mLocationListener != null && !isRemove) {
@@ -185,11 +179,6 @@ class LocationServiceImpl implements LocationService {
         long timeDelta = System.currentTimeMillis() - location.getTime();
         Log.d(TAG, "location time :" + TimeUtils.formatYmdHms(location.getTime()));
         return (timeDelta < mBetterTime);
-    }
-
-    @Override
-    public String getAddress() {
-        return mAddress;
     }
 
     @Override

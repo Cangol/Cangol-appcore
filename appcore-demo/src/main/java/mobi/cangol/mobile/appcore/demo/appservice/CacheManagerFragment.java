@@ -98,7 +98,7 @@ public class CacheManagerFragment extends Fragment{
                     public void returnContent(Object content) {
                         textView1.setText("--------------cache---------------");
                         textView1.append("\nsize=" + cacheManager.size());
-                        textView1.append("\nuser=" + cacheManager.getContent(TAG,"user"));
+                        textView1.append("\nuser=" + content);
                     }
                 });
             }
