@@ -951,47 +951,22 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isForegroundApplication(String packageName, Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            class RecentUseComparator implements Comparator<UsageStats> {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                @Override
-                public int compare(UsageStats lhs, UsageStats rhs) {
-                    return (lhs.getLastTimeUsed() > rhs.getLastTimeUsed()) ? -1 : (lhs.getLastTimeUsed() == rhs.getLastTimeUsed()) ? 0 : 1;
-                }
-            }
-            RecentUseComparator mRecentComp = new RecentUseComparator();
-            UsageStatsManager mUsageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
-            long ts = System.currentTimeMillis();
-            List<UsageStats> usageStats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST, ts - 1000 * 60, ts);
-            Collections.sort(usageStats, mRecentComp);
-            if(usageStats.size()>0){
-                String currentTopPackage = usageStats.get(0).getPackageName();
-                if (currentTopPackage.equals(packageName)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }else{
-                return false;
-            }
-        }else{
-            boolean result = false;
-            ActivityManager am = (ActivityManager) context
-                    .getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
-            if (appProcesses != null) {
-                for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
-                    if (runningAppProcessInfo.processName.equals(packageName)) {
-                        int status = runningAppProcessInfo.importance;
-                        if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
-                                || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                            result = true;
-                        }
+        boolean result = false;
+        ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
+        if (appProcesses != null) {
+            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
+                if (runningAppProcessInfo.processName.equals(packageName)) {
+                    int status = runningAppProcessInfo.importance;
+                    if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
+                            || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                        result = true;
                     }
                 }
             }
-            return result;
         }
+        return result;
     }
 
     /**

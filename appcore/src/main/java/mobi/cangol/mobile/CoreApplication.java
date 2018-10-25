@@ -137,7 +137,7 @@ public class CoreApplication extends Application {
      *
      * @return
      */
-    protected final boolean isDevMode() {
+    public final boolean isDevMode() {
         return mDevMode;
     }
 
