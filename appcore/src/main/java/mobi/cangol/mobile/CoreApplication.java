@@ -72,6 +72,7 @@ public class CoreApplication extends Application {
             }
             mSharePool = PoolManager.buildPool("share", 2);
             initAppServiceManager();
+            mModuleManager.onCreate();
             if (mAsyncInit) {
                 post(new Runnable() {
                     @Override
@@ -85,6 +86,7 @@ public class CoreApplication extends Application {
                 mModuleManager.init();
             }
         } else {
+            mModuleManager.onCreate();
             Log.i("cur process is not app' process");
         }
     }

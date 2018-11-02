@@ -109,7 +109,7 @@ public class LocationServiceFragment extends Fragment{
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.setText("--------------Location---------------");
         textView1.append("\ngetLastKnownLocation=" + locationService.getLastKnownLocation());
-        textView1.append("\ngetAddress=" + locationService.getAddress());
+        textView1.append("\ngetAddress=" + locationService.getLastKnownLocation());
 
         Log.d(textView1.getText().toString());
     }

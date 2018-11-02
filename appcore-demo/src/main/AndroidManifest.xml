@@ -28,7 +28,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="app"
+                    android:host="mobile.cangol.mobi"/>
+            </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".DynamicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|navigation"
+            android:screenOrientation="portrait"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustResize" />
+
     </application>
 
 </manifest>

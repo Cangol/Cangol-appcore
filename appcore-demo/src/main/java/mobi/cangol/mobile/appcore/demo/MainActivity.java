@@ -1,6 +1,7 @@
 package mobi.cangol.mobile.appcore.demo;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,10 +10,15 @@ import android.support.v4.app.FragmentManager;
 //import com.testfairy.TestFairy;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.route.OnNavigation;
+import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnNavigation {
+    private RouteService mRouteService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +29,9 @@ public class MainActivity extends FragmentActivity {
         //TestFairy.begin(this, "47ea7365f8383a1cb728d0f84a918503f8acaae4");
         Log.d("getMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(this));
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
+        mRouteService= (RouteService) ((CoreApplication)getApplication()).getAppService(AppService.ROUTE_SERVICE);
+        mRouteService.registerNavigation(this);
+        mRouteService.register("lib",LibTestFragment.class);
     }
 
     @Override
@@ -57,6 +66,21 @@ public class MainActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         ((CoreApplication)getApplication()).exit();
+    }
+
+    @Override
+    public void toActivity(Intent intent,boolean standalone) {
+        Log.i("activity ");
+    }
+
+    @Override
+    public void toFragment(Fragment fragment,boolean standalone) {
+        Log.i("fragment ");
+        FragmentManager fm = this.getSupportFragmentManager();
+        fm.beginTransaction()
+                .replace(R.id.framelayout, fragment)
+                .addToBackStack(fragment.getClass().getName())
+                .commit();
     }
 }
 

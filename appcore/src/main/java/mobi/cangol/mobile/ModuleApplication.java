@@ -15,13 +15,17 @@
  */
 package mobi.cangol.mobile;
 
+import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.route.OnNavigation;
+import mobi.cangol.mobile.service.route.RouteService;
+
 /**
  * @author Cangol
  */
 
 public abstract class ModuleApplication {
     private CoreApplication mCoreApplication;
-
+    private RouteService mRouteService;
     protected final void setCoreApplication(CoreApplication coreApplication) {
         this.mCoreApplication = coreApplication;
     }
@@ -30,15 +34,24 @@ public abstract class ModuleApplication {
         return mCoreApplication;
     }
 
-    public abstract void onCreate();
+    public  void onCreate(){
+        mRouteService= (RouteService) getApplication().getAppService(AppService.ROUTE_SERVICE);
+    }
 
-    public abstract void init();
+    public  void init(){}
 
-    public abstract void onTerminate();
+    public  void onTerminate(){}
 
-    public abstract void onLowMemory();
+    public  void onLowMemory(){}
 
-    public abstract void onTrimMemory(int level);
+    public  void onTrimMemory(int level){}
 
-    public abstract void onExit();
+    public  void onExit(){}
+
+    protected void registerRoute(String path,Class clazz){
+        mRouteService.register(path,clazz);
+    }
+    protected void registerRoute(Class clazz){
+        mRouteService.register(clazz);
+    }
 }

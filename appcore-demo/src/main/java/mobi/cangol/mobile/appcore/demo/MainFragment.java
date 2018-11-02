@@ -27,8 +27,12 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
+import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.route.RouteService;
 
 /**
  * Created by xuewu.wei on 2016/8/31.
@@ -44,7 +48,7 @@ public class MainFragment extends ListFragment {
         fragments.add(SecurityFragment.class);
         fragments.add(SoapFragment.class);
         fragments.add(UtilsFragment.class);
-        fragments.add(LibTestFragment.class);
+        //fragments.add(LibTestFragment.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,10 +67,15 @@ public class MainFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        getActivity().setTitle((String)getListAdapter().getItem(position));
-        ((MainActivity)getActivity()).toFragment(fragments.get(position));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(position>0){
+            getActivity().setTitle((String)getListAdapter().getItem(position));
+            ((MainActivity)getActivity()).toFragment(fragments.get(position));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }else{
+            RouteService mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
+            mRouteService.build("lib").putString("key","hello "+new Random().nextInt(100)).navigation(this.getContext());
         }
     }
     @Override
