@@ -17,6 +17,8 @@
 
 package mobi.cangol.mobile.appcore.demo;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -74,8 +76,16 @@ public class MainFragment extends ListFragment {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }else{
-            RouteService mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
-            mRouteService.build("lib").putString("key","hello "+new Random().nextInt(100)).navigation(this.getContext());
+            //RouteService mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
+            //mRouteService.build("lib").putString("key","hello "+new Random().nextInt(100)).navigation(this.getContext());
+
+            Intent intent=new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("app://main/lib"));
+            intent.putExtra("class","");
+            Bundle bundle=new Bundle();
+            bundle.putString("key","hello "+new Random().nextInt(100));
+            intent.putExtra("args",bundle);
+            startActivity(intent);
         }
     }
     @Override

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="mobi.cangol.mobile.appcore.demo"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -14,10 +15,11 @@
 
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
+
     <application
+        android:name=".MobileApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name=".MobileApplication"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -28,14 +30,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:scheme="app"
-                    android:host="mobile.cangol.mobi"/>
-            </intent-filter>
         </activity>
 
 
@@ -43,8 +37,14 @@
             android:name=".DynamicActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|navigation"
             android:screenOrientation="portrait"
-            android:exported="false"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan|adjustResize">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="app"/>
+            </intent-filter>
+        </activity>
 
     </application>
 
