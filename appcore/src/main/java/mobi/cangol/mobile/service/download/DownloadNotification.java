@@ -23,7 +23,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.Random;
@@ -33,7 +32,7 @@ import mobi.cangol.mobile.utils.FileUtils;
 
 
 public class DownloadNotification {
-    private static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "notification_channel_upgrade";
+    private static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "101";
     private NotificationManager notificationManager;
     private int id;
     private String titleText, successText, failureText;
@@ -69,8 +68,8 @@ public class DownloadNotification {
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if(notificationManager.getNotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID)==null){
-                NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_upgrade_name), NotificationManager.IMPORTANCE_LOW);
-                channel.setDescription(context.getString(R.string.notification_channel_upgrade_desc));
+                NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_1_name), NotificationManager.IMPORTANCE_LOW);
+                channel.setDescription(context.getString(R.string.notification_channel_1_desc));
                 channel.enableLights(false);
                 channel.enableVibration(false);
                 notificationManager.createNotificationChannel(channel);
