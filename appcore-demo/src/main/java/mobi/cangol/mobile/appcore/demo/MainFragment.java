@@ -69,7 +69,7 @@ public class MainFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if(position>0){
+        if(position>=0){
             getActivity().setTitle((String)getListAdapter().getItem(position));
             ((MainActivity)getActivity()).toFragment(fragments.get(position));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
