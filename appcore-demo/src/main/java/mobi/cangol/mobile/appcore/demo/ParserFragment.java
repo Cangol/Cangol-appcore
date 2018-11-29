@@ -208,6 +208,8 @@ class ParserObject<T,R> {
     private int id;
     @Element("name")
     private String name;
+    @Element("defStr")
+    private String defStr="defStr";
     @Element("_HEIGHT")
     private double height;
     @Element("_IS_CHILD")
@@ -264,6 +266,14 @@ class ParserObject<T,R> {
         isChild = child;
     }
 
+    public String getDefStr() {
+        return defStr;
+    }
+
+    public void setDefStr(String defStr) {
+        this.defStr = defStr;
+    }
+
     @Override
     public String toString() {
         return "ParserObject{" +
@@ -271,6 +281,7 @@ class ParserObject<T,R> {
                 ", name='" + name + '\'' +
                 ", height=" + height +
                 ", isChild=" + isChild +
+                ", defStr=" + defStr +
                 ", t=" + t +
                 ", r=" + r +
                 '}';

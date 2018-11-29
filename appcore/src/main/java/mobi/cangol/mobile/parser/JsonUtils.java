@@ -247,7 +247,8 @@ public class JsonUtils extends Converter {
                     } else {
                         filedClass = field.getType();
                     }
-                    field.set(t, getField(t, filedClass, filedName, jsonObject, useAnnotation));
+                    if(!jsonObject.isNull(filedName))
+                        field.set(t, getValueFromJson(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
@@ -301,7 +302,7 @@ public class JsonUtils extends Converter {
         return list;
     }
 
-    private static <T> Object getField(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
+    private static <T> Object getValueFromJson(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
         Object value = null;
         try {
             if (isBaseClass(fieldClass)) {
