@@ -247,7 +247,7 @@ public class JsonUtils extends Converter {
                     } else {
                         filedClass = field.getType();
                     }
-                    if(!jsonObject.isNull(filedName))
+                    if(jsonObject.has(filedName))
                         field.set(t, getValueFromJson(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
