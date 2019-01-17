@@ -105,17 +105,12 @@ public class ClassUtils {
         try {
             DexFile df = new DexFile(context.getPackageCodePath());
             String str;
-            if (df != null) {
-                for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
-                    str = iter.nextElement();
-                    if (packageName != null && str.startsWith(packageName)) {
-                        classList.add(str);
-                    } else if (packageName == null || "".equals(packageName)) {
-                        classList.add(str);
-                    }
+            for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
+                str = iter.nextElement();
+                if ((packageName != null && str.startsWith(packageName))
+                        ||(packageName == null || "".equals(packageName))) {
+                    classList.add(str);
                 }
-            } else {
-                Log.e("DexFile " + context.getPackageCodePath() + " is null");
             }
             df.close();
         } catch (IOException e) {
@@ -136,19 +131,13 @@ public class ClassUtils {
             DexFile df = new DexFile(context.getPackageCodePath());
             Class<?> clazz ;
             String str;
-            if (df != null) {
-                for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
-                    str = iter.nextElement();
-                    if (packageName != null && str.startsWith(packageName)) {
-                        clazz =  context.getClassLoader().loadClass(str);
-                        classList.add(clazz);
-                    } else if (packageName == null || "".equals(packageName)) {
-                        clazz =  context.getClassLoader().loadClass(str);
-                        classList.add(clazz);
-                    }
+            for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
+                str = iter.nextElement();
+                if ((packageName != null && str.startsWith(packageName))
+                        ||(packageName == null || "".equals(packageName))) {
+                    clazz =  context.getClassLoader().loadClass(str);
+                    classList.add(clazz);
                 }
-            } else {
-                Log.e("DexFile " + context.getPackageCodePath() + " is null");
             }
             df.close();
         } catch (IOException e) {

@@ -223,9 +223,11 @@ public class Object2FileUtils {
      * @param out
      */
     public static void writeObject(Serializable obj, OutputStream out) {
+        BufferedOutputStream bos=null;
         ObjectOutputStream oos = null;
         try {
-            oos = new ObjectOutputStream(new BufferedOutputStream(out));
+            bos=new BufferedOutputStream(out);
+            oos = new ObjectOutputStream(bos);
             oos.writeObject(obj);
         } catch (Exception e) {
             Log.d(e.getMessage());
@@ -233,6 +235,14 @@ public class Object2FileUtils {
             try {
                 if (oos != null) {
                     oos.close();
+                }
+            } catch (IOException e) {
+                Log.d(e.getMessage());
+            }
+
+            try {
+                if (bos != null) {
+                    bos.close();
                 }
             } catch (IOException e) {
                 Log.d(e.getMessage());

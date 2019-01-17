@@ -13,6 +13,9 @@ import mobi.cangol.mobile.logging.Log;
  * @author Kevin Kowalewski
  */
 public class RootUtils {
+
+    public static final String SYSTEM_APP_SUPERUSER_APK = "/system/app/Superuser.apk";
+
     private RootUtils() {
     }
 
@@ -27,7 +30,7 @@ public class RootUtils {
 
     public static boolean checkRootMethod2() {
         try {
-            return new File("/system/app/Superuser.apk").exists();
+            return new File(SYSTEM_APP_SUPERUSER_APK).exists();
         } catch (Exception e) {
             return false;
         }

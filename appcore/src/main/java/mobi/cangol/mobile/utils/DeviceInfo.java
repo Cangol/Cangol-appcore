@@ -17,8 +17,6 @@ package mobi.cangol.mobile.utils;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,7 +25,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,7 +32,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
-import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -58,7 +54,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -464,7 +459,7 @@ public final class DeviceInfo {
 
     public static String getNetworkClassName(Context context) {
         int networkClass = getNetworkClass(context);
-        String type = "UNKNOWN";
+        String type = UNKNOWN;
         switch (networkClass) {
             case NETWORK_CLASS_UNAVAILABLE:
                 type = "UNAVAILABLE";
@@ -482,8 +477,10 @@ public final class DeviceInfo {
                 type = "4G";
                 break;
             case 0://TelephonyManager.NETWORK_CLASS_UNKNOWN:
-                type = "UNKNOWN";
+                type = UNKNOWN;
                 break;
+                default:
+                    break;
         }
         return type;
     }
@@ -552,11 +549,12 @@ public final class DeviceInfo {
      * @return
      */
     public static String getAppVersion(Context context) {
-        String result = "UNKNOWN";
+        String result = UNKNOWN;
         try {
             result = context.getPackageManager().getPackageInfo(
                     context.getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
+            Log.e(e.getMessage());
         }
         return result;
     }
@@ -573,6 +571,7 @@ public final class DeviceInfo {
             result = context.getPackageManager().getPackageInfo(
                     context.getPackageName(), 0).versionCode;
         } catch (NameNotFoundException e) {
+            Log.e(e.getMessage());
         }
         return result;
     }
@@ -592,6 +591,7 @@ public final class DeviceInfo {
                     context.getPackageName(), PackageManager.GET_META_DATA);
             data = appInfo.metaData.get(key);
         } catch (NameNotFoundException e) {
+            Log.e(e.getMessage());
         }
         return data;
     }
@@ -646,15 +646,13 @@ public final class DeviceInfo {
                     }
                     return res1.toString();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception e) {
+                Log.e(e.getMessage());
             }
             return "02:00:00:00:00:00";
         }else{
             WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = manager.getConnectionInfo();
-            String macAddress = wifiInfo.getMacAddress();
-            return macAddress;
+            return  manager.getConnectionInfo().getMacAddress();
         }
     }
 
@@ -930,7 +928,7 @@ public final class DeviceInfo {
         }
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             ComponentName cpn = list.get(0).topActivity;
             return activityName.equals(cpn.getClassName());
         }
@@ -1017,7 +1015,7 @@ public final class DeviceInfo {
      * 检测是否具有底部导航栏
      * @return
      */
-    private  boolean checkDeviceHasNavigationBar(Context context) {
+    public  static boolean checkDeviceHasNavigationBar(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = windowManager.getDefaultDisplay();
@@ -1033,7 +1031,7 @@ public final class DeviceInfo {
         } else {
             boolean hasNavigationBar = false;
             Resources resources = context.getResources();
-            int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+            int id = resources.getIdentifier("config_showNavigationBar", "bool", ANDROID);
             if (id > 0) {
                 hasNavigationBar = resources.getBoolean(id);
             }
@@ -1047,7 +1045,7 @@ public final class DeviceInfo {
                     hasNavigationBar = true;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+               Log.d(e.getMessage());
             }
             return hasNavigationBar;
         }

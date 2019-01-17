@@ -31,6 +31,21 @@ import java.util.TimeZone;
 import mobi.cangol.mobile.logging.Log;
 
 public class TimeUtils {
+
+    public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+    public static final String YYYYMMDD = "yyyyMMdd";
+    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String YYYY_MM = "yyyy-MM";
+    public static final String MM_DD_HH_MM_SS = "MM-dd HH:mm:ss";
+    public static final String MM_DD = "MM-dd";
+    public static final String HH_MM_SS = "HH:mm:ss";
+    public static final String HH_MM = "HH:mm";
+    public static final String MM_SS = "mm:ss";
+    public static final String GMT_02D_00 = "GMT+%02d:00";
+    public static final String MM = "MM";
+    public static final String DD = "dd";
+
     private TimeUtils() {
     }
 
@@ -54,7 +69,7 @@ public class TimeUtils {
     public static String getCurrentMonth() {
         Date nowDate = new Date();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("MM");
+        SimpleDateFormat formatter = new SimpleDateFormat(MM);
         return formatter.format(nowDate);
     }
 
@@ -66,7 +81,7 @@ public class TimeUtils {
     public static String getCurrentDay() {
         Date nowDate = new Date();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd");
+        SimpleDateFormat formatter = new SimpleDateFormat(DD);
         return formatter.format(nowDate);
     }
 
@@ -77,7 +92,7 @@ public class TimeUtils {
      */
     public static String getCurrentHoursMinutes() {
         Date nowDate = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
         return formatter.format(nowDate);
     }
 
@@ -87,7 +102,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        return new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).format(new Date());
     }
 
     /**
@@ -96,7 +111,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentTime2() {
-        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        return new SimpleDateFormat(YYYYMMDDHHMMSS).format(new Date());
     }
 
     /**
@@ -106,7 +121,7 @@ public class TimeUtils {
      * @return
      */
     public static Date convertToDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         try {
             return formatter.parse(date);
         } catch (Exception e) {
@@ -122,7 +137,7 @@ public class TimeUtils {
      * @return
      */
     public static String convertToString(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         try {
             return formatter.format(date);
         } catch (Exception e) {
@@ -151,7 +166,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentDate() {
-        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        return new SimpleDateFormat(YYYY_MM_DD).format(new Date());
     }
 
     /**
@@ -160,7 +175,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getDate8Bit() {
-        return new SimpleDateFormat("yyyyMMdd").format(new Date());
+        return new SimpleDateFormat(YYYYMMDD).format(new Date());
     }
 
     /**
@@ -184,7 +199,7 @@ public class TimeUtils {
             gc = new GregorianCalendar(year, month, day);
             gc.add(GregorianCalendar.DATE, addDay);
 
-            return new SimpleDateFormat("yyyy-MM-dd").format(gc.getTime());
+            return new SimpleDateFormat(YYYY_MM_DD).format(gc.getTime());
         } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
@@ -197,7 +212,7 @@ public class TimeUtils {
      * @param period yyyy-MM
      */
     public static String getStartDateInPeriod(String period) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM");
+        DateFormat df = new SimpleDateFormat(YYYY_MM);
         try {
             if (df.parse(period) == null) {
                 return null;
@@ -221,7 +236,7 @@ public class TimeUtils {
      * @return
      */
     public static String getEndDateInPeriod(String period) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM");
+        DateFormat df = new SimpleDateFormat(YYYY_MM);
         try {
             if (df.parse(period) == null) {
                 return null;
@@ -250,10 +265,10 @@ public class TimeUtils {
         if (str == null || str.equals("")) {
             timeStr = null;
         } else {
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMDD");
+            SimpleDateFormat format = new SimpleDateFormat(YYYYMMDD);
             try {
                 Date date = format.parse(str);
-                format = new SimpleDateFormat("yyyy-MM-dd");
+                format = new SimpleDateFormat(YYYY_MM_DD);
                 timeStr = format.format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
@@ -274,10 +289,10 @@ public class TimeUtils {
         if (str == null || str.equals("")) {
             timeStr = null;
         } else {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat format = new SimpleDateFormat(YYYY_MM_DD);
             try {
                 Date date = format.parse(str);
-                format = new SimpleDateFormat("yyyyMMDD");
+                format = new SimpleDateFormat(YYYYMMDD);
                 timeStr = format.format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
@@ -294,7 +309,7 @@ public class TimeUtils {
      * @return
      */
     public static long convertLong(String str) {
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dfs = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         Date currentTime = null;
         long time = -1;
         try {
@@ -308,32 +323,32 @@ public class TimeUtils {
     public static String formatDateString(String time) {
         Date date = null;
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+            date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         return formatter.format(date);
     }
 
     public static String formatTimeString2(String time) {
         Date date = null;
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+            date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
         return formatter.format(date);
     }
     public static String formatTimeString(String time) {
         Date date = null;
         try {
-            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+            date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
         return formatter.format(date);
     }
     /**
@@ -343,8 +358,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmdHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -354,8 +369,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmd(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -366,8 +381,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatMdHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        SimpleDateFormat formatter = new SimpleDateFormat(MM_DD_HH_MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -377,8 +392,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -388,8 +403,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatHm(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -399,8 +414,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatMs(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        SimpleDateFormat formatter = new SimpleDateFormat(MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -411,7 +426,7 @@ public class TimeUtils {
      */
     public static String format(long time,String pattern,int zone) {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -420,8 +435,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmdHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
     /**
@@ -429,8 +444,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmd(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
     /**
@@ -439,8 +454,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatMdHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        SimpleDateFormat formatter = new SimpleDateFormat(MM_DD_HH_MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
     /**
@@ -449,8 +464,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
     /**
@@ -459,8 +474,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatHm(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
     /**
@@ -469,8 +484,8 @@ public class TimeUtils {
      * @return
      */
     public static String formatMs(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        SimpleDateFormat formatter = new SimpleDateFormat(MM_SS);
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
     /**
@@ -481,7 +496,7 @@ public class TimeUtils {
      */
     public static String format(long time,String pattern) {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
 
@@ -497,7 +512,7 @@ public class TimeUtils {
         }
         Date commentTime = null;
         Date currentTime = null;
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dfs = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         try {
             commentTime = dfs.parse(time);
             currentTime = Calendar.getInstance().getTime();
@@ -609,30 +624,27 @@ public class TimeUtils {
         if (null == strTime || "".equals(strTime)) {
             return "";
         }
-        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date currentTime = null;
-        Date commentTime = null;
         String str = null;
+        Calendar currentCalendar;
+        Calendar commentCalendar;
         try {
-            currentTime = Calendar.getInstance().getTime();
-            commentTime = dfs.parse(strTime);
-            if (currentTime.getYear() == commentTime.getYear()
-                    && currentTime.getMonth() == commentTime.getMonth()
-                    && currentTime.getDate() == commentTime.getDate()) {
-                dfs = new SimpleDateFormat("HH:mm");
-                str = dfs.format(commentTime);
-            } else if (currentTime.getYear() == commentTime.getYear()
-                    && currentTime.getMonth() == commentTime.getMonth()
-                    && currentTime.getDate() != commentTime.getDate()) {
-                dfs = new SimpleDateFormat("MM-dd");
-                str = dfs.format(commentTime);
-            } else if (currentTime.getYear() == commentTime.getYear()
-                    && currentTime.getMonth() != commentTime.getMonth()) {
-                dfs = new SimpleDateFormat("yyyy-MM");
-                str = dfs.format(commentTime);
+            currentCalendar=Calendar.getInstance();
+            commentCalendar=Calendar.getInstance();
+            commentCalendar.setTimeInMillis(new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(strTime).getTime());
+
+            if (currentCalendar.get(Calendar.YEAR) == commentCalendar.get(Calendar.YEAR)
+                    &&currentCalendar.get(Calendar.MONTH) ==commentCalendar.get(Calendar.MONTH)
+                    && currentCalendar.get(Calendar.DAY_OF_YEAR) == commentCalendar.get(Calendar.DAY_OF_YEAR)) {
+                str = new SimpleDateFormat(HH_MM).format(commentCalendar.getTime());
+            } else if (currentCalendar.get(Calendar.YEAR) == commentCalendar.get(Calendar.YEAR)
+                    &&currentCalendar.get(Calendar.MONTH) ==commentCalendar.get(Calendar.MONTH)
+                    && currentCalendar.get(Calendar.DAY_OF_YEAR) != commentCalendar.get(Calendar.DAY_OF_YEAR)) {
+                str = new SimpleDateFormat(MM_DD).format(commentCalendar.getTime());
+            } else if (currentCalendar.get(Calendar.YEAR) == commentCalendar.get(Calendar.YEAR)
+                    &&currentCalendar.get(Calendar.MONTH) ==commentCalendar.get(Calendar.MONTH)) {
+                str = new SimpleDateFormat(YYYY_MM).format(commentCalendar.getTime());
             } else {
-                dfs = new SimpleDateFormat("yyyy-MM-DD");
-                str = dfs.format(commentTime);
+                str = new SimpleDateFormat(YYYY_MM_DD).format(commentCalendar.getTime());
             }
         } catch (ParseException e) {
             Log.d(e.getMessage());
