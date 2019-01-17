@@ -18,7 +18,6 @@ package mobi.cangol.mobile.utils;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -33,7 +32,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.StreamCorruptedException;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -53,22 +51,10 @@ public class Object2FileUtils {
      * @param objPath
      */
     public static void writeJSONObject2File(JSONObject jsonObject, String objPath) {
-        File file = new File(objPath);
-        FileOutputStream fileOutputStream = null;
         try {
-            fileOutputStream = new FileOutputStream(file);
-            writeJSONObject(jsonObject, fileOutputStream);
+            writeJSONObject(jsonObject, new FileOutputStream(new File(objPath)));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
-        } finally {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    Log.d(e.getMessage());
-                }
-                fileOutputStream = null;
-            }
         }
     }
 
@@ -79,22 +65,10 @@ public class Object2FileUtils {
      * @param objPath
      */
     public static void writeJSONArray2File(JSONArray jsonArray, String objPath) {
-        File file = new File(objPath);
-        FileOutputStream fileOutputStream = null;
         try {
-            fileOutputStream = new FileOutputStream(file);
-            writeJSONArray(jsonArray, fileOutputStream);
+            writeJSONArray(jsonArray, new FileOutputStream(new File(objPath)));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
-        } finally {
-            if (fileOutputStream != null) {
-                try {
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    Log.d(e.getMessage());
-                }
-                fileOutputStream = null;
-            }
         }
     }
 
@@ -105,22 +79,11 @@ public class Object2FileUtils {
      * @return
      */
     public static JSONArray readFile2JSONArray(File jsonFile) {
-        FileInputStream fileInputStream = null;
         JSONArray jsonArray = null;
         try {
-            fileInputStream = new FileInputStream(jsonFile);
-            jsonArray = readJSONArray(fileInputStream);
+            jsonArray = readJSONArray(new FileInputStream(jsonFile));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    Log.d(e.getMessage());
-                }
-                fileInputStream = null;
-            }
         }
         return jsonArray;
     }
@@ -132,22 +95,11 @@ public class Object2FileUtils {
      * @return
      */
     public static JSONObject readFile2JSONObject(File jsonFile) {
-        FileInputStream fileInputStream = null;
         JSONObject jsonObject = null;
         try {
-            fileInputStream = new FileInputStream(jsonFile);
-            jsonObject = readJSONObject(fileInputStream);
+            jsonObject = readJSONObject(new FileInputStream(jsonFile));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
-        } finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    Log.d(e.getMessage());
-                }
-                fileInputStream = null;
-            }
         }
         return jsonObject;
     }
@@ -163,8 +115,6 @@ public class Object2FileUtils {
             byte[] buffer = jsonArray.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
         } catch (IOException e) {
             Log.d(e.getMessage());
         } finally {
@@ -174,7 +124,6 @@ public class Object2FileUtils {
                 } catch (IOException e) {
                     Log.d(e.getMessage());
                 }
-                os = null;
             }
         }
     }
@@ -190,9 +139,7 @@ public class Object2FileUtils {
             byte[] buffer = jsonObject.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
-        } catch (IOException e) {
+        }catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             if (os != null) {
@@ -201,7 +148,6 @@ public class Object2FileUtils {
                 } catch (IOException e) {
                     Log.d(e.getMessage());
                 }
-                os = null;
             }
         }
     }
@@ -224,9 +170,7 @@ public class Object2FileUtils {
                 }
 
             }
-        } catch (IOException e) {
-            Log.d(e.getMessage());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             if (is != null) {
@@ -235,7 +179,6 @@ public class Object2FileUtils {
                 } catch (IOException e) {
                     Log.d(e.getMessage());
                 }
-                is = null;
             }
         }
         return jsonObject;
@@ -259,9 +202,7 @@ public class Object2FileUtils {
                 }
 
             }
-        } catch (IOException e) {
-            Log.d(e.getMessage());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             if (is != null) {
@@ -270,7 +211,6 @@ public class Object2FileUtils {
                 } catch (IOException e) {
                     Log.d(e.getMessage());
                 }
-                is = null;
             }
         }
         return jsonArray;
@@ -287,9 +227,7 @@ public class Object2FileUtils {
         try {
             oos = new ObjectOutputStream(new BufferedOutputStream(out));
             oos.writeObject(obj);
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             try {
@@ -310,30 +248,10 @@ public class Object2FileUtils {
      */
     public static Serializable readObject(InputStream is) {
         Object object = null;
-        ObjectInputStream ois = null;
         try {
-            ois = new ObjectInputStream(new BufferedInputStream(is));
-            object = ois.readObject();
-        } catch (FileNotFoundException e) {
+            object = new ObjectInputStream(new BufferedInputStream(is)).readObject();
+        }catch (Exception e) {
             Log.d(e.getMessage());
-        } catch (StreamCorruptedException e) {
-            Log.d(e.getMessage());
-        } catch (IOException e) {
-            Log.d(e.getMessage());
-        } catch (ClassNotFoundException e) {
-            Log.d(e.getMessage());
-        } finally {
-            try {
-                if (ois != null) {
-                    ois.close();
-                }
-
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                Log.d(e.getMessage());
-            }
         }
         return (Serializable) object;
     }
@@ -350,20 +268,10 @@ public class Object2FileUtils {
         if (file.exists()) {
             file.delete();
         }
-        FileOutputStream os = null;
         try {
-            os = new FileOutputStream(file);
-            writeObject(obj, os);
+            writeObject(obj, new FileOutputStream(file));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
-        } finally {
-            try {
-                if (os != null) {
-                    os.close();
-                }
-            } catch (IOException e) {
-                Log.d(e.getMessage());
-            }
         }
     }
 
@@ -378,25 +286,10 @@ public class Object2FileUtils {
             return null;
         }
         Object object = null;
-        InputStream is = null;
-        ObjectInputStream ois = null;
         try {
-            is = new FileInputStream(file);
-            object = readObject(is);
+            object = readObject(new FileInputStream(file));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
-        } finally {
-            try {
-                if (ois != null) {
-                    ois.close();
-                }
-                if (is != null) {
-                    is.close();
-                }
-
-            } catch (IOException e) {
-                Log.d(e.getMessage());
-            }
         }
         return (Serializable) object;
     }

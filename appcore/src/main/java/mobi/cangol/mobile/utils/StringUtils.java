@@ -53,18 +53,18 @@ public class StringUtils {
      * @return
      */
     public static String byte2hex(byte[] b) {
-        String hs = "";
+        StringBuilder hs = new StringBuilder();
         String stmp = "";
         for (int n = 0; n < b.length; n++) {
             stmp = Integer.toHexString(b[n] & 0XFF);
             if (stmp.length() == 1) {
-                hs = hs + "0" + stmp;
+                hs.append('0').append(stmp);
             } else {
-                hs = hs + stmp;
+                hs.append(stmp);
             }
 
         }
-        return hs.toUpperCase();
+        return hs.toString().toUpperCase();
     }
 
     /**
@@ -172,7 +172,7 @@ public class StringUtils {
      * @return
      */
     public static String md5(String s) {
-        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             byte[] strTemp = s.getBytes("UTF-8");
@@ -181,7 +181,7 @@ public class StringUtils {
             mdTemp.update(strTemp);
             byte[] md = mdTemp.digest();
             int j = md.length;
-            char str[] = new char[j * 2];
+            char[] str = new char[j * 2];
             int k = 0;
             for (int i = 0; i < j; i++) {
                 byte b = md[i];
@@ -202,7 +202,7 @@ public class StringUtils {
      * @return
      */
     public static String md5(byte[] bytes) {
-        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             //MessageDigest md5
@@ -210,7 +210,7 @@ public class StringUtils {
             mdTemp.update(bytes);
             byte[] md = mdTemp.digest();
             int j = md.length;
-            char str[] = new char[j * 2];
+            char[] str = new char[j * 2];
             int k = 0;
             for (int i = 0; i < j; i++) {
                 byte b = md[i];
@@ -318,8 +318,7 @@ public class StringUtils {
         char aa;
         for (int i = 0, length = str.length(); i < length; i++) {
             aa = str.charAt(i);
-            if (!first && aa == '\t') {
-            } else {
+            if (!(!first && aa == '\t')) {
                 first = true;
                 sb.append(aa);
             }

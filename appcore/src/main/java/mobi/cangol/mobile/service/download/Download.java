@@ -15,41 +15,42 @@
  */
 package mobi.cangol.mobile.service.download;
 
-public interface Download {
+public class Download {
+    private Download(){}
     //下载文件后缀
-    String SUFFIX_SOURCE = ".tmp";
+    public static final String SUFFIX_SOURCE = ".tmp";
     //配置文件后缀
-    String SUFFIX_CONFIG = ".conf";
+    public static final String SUFFIX_CONFIG = ".conf";
     //正在等待
-    int STATUS_WAIT = 0;
+    public static final int STATUS_WAIT = 0;
     //正在下载
-    int STATUS_START = 1;
+    public static final int STATUS_START = 1;
     //暂停
-    int STATUS_STOP = 2;
+    public static final int STATUS_STOP = 2;
     //重新下载
-    int STATUS_RERUN = 3;
+    public static final int STATUS_RERUN = 3;
     //下载完成
-    int STATUS_FINISH = 4;
+    public static final int STATUS_FINISH = 4;
     //出错
-    int STATUS_FAILURE = 5;
+    public static final int STATUS_FAILURE = 5;
 
 
-    int ACTION_DOWNLOAD_START = 0;
+    public static final int ACTION_DOWNLOAD_START = 0;
 
-    int ACTION_DOWNLOAD_FINISH = 1;
+    public static final int ACTION_DOWNLOAD_FINISH = 1;
 
-    int ACTION_DOWNLOAD_FAILED = 2;
+    public static final int ACTION_DOWNLOAD_FAILED = 2;
 
-    int ACTION_DOWNLOAD_UPDATE = 3;
+    public static final int ACTION_DOWNLOAD_UPDATE = 3;
 
-    int ACTION_DOWNLOAD_DELETE = 5;
+    public static final int ACTION_DOWNLOAD_DELETE = 5;
 
-    //int ACTION_DOWNLOAD_UPDATEFILE = 6;
+    //public static final int ACTION_DOWNLOAD_UPDATEFILE = 6;
 
-    int ACTION_DOWNLOAD_STOP = 7;
+    public static final int ACTION_DOWNLOAD_STOP = 7;
 
-    //int ACTION_DOWNLOAD_INSTALL = 8;
+    //public static final int ACTION_DOWNLOAD_INSTALL = 8;
 
-    int ACTION_DOWNLOAD_CONTINUE = 9;
+    public static final int ACTION_DOWNLOAD_CONTINUE = 9;
 
 }
