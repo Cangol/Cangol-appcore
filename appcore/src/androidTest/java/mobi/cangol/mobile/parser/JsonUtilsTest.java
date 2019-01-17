@@ -103,7 +103,7 @@ class ParserObject {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("ParserObject{");
+        final StringBuilder sb = new StringBuilder("ParserObject{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
         sb.append(", height=").append(height);

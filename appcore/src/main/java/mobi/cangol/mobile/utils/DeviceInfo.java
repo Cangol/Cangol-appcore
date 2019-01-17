@@ -87,6 +87,8 @@ public final class DeviceInfo {
      * 默认CHARSET
      */
     private static final String CHARSET = "UTF-8";
+    public static final String UNKNOWN = "UNKNOWN";
+    public static final String ANDROID = "android";
 
     private DeviceInfo() {
     }
@@ -133,7 +135,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getMobileInfo() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
 
             Field[] fields = Build.class.getDeclaredFields();
@@ -205,7 +207,7 @@ public final class DeviceInfo {
             Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String data = null;
-            StringBuffer sb=new StringBuffer();
+            StringBuilder sb=new StringBuilder();
             while((data = bufferedReader.readLine())!=null){
                 sb.append("\n"+data);
             }
@@ -252,7 +254,7 @@ public final class DeviceInfo {
             String str = bufferedReader.readLine();
             result = str.trim();
         } catch (Exception e) {
-            result = "UNKNOWN";
+            result = UNKNOWN;
         }
         return result;
     }
@@ -280,7 +282,7 @@ public final class DeviceInfo {
      * @return
      */
     public static int getStatusBarHeight(Context context) {
-        final int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        final int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", ANDROID);
         if (resourceId > 0)
             return context.getResources().getDimensionPixelSize(resourceId);
         else
@@ -292,7 +294,7 @@ public final class DeviceInfo {
      * @return
      */
     public static int getNavigationBarHeight(Context context) {
-        int resourceId =context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        int resourceId =context.getResources().getIdentifier("navigation_bar_height", "dimen", ANDROID);
         if (resourceId > 0) {
             return context.getResources().getDimensionPixelSize(resourceId);
         }

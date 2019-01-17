@@ -46,7 +46,7 @@ public class UtilsFragment extends Fragment {
             public void onClick(View v) {
                 textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
                 textView1.setText("\n--------------Utils---------------\n");
-                StringBuffer sb=new StringBuffer();
+                StringBuilder sb=new StringBuilder();
 
                 sb.append("\nCharset="+DeviceInfo.getCharset());
                 sb.append("\nCountry="+DeviceInfo.getCountry());

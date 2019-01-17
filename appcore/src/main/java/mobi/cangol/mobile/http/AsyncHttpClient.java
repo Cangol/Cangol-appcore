@@ -131,7 +131,7 @@ public class AsyncHttpClient {
      */
     public void get(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
 
-        StringBuffer sb = new StringBuffer(url.contains("?") ? "" : "?");
+        StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (params != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 sb.append(entry.getKey())
@@ -151,7 +151,7 @@ public class AsyncHttpClient {
      * @param responseHandler
      */
     public void get(Object context, String url, RequestParams requestParams, AsyncHttpResponseHandler responseHandler) {
-        StringBuffer sb = new StringBuffer(url.contains("?") ? "" : "?");
+        StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (requestParams.urlParams != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : requestParams.urlParams.entrySet()) {
                 sb.append(entry.getKey())
