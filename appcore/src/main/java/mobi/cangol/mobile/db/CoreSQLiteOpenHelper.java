@@ -118,8 +118,8 @@ public abstract class CoreSQLiteOpenHelper {
      * @param clazz
      * @return
      */
-    public <T, ID> Dao<T, ID> getDao(Class<T> clazz) {
-        return new DaoImpl<T, ID>(this, clazz);
+    public <T, I> Dao<T, I> getDao(Class<T> clazz) {
+        return new DaoImpl<>(this, clazz);
     }
 
     /**

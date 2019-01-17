@@ -53,7 +53,7 @@ public class StatsTraffic {
             Log.v("getAction=" + intent.getAction());
             if (BOOT_ACTION.equals(intent.getAction())) {
                 // 开机启动
-                resetAppTraffic(TimeUtils.getCurrentDate());
+                resetAppTraffic();
             } else if (NETWORK_ACTION.equals(intent.getAction())) {
                 NetworkInfo.State wifiState = null;
                 NetworkInfo.State mobileState = null;
@@ -192,7 +192,7 @@ public class StatsTraffic {
         }
     }
 
-    public void resetAppTraffic(String date) {
+    public void resetAppTraffic() {
         List<AppTraffic> list = trafficDbService.getAppTrafficList();
         AppTraffic appTraffic = null;
         for (int i = 0; i < list.size(); i++) {
@@ -207,10 +207,10 @@ public class StatsTraffic {
         List<DateTraffic> list = trafficDbService.getDateTrafficByStatus(uid, date, 0);
         Map<String, String> map = null;
         DateTraffic dateTraffic = null;
-        List<Map> maps = new ArrayList<Map>();
+        List<Map> maps = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             dateTraffic = list.get(i);
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("date", dateTraffic.date);
             map.put("totalRx", String.valueOf(dateTraffic.totalRx));
             map.put("totalTx", String.valueOf(dateTraffic.totalTx));
@@ -244,7 +244,6 @@ public class StatsTraffic {
         if (networkInfoWifi != null) {
             wifiState = networkInfoWifi.getState();
         }
-        NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
             // 无线网络连接
             calcAppTraffic(date, true);
@@ -255,7 +254,7 @@ public class StatsTraffic {
     }
 
     public void registerAlarmForDateTraffic() {
-        int DAY = 24 * 60 * 60 * 1000;
+        int day = 24 * 60 * 60 * 1000;
         Intent intent = new Intent(DATE_ACTION);
         PendingIntent sender = PendingIntent.getBroadcast(this.context, 1, intent, 0);
 
@@ -283,7 +282,7 @@ public class StatsTraffic {
         firstTime += time;
         // 进行闹铃注册
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, DAY, sender);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, day, sender);
 
     }
 }

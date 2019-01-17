@@ -56,7 +56,7 @@ public class ClassUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<Class<? extends T>> getAllClassByInterface(Class<T> c, Context context, String packageName) {
-        List<Class<? extends T>> returnClassList = new ArrayList<Class<? extends T>>();
+        List<Class<? extends T>> returnClassList = new ArrayList<>();
         if (c.isInterface()) {
             List<Class<?>> allClass = getAllClassByPackage(packageName, context);
             for (int i = 0; i < allClass.size(); i++) {
@@ -64,8 +64,6 @@ public class ClassUtils {
                     returnClassList.add((Class<? extends T>) allClass.get(i));
                 }
             }
-            allClass = null;
-            //System.gc();
         } else {
             Log.e("class " + c + " is not Interface");
         }
@@ -80,19 +78,16 @@ public class ClassUtils {
      * @return
      */
     public static List<Class<?>> getAllClassByPackage(String packageName, Context context) {
-        List<Class<?>> classList = new ArrayList<Class<?>>();
+        List<Class<?>> classList = new ArrayList<>();
         List<String> list = getAllClassNameFromDexFile(context, packageName);
-        Class<?> clazz = null;
+        Class<?> clazz;
         try {
             for (String classNane : list) {
                 if (classNane.startsWith(packageName)) {
-                    clazz = (Class<?>) context.getClassLoader().loadClass(classNane);
+                    clazz = context.getClassLoader().loadClass(classNane);
                     classList.add(clazz);
-                    clazz = null;
                 }
             }
-            list = null;
-            //System.gc();
         } catch (ClassNotFoundException e) {
             Log.e("ClassNotFoundException " + e.getMessage());
         }
@@ -106,10 +101,10 @@ public class ClassUtils {
      * @return
      */
     public static List<String> getAllClassNameFromDexFile(Context context, String packageName) {
-        List<String> classList = new ArrayList<String>();
+        List<String> classList = new ArrayList<>();
         try {
             DexFile df = new DexFile(context.getPackageCodePath());
-            String str = null;
+            String str;
             if (df != null) {
                 for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
                     str = iter.nextElement();
@@ -123,7 +118,6 @@ public class ClassUtils {
                 Log.e("DexFile " + context.getPackageCodePath() + " is null");
             }
             df.close();
-            //System.gc();
         } catch (IOException e) {
             Log.e("IOException " + e.getMessage());
         }
@@ -137,28 +131,26 @@ public class ClassUtils {
      * @return
      */
     public static List<Class<?>> getAllClassFromDexFile(Context context, String packageName) {
-        List<Class<?>> classList = new ArrayList<Class<?>>();
+        List<Class<?>> classList = new ArrayList<>();
         try {
             DexFile df = new DexFile(context.getPackageCodePath());
-            Class<?> clazz = null;
-            String str = null;
+            Class<?> clazz ;
+            String str;
             if (df != null) {
                 for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
                     str = iter.nextElement();
                     if (packageName != null && str.startsWith(packageName)) {
-                        clazz = (Class<?>) context.getClassLoader().loadClass(str);
+                        clazz =  context.getClassLoader().loadClass(str);
                         classList.add(clazz);
                     } else if (packageName == null || "".equals(packageName)) {
-                        clazz = (Class<?>) context.getClassLoader().loadClass(str);
+                        clazz =  context.getClassLoader().loadClass(str);
                         classList.add(clazz);
                     }
-                    clazz = null;
                 }
             } else {
                 Log.e("DexFile " + context.getPackageCodePath() + " is null");
             }
             df.close();
-            //System.gc();
         } catch (IOException e) {
             Log.e("IOException " + e.getMessage());
         } catch (ClassNotFoundException e) {

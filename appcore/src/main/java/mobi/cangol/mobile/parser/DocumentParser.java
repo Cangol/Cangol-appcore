@@ -54,7 +54,7 @@ public class DocumentParser {
                     for (int i = 1; i < nodeName.length; i++) {
                         nodeNs[i - 1] = nodeName[i];
                     }
-                    return getNodeValue((Element) node, nodeNs);
+                    return getNodeValue(node, nodeNs);
                 }
             } else {
                 return null;

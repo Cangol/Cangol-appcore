@@ -160,7 +160,7 @@ public final class DeviceInfo {
     public static long getMemTotalSize() {
         long result = 0;
         try {
-            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
+            Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             String memStr = "MemTotal:";
@@ -180,7 +180,7 @@ public final class DeviceInfo {
     public static long getMemFreeSize() {
         long result = 0;
         try {
-            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
+            Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             bufferedReader.readLine();
             String str = bufferedReader.readLine();
@@ -202,7 +202,7 @@ public final class DeviceInfo {
     public static String getMemInfo() {
         String result = "";
         try {
-            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/meminfo"}).start();
+            Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String data = null;
             StringBuffer sb=new StringBuffer();
@@ -225,7 +225,7 @@ public final class DeviceInfo {
     public static String getCPUInfo() {
         String result = "";
         try {
-            Process process = new ProcessBuilder(new String[]{"/system/bin/cat", "/proc/cpuinfo"}).start();
+            Process process = new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             String title = "Processor\t: ";
@@ -819,10 +819,7 @@ public final class DeviceInfo {
     public static boolean isWifiConnection(Context context) {
         final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (networkInfo != null && networkInfo.isConnected()) {
-            return true;
-        }
-        return false;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     /**
@@ -834,10 +831,7 @@ public final class DeviceInfo {
     public static boolean isConnection(Context context) {
         final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
-            return false;
-        }
-        return true;
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
     /**
@@ -936,9 +930,7 @@ public final class DeviceInfo {
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
         if (list != null && list.size() > 0) {
             ComponentName cpn = list.get(0).topActivity;
-            if (activityName.equals(cpn.getClassName())) {
-                return true;
-            }
+            return activityName.equals(cpn.getClassName());
         }
         return false;
     }
@@ -1017,10 +1009,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isAppProcess(Context context) {
-        if (context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext()))) {
-            return true;
-        }
-        return false;
+        return context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext()));
     }
     /**
      * 检测是否具有底部导航栏

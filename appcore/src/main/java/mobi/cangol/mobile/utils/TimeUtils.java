@@ -87,10 +87,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentTime() {
-        Date nowDate = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentTime = formatter.format(nowDate);
-        return currentTime;
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     }
 
     /**
@@ -99,10 +96,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentTime2() {
-        Date nowDate = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String currentTime = formatter.format(nowDate);
-        return currentTime;
+        return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     }
 
     /**
@@ -145,12 +139,9 @@ public class TimeUtils {
     public static String getCurrentTimeAddYear(int addyear) {
         Date nowDate = new Date();
 
-        String currentYear = TimeUtils.getCurrentYear();
-        currentYear = String.valueOf(Integer.parseInt(TimeUtils
-                .getCurrentYear()) + addyear);
+        String currentYear = String.valueOf(Integer.parseInt(getCurrentYear()) + addyear);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("-MM-dd:HH:mm:ss");
-        String currentTime = formatter.format(nowDate);
+        String currentTime = new SimpleDateFormat("-MM-dd:HH:mm:ss").format(nowDate);
         return currentYear + currentTime;
     }
 
@@ -160,10 +151,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentDate() {
-        Date nowDate = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = formatter.format(nowDate);
-        return currentDate;
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     }
 
     /**
@@ -172,33 +160,31 @@ public class TimeUtils {
      * @return String
      */
     public static String getDate8Bit() {
-        Date nowDate = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        String currentDate = formatter.format(nowDate);
-        return currentDate;
+        return new SimpleDateFormat("yyyyMMdd").format(new Date());
     }
 
     /**
      * 得到当前日期加上某一个整数的日期，整数代表天数
      *
-     * @param currentdate String 格式 yyyy-MM-dd
-     * @param add_day     int
+     * @param currentDate String 格式 yyyy-MM-dd
+     * @param addDay     int
      * @return yyyy-MM-dd
      */
-    public static String addDay(String currentdate, int add_day) {
-        GregorianCalendar gc = null;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        int year, month, day;
+    public static String addDay(String currentDate, int addDay) {
+        GregorianCalendar gc;
+        int year;
+        int month;
+        int day;
 
         try {
-            year = Integer.parseInt(currentdate.substring(0, 4));
-            month = Integer.parseInt(currentdate.substring(5, 7)) - 1;
-            day = Integer.parseInt(currentdate.substring(8, 10));
+            year = Integer.parseInt(currentDate.substring(0, 4));
+            month = Integer.parseInt(currentDate.substring(5, 7)) - 1;
+            day = Integer.parseInt(currentDate.substring(8, 10));
 
             gc = new GregorianCalendar(year, month, day);
-            gc.add(GregorianCalendar.DATE, add_day);
+            gc.add(GregorianCalendar.DATE, addDay);
 
-            return formatter.format(gc.getTime());
+            return new SimpleDateFormat("yyyy-MM-dd").format(gc.getTime());
         } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
@@ -421,12 +407,11 @@ public class TimeUtils {
      * 将long形式改成pattern
      * @param time
      * @param pattern
-     * @param zone
      * @return
      */
-    public static String format(long time,String pattern, int zone) {
+    public static String format(long time,String pattern,int zone) {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", 8)));
+        formatter.setTimeZone(TimeZone.getTimeZone(String.format("GMT+%02d:00", zone)));
         return formatter.format(new Date(time));
     }
     /**
@@ -531,37 +516,37 @@ public class TimeUtils {
         long second = between % 60 / 60;
 
         if (year != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(year).append("年前");
             return sb.toString();
         }
         if (month != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(month).append("个月前");
             return sb.toString();
         }
         if (week != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(week).append("周前");
             return sb.toString();
         }
         if (day != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(day).append("天前");
             return sb.toString();
         }
         if (hour != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(hour).append("小时前");
             return sb.toString();
         }
         if (minute != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(minute).append("分钟前");
             return sb.toString();
         }
         if (second != 0) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(second).append("秒前");
             return sb.toString();
         }

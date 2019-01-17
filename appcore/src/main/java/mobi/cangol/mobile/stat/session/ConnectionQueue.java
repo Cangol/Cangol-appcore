@@ -16,7 +16,7 @@
 package mobi.cangol.mobile.stat.session;
 
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -28,8 +28,8 @@ import mobi.cangol.mobile.utils.StringUtils;
  */
 class ConnectionQueue {
     public static final String TAG = "ConnectionQueue";
-    private ConcurrentLinkedQueue<SessionEntity> queue_ = new ConcurrentLinkedQueue<SessionEntity>();
-    private Hashtable<String, SessionEntity> entitys = new Hashtable<String, SessionEntity>();
+    private ConcurrentLinkedQueue<SessionEntity> queue = new ConcurrentLinkedQueue<>();
+    private HashMap<String, SessionEntity> entitys = new HashMap<>();
 
     private Thread mThread = null;
     private StatsSession.OnSessionListener mSessionListener;
@@ -39,7 +39,6 @@ class ConnectionQueue {
     }
 
     public void beginSession(String page) {
-        //long currTime = System.currentTimeMillis() / 1000;
         SessionEntity data = new SessionEntity();
         data.sessionId = StringUtils.md5(String.valueOf(page.hashCode()));
         data.beginSession = 1;//currTime
@@ -48,7 +47,7 @@ class ConnectionQueue {
 
         entitys.put(page, data);
 
-        queue_.offer(data);
+        queue.offer(data);
 
         tick();
 
@@ -58,21 +57,20 @@ class ConnectionQueue {
         SessionEntity data = null;
         try {
             for (Iterator<String> itr = entitys.keySet().iterator(); itr.hasNext(); ) {
-                String page = (String) itr.next();
+                String page = itr.next();
                 data = (SessionEntity) entitys.get(page).clone();
                 data.beginSession = 0;
                 data.sessionDuration = duration;
                 data.endSession = 0;
-                queue_.offer(data);
+                queue.offer(data);
                 tick();
             }
-        } catch (CloneNotSupportedException e) {
+        } catch (Exception e) {
             Log.e(e.getMessage());
         }
     }
 
     public void endSession(String page, long duration) {
-        //long currTime = System.currentTimeMillis() / 1000;
         SessionEntity data = null;
         try {
             if (entitys.containsKey(page)) {
@@ -80,10 +78,10 @@ class ConnectionQueue {
                 data.beginSession = 0;
                 data.sessionDuration = duration;
                 data.endSession = 1;//currTime
-                queue_.offer(data);
+                queue.offer(data);
             }
             tick();
-        } catch (CloneNotSupportedException e) {
+        } catch (Exception e) {
             Log.e(e.getMessage());
         }
     }
@@ -93,7 +91,7 @@ class ConnectionQueue {
         if (mThread != null && mThread.isAlive()) {
             return;
         }
-        if (queue_.isEmpty()) {
+        if (queue.isEmpty()) {
             return;
         }
 
@@ -101,7 +99,7 @@ class ConnectionQueue {
             @Override
             public void run() {
                 while (true) {
-                    SessionEntity data = queue_.peek();
+                    SessionEntity data = queue.peek();
 
                     if (data == null) {
                         break;
@@ -116,7 +114,7 @@ class ConnectionQueue {
                                     String.valueOf(data.endSession),
                                     data.activityId);
                         }
-                        queue_.poll();
+                        queue.poll();
                     } catch (Exception e) {
                         Log.d(TAG, e.toString());
                         break;

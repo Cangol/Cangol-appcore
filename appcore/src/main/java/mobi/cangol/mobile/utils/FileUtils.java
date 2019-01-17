@@ -291,7 +291,7 @@ public class FileUtils {
                 if (temp.isFile()) {
                     FileInputStream input = new FileInputStream(temp);
                     FileOutputStream output = new FileOutputStream(newPath
-                            + "/ " + (temp.getName()).toString());
+                            + "/ " + (temp.getName()));
                     byte[] b = new byte[1024 * 5];
                     int len;
                     while ((len = input.read(b)) != -1) {
@@ -511,11 +511,11 @@ public class FileUtils {
         float SIZE_TB = SIZE_GB * 1024.0f;
         int SACLE = 2;
         if (length >= 0 && length < SIZE_BT) {
-            return (double) (Math.round(length * 10) / 10.0) + "B";
+            return Math.round(length * 10) / 10.0 + "B";
         } else if (length >= SIZE_BT && length < SIZE_KB) {
-            return (double) (Math.round((length / SIZE_BT) * 10) / 10.0) + "KB";// length/SIZE_BT+"KB";
+            return Math.round((length / SIZE_BT) * 10) / 10.0 + "KB";// length/SIZE_BT+"KB";
         } else if (length >= SIZE_KB && length < SIZE_MB) {
-            return (double) (Math.round((length / SIZE_KB) * 10) / 10.0) + "MB";// length/SIZE_KB+"MB";
+            return Math.round((length / SIZE_KB) * 10) / 10.0 + "MB";// length/SIZE_KB+"MB";
         } else if (length >= SIZE_MB && length < SIZE_GB) {
             BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
                     .toString());
@@ -615,7 +615,7 @@ public class FileUtils {
      * @param file
      * @return 文件大小 单位字节
      */
-    public static long getFolderSize(File file) throws Exception {
+    public static long getFolderSize(File file) {
         long size = 0;
         try {
             File[] fileList = file.listFiles();

@@ -61,9 +61,9 @@ public class OberserverManagerFragment extends Fragment{
         initViews();
     }
     private void initViews(){
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
-        button2 = (Button) this.getView().findViewById(R.id.button2);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
+        button2 = this.getView().findViewById(R.id.button2);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,27 +7,27 @@ import android.test.AndroidTestCase;
  */
 public class StorageUtilsTest extends AndroidTestCase {
 
-    public void testGetExternalStorageDir() throws Exception {
+    public void testGetExternalStorageDir() {
         assertNotNull(StorageUtils.getExternalStorageDir(getContext(),"test"));
     }
 
-    public void testGetFileDir() throws Exception {
+    public void testGetFileDir() {
         assertNotNull(StorageUtils.getFileDir(getContext(),"test"));
     }
 
-    public void testIsExternalStorageRemovable() throws Exception {
+    public void testIsExternalStorageRemovable() {
        StorageUtils.isExternalStorageRemovable();
     }
 
-    public void testGetExternalFileDir() throws Exception {
+    public void testGetExternalFileDir() {
         assertNotNull(StorageUtils.getExternalFileDir(getContext(),"test"));
     }
 
-    public void testGetExternalCacheDir() throws Exception {
+    public void testGetExternalCacheDir() {
         assertNotNull(StorageUtils.getExternalCacheDir(getContext()));
     }
 
-    public void testGetUsableSpace() throws Exception {
+    public void testGetUsableSpace() {
         assertNotNull(StorageUtils.getUsableSpace(StorageUtils.getExternalCacheDir(getContext())));
     }
 }

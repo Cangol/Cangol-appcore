@@ -52,9 +52,7 @@ public class UrlUtils {
 
         try {
             return new URL(url).getHost();
-        } catch (MalformedURLException e) {
-            return "";
-        } catch (Exception e) {
+        }catch (Exception e) {
             return "";
         }
     }
@@ -74,7 +72,7 @@ public class UrlUtils {
             query = "";
         }
 
-        Map<String, String> queries = new HashMap<String, String>();
+        Map<String, String> queries = new HashMap<>();
         if (query == null) {
             return queries;
         }
@@ -97,7 +95,7 @@ public class UrlUtils {
         String command = null;
         if (url != null && url.contains("://")) {
             if (url.contains("?")) {
-                command = url.substring(url.indexOf("://") + 3, url.indexOf("?"));
+                command = url.substring(url.indexOf("://") + 3, url.indexOf('?'));
             } else {
                 command = url.substring(url.indexOf("://") + 3, url.length());
             }

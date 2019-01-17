@@ -70,7 +70,7 @@ public class SocketThread implements Runnable {
         this.retryHandler = new SocketRetryHandler(isLong ? RETRY_TIMES_LONG : RETRY_TIMES_SHORT);
     }
 
-    private void makeRequest() throws ClassNotFoundException, IllegalBlockingModeException, IllegalArgumentException, SocketTimeoutException, IOException {
+    private void makeRequest() throws IllegalBlockingModeException, IllegalArgumentException, IOException {
         if (DEBUG) {
             Log.d(TAG, "socket connect executionCount=" + executionCount);
         }
@@ -186,7 +186,7 @@ public class SocketThread implements Runnable {
 
         } catch (IOException e) {
             if (DEBUG) {
-                Log.d(TAG, "disconnect Exception " + e.getMessage());
+                Log.d(TAG, "disconnect EXCEPTION " + e.getMessage());
             }
 
         }
@@ -204,8 +204,7 @@ public class SocketThread implements Runnable {
                 retry = retryHandler.retryRequest(e, ++executionCount, socket);
             }
         }
-        Exception ex = new Exception("Retry count exceeded, exception " + cause.getMessage());
-        ex.initCause(cause);
+        Exception ex = new Exception("Retry count exceeded, exception " + cause.getMessage(), cause);
         throw ex;
     }
 

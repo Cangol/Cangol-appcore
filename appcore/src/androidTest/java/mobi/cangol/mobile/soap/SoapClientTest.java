@@ -27,7 +27,7 @@ import java.util.HashMap;
  */
 public class SoapClientTest extends AndroidTestCase {
 
-    public void testSend() throws Exception {
+    public void testSend() {
         String url="http://www.webxml.com.cn/WebServices/WeatherWebService.asmx";
         String namespace="http://WebXml.com.cn/";
         String action="getSupportCity";

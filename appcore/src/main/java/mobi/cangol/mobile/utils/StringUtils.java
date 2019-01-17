@@ -236,7 +236,7 @@ public class StringUtils {
             return true;
         }
         for (int i = 0; i < strLen; i++) {
-            if ((Character.isWhitespace(str.charAt(i)) == false)) {
+            if (!Character.isWhitespace(str.charAt(i))) {
                 return false;
             }
         }
@@ -313,7 +313,7 @@ public class StringUtils {
      * @return
      */
     public static String trimForFront(String str) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean first = false;
         char aa;
         for (int i = 0, length = str.length(); i < length; i++) {
@@ -345,7 +345,7 @@ public class StringUtils {
      * @return
      */
     public static String trimAllWhitespace(String str) {
-        return str.replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "").toString();
+        return str.replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "");
     }
 
     /**
@@ -437,7 +437,7 @@ public class StringUtils {
         }
         int sz = str.length();
         for (int i = 0; i < sz; i++) {
-            if (Character.isDigit(str.charAt(i)) == false) {
+            if (!Character.isDigit(str.charAt(i))) {
                 return false;
             }
         }
@@ -456,7 +456,7 @@ public class StringUtils {
         }
         int sz = str.length();
         for (int i = 0; i < sz; i++) {
-            if ((Character.isDigit(str.charAt(i)) == false) && (str.charAt(i) != ' ')) {
+            if (!Character.isDigit(str.charAt(i)) && (str.charAt(i) != ' ')) {
                 return false;
             }
         }
@@ -494,7 +494,8 @@ public class StringUtils {
      */
     public static int byteArray2int(byte[] b) {
         byte[] a = new byte[4];
-        int i = a.length - 1, j = b.length - 1;
+        int i = a.length - 1;
+        int j = b.length - 1;
         for (; i >= 0; i--, j--) {//从b的尾部(即int值的低位)开始copy数据
             if (j >= 0) {
                 a[i] = b[j];

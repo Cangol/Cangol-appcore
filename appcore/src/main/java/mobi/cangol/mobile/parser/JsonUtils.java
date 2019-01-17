@@ -302,7 +302,7 @@ public class JsonUtils extends Converter {
         return list;
     }
 
-    private static <T> Object getValueFromJson(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
+    private static <T> Object getValueFromJson(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) {
         Object value = null;
         try {
             if (isBaseClass(fieldClass)) {

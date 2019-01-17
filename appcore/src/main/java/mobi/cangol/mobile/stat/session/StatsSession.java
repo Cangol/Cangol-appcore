@@ -15,8 +15,6 @@
  */
 package mobi.cangol.mobile.stat.session;
 
-import android.content.Context;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,10 +26,8 @@ public class StatsSession {
     private long mLastTime;
     private long unSentSessionLength = 0;
     private OnSessionListener onSessionListener;
-    private Context mContext;
 
-    private StatsSession(Context context) {
-        this.mContext = context.getApplicationContext();
+    private StatsSession() {
         mLastTime = System.currentTimeMillis() / 1000;
         mQueue = new ConnectionQueue(onSessionListener);
         mTimer = new Timer();
@@ -40,13 +36,13 @@ public class StatsSession {
             public void run() {
                 onTimer();
             }
-        }, 30 * 1000, 30 * 1000);
+        }, 30 * 1000L, 30 * 1000L);
         unSentSessionLength = 0;
     }
 
-    static public StatsSession getInstance(Context context) {
+    public static  StatsSession getInstance() {
         if (instance == null) {
-            instance = new StatsSession(context);
+            instance = new StatsSession();
         }
         return instance;
     }

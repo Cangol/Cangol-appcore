@@ -36,7 +36,7 @@ class RouteServiceImpl implements RouteService {
 
     @Override
     public void setDebug(boolean debug) {
-        this.debug = debug;
+        RouteServiceImpl.debug = debug;
     }
 
     @Override

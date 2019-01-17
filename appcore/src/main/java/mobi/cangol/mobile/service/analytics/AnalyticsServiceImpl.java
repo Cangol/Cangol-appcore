@@ -33,12 +33,12 @@ import mobi.cangol.mobile.service.ServiceProperty;
  */
 @Service("AnalyticsService")
 class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
-    private final static String TAG = "AnalyticsService";
+    private static final  String TAG = "AnalyticsService";
     private boolean mDebug = false;
     private Application mContext = null;
     private AsyncHttpClient mAsyncHttpClient = null;
     private ServiceProperty mServiceProperty = null;
-    private Map<String, ITracker> mTrackers = new HashMap<String, ITracker>();
+    private Map<String, ITracker> mTrackers = new HashMap<>();
 
     @Override
     public void onCreate(Application context) {
@@ -54,7 +54,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public String getName() {
-        return "AnalyticsService";
+        return TAG;
     }
 
     @Override
@@ -82,10 +82,6 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
         mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
 
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
 
             @Override
             public void onSuccess(String content) {

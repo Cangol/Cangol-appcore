@@ -16,7 +16,6 @@
 package mobi.cangol.mobile;
 
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.route.OnNavigation;
 import mobi.cangol.mobile.service.route.RouteService;
 
 /**

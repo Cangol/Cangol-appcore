@@ -41,7 +41,7 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class Object2FileUtils {
-    private final static String CHARSET = "UTF-8";
+    private static final  String CHARSET = "UTF-8";
 
     private Object2FileUtils() {
     }

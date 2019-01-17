@@ -12,16 +12,16 @@ import java.io.Serializable;
  */
 public class SocketClientTest extends AndroidTestCase {
 
-    public void testSend() throws Exception {
+    public void testSend() {
         final SocketClient socketClient=new SocketClient();
         socketClient.connect(getContext(), "127.0.0.1", 8080, true, 10 * 1000, new SocketHandler() {
             @Override
-            public boolean handleSocketWrite(OutputStream outputStream) throws IOException {
+            public boolean handleSocketWrite(OutputStream outputStream) {
                 return false;
             }
 
             @Override
-            public boolean handleSocketRead(int timeout, InputStream inputStream) throws IOException, ClassNotFoundException {
+            public boolean handleSocketRead(int timeout, InputStream inputStream) {
                 return false;
             }
 

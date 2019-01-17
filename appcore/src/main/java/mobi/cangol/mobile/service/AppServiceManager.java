@@ -53,7 +53,6 @@ public abstract class AppServiceManager {
      * 设置服务扫描包
      *
      * @param packageName
-     * @deprecated
      */
     public abstract void setScanPackage(String... packageName);
 

@@ -19,8 +19,6 @@ package mobi.cangol.mobile.service.cache;
 
 import java.io.Serializable;
 
-import mobi.cangol.mobile.logging.Log;
-
 /**
  * Created by xuewu.wei on 2016/3/14.
  */
@@ -97,11 +95,7 @@ public class CacheObject implements Serializable {
     public boolean isExpired(){
         if(period==-1){
             return false;
-        }else if(timestamp+period<=System.currentTimeMillis()){
-            return true;
-        }else{
-            return false;
-        }
+        }else return timestamp + period <= System.currentTimeMillis();
     }
 
     @Override

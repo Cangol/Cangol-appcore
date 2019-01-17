@@ -28,10 +28,10 @@ class SessionEntity implements Cloneable {
     String activityId;
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Object clone() {
         Object o = null;
         try {
-            o = (SessionEntity) super.clone();
+            o = super.clone();
         } catch (CloneNotSupportedException e) {
             Log.e(e.getMessage());
         }

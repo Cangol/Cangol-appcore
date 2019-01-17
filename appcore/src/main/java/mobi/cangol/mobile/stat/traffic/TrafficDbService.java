@@ -45,10 +45,10 @@ class TrafficDbService {
     public int saveAppTraffic(AppTraffic obj) {
         int result = -1;
         try {
-            if (obj._id > 0 && obj._id != -1) {
+            if (obj.id > 0 && obj.id != -1) {
                 result = appTrafficDao.update(obj);
                 if (result > 0) {
-                    result = obj._id;
+                    result = obj.id;
                 }
             } else {
                 result = appTrafficDao.create(obj);
@@ -62,10 +62,10 @@ class TrafficDbService {
     public int saveDateTraffic(DateTraffic obj) {
         int result = -1;
         try {
-            if (obj._id > 0 && obj._id != -1) {
+            if (obj.id > 0 && obj.id != -1) {
                 result = dateTrafficDao.update(obj);
                 if (result > 0) {
-                    result = obj._id;
+                    result = obj.id;
                 }
             } else {
                 result = dateTrafficDao.create(obj);
@@ -81,7 +81,7 @@ class TrafficDbService {
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "=");
         List<DateTraffic> list = dateTrafficDao.query(queryBuilder);
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             return list.get(0);
         } else {
             return null;
@@ -93,7 +93,7 @@ class TrafficDbService {
         QueryBuilder queryBuilder = new QueryBuilder(AppTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         List<AppTraffic> list = appTrafficDao.query(queryBuilder);
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             return list.get(0);
         } else {
             return null;

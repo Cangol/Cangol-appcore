@@ -48,7 +48,7 @@ android {
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
-        return; // Skip debug builds.
+        return // Skip debug builds.
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
     task.dependsOn variant.javaCompile
@@ -61,7 +61,7 @@ android.libraryVariants.all { variant ->
                 "Implementation-Version": version
         )
     }
-    artifacts.add('archives', task);
+    artifacts.add('archives', task)
 }
 
 // build a jar with source files

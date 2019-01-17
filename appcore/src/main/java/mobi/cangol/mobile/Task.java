@@ -28,17 +28,15 @@ public abstract  class Task<R> implements Runnable{
     public static class InnerHandler extends Handler{
         private final WeakReference<Task> taskWeakReference;
         public InnerHandler(Task task) {
-            taskWeakReference = new WeakReference<Task>(task);
+            taskWeakReference = new WeakReference<>(task);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==1){
-                if(taskWeakReference.get()!=null){
+            if(msg.what==1&&taskWeakReference.get()!=null){
                     taskWeakReference.get().result(msg.obj);
                     taskWeakReference.clear();
-                }
             }
         }
     }

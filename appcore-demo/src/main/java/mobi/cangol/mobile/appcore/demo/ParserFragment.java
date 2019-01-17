@@ -63,14 +63,14 @@ public class ParserFragment extends Fragment {
         initViews();
     }
     private void initViews() {
-        editText1= (EditText) this.getView().findViewById(R.id.editText1);
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
-        button2 = (Button) this.getView().findViewById(R.id.button2);
-        button3 = (Button) this.getView().findViewById(R.id.button3);
-        button4 = (Button) this.getView().findViewById(R.id.button4);
-        button5 = (Button) this.getView().findViewById(R.id.button5);
-        radioGroup= (RadioGroup) this.getView().findViewById(R.id.radioGroup1);
+        editText1= this.getView().findViewById(R.id.editText1);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
+        button2 = this.getView().findViewById(R.id.button2);
+        button3 = this.getView().findViewById(R.id.button3);
+        button4 = this.getView().findViewById(R.id.button4);
+        button5 = this.getView().findViewById(R.id.button5);
+        radioGroup= this.getView().findViewById(R.id.radioGroup1);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

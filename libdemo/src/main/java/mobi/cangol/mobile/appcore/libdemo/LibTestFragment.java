@@ -39,8 +39,8 @@ public class LibTestFragment extends Fragment {
     }
 
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
         button1.setText(""+key);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override

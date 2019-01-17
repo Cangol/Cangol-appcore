@@ -34,10 +34,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateNull(String str) {
-        if (str == null || "".equals(str)) {
-            return false;
-        }
-        return true;
+        return str != null && !"".equals(str);
     }
 
     /**
@@ -49,11 +46,7 @@ public class ValidatorUtils {
     public static boolean validateContent(String str) {
         if (str == null || "".equals(str)) {
             return false;
-        } else if (str.length() >= 5 && str.length() <= 140) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return str.length() >= 5 && str.length() <= 140;
     }
 
     /**
@@ -78,7 +71,6 @@ public class ValidatorUtils {
             } else if (Pattern.compile(rx2).matcher(c + "").matches()) {
                 num += 2;
             } else {
-                flag = false;
                 break;
             }
         }
@@ -112,11 +104,7 @@ public class ValidatorUtils {
         }
         Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
         Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return m.matches();
     }
 
     /**
@@ -131,11 +119,7 @@ public class ValidatorUtils {
         }
         Pattern p = Patterns.PHONE;
         Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return m.matches();
     }
 
     /**
@@ -150,11 +134,7 @@ public class ValidatorUtils {
         }
         Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
         Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return m.matches();
     }
 
     /**
@@ -169,11 +149,7 @@ public class ValidatorUtils {
         }
         Pattern p = Patterns.EMAIL_ADDRESS;
         Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return m.matches();
     }
 
     /**
@@ -188,11 +164,7 @@ public class ValidatorUtils {
         }
         Pattern p = Patterns.WEB_URL;
         Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return m.matches();
     }
 
     /**
@@ -207,10 +179,6 @@ public class ValidatorUtils {
         }
         Pattern p = Patterns.IP_ADDRESS;
         Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return m.matches();
     }
 }

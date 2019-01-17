@@ -227,7 +227,7 @@ public class DatabaseUtils {
         return map;
     }
 
-    public static <T> String getIdColumnName(Class<?> clazz) {
+    public static String getIdColumnName(Class<?> clazz) {
         String columnName = null;
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
@@ -236,7 +236,7 @@ public class DatabaseUtils {
             }
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (dbField.primaryKey() == true) {
+                if (dbField.primaryKey()) {
                     columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     break;
                 }
@@ -251,9 +251,8 @@ public class DatabaseUtils {
      * @param obj
      * @return
      * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
-    public static Object getIdValue(Object obj) throws IllegalAccessException, IllegalArgumentException {
+    public static Object getIdValue(Object obj) throws IllegalAccessException {
         Object value = null;
         for (Field field : obj.getClass().getDeclaredFields()) {
             field.setAccessible(true);
@@ -263,7 +262,7 @@ public class DatabaseUtils {
 
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (dbField.primaryKey() == true) {
+                if (dbField.primaryKey()) {
                     value = field.get(obj);
                     break;
                 }
@@ -278,9 +277,8 @@ public class DatabaseUtils {
      * @param object
      * @return
      * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
-    public static ContentValues getContentValues(Object object) throws IllegalAccessException, IllegalArgumentException {
+    public static ContentValues getContentValues(Object object) throws IllegalAccessException {
         ContentValues v = new ContentValues();
         String filedName =null;
         for (Field field : object.getClass().getDeclaredFields()) {
@@ -304,7 +302,7 @@ public class DatabaseUtils {
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    public static ContentValues getContentValues(Object object, String[] columns)throws IllegalAccessException, IllegalArgumentException {
+    public static ContentValues getContentValues(Object object, String[] columns)throws IllegalAccessException {
         ContentValues v = new ContentValues();
         String filedName =null;
         Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
@@ -327,10 +325,8 @@ public class DatabaseUtils {
      * @param cursor
      * @param <T>
      * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
-    public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) throws InstantiationException, IllegalAccessException {
+    public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) {
         Field[] fields = obj.getClass().getDeclaredFields();
         Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
         String columnName = null;
@@ -387,13 +383,11 @@ public class DatabaseUtils {
             } else if (field.getType() == Double.class || field.getType() == double.class) {
                 field.set(t, cursor.getDouble(cursor.getColumnIndex(columnName)));
             } else if (field.getType() == Boolean.class || field.getType() == boolean.class) {
-                field.set(t, cursor.getInt(cursor.getColumnIndex(columnName)) == 1 ? true : false);
+                field.set(t, cursor.getInt(cursor.getColumnIndex(columnName)) == 1);
             } else if (field.getType() == Float.class || field.getType() == float.class) {
                 field.set(t, cursor.getFloat(cursor.getColumnIndex(columnName)));
             }
-        } catch (IllegalArgumentException e) {
-            Log.e(e.getMessage());
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             Log.e(e.getMessage());
         }
     }

@@ -22,6 +22,7 @@ import java.lang.reflect.Modifier;
  * @author Cangol
  */
 public class Log {
+    private Log(){}
     private static int level = android.util.Log.VERBOSE;
 
     private static boolean format = false;
@@ -43,8 +44,7 @@ public class Log {
     private static Field findField(Class clazz, String name) {
         if (clazz != Object.class) {
             try {
-                Field field = clazz.getDeclaredField(name);
-                return field;
+                return clazz.getDeclaredField(name);
             } catch (NoSuchFieldException e) {
                 return findField(clazz.getSuperclass(), name);
             }
@@ -167,11 +167,11 @@ public class Log {
         StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
         String classname = stackTrace.getClassName();
         String filename = stackTrace.getFileName();
-        String methodname = stackTrace.getMethodName();
+        String methodName = stackTrace.getMethodName();
         int linenumber = stackTrace.getLineNumber();
         String output = null;
         if (format) {
-            output = String.format("%s.%s(%s:%d)-->%s", classname, methodname, filename, linenumber, msg);
+            output = String.format("%s.%s(%s:%d)-->%s", classname, methodName, filename, linenumber, msg);
         } else {
             output = msg;
         }

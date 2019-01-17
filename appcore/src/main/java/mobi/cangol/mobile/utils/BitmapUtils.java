@@ -16,7 +16,6 @@
 package mobi.cangol.mobile.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
@@ -40,7 +39,6 @@ import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -386,10 +384,10 @@ public final class BitmapUtils {
         int originHeight = options.outHeight;
         // no need to resize
         if (originWidth < maxWidth && originHeight < maxHeight) {
-
+                //do nothings
         } else {
-            float wb = originWidth / maxWidth;
-            float hb = originHeight / maxHeight;
+            float wb = (1.0f*originWidth) / maxWidth;
+            float hb =  (1.0f*originHeight) / maxHeight;
             if (originWidth > maxWidth || originHeight > maxHeight) {
                 if (wb >= hb) {
                     int i = (int) Math.floor(originWidth * 1.0 / maxWidth);
@@ -419,10 +417,10 @@ public final class BitmapUtils {
         if (originWidth < maxWidth && originHeight < maxHeight) {
             return bitmap;
         }
-        int width = originWidth;
-        int height = originHeight;
-        float wb = originWidth / maxWidth;
-        float hb = originHeight / maxHeight;
+        int width;
+        int height;
+        float wb = (1.0f*originWidth) / maxWidth;
+        float hb = (1.0f*originHeight) / maxHeight;
         // 若图片过宽, 则保持长宽比缩放图片
         if (originWidth > maxWidth || originHeight > maxHeight) {
             if (wb > hb) {
@@ -504,10 +502,9 @@ public final class BitmapUtils {
      * @param number   数字
      * @param textSize 字体大小
      * @param bitmap   图片
-     * @param context  上下文
      * @return
      */
-    public static Bitmap createAlbumIcon(int number, int textSize, Bitmap bitmap, Context context) {
+    public static Bitmap createAlbumIcon(int number, int textSize, Bitmap bitmap) {
         if (number == 0) {
             return bitmap;
         }
@@ -558,15 +555,15 @@ public final class BitmapUtils {
     public static void bitmap2File(Bitmap bm, String path) {
         File file = new File(path);
         try {
-            file.createNewFile();
-            FileOutputStream out = new FileOutputStream(file);
-            if (bm.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
-                out.flush();
-                out.close();
+            boolean result=file.createNewFile();
+            if(result){
+                FileOutputStream out = new FileOutputStream(file);
+                if (bm.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                    out.flush();
+                    out.close();
+                }
             }
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
-        } catch (IOException e) {
+        }catch (IOException e) {
             Log.d(e.getMessage());
         }
     }
@@ -579,7 +576,7 @@ public final class BitmapUtils {
      */
     public static byte[] bitmap2Bytes(Bitmap bitmap) {
         if (null == bitmap) {
-            return null;
+            return new byte[0];
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

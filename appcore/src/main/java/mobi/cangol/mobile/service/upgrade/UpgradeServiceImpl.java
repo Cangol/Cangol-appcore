@@ -238,6 +238,8 @@ class UpgradeServiceImpl implements UpgradeService {
             case OTHER:
                 new Intent();
                 break;
+            default:
+                break;
         }
     }
 

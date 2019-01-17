@@ -41,17 +41,18 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String SDK_VERSION = BuildConfig.VERSION_NAME;
-    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
-    private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
-    private final static String STAT_ACTION_EVENT = "api/countly/event.do";
-    private final static String STAT_ACTION_TIMING = "api/countly/qos.do";
-    private final static String STAT_ACTION_LAUNCH = "api/countly/launch.do";
-    private final static String STAT_ACTION_DEVICE = "api/countly/device.do";
-    private final static String STAT_ACTION_SESSION = "api/countly/session.do";
-    private final static String STAT_ACTION_TRAFFIC = "api/countly/traffic.do";
-    private final static String STAT_TRACKING_ID = "stat";
-    private final static String TIMESTAMP = "timestamp";
+    private static final  String SDK_VERSION = BuildConfig.VERSION_NAME;
+    private static final  String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
+    private static final  String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
+    private static final  String STAT_ACTION_EVENT = "api/countly/event.do";
+    private static final  String STAT_ACTION_TIMING = "api/countly/qos.do";
+    private static final  String STAT_ACTION_LAUNCH = "api/countly/launch.do";
+    private static final  String STAT_ACTION_DEVICE = "api/countly/device.do";
+    private static final  String STAT_ACTION_SESSION = "api/countly/session.do";
+    private static final  String STAT_ACTION_TRAFFIC = "api/countly/traffic.do";
+    private static final  String STAT_TRACKING_ID = "stat";
+    private static final  String TIMESTAMP = "timestamp";
+    private static final  String CHANNEL_ID ="CHANNEL_ID";
     private static StatAgent instance;
     private CoreApplication context;
     private ITracker itracker;
@@ -96,7 +97,7 @@ public class StatAgent {
     private void init() {
         sendDevice();
         sendLaunch();
-        StatsSession.getInstance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
+        StatsSession.getInstance().setOnSessionListener(new StatsSession.OnSessionListener() {
             @Override
             public void onTick(String sessionId, String beginSession, String sessionDuration, String endSession, String activityId) {
                 send(Builder.createSession(sessionId, beginSession, sessionDuration, endSession, activityId));
@@ -106,9 +107,9 @@ public class StatAgent {
         crashService.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, getCommonParams());
     }
 
-    public void destroy() {
+    public void destroy(Context context) {
         analyticsService.closeTracker(STAT_TRACKING_ID);
-        StatsSession.getInstance(context).onDestroy();
+        StatsSession.getInstance().onDestroy();
         StatsTraffic.getInstance(context).onDestroy();
     }
 
@@ -127,7 +128,7 @@ public class StatAgent {
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private HashMap<String, String> getCommonParams() {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("deviceId", getDeviceId(context));
         params.put("platform", DeviceInfo.getOS());
@@ -166,7 +167,7 @@ public class StatAgent {
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private HashMap<String, String> getDeviceParams() {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("os", DeviceInfo.getOS());
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("model", DeviceInfo.getDeviceModel());
@@ -197,24 +198,24 @@ public class StatAgent {
     }
 
     private String getChannelID(Context context) {
-        String channel_id = sessionService.getString("CHANNEL_ID", null);
-        if (TextUtils.isEmpty(channel_id)) {
-            channel_id = DeviceInfo.getAppStringMetaData(context, "CHANNEL_ID");
-            if (TextUtils.isEmpty(channel_id)) {
-                channel_id = "UNKNOWN";
+        String channelId = sessionService.getString(CHANNEL_ID, null);
+        if (TextUtils.isEmpty(channelId)) {
+            channelId = DeviceInfo.getAppStringMetaData(context, CHANNEL_ID);
+            if (TextUtils.isEmpty(channelId)) {
+                channelId = "UNKNOWN";
             } else {
-                sessionService.saveString("CHANNEL_ID", channel_id);
+                sessionService.saveString(CHANNEL_ID, channelId);
             }
         }
-        return channel_id;
+        return channelId;
     }
 
     private String getAppID(Context context) {
-        String app_id = DeviceInfo.getAppStringMetaData(context, "APP_ID");
-        if (TextUtils.isEmpty(app_id)) {
-            app_id = context.getPackageName();
+        String appId = DeviceInfo.getAppStringMetaData(context, "APP_ID");
+        if (TextUtils.isEmpty(appId)) {
+            appId = context.getPackageName();
         }
-        return app_id;
+        return appId;
     }
 
     public void setDebug(boolean debug) {
@@ -226,29 +227,29 @@ public class StatAgent {
         builder.setAll(commonParams);
         builder.setAll(eventBuilder.build());
         switch (eventBuilder.type) {
-            case Device:
+            case DEVICE:
                 builder.setAll(getDeviceParams());
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_DEVICE);
                 break;
-            case Event:
+            case EVENT:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_EVENT);
                 break;
-            case Timing:
+            case TIMING:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_TIMING);
                 break;
-            case Exception:
+            case EXCEPTION:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_EXCEPTION);
                 break;
-            case Launcher:
+            case LAUNCHER:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_LAUNCH);
                 break;
-            case Session:
+            case SESSION:
                 if ("1".equals(eventBuilder.get("beginSession"))) {
                     builder.setAll(getDeviceParams());
                 }
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_SESSION);
                 break;
-            case Traffic:
+            case TRAFFIC:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_TRAFFIC);
                 break;
         }
@@ -287,28 +288,28 @@ public class StatAgent {
     }
 
     public void onActivityResume(String pageName) {
-        StatsSession.getInstance(context).onStart(pageName);
+        StatsSession.getInstance().onStart(pageName);
     }
 
     public void onActivityPause(String pageName) {
-        StatsSession.getInstance(context).onStop(pageName);
+        StatsSession.getInstance().onStop(pageName);
     }
 
     public void onFragmentResume(String pageName) {
-        StatsSession.getInstance(context).onStart(pageName);
+        StatsSession.getInstance().onStart(pageName);
     }
 
     public void onFragmentPause(String pageName) {
-        StatsSession.getInstance(context).onStop(pageName);
+        StatsSession.getInstance().onStop(pageName);
     }
 
     public static class Builder {
         Type type;
-        private Map<String, String> map = new HashMap<String, String>();
+        private Map<String, String> map = new HashMap<>();
 
         protected static Builder createDevice() {
             Builder builder = new Builder();
-            builder.type = Type.Device;
+            builder.type = Type.DEVICE;
             return builder;
         }
 
@@ -317,7 +318,7 @@ public class StatAgent {
             builder.set("view", view);
             builder.set("action", "Vistor");
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
-            builder.type = Type.Event;
+            builder.type = Type.EVENT;
             return builder;
         }
 
@@ -340,7 +341,7 @@ public class StatAgent {
             builder.set("target", target);
             builder.set("result", result == null ? null : Long.toString(result.longValue()));
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
-            builder.type = Type.Event;
+            builder.type = Type.EVENT;
             return builder;
         }
 
@@ -355,7 +356,7 @@ public class StatAgent {
             Builder builder = new Builder();
             builder.set("view", view);
             builder.set("idleTime", idletime == null ? null : Long.toString(idletime.longValue()));
-            builder.type = Type.Timing;
+            builder.type = Type.TIMING;
             return builder;
         }
 
@@ -375,7 +376,7 @@ public class StatAgent {
             builder.set("content", content);
             builder.set(TIMESTAMP, timestamp);
             builder.set("fatal", fatal);
-            builder.type = Type.Event;
+            builder.type = Type.EVENT;
             return builder;
 
         }
@@ -388,14 +389,14 @@ public class StatAgent {
          * @param isNew       是否新用户
          * @return
          */
-        protected static Builder createLaunch(String exitCode, String exitVersion, Boolean isNew, String launchTime) {
+        protected static Builder createLaunch(String exitCode, String exitVersion, boolean isNew, String launchTime) {
             Builder builder = new Builder();
             builder.set("exitCode", exitCode);
             builder.set("exitVersion", exitVersion);
             builder.set("launchTime", launchTime);
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
-            builder.set("isNew", isNew == null ? null : isNew ? "1" : "0");
-            builder.type = Type.Launcher;
+            builder.set("isNew",  isNew ? "1" : "0");
+            builder.type = Type.LAUNCHER;
             return builder;
 
         }
@@ -422,7 +423,7 @@ public class StatAgent {
             builder.set("endSession", endSession);
             builder.set("activityId", activityId);
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
-            builder.type = Type.Session;
+            builder.type = Type.SESSION;
             return builder;
 
         }
@@ -443,7 +444,7 @@ public class StatAgent {
             builder.set("wifiRx", map.get("wifiRx"));
             builder.set("wifiTx", map.get("wifiTx"));
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
-            builder.type = Type.Traffic;
+            builder.type = Type.TRAFFIC;
             return builder;
 
         }
@@ -465,26 +466,26 @@ public class StatAgent {
             if (params == null) {
                 return this;
             }
-            this.map.putAll(new HashMap<String, String>(params));
+            this.map.putAll(new HashMap<>(params));
             return this;
         }
 
         public String get(String paramName) {
-            return (String) this.map.get(paramName);
+            return this.map.get(paramName);
         }
 
         public Map<String, String> build() {
-            return new HashMap<String, String>(this.map);
+            return new HashMap<>(this.map);
         }
 
         enum Type {
-            Device,
-            Event,
-            Timing,
-            Exception,
-            Launcher,
-            Session,
-            Traffic
+            DEVICE,
+            EVENT,
+            TIMING,
+            EXCEPTION,
+            LAUNCHER,
+            SESSION,
+            TRAFFIC
         }
     }
 }

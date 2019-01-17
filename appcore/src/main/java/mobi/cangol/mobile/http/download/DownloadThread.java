@@ -58,7 +58,7 @@ public class DownloadThread implements Runnable {
         }
     }
 
-    private void makeRequest() throws IOException, InterruptedException {
+    private void makeRequest() throws IOException {
         if (!Thread.currentThread().isInterrupted()) {
 
             Response response = client.newCall(request).execute();
@@ -109,8 +109,7 @@ public class DownloadThread implements Runnable {
             }
         }
 
-        Exception ex = new Exception();
-        ex.initCause(cause);
+        Exception ex = new Exception(cause);
         throw ex;
     }
 }

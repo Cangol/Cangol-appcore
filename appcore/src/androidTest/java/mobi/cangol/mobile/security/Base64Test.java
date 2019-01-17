@@ -8,11 +8,11 @@ import android.test.InstrumentationTestCase;
  */
 public class Base64Test extends InstrumentationTestCase{
 
-    public void testEncode() throws Exception {
+    public void testEncode() {
         assertNotNull(Base64.encode("123456789"));
     }
 
-    public void testDecode() throws Exception {
+    public void testDecode() {
         assertEquals(Base64.decode(Base64.encode("123456789")),"123456789");
     }
 }

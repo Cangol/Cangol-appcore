@@ -105,7 +105,7 @@ public class DownloadTask {
         this.pool = pool;
         this.handler = handler;
         downloadHttpClient = DownloadHttpClient.build(pool.getName(),safe);
-        downloadHttpClient.setThreadPool(pool);
+        DownloadHttpClient.setThreadPool(pool);
     }
 
     public void setDownloadNotification(DownloadNotification downloadNotification) {

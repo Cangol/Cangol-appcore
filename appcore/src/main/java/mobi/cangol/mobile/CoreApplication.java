@@ -131,7 +131,7 @@ public class CoreApplication extends Application {
      * 初始化方法，当setAsyncInit为true 此处执行异步init
      */
     protected void init() {
-
+        //do nothings
     }
 
     /**
@@ -213,7 +213,7 @@ public class CoreApplication extends Application {
      *
      * @param runnable
      */
-    public final Future<?> post(Runnable runnable) {
+    public final Future post(Runnable runnable) {
         return getSharePool().submit(runnable);
     }
 
@@ -240,7 +240,7 @@ public class CoreApplication extends Application {
      *
      * @param task
      */
-    public final Future<?> post(Task task) {
+    public final Future post(Task task) {
         return getSharePool().submit(task);
     }
 

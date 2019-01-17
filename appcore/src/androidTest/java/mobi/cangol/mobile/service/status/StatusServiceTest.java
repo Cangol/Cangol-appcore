@@ -67,32 +67,32 @@ public class StatusServiceTest  extends ApplicationTestCase<CoreApplication> {
         };
     }
 
-    public void testIsConnection() throws Exception {
+    public void testIsConnection() {
         statusService.isConnection();
     }
 
-    public void testIsWifiConnection() throws Exception {
+    public void testIsWifiConnection() {
         statusService.isWifiConnection();
     }
 
-    public void testIsGPSLocation() throws Exception {
+    public void testIsGPSLocation() {
         statusService.isGPSLocation();
     }
 
-    public void testIsNetworkLocation() throws Exception {
+    public void testIsNetworkLocation() {
         statusService.isNetworkLocation();
     }
 
-    public void testIsCallingState() throws Exception {
+    public void testIsCallingState() {
         statusService.isCallingState();
     }
 
-    public void testRegisterStatusListener() throws Exception {
+    public void testRegisterStatusListener() {
         statusService.registerStatusListener(statusListener);
         statusService.unregisterStatusListener(statusListener);
     }
 
-    public void testUnregisterStatusListener() throws Exception {
+    public void testUnregisterStatusListener() {
 
     }
 }

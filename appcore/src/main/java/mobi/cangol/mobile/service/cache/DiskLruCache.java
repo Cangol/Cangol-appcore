@@ -317,7 +317,6 @@ public final class DiskLruCache implements Closeable {
             try {
                 cache.readJournal();
                 cache.processJournal();
-                ;
                 cache.journalWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cache.journalFile, true), UTF_8),
                         IO_BUFFER_SIZE);
                 return cache;
@@ -925,7 +924,7 @@ public final class DiskLruCache implements Closeable {
             this.lengths = new long[valueCount];
         }
 
-        public String getLengths() throws IOException {
+        public String getLengths() {
             StringBuilder result = new StringBuilder();
             for (long size : lengths) {
                 result.append(' ').append(size);

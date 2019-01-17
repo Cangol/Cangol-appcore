@@ -181,11 +181,11 @@ public class AppUtils {
      * @return
      */
     public static List<PackageInfo> getAllApps(Context context) {
-        List<PackageInfo> apps = new ArrayList<PackageInfo>();
+        List<PackageInfo> apps = new ArrayList<>();
         PackageManager pManager = context.getPackageManager();
         List<PackageInfo> paklist = pManager.getInstalledPackages(0);
         for (int i = 0; i < paklist.size(); i++) {
-            PackageInfo pak = (PackageInfo) paklist.get(i);
+            PackageInfo pak = paklist.get(i);
             //not system app
             if ((pak.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
                 apps.add(pak);

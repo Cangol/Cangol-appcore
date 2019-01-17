@@ -110,7 +110,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
                 if (mServiceMap.containsKey(name)) {
                     Constructor<? extends AppService> c = mServiceMap.get(name).getDeclaredConstructor();
                     c.setAccessible(true);
-                    appService = (AppService) c.newInstance();
+                    appService = c.newInstance();
                     appService.onCreate(mContext);
                     appService.init(mProperties.get(name) != null ? mProperties.get(name) : appService.defaultServiceProperty());
                     appService.setDebug(debug);
