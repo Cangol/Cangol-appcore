@@ -29,14 +29,14 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 public class XmlUtils extends Converter {
-    private final static String TAG = "XmlUtils";
+    private static final  String TAG = "XmlUtils";
+    public static final String UTF_8 = "UTF-8";
 
     private XmlUtils() {
     }
@@ -53,15 +53,13 @@ public class XmlUtils extends Converter {
         XmlSerializer serializer = Xml.newSerializer();
         String result = null;
         try {
-            serializer.setOutput(baos, "utf-8");
-            serializer.startDocument("utf-8", true);
+            serializer.setOutput(baos, UTF_8);
+            serializer.startDocument(UTF_8, true);
             toXml(serializer, obj, useAnnotation);
             serializer.endDocument();
             baos.close();
-            result = baos.toString("utf-8");
-        } catch (UnsupportedEncodingException e) {
-            Log.d(TAG, e.getMessage());
-        } catch (IOException e) {
+            result = baos.toString(UTF_8);
+        }catch (IOException e) {
             Log.d(TAG, e.getMessage());
         }
         return result;
@@ -105,9 +103,7 @@ public class XmlUtils extends Converter {
                 }
             }
             serializer.endTag(null, obj.getClass().getSimpleName());
-        } catch (IllegalAccessException e) {
-            Log.d(TAG, e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
     }
@@ -127,7 +123,7 @@ public class XmlUtils extends Converter {
     public static <T> T parserToObject(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
         InputStream inputSteam = null;
         try {
-            inputSteam = new ByteArrayInputStream(str.getBytes("UTF-8"));
+            inputSteam = new ByteArrayInputStream(str.getBytes(UTF_8));
         } catch (UnsupportedEncodingException e) {
             Log.d(TAG, e.getMessage());
         }
@@ -160,10 +156,10 @@ public class XmlUtils extends Converter {
      * @return
      * @throws XMLParserException
      */
-    public static <T> ArrayList<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
+    public static <T> List<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
         InputStream inputSteam = null;
         try {
-            inputSteam = new ByteArrayInputStream(str.getBytes("UTF-8"));
+            inputSteam = new ByteArrayInputStream(str.getBytes(UTF_8));
         } catch (UnsupportedEncodingException e) {
             Log.d(TAG, e.getMessage());
         }
@@ -180,7 +176,7 @@ public class XmlUtils extends Converter {
      * @return
      * @throws XMLParserException
      */
-    public static <T> ArrayList<T> parserToList(Class<T> c, InputStream inputSteam, boolean useAnnotation) throws XMLParserException {
+    public static <T> List<T> parserToList(Class<T> c, InputStream inputSteam, boolean useAnnotation) throws XMLParserException {
         DocumentParser documentParser = new DocumentParser(inputSteam);
         documentParser.parserDom();
         return parserToList(c, (NodeList) documentParser.getRoot(), useAnnotation);
@@ -214,36 +210,24 @@ public class XmlUtils extends Converter {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
                         Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
                         List<?> list = parserToList(genericClazz, getNodeList(node, filedName), useAnnotation);
-                        try {
-                            field.set(t, list);
-                        } catch (IllegalArgumentException e) {
-                            throw new XMLParserException(c, field, "filed is IllegalArgumentException", e);
-                        } catch (IllegalAccessException e) {
-                            throw new XMLParserException(c, field, "filed is not accessible", e);
-                        }
+                        field.set(t, list);
                     } else {
                         Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
-        } catch (InstantiationException e) {
-            throw new XMLParserException(c, "must have zero-argument constructor", e);
-        } catch (IllegalAccessException e) {
-            throw new XMLParserException(c, "constructor is not accessible", e);
-        } catch (NoSuchMethodException e) {
-            throw new XMLParserException(c, "must have zero-argument constructor", e);
-        } catch (InvocationTargetException e) {
-            throw new XMLParserException(c, "must have zero-argument constructor", e);
+        } catch (Exception e) {
+            throw new XMLParserException(c, "constructor is not accessible,must have zero-argument constructor", e);
         }
         return t;
 
     }
 
-    private static <T> ArrayList<T> parserToList(Class<T> c, NodeList nodeList, boolean useAnnotation) throws XMLParserException {
+    private static <T> List<T> parserToList(Class<T> c, NodeList nodeList, boolean useAnnotation) throws XMLParserException {
         if (null == nodeList) {
-            return null;
+            return new ArrayList<>();
         }
-        ArrayList<T> list = new ArrayList<T>();
+        List<T> list = new ArrayList<>();
         T t = null;
         for (int i = 0; i < nodeList.getLength(); i++) {
             t = parserToObject(c, nodeList.item(i), useAnnotation);

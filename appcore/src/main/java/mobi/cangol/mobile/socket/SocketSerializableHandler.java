@@ -22,8 +22,9 @@ import android.os.Message;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -37,15 +38,15 @@ import mobi.cangol.mobile.logging.Log;
 @SuppressLint("LongLogTag")
 public abstract class SocketSerializableHandler extends SocketHandler {
 
+    private static final  String TAG = "SocketSerializableHandler";
     protected static final boolean DEBUG = false;
     protected static final int RECEIVE_MESSAGE = 0;
-    private final static String TAG = "SocketSerializableHandler";
 
     public SocketSerializableHandler() {
         super();
     }
 
-    abstract public void onReceive(Serializable msg);
+    public abstract  void onReceive(Serializable msg);
 
 
     public void sendReceiveMessage(Serializable obj) {
@@ -62,7 +63,7 @@ public abstract class SocketSerializableHandler extends SocketHandler {
         oos.writeObject(obj);
     }
 
-    protected Serializable read(int timeout, InputStream is) throws IOException, ClassNotFoundException {
+    protected Serializable read(DataInputStream is) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is));
         Object object = ois.readObject();
         return (Serializable) object;
@@ -70,31 +71,24 @@ public abstract class SocketSerializableHandler extends SocketHandler {
 
     protected void handleMessage(Message msg) {
         super.handleMessage(msg);
-        switch (msg.what) {
-            case RECEIVE_MESSAGE:
-                handleReceiveMessage((Serializable) msg.obj);
-                break;
+        if (msg.what == RECEIVE_MESSAGE) {
+            handleReceiveMessage((Serializable) msg.obj);
         }
     }
 
     @Override
-    public boolean handleSocketWrite(OutputStream outputStream) throws IOException {
-        Object sendMsg = getSend();
-        if (sendMsg == null || outputStream == null) {
-            return false;
-        }
+    public boolean handleSocketWrite(DataOutputStream outputStream) throws IOException {
+        Serializable sendMsg = (Serializable) getSend();
+        if (sendMsg == null || outputStream == null) return false;
         if (DEBUG) Log.d(TAG, "sendMsg=" + sendMsg);
-        write(outputStream, (Serializable) sendMsg);
+        write(outputStream, sendMsg);
         return true;
     }
 
     @Override
-    public boolean handleSocketRead(int timeout, InputStream inputStream) throws IOException, ClassNotFoundException {
-        if (inputStream == null) {
-            return false;
-        }
-        Serializable receivedMsg = null;
-        receivedMsg = read(timeout, inputStream);
+    public boolean handleSocketRead(DataInputStream inputStream) throws IOException, ClassNotFoundException {
+        if (inputStream == null) return false;
+        Serializable receivedMsg = read(inputStream);
         if (DEBUG) Log.d(TAG, "receivedMsg=" + receivedMsg);
         sendReceiveMessage(receivedMsg);
         return true;

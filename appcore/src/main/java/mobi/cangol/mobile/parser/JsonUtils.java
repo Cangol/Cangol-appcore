@@ -24,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -43,7 +42,8 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class JsonUtils extends Converter {
-    private final static String TAG = "JsonUtils";
+    private static final  String TAG = "JsonUtils";
+    public static final String UTF_8 = "utf-8";
 
     private JsonUtils() {
     }
@@ -121,11 +121,7 @@ public class JsonUtils extends Converter {
                 }
 
             }
-        } catch (JSONException e) {
-            Log.d(TAG, e.getMessage());
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG, e.getMessage());
-        } catch (IllegalAccessException e) {
+        }  catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
         return json;
@@ -165,7 +161,7 @@ public class JsonUtils extends Converter {
      * @return
      * @throws JSONParserException
      */
-    public static <T> ArrayList<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+    public static <T> List<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
@@ -206,15 +202,13 @@ public class JsonUtils extends Converter {
     }
 
     private static String inputStreamTOString(InputStream in) throws Exception {
-        int BUFFER_SIZE = 4096;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[BUFFER_SIZE];
+        byte[] data = new byte[4096];
         int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
+        while ((count = in.read(data, 0, 4096)) != -1) {
             outStream.write(data, 0, count);
         }
-        data = null;
-        return new String(outStream.toByteArray(), "utf-8");
+        return new String(outStream.toByteArray(), UTF_8);
     }
 
     public static <T> T parserToObject(Class<T> c, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
@@ -223,10 +217,7 @@ public class JsonUtils extends Converter {
         }
         T t = null;
         try {
-            Map<String, Class> typeMap = new HashMap<String, Class>();
-            for (TypeVariable type : c.getTypeParameters()) {
-                //typeMap.put("T",type);
-            }
+            Map<String, Class> typeMap = new HashMap<>();
             Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
             t = (T) constructor.newInstance();
@@ -254,36 +245,24 @@ public class JsonUtils extends Converter {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
                         Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
                         List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
-                        try {
                             field.set(t, list);
-                        } catch (IllegalArgumentException e) {
-                            throw new JSONParserException(c, field, "", e);
-                        } catch (IllegalAccessException e) {
-                            throw new JSONParserException(c, field, "", e);
-                        }
                     } else {
                         Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
-        } catch (InstantiationException e) {
-            throw new JSONParserException(c, "must have zero-argument constructor", e);
-        } catch (IllegalAccessException e) {
-            throw new JSONParserException(c, "constructor is not accessible", e);
-        } catch (NoSuchMethodException e) {
-            throw new JSONParserException(c, "must have zero-argument constructor", e);
-        } catch (InvocationTargetException e) {
-            throw new JSONParserException(c, "must have zero-argument constructor", e);
+        }catch (Exception e) {
+            throw new JSONParserException(c, "constructor is not accessible,must have zero-argument constructor", e);
         }
         return t;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> ArrayList<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation) throws JSONParserException {
+    public static <T> List<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation) throws JSONParserException {
         if (jsonArray == null) {
-            return null;
+            return new ArrayList<>();
         }
-        ArrayList<T> list = new ArrayList<T>();
+        List<T> list = new ArrayList<>();
         T t = null;
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
