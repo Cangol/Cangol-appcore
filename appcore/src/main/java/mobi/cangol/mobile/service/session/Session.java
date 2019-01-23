@@ -29,21 +29,22 @@ import mobi.cangol.mobile.utils.StringUtils;
  * Created by xuewu.wei on 2018/5/2.
  */
 public class Session {
-    private final static String TAG = "session_";
-    private final static String JSON = ".json";
-    private final static String JSONA = ".jsona";
-    private final static String SER = ".ser";
+    private static final String TAG = "session_";
+    private static final String JSON = ".json";
+    private static final String JSONA = ".jsona";
+    private static final String SER = ".ser";
     private SharedPreferences mSharedPreferences = null;
     private Map<String, Object> mMap = new HashMap<>();
     private String mSessionDir;
     private String mName;
     private CoreApplication mCoreApplication;
+
     public Session(Context context, String name) {
-        mName=name;
-        mCoreApplication= (CoreApplication) context;
-        mSharedPreferences = context.getSharedPreferences("session_"+name, Context.MODE_MULTI_PROCESS);
+        mName = name;
+        mCoreApplication = (CoreApplication) context;
+        mSharedPreferences = context.getSharedPreferences("session_" + name, Context.MODE_MULTI_PROCESS);
         ConfigService configService = (ConfigService) mCoreApplication.getAppService(AppService.CONFIG_SERVICE);
-        mSessionDir =configService.getCacheDir().getAbsolutePath()+File.separator+ "session_"+name;
+        mSessionDir = configService.getCacheDir().getAbsolutePath() + File.separator + "session_" + name;
 
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         FileUtils.newFolder(mSessionDir);
@@ -166,7 +167,7 @@ public class Session {
         mCoreApplication.post(new Runnable() {
             @Override
             public void run() {
-                Log.e(TAG+mName,mSessionDir + File.separator + key + JSON);
+                Log.e(TAG + mName, mSessionDir + File.separator + key + JSON);
                 FileUtils.delete(mSessionDir + File.separator + key + JSON);
                 Object2FileUtils.writeJSONObject2File(value, mSessionDir + File.separator + key + JSON);
                 FileUtils.delete(mSessionDir + File.separator + key + JSONA);
@@ -188,7 +189,7 @@ public class Session {
         });
     }
 
-    public void saveSerializable(final String key,final Serializable value) {
+    public void saveSerializable(final String key, final Serializable value) {
         mMap.put(key, value);
         mCoreApplication.post(new Runnable() {
             @Override
@@ -286,9 +287,9 @@ public class Session {
     }
 
     private Map<String, Object> loadDiskMap() {
-        Log.d(TAG+mName,"scan cache file");
+        Log.d(TAG + mName, "scan cache file");
         List<File> files = FileUtils.searchBySuffix(new File(mSessionDir), null, JSON, JSONA, SER);
-        Log.d(TAG+mName,"cache file="+files);
+        Log.d(TAG + mName, "cache file=" + files);
         Map<String, Object> map = new ConcurrentHashMap<>();
         for (File file : files) {
             if (file.getName().endsWith(JSON)) {

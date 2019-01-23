@@ -76,8 +76,8 @@ public class FileUtils {
     public static boolean deleteFile(String fileName) {
         File file = new File(fileName);
         if (file.isFile() && file.exists()) {
-            if(file.delete())
-                Log.d(TAG, "delete single file  success!" + fileName );
+            if (file.delete())
+                Log.d(TAG, "delete single file  success!" + fileName);
             return true;
         } else {
             Log.d(TAG, "delete single file fail!" + fileName);
@@ -144,8 +144,8 @@ public class FileUtils {
      * @param newPath
      */
     public static void copyFile(String oldPath, String newPath) {
-        InputStream is=null;
-        FileOutputStream fos=null;
+        InputStream is = null;
+        FileOutputStream fos = null;
         try {
             int byteRead = 0;
             is = new FileInputStream(oldPath); // 读入原文件
@@ -156,15 +156,15 @@ public class FileUtils {
             }
         } catch (Exception e) {
             Log.d("copy file error!" + e.getMessage());
-        }finally {
-            if(is!=null){
+        } finally {
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
                     Log.e(e.getMessage());
                 }
             }
-            if(fos!=null){
+            if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
@@ -197,12 +197,12 @@ public class FileUtils {
      * @param fileContent String 文件内容
      */
     public static void newFile(String filePath, String fileContent) {
-        OutputStreamWriter outWrite =null;
-        PrintWriter myFile=null;
+        OutputStreamWriter outWrite = null;
+        PrintWriter myFile = null;
         try {
             File myFilePath = new File(filePath);
             if (!myFilePath.exists()) {
-                if(!myFilePath.createNewFile()){
+                if (!myFilePath.createNewFile()) {
                     Log.d(TAG, "newFile createNewFile fail" + filePath);
                 }
             }
@@ -212,15 +212,15 @@ public class FileUtils {
 
         } catch (Exception e) {
             Log.d(e.getMessage());
-        }finally {
-            if(outWrite!=null){
+        } finally {
+            if (outWrite != null) {
                 try {
                     outWrite.close();
                 } catch (IOException e) {
                     Log.e(e.getMessage());
                 }
             }
-            if(myFile!=null){
+            if (myFile != null) {
                 myFile.close();
             }
         }
@@ -235,7 +235,7 @@ public class FileUtils {
     public static void delFile(String filePath) {
         try {
             File file = new File(filePath);
-            if(file.delete()){
+            if (file.delete()) {
                 Log.d(TAG, "delete file" + filePath + " success!");
             }
         } catch (Exception e) {
@@ -300,8 +300,8 @@ public class FileUtils {
      * @param newPath String 复制后路径 如：f:/fqf/ff
      */
     public static void copyFolder(String oldPath, String newPath) {
-        FileInputStream input=null;
-        FileOutputStream output =null;
+        FileInputStream input = null;
+        FileOutputStream output = null;
         try {
             (new File(newPath)).mkdirs(); // 如果文件夹不存在 则建立新文件夹
             File a = new File(oldPath);
@@ -315,8 +315,8 @@ public class FileUtils {
                 }
 
                 if (temp.isFile()) {
-                     input = new FileInputStream(temp);
-                     output = new FileOutputStream(newPath+ "/ " + (temp.getName()));
+                    input = new FileInputStream(temp);
+                    output = new FileOutputStream(newPath + "/ " + (temp.getName()));
                     byte[] b = new byte[1024 * 5];
                     int len;
                     while ((len = input.read(b)) != -1) {
@@ -331,19 +331,19 @@ public class FileUtils {
             }
         } catch (Exception e) {
             Log.d(e.getMessage());
-        }finally {
-            if(input!=null){
+        } finally {
+            if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
                     Log.e(e.getMessage());
                 }
             }
-            if(output!=null){
+            if (output != null) {
                 try {
                     output.close();
                 } catch (IOException e) {
-                   Log.e(e.getMessage());
+                    Log.e(e.getMessage());
                 }
             }
         }
@@ -413,19 +413,19 @@ public class FileUtils {
      * @param content
      */
     public static void writeString(File file, String content) {
-        FileOutputStream os=null;
+        FileOutputStream os = null;
         try {
             os = new FileOutputStream(file);
             os.write(content.getBytes(UTF_8));
             os.flush();
         } catch (IOException e) {
             Log.d(e.getMessage());
-        }finally {
-            if(os!=null){
+        } finally {
+            if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
-                   Log.e(e.getMessage());
+                    Log.e(e.getMessage());
                 }
             }
         }
@@ -438,10 +438,10 @@ public class FileUtils {
      * @param objPath
      */
     public static void writeObject(Object obj, String objPath) {
-        FileOutputStream fos=null;
+        FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos=new FileOutputStream(new File(objPath));
+            fos = new FileOutputStream(new File(objPath));
             oos = new ObjectOutputStream(fos);
             oos.writeObject(obj);
         } catch (Exception e) {
@@ -476,10 +476,10 @@ public class FileUtils {
             return null;
         }
         Object object = null;
-        FileInputStream fos=null;
+        FileInputStream fos = null;
         ObjectInputStream ois = null;
         try {
-            fos=new FileInputStream(file);
+            fos = new FileInputStream(file);
             ois = new ObjectInputStream(fos);
             object = ois.readObject();
         } catch (Exception e) {
@@ -596,8 +596,10 @@ public class FileUtils {
         }
         return -1;
     }
+
     /**
      * 获取文件类型或后缀
+     *
      * @param filePath
      * @return
      */
@@ -612,6 +614,7 @@ public class FileUtils {
 
     /**
      * 获取mimeType
+     *
      * @param file
      * @return
      */
@@ -622,6 +625,7 @@ public class FileUtils {
 
     /**
      * 获取文件名
+     *
      * @param filePath
      * @return
      */
@@ -634,6 +638,7 @@ public class FileUtils {
             return fileName;
         }
     }
+
     /**
      * 获取文件夹中总文件大小
      *

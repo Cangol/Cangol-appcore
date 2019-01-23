@@ -23,7 +23,7 @@ import java.io.Serializable;
  * Created by xuewu.wei on 2016/3/14.
  */
 public class CacheObject implements Serializable {
-    public static final int TIME_SEC =  1000;
+    public static final int TIME_SEC = 1000;
     public static final int TIME_MIN = 60 * 1000;
     public static final int TIME_HOUR = 60 * 60 * 1000;
     public static final int TIME_DAY = 24 * 60 * 60 * 1000;
@@ -37,19 +37,21 @@ public class CacheObject implements Serializable {
 
     public CacheObject() {
     }
+
     public CacheObject(String group, String id, Serializable object) {
         this.group = group;
         this.id = id;
         this.object = object;
-        this.timestamp=System.currentTimeMillis();
-        this.period=-1;
+        this.timestamp = System.currentTimeMillis();
+        this.period = -1;
     }
+
     public CacheObject(String group, String id, Serializable object, long period) {
         this.group = group;
         this.id = id;
         this.object = object;
         this.period = period;
-        this.timestamp=System.currentTimeMillis();
+        this.timestamp = System.currentTimeMillis();
     }
 
     public String getId() {
@@ -92,10 +94,10 @@ public class CacheObject implements Serializable {
         this.object = object;
     }
 
-    public boolean isExpired(){
-        if(period==-1){
+    public boolean isExpired() {
+        if (period == -1) {
             return false;
-        }else return timestamp + period <= System.currentTimeMillis();
+        } else return timestamp + period <= System.currentTimeMillis();
     }
 
     @Override

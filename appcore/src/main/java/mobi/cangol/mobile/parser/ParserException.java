@@ -23,8 +23,8 @@ public class ParserException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
-    private  Field field=null;
-    private  Class<?> clazz =null;
+    private Field field = null;
+    private Class<?> clazz = null;
 
     public ParserException(String message) {
         super(message);

@@ -35,35 +35,36 @@ import mobi.cangol.mobile.logging.Log;
 public class DatabaseUtils {
     private DatabaseUtils() {
     }
+
     /**
      * 创建表索引
      *
      * @param db
      * @param clazz
      */
-    public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName,String... fieldNames) {
+    public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName, String... fieldNames) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             StringBuilder sql = new StringBuilder("CREATE INDEX ");
             sql.append(indexName).append(" on ").append(tableName).append('(');
-            Field field =null;
-            String columnName=null;
-            for (int i = 0; i <fieldNames.length ; i++) {
+            Field field = null;
+            String columnName = null;
+            for (int i = 0; i < fieldNames.length; i++) {
                 try {
-                    field=clazz.getDeclaredField(fieldNames[i]);
+                    field = clazz.getDeclaredField(fieldNames[i]);
                     field.setAccessible(true);
                     if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                         continue;
-                    }else  if (field.isAnnotationPresent(DatabaseField.class)) {
+                    } else if (field.isAnnotationPresent(DatabaseField.class)) {
                         DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                         columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                         sql.append(columnName);
-                        if(i <fieldNames.length-1)
+                        if (i < fieldNames.length - 1)
                             sql.append(',');
                     }
                 } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
+                    Log.e(e.getMessage());
                 }
             }
             sql.append(')');
@@ -72,6 +73,7 @@ public class DatabaseUtils {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
+
     /**
      * 创建表
      *
@@ -163,6 +165,7 @@ public class DatabaseUtils {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
+
     /**
      * 删除表
      *
@@ -170,7 +173,7 @@ public class DatabaseUtils {
      * @param table
      */
     public static void dropTable(SQLiteDatabase db, String table) {
-        if (table!=null&&!"".equals(table.trim())) {
+        if (table != null && !"".equals(table.trim())) {
             StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
             sql.append(table);
             db.execSQL(sql.toString());
@@ -185,43 +188,44 @@ public class DatabaseUtils {
      * @param db
      * @param clazz
      */
-    public static void addColumn(SQLiteDatabase db, Class<?> clazz,String... columns) {
+    public static void addColumn(SQLiteDatabase db, Class<?> clazz, String... columns) {
         Log.d("addColumn ");
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
 
-            Map<String,Field> map=getColumnNames(clazz);
-            for (int i = 0; i <columns.length ; i++) {
-                if(!TextUtils.isEmpty(columns[i])&&map.containsKey(columns[i])){
+            Map<String, Field> map = getColumnNames(clazz);
+            for (int i = 0; i < columns.length; i++) {
+                if (!TextUtils.isEmpty(columns[i]) && map.containsKey(columns[i])) {
                     StringBuilder sql = new StringBuilder("ALTER TABLE ").append(tableName).append(" ADD COLUMN ");
                     sql.append(columns[i]);
                     sql.append("　");
                     sql.append(getDbType(map.get(columns[i]).getType()));
                     sql.append(";");
                     db.execSQL(sql.toString());
-                    Log.d(""+sql.toString());
-                }else{
-                    throw new IllegalStateException("column "+columns[i] + " is exist!");
+                    Log.d("" + sql.toString());
+                } else {
+                    throw new IllegalStateException("column " + columns[i] + " is exist!");
                 }
             }
         } else {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
+
     /**
      * 获取所有要数据库化的列名
      *
      * @param clazz
      * @return
      */
-    public static Map<String,Field> getColumnNames(Class<?> clazz) {
-        Map<String,Field> map=new HashMap<>();
+    public static Map<String, Field> getColumnNames(Class<?> clazz) {
+        Map<String, Field> map = new HashMap<>();
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                map.put("".equals(dbField.value()) ? field.getName() : dbField.value(),field);
+                map.put("".equals(dbField.value()) ? field.getName() : dbField.value(), field);
             }
         }
         return map;
@@ -280,7 +284,7 @@ public class DatabaseUtils {
      */
     public static ContentValues getContentValues(Object object) throws IllegalAccessException {
         ContentValues v = new ContentValues();
-        String filedName =null;
+        String filedName = null;
         for (Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
@@ -296,28 +300,30 @@ public class DatabaseUtils {
 
     /**
      * 获取键值对象
+     *
      * @param object
      * @param columns
      * @return
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    public static ContentValues getContentValues(Object object, String[] columns)throws IllegalAccessException {
+    public static ContentValues getContentValues(Object object, String[] columns) throws IllegalAccessException {
         ContentValues v = new ContentValues();
-        String filedName =null;
-        Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
+        String filedName = null;
+        Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
         for (Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if (!dbField.primaryKey()&&(set.isEmpty()||set.contains(filedName))) {
+                if (!dbField.primaryKey() && (set.isEmpty() || set.contains(filedName))) {
                     v.put(filedName, String.valueOf(field.get(object)));
                 }
             }
         }
         return v;
     }
+
     /**
      * 查询记录的值，赋值给obj
      *
@@ -328,7 +334,7 @@ public class DatabaseUtils {
      */
     public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) {
         Field[] fields = obj.getClass().getDeclaredFields();
-        Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
+        Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
         String columnName = null;
         for (Field field : fields) {
             field.setAccessible(true);
@@ -338,12 +344,13 @@ public class DatabaseUtils {
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if(set.isEmpty()||set.contains(columnName))
+                if (set.isEmpty() || set.contains(columnName))
                     setFieldValue(obj, field, columnName, cursor);
             }
         }
         return obj;
     }
+
     /**
      * 查询记录的值，赋值给clazz的实例obj
      *
@@ -360,7 +367,7 @@ public class DatabaseUtils {
         Constructor constructor = clazz.getDeclaredConstructor();
         constructor.setAccessible(true);
         T obj = (T) constructor.newInstance();
-        return cursorToObject(obj, cursor,columns);
+        return cursorToObject(obj, cursor, columns);
     }
 
     /**

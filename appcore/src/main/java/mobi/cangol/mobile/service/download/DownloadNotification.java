@@ -35,7 +35,9 @@ public class DownloadNotification {
     private static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "101";
     private NotificationManager notificationManager;
     private int id;
-    private String titleText, successText, failureText;
+    private String titleText;
+    private String successText;
+    private String failureText;
     private String savePath;
     private Context context;
     private Intent finishIntent;
@@ -67,7 +69,7 @@ public class DownloadNotification {
 
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if(notificationManager.getNotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID)==null){
+            if (notificationManager.getNotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID) == null) {
                 NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_1_name), NotificationManager.IMPORTANCE_LOW);
                 channel.setDescription(context.getString(R.string.notification_channel_1_desc));
                 channel.enableLights(false);

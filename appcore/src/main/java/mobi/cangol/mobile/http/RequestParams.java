@@ -123,7 +123,7 @@ public class RequestParams {
     }
 
     private void init() {
-        urlParams = new ConcurrentHashMap<String, String>();
-        fileParams = new ConcurrentHashMap<String, File>();
+        urlParams = new ConcurrentHashMap<>();
+        fileParams = new ConcurrentHashMap<>();
     }
 }

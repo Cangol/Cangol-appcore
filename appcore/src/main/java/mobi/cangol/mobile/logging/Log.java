@@ -22,7 +22,9 @@ import java.lang.reflect.Modifier;
  * @author Cangol
  */
 public class Log {
-    private Log(){}
+    private Log() {
+    }
+
     private static int level = android.util.Log.VERBOSE;
 
     private static boolean format = false;

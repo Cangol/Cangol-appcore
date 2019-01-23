@@ -41,7 +41,7 @@ public class UpdateBuilder {
         paraKey = new ArrayList<>();
         paraValue = new ArrayList<>();
         condList = new ArrayList<>();
-        contentValues=new ContentValues();
+        contentValues = new ContentValues();
     }
 
     /**

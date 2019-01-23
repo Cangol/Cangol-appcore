@@ -31,11 +31,12 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 
 public class RSAUtils {
-    private final static String CHARSET = "utf-8";
+    private static final String CHARSET = "utf-8";
 
     private RSAUtils() {
     }
@@ -45,8 +46,8 @@ public class RSAUtils {
      *
      * @throws NoSuchAlgorithmException
      */
-    public static HashMap<String, Object> getKeys() throws NoSuchAlgorithmException {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+    public static Map<String, Object> getKeys() throws NoSuchAlgorithmException {
+        Map<String, Object> map = new HashMap<>();
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(1024);
         KeyPair keyPair = keyPairGen.generateKeyPair();
@@ -112,15 +113,15 @@ public class RSAUtils {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         // 模长   
-        int key_len = publicKey.getModulus().bitLength() / 8;
+        int keyLen = publicKey.getModulus().bitLength() / 8;
         // 加密数据长度 <= 模长-11   
-        String[] datas = splitString(data, key_len - 11);
-        String mi = "";
+        String[] datas = splitString(data, keyLen - 11);
+        StringBuilder mi = new StringBuilder();
         //如果明文长度大于模长-11则要分组加密   
         for (String s : datas) {
-            mi += bcd2Str(cipher.doFinal(s.getBytes(CHARSET)));
+            mi.append(bcd2Str(cipher.doFinal(s.getBytes(CHARSET))));
         }
-        return mi;
+        return mi.toString();
     }
 
     /**
@@ -136,27 +137,27 @@ public class RSAUtils {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         //模长   
-        int key_len = privateKey.getModulus().bitLength() / 8;
+        int keyLen = privateKey.getModulus().bitLength() / 8;
         byte[] bytes = data.getBytes(CHARSET);
         byte[] bcd = asciiToBcd(bytes, bytes.length);
         //如果密文长度大于模长则要分组解密
-        String ming = "";
-        byte[][] arrays = splitArray(bcd, key_len);
+        StringBuilder ming = new StringBuilder();
+        byte[][] arrays = splitArray(bcd, keyLen);
         for (byte[] arr : arrays) {
-            ming += new String(cipher.doFinal(arr), CHARSET);
+            ming.append(new String(cipher.doFinal(arr), CHARSET));
         }
-        return ming;
+        return ming.toString();
     }
 
     /**
      * ASCII码转BCD码
      */
-    protected static byte[] asciiToBcd(byte[] ascii, int asc_len) {
-        byte[] bcd = new byte[asc_len / 2];
+    protected static byte[] asciiToBcd(byte[] ascii, int ascLen) {
+        byte[] bcd = new byte[ascLen / 2];
         int j = 0;
-        for (int i = 0; i < (asc_len + 1) / 2; i++) {
+        for (int i = 0; i < (ascLen + 1) / 2; i++) {
             bcd[i] = ascToBcd(ascii[j++]);
-            bcd[i] = (byte) (((j >= asc_len) ? 0x00 : ascToBcd(ascii[j++])) + (bcd[i] << 4));
+            bcd[i] = (byte) (((j >= ascLen) ? 0x00 : ascToBcd(ascii[j++])) + (bcd[i] << 4));
         }
         return bcd;
     }
@@ -181,7 +182,8 @@ public class RSAUtils {
      * BCD转字符串
      */
     protected static String bcd2Str(byte[] bytes) {
-        char temp[] = new char[bytes.length * 2], val;
+        char temp[] = new char[bytes.length * 2];
+        char val;
 
         for (int i = 0; i < bytes.length; i++) {
             val = (char) (((bytes[i] & 0xf0) >> 4) & 0x0f);

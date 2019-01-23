@@ -169,14 +169,14 @@ public class QueryBuilder {
 
     protected String getWhere() {
         StringBuilder sql = new StringBuilder();
-        String str=null;
+        String str = null;
         if (paraKey != null) {
             for (int i = 0; i < paraKey.size(); i++) {
                 if (i > 0) {
                     sql.append(condList.get(i));
                 }
-                str=paraKey.get(i);
-                sql.append(str.replace("?",String.valueOf(paraValue.get(i))));
+                str = paraKey.get(i);
+                sql.append(str.replace("?", String.valueOf(paraValue.get(i))));
             }
             return sql.toString();
         } else {

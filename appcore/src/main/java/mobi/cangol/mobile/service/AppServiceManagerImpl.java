@@ -22,20 +22,21 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.Task;
@@ -43,13 +44,13 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.utils.ClassUtils;
 
 public class AppServiceManagerImpl extends AppServiceManager {
-    private final static String TAG = "AppServiceManager";
-    public  CoreApplication mContext;
-    private Map<String, AppService> mRunServiceMap = new Hashtable<String, AppService>();
-    private Map<String, Class<? extends AppService>> mServiceMap = new Hashtable<String, Class<? extends AppService>>();
+    private static final String TAG = "AppServiceManager";
+    private CoreApplication mContext;
+    private Map<String, AppService> mRunServiceMap = new HashMap<>();
+    private Map<String, Class<? extends AppService>> mServiceMap = new HashMap<>();
     private boolean mUseAnnotation = true;
-    private Map<String, ServiceProperty> mProperties = new HashMap<String, ServiceProperty>();
-    private boolean debug = false;
+    private Map<String, ServiceProperty> mProperties = new HashMap<>();
+    private boolean mDebug = false;
 
     public AppServiceManagerImpl(CoreApplication context) {
         this.mContext = context;
@@ -66,27 +67,25 @@ public class AppServiceManagerImpl extends AppServiceManager {
          classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, mContext.getPackageName()));
          //2.2-2.3 版本 Process terminated by signal (11) 堆栈溢出
          }else**/
-        {
-            classList = new ArrayList<>();
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.cache.CacheManagerImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.conf.ConfigServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.crash.CrashServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.download.DownloadManagerImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.location.LocationServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.session.SessionServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.status.StatusServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.event.ObserverManagerImpl"));
-            classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.route.RouteServiceImpl"));
-        }
+
+        classList = new ArrayList<>();
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.analytics.AnalyticsServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.cache.CacheManagerImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.conf.ConfigServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.crash.CrashServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.download.DownloadManagerImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.location.LocationServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.session.SessionServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.status.StatusServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.upgrade.UpgradeServiceImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.event.ObserverManagerImpl"));
+        classList.add(ClassUtils.loadClass(mContext, "mobi.cangol.mobile.service.route.RouteServiceImpl"));
+
         Log.d(TAG, "classList size=" + classList.size());
         for (int i = 0; i < classList.size(); i++) {
             Log.d(TAG, "classname=" + classList.get(i).getSimpleName());
         }
-        //System.gc();
         initServiceMap(classList);
-        //initServiceProperties();
     }
 
     private void initServiceMap(List<Class<? extends AppService>> classList) {
@@ -96,8 +95,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setmDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -113,20 +112,12 @@ public class AppServiceManagerImpl extends AppServiceManager {
                     appService = c.newInstance();
                     appService.onCreate(mContext);
                     appService.init(mProperties.get(name) != null ? mProperties.get(name) : appService.defaultServiceProperty());
-                    appService.setDebug(debug);
+                    appService.setDebug(mDebug);
                     mRunServiceMap.put(name, appService);
                 } else {
                     throw new IllegalStateException("hasn't appService'name is " + name);
                 }
-            } catch (InstantiationException e) {
-                Log.d(e.getMessage());
-            } catch (IllegalAccessException e) {
-                Log.d(e.getMessage());
-            } catch (NoSuchMethodException e) {
-                Log.d(e.getMessage());
-            } catch (IllegalArgumentException e) {
-                Log.d(e.getMessage());
-            } catch (InvocationTargetException e) {
+            } catch (Exception e) {
                 Log.d(e.getMessage());
             }
         }
@@ -149,15 +140,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
                 String name = (String) method.invoke(t);
                 mServiceMap.put(name, clazz);
             }
-        } catch (NoSuchMethodException e) {
-            Log.d(e.getMessage());
-        } catch (InstantiationException e) {
-            Log.d(e.getMessage());
-        } catch (IllegalAccessException e) {
-            Log.d(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            Log.d(e.getMessage());
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         }
     }
@@ -167,6 +150,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
      * @param serviceProperty
      * @deprecated
      */
+    @Deprecated
     private void init(AppService appService, ServiceProperty serviceProperty) {
         Field filed = null;
         try {
@@ -186,11 +170,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
                 filed.setAccessible(true);
                 filed.set(appService, serviceProperty);
             }
-        } catch (NoSuchFieldException e) {
-            Log.d(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            Log.d(e.getMessage());
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         }
     }
@@ -233,8 +213,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
             mContext.post(new Task<List<Class<? extends AppService>>>() {
 
                 @Override
-                public List<Class<? extends AppService>> call(){
-                    List<Class<? extends AppService>> classList = new ArrayList<Class<? extends AppService>>();
+                public List<Class<? extends AppService>> call() {
+                    List<Class<? extends AppService>> classList = new ArrayList<>();
                     for (String name : packageName) {
                         classList.addAll(ClassUtils.getAllClassByInterface(AppService.class, mContext, name));
                     }
@@ -249,6 +229,9 @@ public class AppServiceManagerImpl extends AppServiceManager {
         }
     }
 
+    /**
+     *  @deprecated
+     */
     @Deprecated
     public void initServiceProperties() {
         if (Build.VERSION.SDK_INT >= 9) {
@@ -273,7 +256,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
         }
     }
 
-    private void parser(InputStream is) throws Exception {
+    private void parser(InputStream is) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(is);

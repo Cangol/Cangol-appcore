@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
+import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.security.AESUtils;
@@ -164,7 +165,7 @@ public class SecurityFragment extends Fragment {
         }
     }
     static{
-        HashMap<String, Object> map = null;
+        Map<String, Object> map = null;
         try {
             map = RSAUtils.getKeys();
         } catch (NoSuchAlgorithmException e) {

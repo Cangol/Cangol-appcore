@@ -8,8 +8,6 @@ import android.util.SparseArray;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import mobi.cangol.mobile.logging.Log;
-
 /**
  * Created by xuewu.wei on 2018/10/16.
  */
@@ -181,7 +179,7 @@ public class RouteBuilder {
         return this;
     }
 
-    public RouteBuilder putIntegerArrayList(String key, ArrayList<Integer>  value) {
+    public RouteBuilder putIntegerArrayList(String key, ArrayList<Integer> value) {
         this.bundle.putIntegerArrayList(key, value);
         return this;
     }

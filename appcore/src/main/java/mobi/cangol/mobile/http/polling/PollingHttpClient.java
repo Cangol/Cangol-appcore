@@ -19,7 +19,6 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.service.PoolManager;
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -38,13 +36,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class PollingHttpClient {
-    public final static boolean DEBUG = true;
-    public final static String TAG = "PollingHttpClient";
-    private final static int DEFAULT_RETRYTIMES = 10;
-    private final static int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_MAX = 3;
+    public static final  String TAG = "PollingHttpClient";
+    private static final  int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
+    private static final  int DEFAULT_READ_TIMEOUT = 30 * 1000;
+    private static final  int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
+    private static final  int DEFAULT_MAX = 3;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
     private OkHttpClient httpClient;
     private PoolManager.Pool threadPool;
@@ -62,12 +58,13 @@ public class PollingHttpClient {
                 .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                 .build();
         threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
-        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        requestMap = new WeakHashMap<>();
     }
+
     public static PollingHttpClient build(String group) {
-        PollingHttpClient asyncHttpClient = new PollingHttpClient(group);
-        return asyncHttpClient;
+        return new PollingHttpClient(group);
     }
+
     /**
      * 发送轮询请求(get请求)
      *
@@ -78,7 +75,7 @@ public class PollingHttpClient {
      * @param retryTimes
      * @param sleeptimes
      */
-    public void send(Object tag, String url, HashMap<String, String> params, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
+    public void send(Object tag, String url, Map<String, String> params, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
 
         Request request = null;
         if (params != null) {
@@ -102,10 +99,10 @@ public class PollingHttpClient {
 
     public void send(Object tag, String url, RequestBody requestBody, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
         Request request = new Request.Builder()
-                    .tag(tag)
-                    .url(url)
-                    .post(requestBody)
-                    .build();
+                .tag(tag)
+                .url(url)
+                .post(requestBody)
+                .build();
         sendRequest(httpClient, request, responseHandler, tag, retryTimes, sleeptimes);
     }
 
@@ -116,7 +113,7 @@ public class PollingHttpClient {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
             if (requestList == null) {
-                requestList = new LinkedList<WeakReference<Future<?>>>();
+                requestList = new LinkedList<>();
                 requestMap.put(context, requestList);
             }
             requestList.add(new WeakReference<Future<?>>(request));
@@ -152,11 +149,13 @@ public class PollingHttpClient {
             }
         }
     }
-    public  void shutdown() {
+
+    public void shutdown() {
         threadPool.getExecutorService().shutdownNow();
         PoolManager.clear();
 
     }
+
     class HttpRequestTask implements Runnable {
         private final PollingResponseHandler responseHandler;
         private OkHttpClient client;
@@ -206,7 +205,6 @@ public class PollingHttpClient {
                         if (exec >= retryTimes) {
                             break;
                         }
-                        continue;
                     } catch (InterruptedException e) {
                         isInterrupted = true;
                         break;

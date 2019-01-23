@@ -108,7 +108,7 @@ public class ClassUtils {
             for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
                 str = iter.nextElement();
                 if ((packageName != null && str.startsWith(packageName))
-                        ||(packageName == null || "".equals(packageName))) {
+                        || (packageName == null || "".equals(packageName))) {
                     classList.add(str);
                 }
             }
@@ -129,13 +129,13 @@ public class ClassUtils {
         List<Class<?>> classList = new ArrayList<>();
         try {
             DexFile df = new DexFile(context.getPackageCodePath());
-            Class<?> clazz ;
+            Class<?> clazz;
             String str;
             for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
                 str = iter.nextElement();
                 if ((packageName != null && str.startsWith(packageName))
-                        ||(packageName == null || "".equals(packageName))) {
-                    clazz =  context.getClassLoader().loadClass(str);
+                        || (packageName == null || "".equals(packageName))) {
+                    clazz = context.getClassLoader().loadClass(str);
                     classList.add(clazz);
                 }
             }

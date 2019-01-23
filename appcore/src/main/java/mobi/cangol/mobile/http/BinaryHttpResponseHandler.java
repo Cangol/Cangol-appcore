@@ -61,6 +61,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
      * @param binaryData the body of the HTTP response from the server
      */
     public void onSuccess(byte[] binaryData) {
+        //do nothings
     }
 
     /**
@@ -78,7 +79,6 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
      *
      * @param error      the underlying cause of the failure
      * @param binaryData the response body, if any
-     * @deprecated
      */
     public void onFailure(Throwable error, byte[] binaryData) {
         // By default, call the deprecated onFailure(Throwable) for compatibility
@@ -105,7 +105,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     protected void handleFailureMessage(Throwable e, byte[] responseBody) {
         onFailure(e, responseBody);
     }
-
+    @Override
     protected void handleFailureMessage(Throwable e, String responseBody) {
         byte[] response = null;
         if (responseBody != null) {
@@ -141,6 +141,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
         }
     }
 
+    @Override
     void sendResponseMessage(Response response) {
         Log.d(">>", "sendResponseMessage=");
         ResponseBody responseBody = response.body();

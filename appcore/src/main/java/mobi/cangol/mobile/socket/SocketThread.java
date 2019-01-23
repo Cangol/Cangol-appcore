@@ -36,7 +36,7 @@ import mobi.cangol.mobile.logging.Log;
  * 参考 http://www.cnblogs.com/jerrychoi/archive/2010/04/15/1712931.html
  */
 public class SocketThread extends Thread {
-    private static  final String TAG = "SocketThread";
+    private static final String TAG = "SocketThread";
     private static final int BUFFER_SIZE = 8192;
     private static final int WRITE_DELAY_TIME = 1;
     private static final int LINGER_TIME = 5;//阻塞时间 单位秒
@@ -67,7 +67,7 @@ public class SocketThread extends Thread {
         this.setPriority(Thread.MAX_PRIORITY); // 10
     }
 
-    private void makeRequest() throws  IOException {
+    private void makeRequest() throws IOException {
         Log.d(TAG, "socket connect executionCount=" + executionCount);
         if (!Thread.currentThread().isInterrupted()) {
             socket = new Socket();
@@ -155,7 +155,7 @@ public class SocketThread extends Thread {
                 retry = retryHandler.retryRequest(e, ++executionCount, socket);
             }
         }
-        throw  new Exception("Retry count exceeded, exception " + cause, cause);
+        throw new Exception("Retry count exceeded, exception " + cause, cause);
     }
 
 

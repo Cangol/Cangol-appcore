@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XmlUtils extends Converter {
-    private static final  String TAG = "XmlUtils";
+    private static final String TAG = "XmlUtils";
     public static final String UTF_8 = "UTF-8";
 
     private XmlUtils() {
@@ -59,7 +59,7 @@ public class XmlUtils extends Converter {
             serializer.endDocument();
             baos.close();
             result = baos.toString(UTF_8);
-        }catch (IOException e) {
+        } catch (IOException e) {
             Log.d(TAG, e.getMessage());
         }
         return result;

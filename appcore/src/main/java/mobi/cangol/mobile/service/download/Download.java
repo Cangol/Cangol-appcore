@@ -16,7 +16,9 @@
 package mobi.cangol.mobile.service.download;
 
 public class Download {
-    private Download(){}
+    private Download() {
+    }
+
     //下载文件后缀
     public static final String SUFFIX_SOURCE = ".tmp";
     //配置文件后缀
@@ -45,11 +47,10 @@ public class Download {
 
     public static final int ACTION_DOWNLOAD_DELETE = 5;
 
-    //public static final int ACTION_DOWNLOAD_UPDATEFILE = 6;
-
+    /**public static final int ACTION_DOWNLOAD_UPDATEFILE = 6;**/
     public static final int ACTION_DOWNLOAD_STOP = 7;
 
-    //public static final int ACTION_DOWNLOAD_INSTALL = 8;
+    /**public static final int ACTION_DOWNLOAD_INSTALL = 8;**/
 
     public static final int ACTION_DOWNLOAD_CONTINUE = 9;
 

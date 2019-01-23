@@ -94,7 +94,7 @@ public class DataCleanManager {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {
                 if (!item.isDirectory()) {
-                    boolean result=item.delete();
+                    boolean result = item.delete();
                     Log.d("delete " + item.getAbsoluteFile() + ",result=" + result);
                 } else {
                     deleteFilesByDirectory(item);

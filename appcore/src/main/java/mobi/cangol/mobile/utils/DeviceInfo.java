@@ -169,6 +169,7 @@ public final class DeviceInfo {
         }
         return result;
     }
+
     /**
      * 获取设备mem 未使用大小 单位B
      *
@@ -202,9 +203,9 @@ public final class DeviceInfo {
             Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String data = null;
-            StringBuilder sb=new StringBuilder();
-            while((data = bufferedReader.readLine())!=null){
-                sb.append("\n"+data);
+            StringBuilder sb = new StringBuilder();
+            while ((data = bufferedReader.readLine()) != null) {
+                sb.append("\n" + data);
             }
             bufferedReader.close();
             result = sb.toString();
@@ -265,7 +266,7 @@ public final class DeviceInfo {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             wm.getDefaultDisplay().getRealMetrics(dm);
-        }else{
+        } else {
             wm.getDefaultDisplay().getMetrics(dm);
         }
         return dm.widthPixels + "x" + dm.heightPixels;
@@ -273,6 +274,7 @@ public final class DeviceInfo {
 
     /**
      * 获取状态栏高度
+     *
      * @param context
      * @return
      */
@@ -283,13 +285,15 @@ public final class DeviceInfo {
         else
             return (int) Math.ceil((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 24 : 25) * context.getResources().getDisplayMetrics().density);
     }
+
     /**
      * 获取导航栏高度
+     *
      * @param context
      * @return
      */
     public static int getNavigationBarHeight(Context context) {
-        int resourceId =context.getResources().getIdentifier("navigation_bar_height", "dimen", ANDROID);
+        int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", ANDROID);
         if (resourceId > 0) {
             return context.getResources().getDimensionPixelSize(resourceId);
         }
@@ -376,13 +380,13 @@ public final class DeviceInfo {
      * @return
      */
     public static String getNetworkOperatorName(Context context) {
-        String provider="";
+        String provider = "";
         try {
             TelephonyManager manager = (TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
-            provider=manager.getNetworkOperatorName();
+            provider = manager.getNetworkOperatorName();
         } catch (Exception e) {
-            Log.e("getNetworkOperatorName", ""+e.getMessage(),e);
+            Log.e("getNetworkOperatorName", "" + e.getMessage(), e);
         }
         return provider;
     }
@@ -391,43 +395,43 @@ public final class DeviceInfo {
     public static final int NETWORK_TYPE_WIFI = -101;
 
     public static int getNetworkType(Context context) {
-        int networkType=TelephonyManager.NETWORK_TYPE_UNKNOWN;
+        int networkType = TelephonyManager.NETWORK_TYPE_UNKNOWN;
         try {
-            final NetworkInfo network = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE))
+            final NetworkInfo network = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getActiveNetworkInfo();
             if (network != null && network.isAvailable() && network.isConnected()) {
                 int type = network.getType();
                 if (type == ConnectivityManager.TYPE_WIFI) {
                     networkType = NETWORK_TYPE_WIFI;
                 } else if (type == ConnectivityManager.TYPE_MOBILE) {
-                    TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+                    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                     networkType = telephonyManager.getNetworkType();
                 }
-            }else{
+            } else {
                 networkType = NETWORK_TYPE_UNAVAILABLE;
             }
-        }catch (Exception e) {
-            Log.e("getNetworkType", ""+e.getMessage(),e);
+        } catch (Exception e) {
+            Log.e("getNetworkType", "" + e.getMessage(), e);
         }
 
         return networkType;
     }
 
     public static String getNetworkTypeName(Context context) {
-        String typeName=null;
-        int networkType=getNetworkType(context);
-        if(networkType==NETWORK_TYPE_WIFI){
-            typeName= "WIFI";
-        }else if(networkType==NETWORK_TYPE_UNAVAILABLE){
-            typeName= "UNAVAILABLE";
-        }else{
-            TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String typeName = null;
+        int networkType = getNetworkType(context);
+        if (networkType == NETWORK_TYPE_WIFI) {
+            typeName = "WIFI";
+        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
+            typeName = "UNAVAILABLE";
+        } else {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             try {
-                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName",Integer.class);
+                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName", Integer.class);
                 method.setAccessible(true);
-                typeName= (String) method.invoke(telephonyManager,networkType);
+                typeName = (String) method.invoke(telephonyManager, networkType);
             } catch (Exception e) {
-                Log.e("getNetworkTypeName", ""+e.getMessage(),e);
+                Log.e("getNetworkTypeName", "" + e.getMessage(), e);
             }
         }
         return typeName;
@@ -437,21 +441,21 @@ public final class DeviceInfo {
     private static final int NETWORK_CLASS_UNAVAILABLE = -1;
 
     public static int getNetworkClass(Context context) {
-        int networkClass=0;
-        int networkType=getNetworkType(context);
-        if(networkType==NETWORK_TYPE_WIFI){
-            networkClass=NETWORK_CLASS_WIFI;
-        }else if(networkType==NETWORK_TYPE_UNAVAILABLE){
-            networkClass=NETWORK_CLASS_UNAVAILABLE;
-        }else{
-            TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        int networkClass = 0;
+        int networkType = getNetworkType(context);
+        if (networkType == NETWORK_TYPE_WIFI) {
+            networkClass = NETWORK_CLASS_WIFI;
+        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
+            networkClass = NETWORK_CLASS_UNAVAILABLE;
+        } else {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             try {
-                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass",Integer.class);
+                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass", Integer.class);
                 method.setAccessible(true);
-                Integer classInteger= (Integer) method.invoke(telephonyManager,networkType);
-                networkClass=classInteger.intValue();
+                Integer classInteger = (Integer) method.invoke(telephonyManager, networkType);
+                networkClass = classInteger.intValue();
             } catch (Exception e) {
-                Log.e("getNetworkClass", ""+e.getMessage(),e);
+                Log.e("getNetworkClass", "" + e.getMessage(), e);
             }
         }
         return networkClass;
@@ -479,8 +483,8 @@ public final class DeviceInfo {
             case 0://TelephonyManager.NETWORK_CLASS_UNKNOWN:
                 type = UNKNOWN;
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
         return type;
     }
@@ -488,13 +492,13 @@ public final class DeviceInfo {
     public static int getWifiRssi(Context context) {
         int asu = 85;
         try {
-            final NetworkInfo network = ((ConnectivityManager)context
+            final NetworkInfo network = ((ConnectivityManager) context
                     .getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getActiveNetworkInfo();
-            if (network != null && network.isAvailable()&& network.isConnected()) {
+            if (network != null && network.isAvailable() && network.isConnected()) {
                 int type = network.getType();
                 if (type == ConnectivityManager.TYPE_WIFI) {
-                    WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+                    WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
                     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo != null) {
@@ -503,7 +507,7 @@ public final class DeviceInfo {
                 }
             }
         } catch (Exception e) {
-            Log.e("getWifiRssi", ""+e.getMessage(),e);
+            Log.e("getWifiRssi", "" + e.getMessage(), e);
         }
         return asu;
     }
@@ -638,7 +642,7 @@ public final class DeviceInfo {
 
                     StringBuilder res1 = new StringBuilder();
                     for (byte b : macBytes) {
-                        res1.append(String.format("%02X:",b));
+                        res1.append(String.format("%02X:", b));
                     }
 
                     if (res1.length() > 0) {
@@ -650,9 +654,9 @@ public final class DeviceInfo {
                 Log.e(e.getMessage());
             }
             return "02:00:00:00:00:00";
-        }else{
+        } else {
             WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            return  manager.getConnectionInfo().getMacAddress();
+            return manager.getConnectionInfo().getMacAddress();
         }
     }
 
@@ -768,23 +772,23 @@ public final class DeviceInfo {
         WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = manager.getConnectionInfo();
         String macAddress = wifiInfo.getMacAddress();
-        Log.i("macAddress did:"+macAddress);
-        if (null != macAddress&&!SPECIAL_MAC.equals(macAddress)) {
+        Log.i("macAddress did:" + macAddress);
+        if (null != macAddress && !SPECIAL_MAC.equals(macAddress)) {
             did = macAddress.replace(".", "").replace(":", "")
                     .replace("-", "").replace("_", "");
-            Log.i("macAddress did:"+did);
+            Log.i("macAddress did:" + did);
         } else {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            String imei=null;
+            String imei = null;
             try {
                 imei = tm.getDeviceId();
-            }catch (SecurityException e){
+            } catch (SecurityException e) {
                 //
             }
             // no sim: sdk|any pad
             if (null != imei && !SPECIAL_IMEI.equals(imei)) {
                 did = imei;
-                Log.i("imei did:"+did);
+                Log.i("imei did:" + did);
             } else {
                 String deviceId = Secure.getString(context.getContentResolver(),
                         Secure.ANDROID_ID);
@@ -792,7 +796,7 @@ public final class DeviceInfo {
                 if (null != deviceId
                         && !SPECIAL_ANDROID_ID.equals(deviceId)) {
                     did = deviceId;
-                    Log.i("ANDROID_ID did:"+did);
+                    Log.i("ANDROID_ID did:" + did);
                 } else {
                     SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
                     String uid = sp.getString("uid", null);
@@ -801,7 +805,7 @@ public final class DeviceInfo {
                         uid = UUID.randomUUID().toString().replace("-", "");
                         editor.putString("uid", uid);
                         editor.commit();
-                        Log.i("uid did:"+did);
+                        Log.i("uid did:" + did);
                     }
 
                     did = uid;
@@ -810,6 +814,7 @@ public final class DeviceInfo {
         }
         return did;
     }
+
     /**
      * 判读WIFI网络是否连接
      *
@@ -985,6 +990,7 @@ public final class DeviceInfo {
 
     /**
      * 判断设备 是否使用代理上网
+     *
      * @param context
      * @return
      */
@@ -1002,6 +1008,7 @@ public final class DeviceInfo {
         }
         return (!TextUtils.isEmpty(proxyAddress)) && (proxyPort != -1);
     }
+
     /**
      * 是否是app当前进程
      *
@@ -1011,11 +1018,13 @@ public final class DeviceInfo {
     public static boolean isAppProcess(Context context) {
         return context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext()));
     }
+
     /**
      * 检测是否具有底部导航栏
+     *
      * @return
      */
-    public  static boolean checkDeviceHasNavigationBar(Context context) {
+    public static boolean checkDeviceHasNavigationBar(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = windowManager.getDefaultDisplay();
@@ -1045,7 +1054,7 @@ public final class DeviceInfo {
                     hasNavigationBar = true;
                 }
             } catch (Exception e) {
-               Log.d(e.getMessage());
+                Log.d(e.getMessage());
             }
             return hasNavigationBar;
         }

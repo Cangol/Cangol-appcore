@@ -23,6 +23,7 @@ import android.os.StrictMode;
 
 import java.io.File;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
@@ -32,7 +33,7 @@ import mobi.cangol.mobile.utils.StorageUtils;
  * @author Cangol
  */
 class ConfigServiceImpl implements ConfigService {
-    private final static String TAG = "ConfigService";
+    private static final String TAG = "ConfigService";
     private Application mContext = null;
     private ServiceProperty mServiceProperty = null;
     private boolean mDebug = false;
@@ -47,8 +48,8 @@ class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        mDebug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -80,7 +81,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void onDestroy() {
-
+        //do nothings
     }
 
     @Override
@@ -102,21 +103,20 @@ class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
-    public boolean setCustomAppDir(String path) {
+    public void setCustomAppDir(String path) {
+        if(mDebug) Log.d(TAG,"setCustomAppDir "+path);
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = new File(path);
         if (file.exists()) {
             StrictMode.setThreadPolicy(oldPolicy);
             mAppDir = file;
             mIsCustomAppDir = true;
-            return true;
         } else {
             boolean mkdirs = file.mkdirs();
             StrictMode.setThreadPolicy(oldPolicy);
             if (mkdirs) {
                 mAppDir = file;
                 mIsCustomAppDir = true;
-                return true;
             } else {
                 throw new IllegalArgumentException("mkdirs fail. path=" + path);
             }

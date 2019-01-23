@@ -39,7 +39,7 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class Object2FileUtils {
-    private static final  String CHARSET = "UTF-8";
+    private static final String CHARSET = "UTF-8";
 
     private Object2FileUtils() {
     }
@@ -139,7 +139,7 @@ public class Object2FileUtils {
             byte[] buffer = jsonObject.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             if (os != null) {
@@ -223,10 +223,10 @@ public class Object2FileUtils {
      * @param out
      */
     public static void writeObject(Serializable obj, OutputStream out) {
-        BufferedOutputStream bos=null;
+        BufferedOutputStream bos = null;
         ObjectOutputStream oos = null;
         try {
-            bos=new BufferedOutputStream(out);
+            bos = new BufferedOutputStream(out);
             oos = new ObjectOutputStream(bos);
             oos.writeObject(obj);
         } catch (Exception e) {
@@ -260,7 +260,7 @@ public class Object2FileUtils {
         Object object = null;
         try {
             object = new ObjectInputStream(new BufferedInputStream(is)).readObject();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         }
         return (Serializable) object;

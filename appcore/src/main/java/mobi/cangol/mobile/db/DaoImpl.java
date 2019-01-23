@@ -35,6 +35,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
     private String mTableName;
     private Class<T> mClazz;
     private boolean mShowSql;
+
     public DaoImpl(CoreSQLiteOpenHelper databaseHelper, Class<T> clazz) {
         this.mDatabaseHelper = databaseHelper;
         this.mClazz = clazz;
@@ -48,7 +49,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public void showSql(boolean showSql) throws SQLException {
-        mShowSql=showSql;
+        mShowSql = showSql;
     }
 
     @Override
@@ -61,7 +62,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
             result = db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT));
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         } finally {
             db.endTransaction();
         }
@@ -81,7 +82,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         } finally {
             db.endTransaction();
         }
@@ -89,9 +90,9 @@ class DaoImpl<T, I> implements Dao<T, I> {
         return (int) result;
     }
 
-    private Cursor query(SQLiteDatabase db, QueryBuilder queryBuilder,String... columns) {
-        if(mShowSql){
-            Log.d(mTableName,SQLiteQueryBuilder.buildQueryString(queryBuilder.isDistinctValue(),
+    private Cursor query(SQLiteDatabase db, QueryBuilder queryBuilder, String... columns) {
+        if (mShowSql) {
+            Log.d(mTableName, SQLiteQueryBuilder.buildQueryString(queryBuilder.isDistinctValue(),
                     queryBuilder.getTable(),
                     columns,
                     queryBuilder.getWhere(),
@@ -111,25 +112,27 @@ class DaoImpl<T, I> implements Dao<T, I> {
                 queryBuilder.getOrderByValue(),
                 queryBuilder.getLimitValue());
     }
+
     @Override
-    public List<T> query(QueryBuilder queryBuilder,String... columns) {
+    public List<T> query(QueryBuilder queryBuilder, String... columns) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         ArrayList<T> list = new ArrayList<>();
         try {
             SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            Cursor cursor = query(db, queryBuilder,columns);
+            Cursor cursor = query(db, queryBuilder, columns);
             T obj = null;
             while (cursor.moveToNext()) {
-                obj = DatabaseUtils.cursorToClassObject(mClazz,cursor,columns);
+                obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns);
                 list.add(obj);
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return list;
     }
+
     @Override
     public T queryForId(I paramID, String... columns) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
@@ -139,12 +142,12 @@ class DaoImpl<T, I> implements Dao<T, I> {
             QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
             Cursor cursor = query(db, queryBuilder);
-            if (cursor.getCount()>0&&cursor.moveToFirst()) {
-                obj =  DatabaseUtils.cursorToClassObject(mClazz, cursor,columns);
+            if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns);
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return obj;
@@ -158,20 +161,21 @@ class DaoImpl<T, I> implements Dao<T, I> {
             SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             Cursor cursor = query(db, queryBuilder);
-            T obj ;
+            T obj;
             while (cursor.moveToNext()) {
-                obj = DatabaseUtils.cursorToClassObject(mClazz, cursor,columns);
+                obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns);
                 list.add(obj);
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return list;
     }
+
     @Override
-    public T refresh(T paramT,String... columns) throws SQLException {
+    public T refresh(T paramT, String... columns) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         T result = null;
         try {
@@ -179,54 +183,56 @@ class DaoImpl<T, I> implements Dao<T, I> {
             QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
             Cursor cursor = query(db, queryBuilder);
-            if (cursor.getCount()>0&&cursor.moveToFirst()) {
-                result = DatabaseUtils.cursorToObject(paramT, cursor,columns);
+            if (cursor.getCount() > 0 && cursor.moveToFirst()) {
+                result = DatabaseUtils.cursorToObject(paramT, cursor, columns);
             }
             cursor.close();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
     }
+
     @Override
     public int update(UpdateBuilder updateBuilder) throws SQLException {
-        return mDatabaseHelper.getWritableDatabase().update(mTableName,updateBuilder.getContentValues(), updateBuilder.getWhere(), updateBuilder.getWhereArgs());
+        return mDatabaseHelper.getWritableDatabase().update(mTableName, updateBuilder.getContentValues(), updateBuilder.getWhere(), updateBuilder.getWhereArgs());
     }
 
     @Override
-    public int update(T paramT,String... columns) throws SQLException {
+    public int update(T paramT, String... columns) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
-            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
+            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT, columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
     }
 
     @Override
-    public int update(Collection<T> paramTs,String... columns) throws SQLException {
+    public int update(Collection<T> paramTs, String... columns) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
             db.beginTransaction();
             for (T paramT : paramTs) {
-                result = result + db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
+                result = result + db.update(mTableName, DatabaseUtils.getContentValues(paramT, columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         } finally {
             db.endTransaction();
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
     }
+
     @Override
     public int updateById(T paramT, I paramID, String... columns) throws SQLException {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
@@ -234,9 +240,9 @@ class DaoImpl<T, I> implements Dao<T, I> {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
-            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT,columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
+            result = db.update(mTableName, DatabaseUtils.getContentValues(paramT, columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -250,7 +256,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
         try {
             result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         }
         StrictMode.setThreadPolicy(oldPolicy);
         return result;
@@ -268,7 +274,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName,e);
+            throw new SQLException(mTableName, e);
         } finally {
             db.endTransaction();
         }
@@ -297,7 +303,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e,e);
+            throw new SQLException(mTableName + " error=" + e, e);
         }
         return result;
     }
@@ -311,7 +317,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
             result = db.delete(mTableName, null, null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            throw new SQLException(mTableName + " error=" + e,e);
+            throw new SQLException(mTableName + " error=" + e, e);
         } finally {
             db.endTransaction();
         }

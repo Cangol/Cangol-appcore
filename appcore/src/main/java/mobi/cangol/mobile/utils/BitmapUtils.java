@@ -384,10 +384,10 @@ public final class BitmapUtils {
         int originHeight = options.outHeight;
         // no need to resize
         if (originWidth < maxWidth && originHeight < maxHeight) {
-                //do nothings
+            //do nothings
         } else {
-            float wb = (1.0f*originWidth) / maxWidth;
-            float hb =  (1.0f*originHeight) / maxHeight;
+            float wb = (1.0f * originWidth) / maxWidth;
+            float hb = (1.0f * originHeight) / maxHeight;
             if (originWidth > maxWidth || originHeight > maxHeight) {
                 if (wb >= hb) {
                     int i = (int) Math.floor(originWidth * 1.0 / maxWidth);
@@ -419,8 +419,8 @@ public final class BitmapUtils {
         }
         int width;
         int height;
-        float wb = (1.0f*originWidth) / maxWidth;
-        float hb = (1.0f*originHeight) / maxHeight;
+        float wb = (1.0f * originWidth) / maxWidth;
+        float hb = (1.0f * originHeight) / maxHeight;
         // 若图片过宽, 则保持长宽比缩放图片
         if (originWidth > maxWidth || originHeight > maxHeight) {
             if (wb > hb) {
@@ -555,15 +555,15 @@ public final class BitmapUtils {
     public static void bitmap2File(Bitmap bm, String path) {
         File file = new File(path);
         try {
-            boolean result=file.createNewFile();
-            if(result){
+            boolean result = file.createNewFile();
+            if (result) {
                 FileOutputStream out = new FileOutputStream(file);
                 if (bm.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
                     out.flush();
                     out.close();
                 }
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             Log.d(e.getMessage());
         }
     }

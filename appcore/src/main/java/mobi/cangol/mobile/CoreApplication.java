@@ -46,11 +46,11 @@ public class CoreApplication extends Application {
     private AppServiceManager mAppServiceManager;
     private PoolManager.Pool mSharePool;
     private ModuleManager mModuleManager;
-    public final  List<WeakReference<Activity>> mActivityManager = new ArrayList<>();
+    public final List<WeakReference<Activity>> mActivityManager = new ArrayList<>();
 
     public CoreApplication() {
         super();
-        mModuleManager=new ModuleManager(this);
+        mModuleManager = new ModuleManager(this);
     }
 
     public ModuleManager getModuleManager() {

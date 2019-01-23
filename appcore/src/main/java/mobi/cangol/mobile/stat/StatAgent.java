@@ -41,18 +41,18 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private static final  String SDK_VERSION = BuildConfig.VERSION_NAME;
-    private static final  String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
-    private static final  String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
-    private static final  String STAT_ACTION_EVENT = "api/countly/event.do";
-    private static final  String STAT_ACTION_TIMING = "api/countly/qos.do";
-    private static final  String STAT_ACTION_LAUNCH = "api/countly/launch.do";
-    private static final  String STAT_ACTION_DEVICE = "api/countly/device.do";
-    private static final  String STAT_ACTION_SESSION = "api/countly/session.do";
-    private static final  String STAT_ACTION_TRAFFIC = "api/countly/traffic.do";
-    private static final  String STAT_TRACKING_ID = "stat";
-    private static final  String TIMESTAMP = "timestamp";
-    private static final  String CHANNEL_ID ="CHANNEL_ID";
+    private static final String SDK_VERSION = BuildConfig.VERSION_NAME;
+    private static final String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
+    private static final String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
+    private static final String STAT_ACTION_EVENT = "api/countly/event.do";
+    private static final String STAT_ACTION_TIMING = "api/countly/qos.do";
+    private static final String STAT_ACTION_LAUNCH = "api/countly/launch.do";
+    private static final String STAT_ACTION_DEVICE = "api/countly/device.do";
+    private static final String STAT_ACTION_SESSION = "api/countly/session.do";
+    private static final String STAT_ACTION_TRAFFIC = "api/countly/traffic.do";
+    private static final String STAT_TRACKING_ID = "stat";
+    private static final String TIMESTAMP = "timestamp";
+    private static final String CHANNEL_ID = "CHANNEL_ID";
     private static StatAgent instance;
     private CoreApplication context;
     private ITracker itracker;
@@ -60,7 +60,8 @@ public class StatAgent {
     private AnalyticsService analyticsService;
     private SessionService sessionService;
     private CrashService crashService;
-    private String statServerURL=null;
+    private String statServerURL = null;
+
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     protected StatAgent(CoreApplication coreApplication) {
         this.context = coreApplication;
@@ -71,29 +72,33 @@ public class StatAgent {
 
         commonParams = this.getCommonParams();
     }
+
     public static StatAgent getInstance() {
-        if(instance==null){
+        if (instance == null) {
             throw new IllegalStateException("Please invoke initInstance in first!");
         }
         return instance;
     }
+
     public static void initInstance(CoreApplication coreApplication) {
         if (instance == null) {
             instance = new StatAgent(coreApplication);
             instance.init();
         }
     }
+
     public void setStatServerURL(String statServerURL) {
         this.statServerURL = statServerURL;
     }
 
-    private String getStatHostUrl(){
-        if(statServerURL==null||"".equals(statServerURL)){
+    private String getStatHostUrl() {
+        if (statServerURL == null || "".equals(statServerURL)) {
             return STAT_SERVER_URL;
-        }else{
+        } else {
             return statServerURL;
         }
     }
+
     private void init() {
         sendDevice();
         sendLaunch();
@@ -395,7 +400,7 @@ public class StatAgent {
             builder.set("exitVersion", exitVersion);
             builder.set("launchTime", launchTime);
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
-            builder.set("isNew",  isNew ? "1" : "0");
+            builder.set("isNew", isNew ? "1" : "0");
             builder.type = Type.LAUNCHER;
             return builder;
 

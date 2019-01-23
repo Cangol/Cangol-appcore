@@ -36,7 +36,7 @@ import mobi.cangol.mobile.service.conf.ConfigService;
 @Service("DownloadManager")
 class DownloadManagerImpl implements DownloadManager {
     protected static final int DEFAULT_MAX_THREAD = 2;
-    private final static String TAG = "DownloadManager";
+    private static final String TAG = "DownloadManager";
     protected boolean debug = false;
     protected ConcurrentHashMap<String, DownloadExecutor<?>> executorMap = null;
     private Application mContext = null;
@@ -53,7 +53,7 @@ class DownloadManagerImpl implements DownloadManager {
     public void init(ServiceProperty serviceProperty) {
         this.mServiceProperty = serviceProperty;
         if (executorMap == null) {
-            executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
+            executorMap = new ConcurrentHashMap<>();
         }
     }
 
@@ -61,7 +61,7 @@ class DownloadManagerImpl implements DownloadManager {
     public synchronized DownloadExecutor<?> getDownloadExecutor(String name) {
         DownloadExecutor<?> downloadExecutor = null;
         if (executorMap == null) {
-            executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
+            executorMap = new ConcurrentHashMap<>();
         }
         if (executorMap.containsKey(name)) {
             downloadExecutor = executorMap.get(name);
@@ -72,15 +72,11 @@ class DownloadManagerImpl implements DownloadManager {
     //提前注册各个下载器 减少需要用时再初始化造成的时间消耗（初始化扫描耗时较多）
     @Override
     public void registerExecutor(String name, Class<? extends DownloadExecutor<?>> clazz, int max) {
-        DownloadExecutor<?> downloadExecutor = null;
         if (executorMap == null) {
-            executorMap = new ConcurrentHashMap<String, DownloadExecutor<?>>();
+            executorMap = new ConcurrentHashMap<>();
         }
-        if (executorMap.containsKey(name)) {
-            downloadExecutor = executorMap.get(name);
-        } else {
-            downloadExecutor = createDownloadExecutor(name, clazz, max);
-            executorMap.put(name, downloadExecutor);
+        if (!executorMap.containsKey(name)) {
+            executorMap.put(name, createDownloadExecutor(name, clazz, max));
         }
     }
 
@@ -142,12 +138,12 @@ class DownloadManagerImpl implements DownloadManager {
 
     @Override
     public String getName() {
-        return "DownloadManager";
+        return TAG;
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.debug = mDebug;
     }
 
     @Override

@@ -58,7 +58,8 @@ public interface CacheManager extends AppService {
      * @param data    必须实现Serializable
      * @param period  有效期(单位毫秒)
      */
-    void addContent(String context, String id, Serializable data,long period);
+    void addContent(String context, String id, Serializable data, long period);
+
     /**
      * 移除缓存对象
      *

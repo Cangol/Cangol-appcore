@@ -66,7 +66,7 @@ public abstract class AppServiceManager {
     /**
      * 设置debug
      *
-     * @param debug
+     * @param mDebug
      */
-    public abstract void setDebug(boolean debug);
+    public abstract void setmDebug(boolean mDebug);
 }

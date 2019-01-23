@@ -38,7 +38,7 @@ import mobi.cangol.mobile.logging.Log;
 @SuppressLint("LongLogTag")
 public abstract class SocketSerializableHandler extends SocketHandler {
 
-    private static final  String TAG = "SocketSerializableHandler";
+    private static final String TAG = "SocketSerializableHandler";
     protected static final boolean DEBUG = false;
     protected static final int RECEIVE_MESSAGE = 0;
 
@@ -46,7 +46,7 @@ public abstract class SocketSerializableHandler extends SocketHandler {
         super();
     }
 
-    public abstract  void onReceive(Serializable msg);
+    public abstract void onReceive(Serializable msg);
 
 
     public void sendReceiveMessage(Serializable obj) {

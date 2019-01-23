@@ -27,7 +27,7 @@ public class ServiceProperty {
 
     public ServiceProperty(String name) {
         this.mName = name;
-        mMap = new HashMap<String, Object>();
+        mMap = new HashMap<>();
     }
 
     public String getName() {

@@ -23,7 +23,7 @@ import mobi.cangol.mobile.db.DatabaseTable;
  */
 @DatabaseTable("APP_TRAFFIC")
 public class AppTraffic {
-    @DatabaseField(primaryKey = true, notNull = true,value = "id")
+    @DatabaseField(primaryKey = true, notNull = true, value = "id")
     public int id;
     @DatabaseField(value = "package_name", notNull = true)
     public String packageName;

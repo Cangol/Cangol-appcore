@@ -32,7 +32,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AESUtils {
-    private static final  String CHARSET = "utf-8";
+    private static final String CHARSET = "utf-8";
 
     private AESUtils() {
     }
@@ -70,7 +70,7 @@ public class AESUtils {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         Cipher cipher = Cipher.getInstance("AES");   //AES/CBC/PKCS5Padding
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        return  cipher.doFinal(encrypted);
+        return cipher.doFinal(encrypted);
     }
 
     private static byte[] toByte(String hexString) {

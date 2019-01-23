@@ -52,7 +52,7 @@ public class UrlUtils {
 
         try {
             return new URL(url).getHost();
-        }catch (Exception e) {
+        } catch (Exception e) {
             return "";
         }
     }

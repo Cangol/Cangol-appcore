@@ -24,7 +24,7 @@ import mobi.cangol.mobile.db.DatabaseTable;
 
 @DatabaseTable("DATE_TRAFFIC")
 public class DateTraffic {
-    @DatabaseField(primaryKey = true, notNull = true,value = "id")
+    @DatabaseField(primaryKey = true, notNull = true, value = "id")
     public int id;
     @DatabaseField(value = "status", notNull = true)
     public int status;

@@ -25,6 +25,7 @@ import mobi.cangol.mobile.service.route.RouteService;
 public abstract class ModuleApplication {
     private CoreApplication mCoreApplication;
     private RouteService mRouteService;
+
     protected final void setCoreApplication(CoreApplication coreApplication) {
         this.mCoreApplication = coreApplication;
     }
@@ -33,24 +34,30 @@ public abstract class ModuleApplication {
         return mCoreApplication;
     }
 
-    public  void onCreate(){
-        mRouteService= (RouteService) getApplication().getAppService(AppService.ROUTE_SERVICE);
+    public void onCreate() {
+        mRouteService = (RouteService) getApplication().getAppService(AppService.ROUTE_SERVICE);
     }
 
-    public  void init(){}
-
-    public  void onTerminate(){}
-
-    public  void onLowMemory(){}
-
-    public  void onTrimMemory(int level){}
-
-    public  void onExit(){}
-
-    protected void registerRoute(String path,Class clazz){
-        mRouteService.register(path,clazz);
+    public void init() {
     }
-    protected void registerRoute(Class clazz){
+
+    public void onTerminate() {
+    }
+
+    public void onLowMemory() {
+    }
+
+    public void onTrimMemory(int level) {
+    }
+
+    public void onExit() {
+    }
+
+    protected void registerRoute(String path, Class clazz) {
+        mRouteService.register(path, clazz);
+    }
+
+    protected void registerRoute(Class clazz) {
         mRouteService.register(clazz);
     }
 }

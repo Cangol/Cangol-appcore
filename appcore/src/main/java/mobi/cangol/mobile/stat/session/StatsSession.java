@@ -40,7 +40,7 @@ public class StatsSession {
         unSentSessionLength = 0;
     }
 
-    public static  StatsSession getInstance() {
+    public static StatsSession getInstance() {
         if (instance == null) {
             instance = new StatsSession();
         }

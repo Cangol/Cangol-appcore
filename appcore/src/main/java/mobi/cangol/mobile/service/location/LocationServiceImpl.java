@@ -36,9 +36,9 @@ import mobi.cangol.mobile.utils.TimeUtils;
  */
 @Service("LocationService")
 class LocationServiceImpl implements LocationService {
-    private final static String TAG = "LocationService";
-    private final static int FLAG_TIMEOUT = 1;
-    private final static int FLAG_BETTER_LOCATION = 2;
+    private static final String TAG = "LocationService";
+    private static final int FLAG_TIMEOUT = 1;
+    private static final int FLAG_BETTER_LOCATION = 2;
     private boolean mDebug = false;
     private int mBetterTime = 1000 * 60 * 2;
     private int mTimeOut = 1000 * 60 * 5;
@@ -55,9 +55,6 @@ class LocationServiceImpl implements LocationService {
     @Override
     public void onCreate(Application context) {
         this.mContext = context;
-//		HandlerThread thread = new HandlerThread("LocationService");
-//        thread.start();
-//        mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(Looper.getMainLooper());
         mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -151,11 +148,6 @@ class LocationServiceImpl implements LocationService {
         mServiceHandler.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut);
     }
 
-    private void getLocationAddress(Location location) {
-        final double lat = location.getLatitude();
-        final double lng = location.getLongitude();
-    }
-
     @SuppressLint("MissingPermission")
     @Override
     public void removeLocationUpdates() {
@@ -194,8 +186,8 @@ class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.mDebug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     private final class ServiceHandler extends Handler {
@@ -214,6 +206,8 @@ class LocationServiceImpl implements LocationService {
                     break;
                 case FLAG_BETTER_LOCATION:
                     handleBetterLocation();
+                    break;
+                default:
                     break;
             }
         }

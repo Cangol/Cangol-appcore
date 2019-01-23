@@ -26,7 +26,7 @@ public class BaseViewHolder {
     }
 
     public void setTag(DownloadResource resouce) {
-        this.tag = new WeakReference<DownloadResource>(resouce);
+        this.tag = new WeakReference<>(resouce);
     }
 
     public void updateView(DownloadResource resouce) {

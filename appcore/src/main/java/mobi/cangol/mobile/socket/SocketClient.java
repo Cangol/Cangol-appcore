@@ -30,7 +30,7 @@ import mobi.cangol.mobile.service.PoolManager;
  * Created by weixuewu on 15/11/11.
  */
 public class SocketClient {
-    private static final  String TAG = "SocketClient";
+    private static final String TAG = "SocketClient";
     private final Map<String, List<WeakReference<Future<?>>>> requestMap;
     private final Map<String, WeakReference<SocketHandler>> handlerMap;
 
@@ -45,10 +45,11 @@ public class SocketClient {
     private static final int TIME_OUT = 20 * 1000;
 
     private PoolManager.Pool pool;
+
     protected SocketClient() {
         handlerMap = new WeakHashMap<>();
         requestMap = new WeakHashMap<>();
-        pool = PoolManager.buildPool(TAG,3);
+        pool = PoolManager.buildPool(TAG, 3);
     }
 
     public void setLong(boolean aLong) {

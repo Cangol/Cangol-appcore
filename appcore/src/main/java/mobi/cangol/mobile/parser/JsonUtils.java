@@ -42,7 +42,7 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class JsonUtils extends Converter {
-    private static final  String TAG = "JsonUtils";
+    private static final String TAG = "JsonUtils";
     public static final String UTF_8 = "utf-8";
 
     private JsonUtils() {
@@ -121,7 +121,7 @@ public class JsonUtils extends Converter {
                 }
 
             }
-        }  catch (Exception e) {
+        } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
         return json;
@@ -238,20 +238,20 @@ public class JsonUtils extends Converter {
                     } else {
                         filedClass = field.getType();
                     }
-                    if(jsonObject.has(filedName))
+                    if (jsonObject.has(filedName))
                         field.set(t, getValueFromJson(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
                         ParameterizedType pt = (ParameterizedType) field.getGenericType();
                         Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
                         List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
-                            field.set(t, list);
+                        field.set(t, list);
                     } else {
                         Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new JSONParserException(c, "constructor is not accessible,must have zero-argument constructor", e);
         }
         return t;

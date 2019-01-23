@@ -26,7 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DownloadThread implements Runnable {
-    public final static String TAG = "DownloadThread";
+    public static final  String TAG = "DownloadThread";
     private final DownloadResponseHandler responseHandler;
     private DownloadHttpClient context;
     private OkHttpClient client;
@@ -97,9 +97,6 @@ public class DownloadThread implements Runnable {
             } catch (InterruptedIOException e) {
                 responseHandler.sendStopMessage(from);
                 return;
-            } catch (InterruptedException e) {
-                responseHandler.sendStopMessage(from);
-                return;
             } catch (IOException e) {
                 cause = e;
                 retry = retryHandler.retryRequest(e, ++executionCount);
@@ -109,7 +106,6 @@ public class DownloadThread implements Runnable {
             }
         }
 
-        Exception ex = new Exception(cause);
-        throw ex;
+        throw new Exception(cause);
     }
 }

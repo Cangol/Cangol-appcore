@@ -43,8 +43,7 @@ import okhttp3.RequestBody;
  * 基于okio,okhttp3实现
  */
 public class AsyncHttpClient {
-    private final static String TAG = "AsyncHttpClient";
-    private final static int DEFAULT_RETRY_TIMES = 3;
+    private static final int DEFAULT_RETRY_TIMES = 3;
     private final OkHttpClient httpClient;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
 
@@ -56,7 +55,7 @@ public class AsyncHttpClient {
         this.group = group;
         this.httpClient = HttpClientFactory.createDefaultHttpClient();
         this.threadPool = PoolManager.getPool(group);
-        this.requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        this.requestMap = new WeakHashMap<>();
         this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
@@ -64,7 +63,7 @@ public class AsyncHttpClient {
         this.group = group;
         this.httpClient = client;
         this.threadPool = PoolManager.getPool(group);
-        this.requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        this.requestMap = new WeakHashMap<>();
         this.retryHandler = new RetryHandler(DEFAULT_RETRY_TIMES);
     }
 
@@ -75,8 +74,7 @@ public class AsyncHttpClient {
      * @return
      */
     public static AsyncHttpClient build(String group) {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient(group);
-        return asyncHttpClient;
+        return new AsyncHttpClient(group);
     }
 
     /**
@@ -87,8 +85,7 @@ public class AsyncHttpClient {
      * @return
      */
     public static AsyncHttpClient build(String group, OkHttpClient client) {
-        AsyncHttpClient asyncHttpClient = new AsyncHttpClient(group, client);
-        return asyncHttpClient;
+        return new AsyncHttpClient(group, client);
     }
 
     /**
@@ -129,7 +126,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void get(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
+    public void get(Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
 
         StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (params != null) {
@@ -139,7 +136,7 @@ public class AsyncHttpClient {
                         .append(entry.getValue());
             }
         }
-        execMethod("GET", context, url + sb.toString(), headers, (HashMap<String, String>) null, responseHandler);
+        execMethod("GET", context, url + sb.toString(), headers, (Map<String, String>) null, responseHandler);
     }
 
     /**
@@ -183,7 +180,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void patch(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
+    public void patch(Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("PATCH", context, url, headers, params, responseHandler);
     }
 
@@ -232,7 +229,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void post(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
+    public void post(Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("POST", context, url, headers, params, responseHandler);
     }
 
@@ -256,7 +253,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void put(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
+    public void put(Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("PUT", context, url, headers, params, responseHandler);
     }
 
@@ -280,7 +277,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void delete(Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
+    public void delete(Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         execMethod("DELETE", context, url, headers, params, responseHandler);
     }
 
@@ -294,7 +291,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void execMethod(String method, Object context, String url, HashMap<String, String> headers, HashMap<String, String> params, AsyncHttpResponseHandler responseHandler) {
+    public void execMethod(String method, Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
@@ -309,7 +306,7 @@ public class AsyncHttpClient {
             }
         }
         Request request = null;
-        if ("GET".equals(method.toUpperCase())) {
+        if ("GET".equalsIgnoreCase(method)) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -337,7 +334,7 @@ public class AsyncHttpClient {
      * @param params
      * @param responseHandler
      */
-    public void execMethod(String method, Object context, String url, HashMap<String, String> headers, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public void execMethod(String method, Object context, String url, Map<String, String> headers, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
@@ -359,7 +356,7 @@ public class AsyncHttpClient {
             }
         }
         Request request = null;
-        if ("GET".equals(method.toUpperCase())) {
+        if ("GET".equalsIgnoreCase(method)) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -386,7 +383,7 @@ public class AsyncHttpClient {
      * @param requestBody
      * @param responseHandler
      */
-    public void execMethod(String method, Object context, String url, HashMap<String, String> headers, RequestBody requestBody, AsyncHttpResponseHandler responseHandler) {
+    public void execMethod(String method, Object context, String url, Map<String, String> headers, RequestBody requestBody, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
             for (ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
@@ -395,7 +392,7 @@ public class AsyncHttpClient {
         }
 
         Request request = null;
-        if ("GET".equals(method.toUpperCase())) {
+        if ("GET".equalsIgnoreCase(method)) {
             request = new Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
@@ -420,7 +417,7 @@ public class AsyncHttpClient {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
             if (requestList == null) {
-                requestList = new LinkedList<WeakReference<Future<?>>>();
+                requestList = new LinkedList<>();
                 requestMap.put(context, requestList);
             }
             requestList.add(new WeakReference<Future<?>>(request));

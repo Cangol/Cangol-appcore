@@ -97,14 +97,16 @@ public class DownloadTask {
         }
 
     };
+
     public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler) {
-        this(downloadResource,pool,handler,true);
+        this(downloadResource, pool, handler, true);
     }
-    public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler,boolean safe) {
+
+    public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler, boolean safe) {
         this.downloadResource = downloadResource;
         this.pool = pool;
         this.handler = handler;
-        downloadHttpClient = DownloadHttpClient.build(pool.getName(),safe);
+        downloadHttpClient = DownloadHttpClient.build(pool.getName(), safe);
         DownloadHttpClient.setThreadPool(pool);
     }
 

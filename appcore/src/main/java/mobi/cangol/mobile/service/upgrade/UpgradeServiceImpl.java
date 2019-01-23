@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dalvik.system.DexClassLoader;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
@@ -46,12 +47,12 @@ import mobi.cangol.mobile.utils.AppUtils;
  */
 @Service("UpgradeService")
 class UpgradeServiceImpl implements UpgradeService {
-    private final static String TAG = "UpgradeService";
+    private static final  String TAG = "UpgradeService";
     private boolean debug = false;
     private Application mContext = null;
     private ServiceProperty mServiceProperty = null;
     private ConfigService mConfigService;
-    private List<Integer> mIds = new ArrayList<Integer>();
+    private List<Integer> mIds = new ArrayList<>();
     private Map<String, OnUpgradeListener> mOnUpgradeListeners;
     private DownloadHttpClient mDownloadHttpClient;
 
@@ -59,7 +60,7 @@ class UpgradeServiceImpl implements UpgradeService {
     public void onCreate(Application context) {
         mContext = context;
         mConfigService = (ConfigService) ((CoreApplication) mContext).getAppService(AppService.CONFIG_SERVICE);
-        mOnUpgradeListeners = new HashMap<String, OnUpgradeListener>();
+        mOnUpgradeListeners = new HashMap<>();
     }
 
     @Override
@@ -75,7 +76,7 @@ class UpgradeServiceImpl implements UpgradeService {
     @Override
     public void onDestroy() {
         if (debug) Log.d("onDestory");
-        if(mDownloadHttpClient!=null)
+        if (mDownloadHttpClient != null)
             mDownloadHttpClient.cancelAll();
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         for (Integer id : mIds) {
@@ -91,65 +92,49 @@ class UpgradeServiceImpl implements UpgradeService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
-        return sp;
+        return new ServiceProperty(TAG);
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.debug = mDebug;
     }
 
-    //	@Override
-//	public void upgradeRes(String filename, String url,boolean notification, boolean load) {
-//		upgrade(filename,url,notification, UpgradeType.RES,load);
-//	}
-//
-//	@Override
-//	public void upgradeDex(String filename, String url,boolean notification, boolean load) {
-//		upgrade(filename,url,notification, UpgradeType.DEX,load);
-//	}
-//
-//	@Override
-//	public void upgradeSo(String filename, String url,boolean notification, boolean load) {
-//		upgrade(filename,url,notification, UpgradeType.SO,load);
-//	}
-//
-//	@Override
-//	public void upgradeApk(String filename, String url,boolean notification, boolean install) {
-//		upgrade(filename,url,notification, UpgradeType.APK,install);
-//	}
     @Override
     public void upgrade(final String filename, String url, final boolean notification) {
-        upgrade(filename, url, notification, UpgradeType.APK, false,true);
+        upgrade(filename, url, notification, UpgradeType.APK, false, true);
     }
 
     @Override
     public void upgrade(String filename, String url, boolean notification, boolean install) {
-        upgrade(filename, url, notification, UpgradeType.APK, install,true);
+        upgrade(filename, url, notification, UpgradeType.APK, install, true);
     }
+
     @Override
     public void upgrade(String filename, String url, boolean notification, boolean install, boolean safe) {
-        upgrade(filename, url, notification, UpgradeType.APK, install,safe);
+        upgrade(filename, url, notification, UpgradeType.APK, install, safe);
     }
+
     private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean install, final boolean safe) {
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
         File saveFile = new File(savePath);
         if (debug) Log.d("upgrade savePath:" + savePath);
         if (saveFile.exists()) {
-            saveFile.delete();
-        }else{
+            boolean result=saveFile.delete();
+            if(!result)Log.d("delete oldFile fail:" + savePath);
+        } else {
             try {
-                saveFile.createNewFile();
+                boolean result=saveFile.createNewFile();
+                if(!result)Log.d("createNewFile  fail:" + savePath);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(e.getMessage());
             }
         }
         final DownloadNotification downloadNotification = new DownloadNotification(mContext, filename, savePath, createFinishIntent(savePath, upgradeType));
         if (notification) {
             mIds.add(downloadNotification.getId());
         }
-        mDownloadHttpClient= DownloadHttpClient.build(TAG,safe);
+        mDownloadHttpClient = DownloadHttpClient.build(TAG, safe);
         mDownloadHttpClient.send(filename, url, new DownloadResponseHandler() {
             @Override
             public void onWait() {
@@ -161,7 +146,7 @@ class UpgradeServiceImpl implements UpgradeService {
 
             @Override
             public void onStart(long start, long length) {
-                super.onStart(start, length);
+                Log.d(TAG, "onStart " + start + "/" + length);
             }
 
             @Override
@@ -213,11 +198,11 @@ class UpgradeServiceImpl implements UpgradeService {
         switch (upgradeType) {
             case APK:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    String authority=mContext.getPackageName()+".fileprovider";
-                    if (debug)Log.e("authority="+authority);
+                    String authority = mContext.getPackageName() + ".fileprovider";
+                    if (debug) Log.e("authority=" + authority);
                     Uri contentUri = FileProvider.getUriForFile(mContext, authority, new File(savePath));
                     AppUtils.install(mContext, contentUri);
-                }else{
+                } else {
                     AppUtils.install(mContext, savePath);
                 }
                 break;
@@ -225,12 +210,13 @@ class UpgradeServiceImpl implements UpgradeService {
 
                 break;
             case DEX:
-//				DexClassLoader dexClassLoader = new DexClassLoader(savePath,mConfigService.getTempDir().getAbsolutePath(), null, mContext.getClassLoader());
-//				try {
-//					Class clazz = dexClassLoader.loadClass("className");
-//				} catch (ClassNotFoundException e) {
-//					e.printStackTrace();
-//				}
+                /**
+                 DexClassLoader dexClassLoader = new DexClassLoader(savePath, mConfigService.getTempDir().getAbsolutePath(), null, mContext.getClassLoader());
+                 try {
+                 Class clazz = dexClassLoader.loadClass("className");
+                 } catch (ClassNotFoundException e) {
+                 Log.e(e.getMessage());
+                 }**/
                 break;
             case SO:
                 System.load(savePath);
@@ -245,17 +231,17 @@ class UpgradeServiceImpl implements UpgradeService {
 
     private Intent createFinishIntent(String savePath, UpgradeType upgradeType) {
         Intent intent = null;
-        File file=new File(savePath);
+        File file = new File(savePath);
         switch (upgradeType) {
             case APK:
                 intent = new Intent(Intent.ACTION_VIEW);
                 //判断是否是AndroidN以及更高的版本
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    String authority=mContext.getPackageName()+".fileprovider";
-                    if (debug)Log.e("authority="+authority);
+                    String authority = mContext.getPackageName() + ".fileprovider";
+                    if (debug) Log.e("authority=" + authority);
                     Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
-                    if (debug)Log.e("uri="+contentUri);
+                    if (debug) Log.e("uri=" + contentUri);
                     intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
                 } else {
                     intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
@@ -283,8 +269,8 @@ class UpgradeServiceImpl implements UpgradeService {
 
     @Override
     public void cancel(String filename) {
-        if(mDownloadHttpClient!=null)
-        mDownloadHttpClient.cancelRequests(filename, true);
+        if (mDownloadHttpClient != null)
+            mDownloadHttpClient.cancelRequests(filename, true);
     }
 
     public void notifyUpgradeFinish(String filename, String filepath) {

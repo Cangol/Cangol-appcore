@@ -25,9 +25,11 @@ public interface Dao<T, I> {
 
     /**
      * 设置是否显示执行的sql语句
+     *
      * @param showSql
      */
     void showSql(boolean showSql) throws SQLException;
+
     /**
      * 新建一个数据对象
      *

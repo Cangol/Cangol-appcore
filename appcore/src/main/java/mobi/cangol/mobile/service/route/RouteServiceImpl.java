@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -21,22 +20,20 @@ import mobi.cangol.mobile.service.ServiceProperty;
 @Service("RouteService")
 class RouteServiceImpl implements RouteService {
     private static final String TAG = "RouteService";
-    private CoreApplication mContext = null;
     private ServiceProperty mServiceProperty = null;
     private Map<String, Class<?>> mRouteMap = null;
     private OnNavigation mOnNavigation;
 
-    private static boolean debug = true;
+    private boolean mDebug = false;
 
     @Override
     public void onCreate(Application context) {
-        mContext = (CoreApplication) context;
         mRouteMap = new HashMap<>();
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        RouteServiceImpl.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -78,7 +75,7 @@ class RouteServiceImpl implements RouteService {
     @Override
     public void register(String path, Class clazz) {
         if (!mRouteMap.containsKey(path)) {
-            Log.i(TAG, "registerRoute " + path + "--->" + clazz.getName());
+            if(mDebug)Log.i(TAG, "registerRoute " + path + "--->" + clazz.getName());
             mRouteMap.put(path, clazz);
         } else {
             Log.i(TAG, path + " is registered");
@@ -88,7 +85,7 @@ class RouteServiceImpl implements RouteService {
     @Override
     public void unregister(String path) {
         if (mRouteMap.containsKey(path)) {
-            Log.i(TAG, "unregisterRoute " + path);
+            if(mDebug) Log.i(TAG, "unregisterRoute " + path);
             mRouteMap.remove(path);
         } else {
             Log.i(TAG, path + " is not registered");

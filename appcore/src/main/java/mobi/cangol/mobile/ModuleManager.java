@@ -27,7 +27,7 @@ public class ModuleManager {
     private final List<ModuleApplication> mModuleApplications = new ArrayList<>();
 
     public ModuleManager(CoreApplication coreApplication) {
-        this.mCoreApplication=coreApplication;
+        this.mCoreApplication = coreApplication;
     }
 
     protected final void setCoreApplication(CoreApplication coreApplication) {

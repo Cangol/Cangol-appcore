@@ -27,7 +27,9 @@ import mobi.cangol.mobile.utils.StringUtils;
  * Created by xuewu.wei on 2016/5/31.
  */
 public class Converter {
-    protected Converter(){}
+    protected Converter() {
+    }
+
     public static <T> T parserXml(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
         return XmlUtils.parserToObject(c, str, useAnnotation);
     }
@@ -84,7 +86,7 @@ public class Converter {
     public static boolean parseBoolean(String str, boolean defaultValue) {
         try {
             return Boolean.parseBoolean(str);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -99,7 +101,7 @@ public class Converter {
     public static long parseLong(String str, long defaultValue) {
         try {
             return Long.parseLong(str);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }

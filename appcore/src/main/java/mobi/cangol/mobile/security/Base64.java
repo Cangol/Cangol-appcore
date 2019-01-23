@@ -26,7 +26,7 @@ import java.io.UnsupportedEncodingException;
  */
 
 public class Base64 {
-    final static String encodingChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    static final  String ENCODING_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
     private Base64() {
     }
@@ -39,7 +39,7 @@ public class Base64 {
         for (int group = 0; group < numGroups; group++) {
             convert3To4(sourceBytes, group * 3, targetBytes);
             for (int i = 0; i < targetBytes.length; i++) {
-                target[i + 4 * group] = encodingChar.charAt(targetBytes[i]);
+                target[i + 4 * group] = ENCODING_CHAR.charAt(targetBytes[i]);
             }
         }
         int numPadBytes = sourceBytes.length - source.length();
@@ -74,7 +74,7 @@ public class Base64 {
         byte[] sourceBytes = new byte[4];
         for (int group = 0; group < numGroups; group++) {
             for (int i = 0; i < sourceBytes.length; i++) {
-                sourceBytes[i] = (byte) Math.max(0, encodingChar.indexOf(source.charAt(4 * group + i)));
+                sourceBytes[i] = (byte) Math.max(0, ENCODING_CHAR.indexOf(source.charAt(4 * group + i)));
             }
             convert4To3(sourceBytes, targetBytes, group * 3);
         }

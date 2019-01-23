@@ -182,7 +182,7 @@ public class TimeUtils {
      * 得到当前日期加上某一个整数的日期，整数代表天数
      *
      * @param currentDate String 格式 yyyy-MM-dd
-     * @param addDay     int
+     * @param addDay      int
      * @return yyyy-MM-dd
      */
     public static String addDay(String currentDate, int addDay) {
@@ -320,6 +320,7 @@ public class TimeUtils {
         }
         return time;
     }
+
     public static String formatDateString(String time) {
         Date date = null;
         try {
@@ -341,6 +342,7 @@ public class TimeUtils {
         SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
         return formatter.format(date);
     }
+
     public static String formatTimeString(String time) {
         Date date = null;
         try {
@@ -351,8 +353,10 @@ public class TimeUtils {
         SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
         return formatter.format(date);
     }
+
     /**
      * 将long形式改成yyyy-MM-dd HH:mm:ss
+     *
      * @param time
      * @param zone
      * @return
@@ -362,8 +366,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成yyyy-MM-dd
+     *
      * @param time
      * @param zone
      * @return
@@ -373,11 +379,12 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成MM-dd HH:mm:ss
+     *
      * @param time
      * @param zone
-     *
      * @return
      */
     public static String formatMdHms(long time, int zone) {
@@ -385,8 +392,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成MM-dd HH:mm:ss
+     *
      * @param time
      * @param zone
      * @return
@@ -396,8 +405,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成MM-dd HH:mm
+     *
      * @param time
      * @param zone
      * @return
@@ -407,8 +418,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成mm:ss
+     *
      * @param time
      * @param zone
      * @return
@@ -418,19 +431,23 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成pattern
+     *
      * @param time
      * @param pattern
      * @return
      */
-    public static String format(long time,String pattern,int zone) {
+    public static String format(long time, String pattern, int zone) {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成yyyy-MM-dd HH:mm:ss
+     *
      * @param time
      * @return
      */
@@ -439,8 +456,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成yyyy-MM-dd
+     *
      * @return
      */
     public static String formatYmd(long time) {
@@ -448,8 +467,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成MM-dd HH:mm:ss
+     *
      * @param time
      * @return
      */
@@ -458,8 +479,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成HH:mm:ss
+     *
      * @param time
      * @return
      */
@@ -468,8 +491,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成HH:mm
+     *
      * @param time
      * @return
      */
@@ -478,8 +503,10 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成mm:ss
+     *
      * @param time
      * @return
      */
@@ -488,13 +515,15 @@ public class TimeUtils {
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
+
     /**
      * 将long形式改成pattern
+     *
      * @param time
      * @param pattern
      * @return
      */
-    public static String format(long time,String pattern) {
+    public static String format(long time, String pattern) {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
@@ -628,20 +657,20 @@ public class TimeUtils {
         Calendar currentCalendar;
         Calendar commentCalendar;
         try {
-            currentCalendar=Calendar.getInstance();
-            commentCalendar=Calendar.getInstance();
+            currentCalendar = Calendar.getInstance();
+            commentCalendar = Calendar.getInstance();
             commentCalendar.setTimeInMillis(new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(strTime).getTime());
 
             if (currentCalendar.get(Calendar.YEAR) == commentCalendar.get(Calendar.YEAR)
-                    &&currentCalendar.get(Calendar.MONTH) ==commentCalendar.get(Calendar.MONTH)
+                    && currentCalendar.get(Calendar.MONTH) == commentCalendar.get(Calendar.MONTH)
                     && currentCalendar.get(Calendar.DAY_OF_YEAR) == commentCalendar.get(Calendar.DAY_OF_YEAR)) {
                 str = new SimpleDateFormat(HH_MM).format(commentCalendar.getTime());
             } else if (currentCalendar.get(Calendar.YEAR) == commentCalendar.get(Calendar.YEAR)
-                    &&currentCalendar.get(Calendar.MONTH) ==commentCalendar.get(Calendar.MONTH)
+                    && currentCalendar.get(Calendar.MONTH) == commentCalendar.get(Calendar.MONTH)
                     && currentCalendar.get(Calendar.DAY_OF_YEAR) != commentCalendar.get(Calendar.DAY_OF_YEAR)) {
                 str = new SimpleDateFormat(MM_DD).format(commentCalendar.getTime());
             } else if (currentCalendar.get(Calendar.YEAR) == commentCalendar.get(Calendar.YEAR)
-                    &&currentCalendar.get(Calendar.MONTH) ==commentCalendar.get(Calendar.MONTH)) {
+                    && currentCalendar.get(Calendar.MONTH) == commentCalendar.get(Calendar.MONTH)) {
                 str = new SimpleDateFormat(YYYY_MM).format(commentCalendar.getTime());
             } else {
                 str = new SimpleDateFormat(YYYY_MM_DD).format(commentCalendar.getTime());
@@ -655,6 +684,7 @@ public class TimeUtils {
 
     /**
      * 判断是同一天
+     *
      * @param time1
      * @param time2
      * @return
@@ -671,8 +701,10 @@ public class TimeUtils {
                 && calDateA.get(Calendar.DAY_OF_MONTH) == calDateB
                 .get(Calendar.DAY_OF_MONTH);
     }
+
     /**
      * 判断是同一月
+     *
      * @param time1
      * @param time2
      * @return
@@ -685,10 +717,12 @@ public class TimeUtils {
         time2Ca.setFirstDayOfWeek(Calendar.MONDAY);
         time2Ca.setTimeInMillis(time2);
         return time1Ca.get(Calendar.YEAR) == time2Ca.get(Calendar.YEAR)
-                && time1Ca.get(Calendar.MONTH) ==time2Ca.get(Calendar.MONTH);
+                && time1Ca.get(Calendar.MONTH) == time2Ca.get(Calendar.MONTH);
     }
+
     /**
      * 判断是同一周
+     *
      * @param time1
      * @param time2
      * @return
@@ -700,6 +734,6 @@ public class TimeUtils {
         Calendar time2Ca = Calendar.getInstance();
         time2Ca.setFirstDayOfWeek(Calendar.MONDAY);
         time2Ca.setTimeInMillis(time2);
-        return time1Ca.get(Calendar.WEEK_OF_YEAR)==time2Ca.get(Calendar.WEEK_OF_YEAR);
+        return time1Ca.get(Calendar.WEEK_OF_YEAR) == time2Ca.get(Calendar.WEEK_OF_YEAR);
     }
 }

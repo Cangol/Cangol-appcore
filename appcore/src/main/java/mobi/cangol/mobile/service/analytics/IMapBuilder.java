@@ -26,7 +26,7 @@ final public class IMapBuilder {
     private Map<String, String> mParams;
 
     private IMapBuilder() {
-        mParams = new HashMap<String, String>();
+        mParams = new HashMap<>();
     }
 
     public static IMapBuilder build() {

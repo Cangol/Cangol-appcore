@@ -28,15 +28,14 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class DownloadResponseHandler {
-    public final static String TAG = "DownloadResponseHandler";
+    public static final  String TAG = "DownloadResponseHandler";
     protected static final int WAIT_MESSAGE = 0;
     protected static final int START_MESSAGE = 1;
     protected static final int PROGRESS_MESSAGE = 2;
     protected static final int STOP_MESSAGE = 3;
     protected static final int FAILURE_MESSAGE = 4;
     protected static final int FINISH_MESSAGE = 5;
-    private final static boolean DEBUG = true;
-    private final int BUFF_SIZE = 8192;
+    private static final int BUFF_SIZE = 8192;
     private Handler handler;
 
     public DownloadResponseHandler() {
@@ -53,6 +52,7 @@ public class DownloadResponseHandler {
      * 等候状态
      */
     public void onWait() {
+        //do nothings
     }
 
     /**
@@ -62,6 +62,7 @@ public class DownloadResponseHandler {
      * @param length
      */
     public void onStart(long start, long length) {
+        //do nothings
     }
 
     /**
@@ -70,6 +71,7 @@ public class DownloadResponseHandler {
      * @param end
      */
     public void onStop(long end) {
+        //do nothings
     }
 
     /**
@@ -78,6 +80,7 @@ public class DownloadResponseHandler {
      * @param end
      */
     public void onFinish(long end) {
+        //do nothings
     }
 
     /**
@@ -88,6 +91,7 @@ public class DownloadResponseHandler {
      * @param speed
      */
     public void onProgressUpdate(long end, int progress, int speed) {
+        //do nothings
     }
 
     /**
@@ -97,6 +101,7 @@ public class DownloadResponseHandler {
      * @param content
      */
     public void onFailure(Throwable error, String content) {
+        //do nothings
     }
 
     protected void sendWaitMessage() {
@@ -202,6 +207,8 @@ public class DownloadResponseHandler {
                 response = (Object[]) msg.obj;
                 handleFinishMessage(((Long) response[0]).longValue());
                 break;
+                default:
+                    break;
         }
     }
 
