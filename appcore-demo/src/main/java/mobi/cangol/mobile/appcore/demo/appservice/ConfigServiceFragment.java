@@ -56,8 +56,8 @@ public class ConfigServiceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String path="/sdcard/appcore";
-                boolean result=configService.setCustomAppDir(path);
-                showToast("setCustomAppDir "+(result?"success":"fail")+"\n"+path);
+                 configService.setCustomAppDir(path);
+                showToast("setCustomAppDir "+configService.getAppDir());
                 updateViews();
             }
         });
