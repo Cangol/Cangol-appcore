@@ -33,7 +33,7 @@ before_install:
     - export GRADLE_HOME=$PWD/gradle-4.1
     - export PATH=$GRADLE_HOME/bin:$PATH
     - sudo apt-get install jq
-    - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
+    - wget --timeout=120 --retry-connrefused -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
     -  mkdir "$ANDROID_HOME/licenses" || true
     - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
     - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
