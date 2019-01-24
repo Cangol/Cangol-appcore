@@ -54,8 +54,4 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
             }
         });
     }
-
-    public void testGetAddress() {
-        locationService.getAddress();
-    }
 }
