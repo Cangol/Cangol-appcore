@@ -5,7 +5,6 @@ import com.squareup.leakcanary.LeakCanary;
 
 import hugo.weaving.DebugLog;
 import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.appcore.libdemo.LibApplication;
 import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
@@ -17,7 +16,7 @@ public class MobileApplication extends CoreApplication {
     public void onCreate() {
         this.setDevMode(true);
         this.setAsyncInit(false);
-        this.getModuleManager().add(new LibApplication());
+        //this.getModuleManager().add(new LibApplication());
         super.onCreate();
     }
 

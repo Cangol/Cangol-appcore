@@ -31,11 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
-import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.route.RouteService;
-
 /**
  * Created by xuewu.wei on 2016/8/31.
  */
