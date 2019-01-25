@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.route.OnNavigation;
@@ -30,7 +31,7 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
         mRouteService= (RouteService) ((CoreApplication)getApplication()).getAppService(AppService.ROUTE_SERVICE);
         mRouteService.registerNavigation(this);
-        //mRouteService.register("lib",LibTestFragment.class);
+        mRouteService.register("lib",LibTestFragment.class);
     }
 
     @Override

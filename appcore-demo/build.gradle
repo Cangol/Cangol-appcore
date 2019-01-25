@@ -8,7 +8,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.2'
     //implementation 'testfairy:testfairy-android-sdk:1.+@aar'
     implementation project(':appcore')
-    //implementation project(':libdemo')
+    implementation project(':libdemo')
 }
 android {
     compileSdkVersion 26
