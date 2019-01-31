@@ -144,11 +144,11 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     @Override
     void sendResponseMessage(Response response) {
         Log.d(">>", "sendResponseMessage=");
-        ResponseBody responseBody = response.body();
+        final ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-            String contentType = response.body().contentType().toString();
+            final String contentType = response.body().contentType().toString();
             boolean foundAllowedContentType = false;
-            for (String anAllowedContentType : mAllowedContentTypes) {
+            for (final String anAllowedContentType : mAllowedContentTypes) {
                 if (anAllowedContentType.equals(contentType)) {
                     foundAllowedContentType = true;
                 }

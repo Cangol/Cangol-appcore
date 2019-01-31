@@ -39,20 +39,20 @@ public class AESUtils {
 
     public static String encrypt(String seed, String content) throws UnsupportedEncodingException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
-        byte[] result = encrypt(rawKey, content.getBytes(CHARSET));
+        final byte[] result = encrypt(rawKey, content.getBytes(CHARSET));
         return toHex(result);
     }
 
     public static String decrypt(String seed, String encrypted) throws UnsupportedEncodingException, NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchPaddingException {
-        byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
-        byte[] enc = toByte(encrypted);
-        byte[] result = decrypt(rawKey, enc);
+        final byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
+        final byte[] enc = toByte(encrypted);
+        final byte[] result = decrypt(rawKey, enc);
         return new String(result, CHARSET);
     }
 
     private static byte[] getRawKey(byte[] seed) throws NoSuchAlgorithmException {
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        final KeyGenerator kgen = KeyGenerator.getInstance("AES");
+        final SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         sr.setSeed(seed);
         kgen.init(128, sr); // 192 and 256 bits may not be available
         return kgen.generateKey().getEncoded();
@@ -67,14 +67,14 @@ public class AESUtils {
     }
 
     private static byte[] decrypt(byte[] raw, byte[] encrypted) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");   //AES/CBC/PKCS5Padding
+        final SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        final Cipher cipher = Cipher.getInstance("AES");   //AES/CBC/PKCS5Padding
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         return cipher.doFinal(encrypted);
     }
 
     private static byte[] toByte(String hexString) {
-        int len = hexString.length() / 2;
+        final int len = hexString.length() / 2;
         byte[] result = new byte[len];
         for (int i = 0; i < len; i++) {
             result[i] = Integer.valueOf(hexString.substring(2 * i, 2 * i + 2), 16).byteValue();
@@ -83,11 +83,11 @@ public class AESUtils {
     }
 
     private static String toHex(byte[] buf) {
-        String hex = "0123456789ABCDEF";
+        final String hex = "0123456789ABCDEF";
         if (buf == null) {
             return "";
         }
-        StringBuilder result = new StringBuilder(2 * buf.length);
+        final StringBuilder result = new StringBuilder(2 * buf.length);
         for (int i = 0; i < buf.length; i++) {
             result.append(hex.charAt((buf[i] >> 4) & 0x0f))
                     .append(hex.charAt(buf[i] & 0x0f));

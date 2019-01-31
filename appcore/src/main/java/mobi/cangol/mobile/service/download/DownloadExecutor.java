@@ -112,8 +112,8 @@ public abstract class DownloadExecutor<T> {
      * @return
      */
     protected ArrayList<DownloadResource> scanResource(File scanDir) {
-        ArrayList<DownloadResource> list = new ArrayList<>();
-        ArrayList<File> fileList = new ArrayList<>();
+        final ArrayList<DownloadResource> list = new ArrayList<>();
+        final ArrayList<File> fileList = new ArrayList<>();
         //耗时操作
         FileUtils.searchBySuffix(scanDir, fileList, Download.SUFFIX_CONFIG);
         for (int i = 0; i < fileList.size(); i++) {
@@ -133,7 +133,7 @@ public abstract class DownloadExecutor<T> {
         //使用json格式存储
         DownloadResource downloadResource = null;
         try {
-            JSONObject jsonObject = Object2FileUtils.readFile2JSONObject(new File(filePath));
+            final JSONObject jsonObject = Object2FileUtils.readFile2JSONObject(new File(filePath));
             downloadResource = JsonUtils.parserToObject(DownloadResource.class, jsonObject, false);
         } catch (JSONParserException e) {
             Log.d(mTag, e.getMessage());
@@ -149,7 +149,7 @@ public abstract class DownloadExecutor<T> {
     protected void writeResource(DownloadResource resource) {
         Log.d(mTag, "write DownloadResource >" + resource.getConfFile());
         //使用json格式存储
-        JSONObject jsonObject = JsonUtils.toJSONObject(resource, false);
+        final  JSONObject jsonObject = JsonUtils.toJSONObject(resource, false);
         Object2FileUtils.writeJSONObject2File(jsonObject, resource.getConfFile());
     }
 
@@ -189,7 +189,7 @@ public abstract class DownloadExecutor<T> {
                 downloadTask.start();
             }
         } else {
-            DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler, true);
+            final DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler, true);
             resource.setDownloadTask(downloadTask);
             downloadTask.setDownloadNotification(notification(mContext, resource));
             downloadTask.start();
@@ -262,7 +262,7 @@ public abstract class DownloadExecutor<T> {
             return;
         }
         if (!mDownloadRes.contains(resource)) {
-            DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler, mHttpSafe);
+            final  DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler, mHttpSafe);
             resource.setDownloadTask(downloadTask);
             downloadTask.setDownloadNotification(notification(mContext, resource));
             downloadTask.start();
@@ -284,7 +284,7 @@ public abstract class DownloadExecutor<T> {
         }
         synchronized (mDownloadRes) {
             if (mDownloadRes.contains(resource)) {
-                DownloadTask downloadTask = resource.getDownloadTask();
+                final DownloadTask downloadTask = resource.getDownloadTask();
                 downloadTask.remove();
                 mDownloadRes.remove(resource);
             } else {
@@ -329,7 +329,7 @@ public abstract class DownloadExecutor<T> {
     public void close() {
         synchronized (mDownloadRes) {
             DownloadTask downloadTask = null;
-            for (DownloadResource resource : mDownloadRes) {
+            for (final DownloadResource resource : mDownloadRes) {
                 downloadTask = resource.getDownloadTask();
                 if (downloadTask != null) {
                     downloadTask.stop();
@@ -375,7 +375,7 @@ public abstract class DownloadExecutor<T> {
     }
 
     private void notifyUpdateStatus(DownloadResource resource, int type) {
-        for (WeakReference<DownloadStatusListener> listener : listeners) {
+        for (final WeakReference<DownloadStatusListener> listener : listeners) {
             if (null != listener.get()) {
                 listener.get().onStatusChange(resource, type);
             }
@@ -383,7 +383,7 @@ public abstract class DownloadExecutor<T> {
     }
 
     private void handleMessage(Message msg) {
-        DownloadResource resource = (DownloadResource) msg.obj;
+        final DownloadResource resource = (DownloadResource) msg.obj;
         switch (msg.what) {
             case Download.ACTION_DOWNLOAD_START:
                 if (null != mDownloadEvent) {
@@ -420,7 +420,7 @@ public abstract class DownloadExecutor<T> {
         }
 
         public void handleMessage(Message msg) {
-            DownloadExecutor downloadExecutor = mDownloadExecutor.get();
+            final DownloadExecutor downloadExecutor = mDownloadExecutor.get();
             if (downloadExecutor != null) {
                 downloadExecutor.handleMessage(msg);
             }

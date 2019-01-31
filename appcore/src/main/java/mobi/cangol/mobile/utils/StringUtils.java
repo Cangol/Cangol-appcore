@@ -53,7 +53,7 @@ public class StringUtils {
      * @return
      */
     public static String byte2hex(byte[] b) {
-        StringBuilder hs = new StringBuilder();
+        final StringBuilder hs = new StringBuilder();
         String stmp = "";
         for (int n = 0; n < b.length; n++) {
             stmp = Integer.toHexString(b[n] & 0XFF);
@@ -88,10 +88,10 @@ public class StringUtils {
      * @return
      */
     public static String formatZhNum(long num) {
-        long yi = num / (10000 * 10000);
-        long qianwan = (num % (10000 * 10000)) / (1000 * 10000);
-        long wan = num / (10000);
-        long qian = (num % (10000)) / (1000);
+        final long yi = num / (10000 * 10000);
+        final long qianwan = (num % (10000 * 10000)) / (1000 * 10000);
+        final long wan = num / (10000);
+        final long qian = (num % (10000)) / (1000);
 
         if (yi > 0) {
             if (qianwan > 0) {
@@ -128,17 +128,17 @@ public class StringUtils {
      */
     public static String formatSize(long value) {
 
-        double k = (double) value / 1024;
+        final double k = (double) value / 1024;
         if (k == 0) {
             return String.format("%dB", value);
         }
 
-        double m = k / 1024;
+        final double m = k / 1024;
         if (m < 1) {
             return String.format("%.1fK", k);
         }
 
-        double g = m / 1024;
+        final double g = m / 1024;
         if (g < 1) {
             return String.format("%.1fM", m);
         }
@@ -154,9 +154,9 @@ public class StringUtils {
      */
     public static String formatTime(int second) {
 
-        int hh = second / 3600;
-        int mm = second % 3600 / 60;
-        int ss = second % 60;
+        final int hh = second / 3600;
+        final int mm = second % 3600 / 60;
+        final int ss = second % 60;
 
         if (0 != hh) {
             return String.format("%02d:%02d:%02d", hh, mm, ss);
@@ -172,7 +172,7 @@ public class StringUtils {
      * @return
      */
     public static String md5(String s) {
-        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             byte[] strTemp = s.getBytes("UTF-8");
@@ -184,7 +184,7 @@ public class StringUtils {
             char[] str = new char[j * 2];
             int k = 0;
             for (int i = 0; i < j; i++) {
-                byte b = md[i];
+                final byte b = md[i];
                 str[k++] = hexDigits[b >> 4 & 0xf];
                 str[k++] = hexDigits[b & 0xf];
             }
@@ -202,7 +202,7 @@ public class StringUtils {
      * @return
      */
     public static String md5(byte[] bytes) {
-        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             //MessageDigest md5
@@ -213,7 +213,7 @@ public class StringUtils {
             char[] str = new char[j * 2];
             int k = 0;
             for (int i = 0; i < j; i++) {
-                byte b = md[i];
+                final byte b = md[i];
                 str[k++] = hexDigits[b >> 4 & 0xf];
                 str[k++] = hexDigits[b & 0xf];
             }
@@ -313,7 +313,7 @@ public class StringUtils {
      * @return
      */
     public static String trimForFront(String str) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         boolean first = false;
         char aa;
         for (int i = 0, length = str.length(); i < length; i++) {
@@ -434,7 +434,7 @@ public class StringUtils {
         if (str == null) {
             return false;
         }
-        int sz = str.length();
+        final int sz = str.length();
         for (int i = 0; i < sz; i++) {
             if (!Character.isDigit(str.charAt(i))) {
                 return false;
@@ -453,7 +453,7 @@ public class StringUtils {
         if (str == null) {
             return false;
         }
-        int sz = str.length();
+        final int sz = str.length();
         for (int i = 0; i < sz; i++) {
             if (!Character.isDigit(str.charAt(i)) && (str.charAt(i) != ' ')) {
                 return false;
@@ -503,10 +503,10 @@ public class StringUtils {
             }
 
         }
-        int v0 = (a[0] & 0xff) << 24;//&0xff将byte值无差异转成int,避免Java自动类型提升后,会保留高位的符号位
-        int v1 = (a[1] & 0xff) << 16;
-        int v2 = (a[2] & 0xff) << 8;
-        int v3 = (a[3] & 0xff);
+        final int v0 = (a[0] & 0xff) << 24;//&0xff将byte值无差异转成int,避免Java自动类型提升后,会保留高位的符号位
+        final int v1 = (a[1] & 0xff) << 16;
+        final int v2 = (a[2] & 0xff) << 8;
+        final int v3 = (a[3] & 0xff);
         return v0 + v1 + v2 + v3;
     }
 

@@ -32,19 +32,20 @@ import mobi.cangol.mobile.logging.Log;
 
 public class TimeUtils {
 
-    public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
-    public static final String YYYYMMDD = "yyyyMMdd";
-    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-    public static final String YYYY_MM_DD = "yyyy-MM-dd";
-    public static final String YYYY_MM = "yyyy-MM";
-    public static final String MM_DD_HH_MM_SS = "MM-dd HH:mm:ss";
-    public static final String MM_DD = "MM-dd";
-    public static final String HH_MM_SS = "HH:mm:ss";
-    public static final String HH_MM = "HH:mm";
-    public static final String MM_SS = "mm:ss";
-    public static final String GMT_02D_00 = "GMT+%02d:00";
-    public static final String MM = "MM";
-    public static final String DD = "dd";
+    private static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+    private static final String YYYYMMDD = "yyyyMMdd";
+    private static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    private static final String YYYY_MM_DD = "yyyy-MM-dd";
+    private static final String YYYY_MM = "yyyy-MM";
+    private static final String YYYY = "yyyy";
+    private static final String MM_DD_HH_MM_SS = "MM-dd HH:mm:ss";
+    private static final String MM_DD = "MM-dd";
+    private static final String HH_MM_SS = "HH:mm:ss";
+    private static final String HH_MM = "HH:mm";
+    private static final String MM_SS = "mm:ss";
+    private static final String GMT_02D_00 = "GMT+%02d:00";
+    private static final String MM = "MM";
+    private static final String DD = "dd";
 
     private TimeUtils() {
     }
@@ -55,10 +56,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentYear() {
-        Date nowDate = new Date();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy");
-        return formatter.format(nowDate);
+        return new SimpleDateFormat(YYYY).format(new Date());
     }
 
     /**
@@ -67,10 +65,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentMonth() {
-        Date nowDate = new Date();
-
-        SimpleDateFormat formatter = new SimpleDateFormat(MM);
-        return formatter.format(nowDate);
+        return new SimpleDateFormat(MM).format(new Date());
     }
 
     /**
@@ -79,10 +74,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentDay() {
-        Date nowDate = new Date();
-
-        SimpleDateFormat formatter = new SimpleDateFormat(DD);
-        return formatter.format(nowDate);
+        return new SimpleDateFormat(DD).format(new Date());
     }
 
     /**
@@ -91,9 +83,7 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentHoursMinutes() {
-        Date nowDate = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
-        return formatter.format(nowDate);
+        return new SimpleDateFormat(HH_MM).format(new Date());
     }
 
     /**
@@ -121,9 +111,8 @@ public class TimeUtils {
      * @return
      */
     public static Date convertToDate(String date) {
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         try {
-            return formatter.parse(date);
+            return new SimpleDateFormat(YYYY_MM_DD).parse(date);
         } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
@@ -137,9 +126,8 @@ public class TimeUtils {
      * @return
      */
     public static String convertToString(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         try {
-            return formatter.format(date);
+            return new SimpleDateFormat(YYYY_MM_DD).format(date);
         } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
@@ -151,13 +139,8 @@ public class TimeUtils {
      *
      * @return String
      */
-    public static String getCurrentTimeAddYear(int addyear) {
-        Date nowDate = new Date();
-
-        String currentYear = String.valueOf(Integer.parseInt(getCurrentYear()) + addyear);
-
-        String currentTime = new SimpleDateFormat("-MM-dd:HH:mm:ss").format(nowDate);
-        return currentYear + currentTime;
+    public static String getCurrentTimeAddYear(int addYear) {
+        return String.valueOf(Integer.parseInt(getCurrentYear()) + addYear) + new SimpleDateFormat("-MM-dd:HH:mm:ss").format(new Date());
     }
 
     /**
@@ -236,7 +219,7 @@ public class TimeUtils {
      * @return
      */
     public static String getEndDateInPeriod(String period) {
-        DateFormat df = new SimpleDateFormat(YYYY_MM);
+        final DateFormat df = new SimpleDateFormat(YYYY_MM);
         try {
             if (df.parse(period) == null) {
                 return null;
@@ -245,9 +228,9 @@ public class TimeUtils {
             Log.d(e.getMessage());
             return null;
         }
-        int year = Integer.parseInt(period.substring(0, 4));
-        int month = Integer.parseInt(period.substring(5, 7));
-        Calendar cl = Calendar.getInstance();
+        final int year = Integer.parseInt(period.substring(0, 4));
+        final int month = Integer.parseInt(period.substring(5, 7));
+        final Calendar cl = Calendar.getInstance();
         cl.set(year, month - 1, 1);
         cl.add(Calendar.MONTH, 1);
         cl.add(Calendar.DATE, -1);
@@ -265,14 +248,11 @@ public class TimeUtils {
         if (str == null || str.equals("")) {
             timeStr = null;
         } else {
-            SimpleDateFormat format = new SimpleDateFormat(YYYYMMDD);
             try {
-                Date date = format.parse(str);
-                format = new SimpleDateFormat(YYYY_MM_DD);
-                timeStr = format.format(date);
+                Date date = new SimpleDateFormat(YYYYMMDD).parse(str);
+                timeStr = new SimpleDateFormat(YYYY_MM_DD).format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
-                timeStr = null;
             }
         }
         return timeStr;
@@ -289,14 +269,11 @@ public class TimeUtils {
         if (str == null || str.equals("")) {
             timeStr = null;
         } else {
-            SimpleDateFormat format = new SimpleDateFormat(YYYY_MM_DD);
             try {
-                Date date = format.parse(str);
-                format = new SimpleDateFormat(YYYYMMDD);
-                timeStr = format.format(date);
+                Date date = new SimpleDateFormat(YYYY_MM_DD).parse(str);
+                timeStr = new SimpleDateFormat(YYYYMMDD).format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
-                timeStr = null;
             }
         }
         return timeStr;
@@ -309,11 +286,10 @@ public class TimeUtils {
      * @return
      */
     public static long convertLong(String str) {
-        SimpleDateFormat dfs = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         Date currentTime = null;
         long time = -1;
         try {
-            currentTime = dfs.parse(str);
+            currentTime = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(str);
             time = currentTime.getTime();
         } catch (ParseException e) {
             Log.d(e.getMessage());
@@ -328,8 +304,7 @@ public class TimeUtils {
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
-        return formatter.format(date);
+        return new SimpleDateFormat(YYYY_MM_DD).format(date);
     }
 
     public static String formatTimeString2(String time) {
@@ -339,8 +314,7 @@ public class TimeUtils {
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
-        return formatter.format(date);
+        return new SimpleDateFormat(HH_MM_SS).format(date);
     }
 
     public static String formatTimeString(String time) {
@@ -350,8 +324,7 @@ public class TimeUtils {
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
-        return formatter.format(date);
+        return new SimpleDateFormat(HH_MM).format(date);
     }
 
     /**
@@ -362,7 +335,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmdHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -375,7 +348,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmd(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        final SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -388,7 +361,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatMdHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(MM_DD_HH_MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(MM_DD_HH_MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -401,7 +374,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatHms(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -414,7 +387,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatHm(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
+        final SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -427,7 +400,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatMs(long time, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -440,7 +413,7 @@ public class TimeUtils {
      * @return
      */
     public static String format(long time, String pattern, int zone) {
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        final SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, zone)));
         return formatter.format(new Date(time));
     }
@@ -452,7 +425,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmdHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -463,7 +436,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatYmd(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
+        final SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -475,7 +448,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatMdHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(MM_DD_HH_MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(MM_DD_HH_MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -487,7 +460,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatHms(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -499,7 +472,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatHm(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
+        final SimpleDateFormat formatter = new SimpleDateFormat(HH_MM);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -511,7 +484,7 @@ public class TimeUtils {
      * @return
      */
     public static String formatMs(long time) {
-        SimpleDateFormat formatter = new SimpleDateFormat(MM_SS);
+        final SimpleDateFormat formatter = new SimpleDateFormat(MM_SS);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -524,7 +497,7 @@ public class TimeUtils {
      * @return
      */
     public static String format(long time, String pattern) {
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        final SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         formatter.setTimeZone(TimeZone.getTimeZone(String.format(GMT_02D_00, 8)));
         return formatter.format(new Date(time));
     }
@@ -541,23 +514,22 @@ public class TimeUtils {
         }
         Date commentTime = null;
         Date currentTime = null;
-        SimpleDateFormat dfs = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
         try {
-            commentTime = dfs.parse(time);
+            commentTime = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
             currentTime = Calendar.getInstance().getTime();
         } catch (ParseException e) {
             Log.d(e.getMessage());
             return null;
         }
-        long between = (currentTime.getTime() - commentTime.getTime()) / 1000;// 除以1000是为了转换成秒
+        final long between = (currentTime.getTime() - commentTime.getTime()) / 1000;// 除以1000是为了转换成秒
 
-        long year = between / (24 * 3600 * 30 * 12);
-        long month = between / (24 * 3600 * 30);
-        long week = between / (24 * 3600 * 7);
-        long day = between / (24 * 3600);
-        long hour = between % (24 * 3600) / 3600;
-        long minute = between % 3600 / 60;
-        long second = between % 60 / 60;
+        final long year = between / (24 * 3600 * 30 * 12);
+        final long month = between / (24 * 3600 * 30);
+        final long week = between / (24 * 3600 * 7);
+        final long day = between / (24 * 3600);
+        final long hour = between % (24 * 3600) / 3600;
+        final long minute = between % 3600 / 60;
+        final long second = between % 60 / 60;
 
         if (year != 0) {
             StringBuilder sb = new StringBuilder();
@@ -605,7 +577,7 @@ public class TimeUtils {
      * @return
      */
     public static String getZhTimeString(String time) {
-        String[] str = time.split(":");
+        final String[] str = time.split(":");
         if (str.length == 3) {
             return Integer.valueOf(str[0]) + "小时" + Integer.valueOf(str[1])
                     + "分" + Integer.valueOf(str[2]) + "秒";
@@ -626,9 +598,8 @@ public class TimeUtils {
      * @return
      */
     public static String getFormatDate(int year, int monthOfYear, int dayOfMonth) {
-        DecimalFormat nf = new DecimalFormat("00");
-        return year + "-" + nf.format((monthOfYear + 1)) + "-"
-                + nf.format(dayOfMonth);
+        final DecimalFormat nf = new DecimalFormat("00");
+        return year + "-" + nf.format((monthOfYear + 1)) + "-"+ nf.format(dayOfMonth);
     }
 
     /**
@@ -639,7 +610,7 @@ public class TimeUtils {
      * @return
      */
     public static String getFormatTime(int hourOfDay, int minute) {
-        DecimalFormat nf = new DecimalFormat("00");
+        final DecimalFormat nf = new DecimalFormat("00");
         return nf.format((hourOfDay)) + ":" + nf.format(minute);
     }
 
@@ -690,10 +661,10 @@ public class TimeUtils {
      * @return
      */
     public static boolean isSameDay(long time1, long time2) {
-        Calendar calDateA = Calendar.getInstance();
+        final Calendar calDateA = Calendar.getInstance();
         calDateA.setTimeInMillis(time1);
 
-        Calendar calDateB = Calendar.getInstance();
+        final Calendar calDateB = Calendar.getInstance();
         calDateB.setTimeInMillis(time2);
 
         return calDateA.get(Calendar.YEAR) == calDateB.get(Calendar.YEAR)
@@ -710,10 +681,10 @@ public class TimeUtils {
      * @return
      */
     public static boolean isSameMonth(long time1, long time2) {
-        Calendar time1Ca = Calendar.getInstance();
+        final Calendar time1Ca = Calendar.getInstance();
         time1Ca.setFirstDayOfWeek(Calendar.MONDAY);
         time1Ca.setTimeInMillis(time1);
-        Calendar time2Ca = Calendar.getInstance();
+        final Calendar time2Ca = Calendar.getInstance();
         time2Ca.setFirstDayOfWeek(Calendar.MONDAY);
         time2Ca.setTimeInMillis(time2);
         return time1Ca.get(Calendar.YEAR) == time2Ca.get(Calendar.YEAR)
@@ -728,10 +699,10 @@ public class TimeUtils {
      * @return
      */
     public static boolean isSameWeek(long time1, long time2) {
-        Calendar time1Ca = Calendar.getInstance();
+        final Calendar time1Ca = Calendar.getInstance();
         time1Ca.setFirstDayOfWeek(Calendar.MONDAY);
         time1Ca.setTimeInMillis(time1);
-        Calendar time2Ca = Calendar.getInstance();
+        final Calendar time2Ca = Calendar.getInstance();
         time2Ca.setFirstDayOfWeek(Calendar.MONDAY);
         time2Ca.setTimeInMillis(time2);
         return time1Ca.get(Calendar.WEEK_OF_YEAR) == time2Ca.get(Calendar.WEEK_OF_YEAR);

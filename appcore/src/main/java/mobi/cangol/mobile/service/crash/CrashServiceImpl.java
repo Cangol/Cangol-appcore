@@ -71,10 +71,10 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         mSessionService = (SessionService) mApplication.getAppService(AppService.SESSION_SERVICE);
-        ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
+        final ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
         mCrashDir = configService.getTempDir().getAbsolutePath() + File.separator + "crash";
 
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         FileUtils.newFolder(mCrashDir);
         StrictMode.setThreadPolicy(oldPolicy);
     }
@@ -108,7 +108,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(CRASHSERVICE_THREADPOOL_NAME, TAG);
         sp.putInt(CRASHSERVICE_THREAD_MAX, 1);
         sp.putString(CRASHSERVICE_REPORT_URL, "");
@@ -131,7 +131,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
             Log.d(TAG, "report .crash " + report.path);
         }
 
-        RequestParams params = this.mParams == null ? new RequestParams() : new RequestParams(this.mParams);
+        final  RequestParams params = this.mParams == null ? new RequestParams() : new RequestParams(this.mParams);
         params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_ERROR), report.error);
         params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_POSITION), report.position);
         params.put(mServiceProperty.getString(CRASHSERVICE_REPORT_CONTEXT), report.context);
@@ -164,17 +164,17 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     }
 
     protected String throwableToString(Throwable ex) {
-        Writer writer = new StringWriter();
-        PrintWriter pw = new PrintWriter(writer);
+        final  Writer writer = new StringWriter();
+        final PrintWriter pw = new PrintWriter(writer);
         ex.printStackTrace(pw);
         pw.close();
         return writer.toString();
     }
 
     protected ReportError makeReportError(Throwable ex) {
-        String timestamp = TimeUtils.getCurrentTime();
-        String filename = timestamp.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "");
-        ReportError error = new ReportError();
+        final String timestamp = TimeUtils.getCurrentTime();
+        final String filename = timestamp.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "");
+        final ReportError error = new ReportError();
         error.error = ex.toString();
         error.position = ex.getStackTrace()[0].toString();
         error.context = throwableToString(ex);
@@ -187,7 +187,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         Thread.setDefaultUncaughtExceptionHandler(mDefaultExceptionHandler);
-        ReportError error = makeReportError(ex);
+        final ReportError error = makeReportError(ex);
         Log.e("AndroidRuntime", error.context);
         if (debug) {
             Log.d(TAG, "save .crash " + error.path);
@@ -205,9 +205,9 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         mApplication.post(new Task<List<ReportError>>() {
             @Override
             public List<ReportError> call() {
-                List<File> files = FileUtils.searchBySuffix(new File(mCrashDir), null, CRASH);
+                final List<File> files = FileUtils.searchBySuffix(new File(mCrashDir), null, CRASH);
 
-                List<ReportError> reports = new ArrayList<>();
+                final List<ReportError> reports = new ArrayList<>();
                 Object obj = null;
                 for (final File file : files) {
                     obj = FileUtils.readObject(file);

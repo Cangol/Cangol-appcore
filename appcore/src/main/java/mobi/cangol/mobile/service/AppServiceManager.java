@@ -68,5 +68,5 @@ public abstract class AppServiceManager {
      *
      * @param mDebug
      */
-    public abstract void setmDebug(boolean mDebug);
+    public abstract void setDebug(boolean mDebug);
 }
