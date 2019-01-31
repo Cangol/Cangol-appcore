@@ -133,11 +133,11 @@ public final class DeviceInfo {
         StringBuilder sb = new StringBuilder();
         try {
 
-            Field[] fields = Build.class.getDeclaredFields();
-            for (Field field : fields) {
+            final Field[] fields = Build.class.getDeclaredFields();
+            for (final Field field : fields) {
                 field.setAccessible(true);
-                String name = field.getName();
-                String value = field.get(null).toString();
+                final String name = field.getName();
+                final String value = field.get(null).toString();
                 sb.append(name)
                         .append('=')
                         .append(value)
@@ -160,7 +160,7 @@ public final class DeviceInfo {
             Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
-            String memStr = "MemTotal:";
+            final String memStr = "MemTotal:";
             String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
@@ -182,7 +182,7 @@ public final class DeviceInfo {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             bufferedReader.readLine();
             String str = bufferedReader.readLine();
-            String memStr = "MemFree:";
+            final String memStr = "MemFree:";
             String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
@@ -200,10 +200,10 @@ public final class DeviceInfo {
     public static String getMemInfo() {
         String result = "";
         try {
-            Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
+            final Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String data = null;
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             while ((data = bufferedReader.readLine()) != null) {
                 sb.append("\n" + data);
             }
@@ -223,10 +223,10 @@ public final class DeviceInfo {
     public static String getCPUInfo() {
         String result = "";
         try {
-            Process process = new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo").start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
+            final  Process process = new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo").start();
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
-            String title = "Processor\t: ";
+            final String title = "Processor\t: ";
             result = str.substring(str.indexOf(title) + title.length());
             bufferedReader.close();
             return result;
@@ -244,10 +244,10 @@ public final class DeviceInfo {
     public static String getCPUABI() {
         String result = "";
         try {
-            Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
-            InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), CHARSET);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String str = bufferedReader.readLine();
+            final Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
+            final InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), CHARSET);
+            final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            final String str = bufferedReader.readLine();
             result = str.trim();
         } catch (Exception e) {
             result = UNKNOWN;
@@ -262,8 +262,8 @@ public final class DeviceInfo {
      * @return
      */
     public static String getResolution(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        final DisplayMetrics dm = new DisplayMetrics();
+        final  WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             wm.getDefaultDisplay().getRealMetrics(dm);
         } else {
@@ -293,7 +293,7 @@ public final class DeviceInfo {
      * @return
      */
     public static int getNavigationBarHeight(Context context) {
-        int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", ANDROID);
+        final int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", ANDROID);
         if (resourceId > 0) {
             return context.getResources().getDimensionPixelSize(resourceId);
         }
@@ -311,8 +311,7 @@ public final class DeviceInfo {
      * @return
      */
     public static float getDensity(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return displayMetrics.density;
+        return context.getResources().getDisplayMetrics().density;
     }
 
     /**
@@ -322,8 +321,7 @@ public final class DeviceInfo {
      * @return
      */
     public static float getDensityDpi(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return displayMetrics.densityDpi;
+        return context.getResources().getDisplayMetrics().densityDpi;
     }
 
     /**
@@ -333,8 +331,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getDensityDpiStr(Context context) {
-        int density = context.getResources().getDisplayMetrics().densityDpi;
-        switch (density) {
+        switch (context.getResources().getDisplayMetrics().densityDpi) {
             case DisplayMetrics.DENSITY_LOW:
                 return "LDPI";
             case DisplayMetrics.DENSITY_MEDIUM:
@@ -362,14 +359,14 @@ public final class DeviceInfo {
      */
     public static String getScreenSize(Context context) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-        double x = Math.pow(width, 2);
-        double y = Math.pow(height, 2);
-        double diagonal = Math.sqrt(x + y);
+        final int width = dm.widthPixels;
+        final int height = dm.heightPixels;
+        final double x = Math.pow(width, 2);
+        final double y = Math.pow(height, 2);
+        final double diagonal = Math.sqrt(x + y);
 
         int dens = dm.densityDpi;
-        double screenInches = diagonal / (double) dens;
+        final double screenInches = diagonal / (double) dens;
         return String.format("%.2f", screenInches);
     }
 
@@ -382,7 +379,7 @@ public final class DeviceInfo {
     public static String getNetworkOperatorName(Context context) {
         String provider = "";
         try {
-            TelephonyManager manager = (TelephonyManager) context
+            final TelephonyManager manager = (TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
             provider = manager.getNetworkOperatorName();
         } catch (Exception e) {
@@ -532,8 +529,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getLanguage() {
-        Locale locale = Locale.getDefault();
-        return locale.getLanguage();
+        return Locale.getDefault().getLanguage();
     }
 
     /**
@@ -542,8 +538,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getCountry() {
-        Locale locale = Locale.getDefault();
-        return locale.getCountry();
+        return Locale.getDefault().getCountry();
     }
 
     /**
@@ -668,8 +663,8 @@ public final class DeviceInfo {
      */
     public static int getIpAddress(Context context) {
         int ipAddress = 0;
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo == null || wifiInfo.equals("")) {
             return ipAddress;
         } else {
@@ -685,7 +680,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getIpStr(Context context) {
-        int ipAddress = getIpAddress(context);
+        final int ipAddress = getIpAddress(context);
         return String.format("%d.%d.%d.%d", (ipAddress & 0xff),
                 (ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff),
                 (ipAddress >> 24 & 0xff));
@@ -752,7 +747,7 @@ public final class DeviceInfo {
             }
         }
         try {
-            Method method = clazz.getDeclaredMethod("sync", Context.class);
+            final Method method = clazz.getDeclaredMethod("sync", Context.class);
             method.invoke(null, context);
         } catch (InvocationTargetException e) {
             Log.d("InvocationTargetException", e.toString());
@@ -769,8 +764,8 @@ public final class DeviceInfo {
 
     public static String getDeviceId(Context context) {
         String did = "";
-        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = manager.getConnectionInfo();
+        final  WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        final WifiInfo wifiInfo = manager.getConnectionInfo();
         String macAddress = wifiInfo.getMacAddress();
         Log.i("macAddress did:" + macAddress);
         if (null != macAddress && !SPECIAL_MAC.equals(macAddress)) {
@@ -790,7 +785,7 @@ public final class DeviceInfo {
                 did = imei;
                 Log.i("imei did:" + did);
             } else {
-                String deviceId = Secure.getString(context.getContentResolver(),
+                final String deviceId = Secure.getString(context.getContentResolver(),
                         Secure.ANDROID_ID);
                 // sdk: android_id
                 if (null != deviceId
@@ -801,7 +796,7 @@ public final class DeviceInfo {
                     SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
                     String uid = sp.getString("uid", null);
                     if (null == uid) {
-                        SharedPreferences.Editor editor = sp.edit();
+                        final SharedPreferences.Editor editor = sp.edit();
                         uid = UUID.randomUUID().toString().replace("-", "");
                         editor.putString("uid", uid);
                         editor.commit();
@@ -857,7 +852,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isNetworkLocation(Context context) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        final  LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
@@ -890,12 +885,12 @@ public final class DeviceInfo {
         PackageInfo info;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-            byte[] cert = info.signatures[0].toByteArray();
-            MessageDigest md = MessageDigest.getInstance("SHA1");
+            final byte[] cert = info.signatures[0].toByteArray();
+            final MessageDigest md = MessageDigest.getInstance("SHA1");
 
-            InputStream input = new ByteArrayInputStream(cert);
+            final InputStream input = new ByteArrayInputStream(cert);
             //证书工厂类，这个类实现了出厂合格证算法的功能
-            CertificateFactory cf = CertificateFactory.getInstance("X509");
+            final  CertificateFactory cf = CertificateFactory.getInstance("X509");
             X509Certificate c = (X509Certificate) cf.generateCertificate(input);
             //获得公钥
             byte[] publicKey = md.digest(c.getEncoded());

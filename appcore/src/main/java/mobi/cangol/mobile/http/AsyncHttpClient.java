@@ -148,9 +148,9 @@ public class AsyncHttpClient {
      * @param responseHandler
      */
     public void get(Object context, String url, RequestParams requestParams, AsyncHttpResponseHandler responseHandler) {
-        StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
+        final StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (requestParams.urlParams != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : requestParams.urlParams.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : requestParams.urlParams.entrySet()) {
                 sb.append(entry.getKey())
                         .append('&')
                         .append(entry.getValue());
@@ -204,7 +204,7 @@ public class AsyncHttpClient {
      * @param responseHandler
      */
     public void post(Object context, String url, JSONObject json, AsyncHttpResponseHandler responseHandler) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+        final RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         execMethod("POST", context, url, null, requestBody, responseHandler);
     }
 
@@ -294,14 +294,14 @@ public class AsyncHttpClient {
     public void execMethod(String method, Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
 
         FormBody.Builder requestBodyBuilder = new FormBody.Builder();
         if (params != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
         }
@@ -341,17 +341,17 @@ public class AsyncHttpClient {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
-        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        final MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         if (params.fileParams != null) {
-            for (ConcurrentHashMap.Entry<String, File> entry : params.fileParams.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, File> entry : params.fileParams.entrySet()) {
                 RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), entry.getValue());
                 requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue().getName(), fileBody);
             }
         }
 
         if (params.urlParams != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : params.urlParams.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : params.urlParams.entrySet()) {
                 requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
             }
         }
@@ -384,9 +384,9 @@ public class AsyncHttpClient {
      * @param responseHandler
      */
     public void execMethod(String method, Object context, String url, Map<String, String> headers, RequestBody requestBody, AsyncHttpResponseHandler responseHandler) {
-        Headers.Builder headerBuilder = new Headers.Builder();
+        final Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
@@ -412,7 +412,7 @@ public class AsyncHttpClient {
     }
 
     protected void sendRequest(OkHttpClient client, Request uriRequest, AsyncHttpResponseHandler responseHandler, Object context) {
-        Future<?> request = threadPool.submit(new AsyncHttpRequest(this, client, uriRequest, responseHandler));
+        final Future<?> request = threadPool.submit(new AsyncHttpRequest(this, client, uriRequest, responseHandler));
         if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
@@ -432,10 +432,10 @@ public class AsyncHttpClient {
      */
     public void cancelRequests(Object context, boolean mayInterruptIfRunning) {
 
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+        final List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final  Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
@@ -443,12 +443,12 @@ public class AsyncHttpClient {
         }
         requestMap.remove(context);
 
-        for (Call call : httpClient.dispatcher().queuedCalls()) {
+        for (final Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(group)) {
                 call.cancel();
             }
         }
-        for (Call call : httpClient.dispatcher().runningCalls()) {
+        for (final Call call : httpClient.dispatcher().runningCalls()) {
             if (call.request().tag().equals(group)) {
                 call.cancel();
             }
