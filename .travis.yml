@@ -45,7 +45,7 @@ before_script:
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 script:
-  -  gradle build connectedCheck
+  -  gradle appcore:build connectedCheck
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - java -jar ~/codacy-coverage-reporter-assembly-latest.jar -l Java -r appcore/build/reports/coverage/debug/report.xml
