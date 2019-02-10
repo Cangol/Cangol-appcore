@@ -24,7 +24,7 @@ public class RootUtils {
     }
 
     public static boolean checkRootMethod1() {
-        String buildTags = android.os.Build.TAGS;
+        final String buildTags = android.os.Build.TAGS;
         return buildTags != null && buildTags.contains("test-keys");
     }
 
@@ -57,7 +57,7 @@ public class RootUtils {
 
         public List<String> executeCommand(SHELL_CMD shellCmd) {
             String line = null;
-            List<String> fullResponse = new ArrayList<>();
+            final List<String> fullResponse = new ArrayList<>();
             Process localProcess = null;
             try {
                 localProcess = Runtime.getRuntime().exec(shellCmd.command);

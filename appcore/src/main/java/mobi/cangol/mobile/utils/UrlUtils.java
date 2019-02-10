@@ -72,13 +72,13 @@ public class UrlUtils {
             query = "";
         }
 
-        Map<String, String> queries = new HashMap<>();
+        final Map<String, String> queries = new HashMap<>();
         if (query == null) {
             return queries;
         }
 
-        for (String entry : query.split("&")) {
-            String[] keyvalue = entry.split("=");
+        for (final String entry : query.split("&")) {
+            final String[] keyvalue = entry.split("=");
             if (keyvalue.length != 2) {
                 continue;
             }
