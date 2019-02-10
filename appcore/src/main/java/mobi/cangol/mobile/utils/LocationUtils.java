@@ -147,7 +147,7 @@ public class LocationUtils {
      * @return
      */
     public static Long getUTCTime() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("gmt"));
         return cal.getTimeInMillis();
     }
@@ -174,7 +174,7 @@ public class LocationUtils {
                 .format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderReverse&location=%f,%f&output=json&pois=0",
                         ak, lat, lng);
         String address = null;
-        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        final OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -183,10 +183,10 @@ public class LocationUtils {
         try {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
-                String response = httpResponse.body().string();
-                int start = "renderReverse&&renderReverse(".length();
-                int end = response.lastIndexOf(')');
-                JSONObject json = new JSONObject(response.substring(start, end));
+                final String response = httpResponse.body().string();
+                final int start = "renderReverse&&renderReverse(".length();
+                final int end = response.lastIndexOf(')');
+                final JSONObject json = new JSONObject(response.substring(start, end));
                 address = json.getJSONObject("result").getString("formatted_address");
             }
             return address;
@@ -213,7 +213,7 @@ public class LocationUtils {
                         lat, lng);
         String address = null;
         final OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 .url(url)
                 .get()
                 .build();

@@ -72,7 +72,7 @@ class CacheManagerImpl implements CacheManager {
         this.mServiceProperty = serviceProperty;
         String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
         long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
-        ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
+        final ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
         String cacheDir = configService.getCacheDir().getAbsolutePath() + File.separator + (!TextUtils.isEmpty(dir) ? dir : "contentCache");
         setDiskCache(new File(cacheDir), size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
     }
@@ -246,7 +246,7 @@ class CacheManagerImpl implements CacheManager {
                     if (snapshot != null) {
                         inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
                         if (inputStream != null) {
-                            CacheObject obj = (CacheObject) Object2FileUtils.readObject(inputStream);
+                            final CacheObject obj = (CacheObject) Object2FileUtils.readObject(inputStream);
                             if (obj.isExpired()) {
                                 Log.e(TAG, "is expired & remove ");
                                 mDiskLruCache.remove(hashKeyForDisk(id));
@@ -397,7 +397,7 @@ class CacheManagerImpl implements CacheManager {
                 final String key = hashKeyForDisk(id);
                 OutputStream out = null;
                 try {
-                    DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
+                    final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
                     if (snapshot == null) {
                         final DiskLruCache.Editor editor = mDiskLruCache.edit(key);
                         if (editor != null) {
@@ -432,7 +432,7 @@ class CacheManagerImpl implements CacheManager {
         if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
-        Iterator<String> iterator = contextMap.keySet().iterator();
+        final Iterator<String> iterator = contextMap.keySet().iterator();
         String id = null;
         while (iterator.hasNext()) {
             id = iterator.next();
@@ -453,12 +453,12 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public void removeContent(String context, String id) {
-        HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
+        final HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
         contextMap.remove(id);
-        String key = hashKeyForDisk(id);
+        final String key = hashKeyForDisk(id);
         try {
             if (mDiskLruCache != null) {
                 mDiskLruCache.remove(key);
@@ -558,9 +558,9 @@ class CacheManagerImpl implements CacheManager {
 
     private String bytesToHexString(byte[] bytes) {
         // http://stackoverflow.com/questions/332079
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
+            final String hex = Integer.toHexString(0xFF & bytes[i]);
             if (hex.length() == 1) {
                 sb.append('0');
             }

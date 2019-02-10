@@ -134,7 +134,7 @@ public class DownloadHttpClient {
         }
         requestMap.remove(tag);
 
-        for (Call call : httpClient.dispatcher().queuedCalls()) {
+        for (final Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(group)) {
                 call.cancel();
             }

@@ -74,7 +74,7 @@ public class StringUtils {
      * @return
      */
     public static String reverse(String value) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (int i = value.length() - 1; i >= 0; --i) {
             sb.append(value.charAt(i));
         }
@@ -175,7 +175,7 @@ public class StringUtils {
         final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
-            byte[] strTemp = s.getBytes("UTF-8");
+            final byte[] strTemp = s.getBytes("UTF-8");
             //MessageDigest md5
             MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(strTemp);
@@ -206,10 +206,10 @@ public class StringUtils {
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             //MessageDigest md5
-            MessageDigest mdTemp = MessageDigest.getInstance("MD5");
+            final MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(bytes);
-            byte[] md = mdTemp.digest();
-            int j = md.length;
+            final byte[] md = mdTemp.digest();
+            final int j = md.length;
             char[] str = new char[j * 2];
             int k = 0;
             for (int i = 0; i < j; i++) {
@@ -316,7 +316,8 @@ public class StringUtils {
         final StringBuilder sb = new StringBuilder();
         boolean first = false;
         char aa;
-        for (int i = 0, length = str.length(); i < length; i++) {
+        final int length = str.length();
+        for (int i = 0; i < length; i++) {
             aa = str.charAt(i);
             if (!(!first && aa == '\t')) {
                 first = true;

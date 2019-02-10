@@ -161,13 +161,13 @@ public class Converter {
         String filedName = null;
         if (useAnnotation) {
             if (field.isAnnotationPresent(Attribute.class)) {
-                Attribute attr = field.getAnnotation(Attribute.class);
+               final Attribute attr = field.getAnnotation(Attribute.class);
                 filedName = StringUtils.isEmpty(attr.value()) ? field.getName() : attr.value();
             } else if (field.isAnnotationPresent(Element.class)) {
-                Element element = field.getAnnotation(Element.class);
+                final Element element = field.getAnnotation(Element.class);
                 filedName = StringUtils.isEmpty(element.value()) ? field.getName() : element.value();
             } else if (field.isAnnotationPresent(ElementList.class)) {
-                ElementList elementList = field.getAnnotation(ElementList.class);
+                final ElementList elementList = field.getAnnotation(ElementList.class);
                 filedName = StringUtils.isEmpty(elementList.value()) ? field.getName() : elementList.value();
             } else {
                 //do nothing

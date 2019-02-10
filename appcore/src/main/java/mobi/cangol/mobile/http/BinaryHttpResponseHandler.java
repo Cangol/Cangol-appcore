@@ -107,7 +107,6 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     }
     @Override
     protected void handleFailureMessage(Throwable e, String responseBody) {
-        byte[] response = null;
         if (responseBody != null) {
             try {
                 onFailure(e, responseBody.getBytes("utf-8"));
@@ -115,7 +114,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
                 Log.d("UnsupportedEncoding", e.getMessage());
             }
         } else {
-            onFailure(e, response);
+            onFailure(e, (byte[]) null);
         }
     }
 

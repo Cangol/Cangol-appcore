@@ -130,7 +130,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getMobileInfo() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         try {
 
             final Field[] fields = Build.class.getDeclaredFields();
@@ -178,12 +178,12 @@ public final class DeviceInfo {
     public static long getMemFreeSize() {
         long result = 0;
         try {
-            Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
+            final Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             bufferedReader.readLine();
             String str = bufferedReader.readLine();
             final String memStr = "MemFree:";
-            String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
+            final String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
         } catch (IOException e) {
@@ -201,7 +201,7 @@ public final class DeviceInfo {
         String result = "";
         try {
             final Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String data = null;
             final StringBuilder sb = new StringBuilder();
             while ((data = bufferedReader.readLine()) != null) {
@@ -225,7 +225,7 @@ public final class DeviceInfo {
         try {
             final  Process process = new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo").start();
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
-            String str = bufferedReader.readLine();
+            final String str = bufferedReader.readLine();
             final String title = "Processor\t: ";
             result = str.substring(str.indexOf(title) + title.length());
             bufferedReader.close();
@@ -358,14 +358,14 @@ public final class DeviceInfo {
      * @return
      */
     public static String getScreenSize(Context context) {
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        final DisplayMetrics dm = context.getResources().getDisplayMetrics();
         final int width = dm.widthPixels;
         final int height = dm.heightPixels;
         final double x = Math.pow(width, 2);
         final double y = Math.pow(height, 2);
         final double diagonal = Math.sqrt(x + y);
 
-        int dens = dm.densityDpi;
+        final int dens = dm.densityDpi;
         final double screenInches = diagonal / (double) dens;
         return String.format("%.2f", screenInches);
     }
@@ -424,7 +424,7 @@ public final class DeviceInfo {
         } else {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             try {
-                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName", Integer.class);
+                final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName", Integer.class);
                 method.setAccessible(true);
                 typeName = (String) method.invoke(telephonyManager, networkType);
             } catch (Exception e) {
@@ -439,17 +439,17 @@ public final class DeviceInfo {
 
     public static int getNetworkClass(Context context) {
         int networkClass = 0;
-        int networkType = getNetworkType(context);
+        final int networkType = getNetworkType(context);
         if (networkType == NETWORK_TYPE_WIFI) {
             networkClass = NETWORK_CLASS_WIFI;
         } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
             networkClass = NETWORK_CLASS_UNAVAILABLE;
         } else {
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             try {
-                Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass", Integer.class);
+               final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass", Integer.class);
                 method.setAccessible(true);
-                Integer classInteger = (Integer) method.invoke(telephonyManager, networkType);
+                final Integer classInteger = (Integer) method.invoke(telephonyManager, networkType);
                 networkClass = classInteger.intValue();
             } catch (Exception e) {
                 Log.e("getNetworkClass", "" + e.getMessage(), e);
@@ -459,7 +459,7 @@ public final class DeviceInfo {
     }
 
     public static String getNetworkClassName(Context context) {
-        int networkClass = getNetworkClass(context);
+        final int networkClass = getNetworkClass(context);
         String type = UNKNOWN;
         switch (networkClass) {
             case NETWORK_CLASS_UNAVAILABLE:
@@ -493,11 +493,11 @@ public final class DeviceInfo {
                     .getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getActiveNetworkInfo();
             if (network != null && network.isAvailable() && network.isConnected()) {
-                int type = network.getType();
+                final int type = network.getType();
                 if (type == ConnectivityManager.TYPE_WIFI) {
-                    WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                    final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
-                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo != null) {
                         asu = wifiInfo.getRssi();
                     }
@@ -519,7 +519,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getLocale() {
-        Locale locale = Locale.getDefault();
+        final Locale locale = Locale.getDefault();
         return locale.getLanguage() + "_" + locale.getCountry();
     }
 
@@ -626,17 +626,17 @@ public final class DeviceInfo {
     public static String getMacAddress(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
-                List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
-                for (NetworkInterface nif : all) {
+                final List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+                for (final NetworkInterface nif : all) {
                     if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
 
-                    byte[] macBytes = nif.getHardwareAddress();
+                    final byte[] macBytes = nif.getHardwareAddress();
                     if (macBytes == null) {
                         return "";
                     }
 
-                    StringBuilder res1 = new StringBuilder();
-                    for (byte b : macBytes) {
+                    final StringBuilder res1 = new StringBuilder();
+                    for (final byte b : macBytes) {
                         res1.append(String.format("%02X:", b));
                     }
 
@@ -650,7 +650,7 @@ public final class DeviceInfo {
             }
             return "02:00:00:00:00:00";
         } else {
-            WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             return manager.getConnectionInfo().getMacAddress();
         }
     }
@@ -773,7 +773,7 @@ public final class DeviceInfo {
                     .replace("-", "").replace("_", "");
             Log.i("macAddress did:" + did);
         } else {
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String imei = null;
             try {
                 imei = tm.getDeviceId();
@@ -793,7 +793,7 @@ public final class DeviceInfo {
                     did = deviceId;
                     Log.i("ANDROID_ID did:" + did);
                 } else {
-                    SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
+                    final SharedPreferences sp = context.getSharedPreferences(DeviceInfo.class.getSimpleName(), Context.MODE_PRIVATE);
                     String uid = sp.getString("uid", null);
                     if (null == uid) {
                         final SharedPreferences.Editor editor = sp.edit();

@@ -80,13 +80,13 @@ public class SoapClient {
     public void send(Context context, String url, String namespace, String action, Map<String, String> params, SoapResponseHandler responseHandler) {
 
         if (params != null) {
-            StringBuilder paramsStr = new StringBuilder(url);
+            final StringBuilder paramsStr = new StringBuilder(url);
             paramsStr.append('/')
                     .append(action);
             if (params.size() > 0) {
                 paramsStr.append('?');
             }
-            SoapObject rpc = new SoapObject(namespace, action);
+            final SoapObject rpc = new SoapObject(namespace, action);
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 rpc.addProperty(entry.getKey(), entry.getValue());
                 paramsStr.append(entry.getKey())
@@ -109,9 +109,9 @@ public class SoapClient {
      * @return
      */
     private Element buildAuthHeader(String namespace, String authheader, Map<String, String> params) {
-        Element header = new Element().createElement(namespace, authheader);
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            Element element = new Element().createElement(namespace, entry.getKey());
+        final Element header = new Element().createElement(namespace, authheader);
+        for (final Map.Entry<String, String> entry : params.entrySet()) {
+            final Element element = new Element().createElement(namespace, entry.getKey());
             element.addChild(Node.TEXT, entry.getValue());
             header.addChild(Node.ELEMENT, element);
         }
@@ -125,7 +125,7 @@ public class SoapClient {
      * @param mayInterruptIfRunning
      */
     public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+        final List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
             for (WeakReference<Future<?>> requestRef : requestList) {
                 Future<?> request = requestRef.get();
@@ -149,7 +149,7 @@ public class SoapClient {
     protected void sendRequest(HttpTransportSE ht, SoapSerializationEnvelope envelope,
                                String namespace, SoapResponseHandler responseHandler, Context context) {
 
-        Future<?> request = threadPool.submit(new SoapRequest(ht, envelope, namespace, responseHandler));
+        final Future<?> request = threadPool.submit(new SoapRequest(ht, envelope, namespace, responseHandler));
 
         if (context != null) {
             // Add request to request map

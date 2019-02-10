@@ -113,12 +113,12 @@ public class RSAUtils {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         // 模长   
-        int keyLen = publicKey.getModulus().bitLength() / 8;
+        final int keyLen = publicKey.getModulus().bitLength() / 8;
         // 加密数据长度 <= 模长-11   
-        String[] datas = splitString(data, keyLen - 11);
-        StringBuilder mi = new StringBuilder();
+        final String[] datas = splitString(data, keyLen - 11);
+        final StringBuilder mi = new StringBuilder();
         //如果明文长度大于模长-11则要分组加密   
-        for (String s : datas) {
+        for (final String s : datas) {
             mi.append(bcd2Str(cipher.doFinal(s.getBytes(CHARSET))));
         }
         return mi.toString();
@@ -137,13 +137,13 @@ public class RSAUtils {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         //模长   
-        int keyLen = privateKey.getModulus().bitLength() / 8;
-        byte[] bytes = data.getBytes(CHARSET);
-        byte[] bcd = asciiToBcd(bytes, bytes.length);
+        final int keyLen = privateKey.getModulus().bitLength() / 8;
+        final byte[] bytes = data.getBytes(CHARSET);
+        final byte[] bcd = asciiToBcd(bytes, bytes.length);
         //如果密文长度大于模长则要分组解密
         StringBuilder ming = new StringBuilder();
-        byte[][] arrays = splitArray(bcd, keyLen);
-        for (byte[] arr : arrays) {
+        final byte[][] arrays = splitArray(bcd, keyLen);
+        for (final byte[] arr : arrays) {
             ming.append(new String(cipher.doFinal(arr), CHARSET));
         }
         return ming.toString();
@@ -199,8 +199,8 @@ public class RSAUtils {
      * 拆分字符串
      */
     protected static String[] splitString(String string, int len) {
-        int x = string.length() / len;
-        int y = string.length() % len;
+        final int x = string.length() / len;
+        final int y = string.length() % len;
         int z = 0;
         if (y != 0) {
             z = 1;

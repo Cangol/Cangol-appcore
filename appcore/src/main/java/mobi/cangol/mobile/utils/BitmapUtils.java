@@ -65,11 +65,11 @@ public final class BitmapUtils {
      */
     public static Bitmap addWatermark(Bitmap src, float left, float top, String content, int color,
                                       int size, int alpha) {
-        int w = src.getWidth();
-        int h = src.getHeight();
+        final int w = src.getWidth();
+        final int h = src.getHeight();
         Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
         Canvas canvas = new Canvas(dst);
-        Paint p = new Paint();
+        final Paint p = new Paint();
         p.setAntiAlias(true);
         canvas.drawBitmap(src, 0, 0, p);
         final String fontName = "sans";
@@ -99,7 +99,7 @@ public final class BitmapUtils {
     public static Bitmap addWatermark(Bitmap src, float left, float top, Bitmap img, int alpha) {
         final  int w = src.getWidth();
         final int h = src.getHeight();
-        Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        final Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
         Canvas canvas = new Canvas(dst);
         final Paint p = new Paint();
         p.setAntiAlias(true);
@@ -205,8 +205,8 @@ public final class BitmapUtils {
         canvas.drawRect(0, height, width, height + reflectionGap,
                 deafalutPaint);
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
-        Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0,
+         Paint paint = new Paint();
+        final LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0,
                 bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff,
                 0x00ffffff, TileMode.CLAMP);
         paint.setShader(shader);
@@ -225,31 +225,31 @@ public final class BitmapUtils {
      */
     public static Bitmap createReflectedImage(Bitmap originalImage) {
         final int reflectionGap = 4;  //倒影和原图片间的距离
-        int width = originalImage.getWidth();
-        int height = originalImage.getHeight();
+        final int width = originalImage.getWidth();
+        final int height = originalImage.getHeight();
 
         Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
 
         //倒影部分
-        Bitmap reflectionImage = Bitmap.createBitmap(originalImage,
+        final Bitmap reflectionImage = Bitmap.createBitmap(originalImage,
                 0, height / 2, width, height / 2, matrix, false);
         //要返回的倒影图片
-        Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
+        final Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
                 (height + height / 2), Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(bitmapWithReflection);
+        final Canvas canvas = new Canvas(bitmapWithReflection);
         //画原来的图片
         canvas.drawBitmap(originalImage, 0, 0, null);
 
-        Paint defaultPaint = new Paint();
+        final Paint defaultPaint = new Paint();
         //倒影和原图片间的距离
         canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
         //画倒影部分
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
 
-        Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, originalImage.getHeight(),
+        final Paint paint = new Paint();
+        final LinearGradient shader = new LinearGradient(0, originalImage.getHeight(),
                 0, bitmapWithReflection.getHeight() + reflectionGap,
                 0x70ffffff, 0x00ffffff,
                 TileMode.MIRROR);
@@ -309,9 +309,9 @@ public final class BitmapUtils {
     public static Bitmap scale(Bitmap bitmap, int newWidth, int newHeight) {
         final int width = bitmap.getWidth();
         final int height = bitmap.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        Matrix matrix = new Matrix();
+        final float scaleWidth = ((float) newWidth) / width;
+        final float scaleHeight = ((float) newHeight) / height;
+        final Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
@@ -325,7 +325,7 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap scaleFile(String filepath, int maxWidth, int maxHeight) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         options.inJustDecodeBounds = false;
@@ -386,8 +386,8 @@ public final class BitmapUtils {
         if (originWidth < maxWidth && originHeight < maxHeight) {
             //do nothings
         } else {
-            float wb = (1.0f * originWidth) / maxWidth;
-            float hb = (1.0f * originHeight) / maxHeight;
+            final float wb = (1.0f * originWidth) / maxWidth;
+            final float hb = (1.0f * originHeight) / maxHeight;
             if (originWidth > maxWidth || originHeight > maxHeight) {
                 if (wb >= hb) {
                     final int i = (int) Math.floor(originWidth * 1.0 / maxWidth);
@@ -512,21 +512,21 @@ public final class BitmapUtils {
         final int x = len * (textSize);
         final int y = textSize;
 
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        Bitmap contactIcon = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-        Canvas canvas = new Canvas(contactIcon);
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        final Bitmap contactIcon = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        final Canvas canvas = new Canvas(contactIcon);
 
-        Paint iconPaint = new Paint();
+        final Paint iconPaint = new Paint();
         iconPaint.setDither(true);
         iconPaint.setFilterBitmap(true);
-        Rect src1 = new Rect(0, 0, width, height);
-        Rect dst1 = new Rect(0, 0, width, height);
+        final Rect src1 = new Rect(0, 0, width, height);
+        final Rect dst1 = new Rect(0, 0, width, height);
         canvas.drawBitmap(bitmap, src1, dst1, iconPaint);
-        Paint bgPaint = new Paint();
+        final Paint bgPaint = new Paint();
         bgPaint.setColor(Color.RED);
         canvas.drawRect(width - x / 2 - 6, 0, width + x / 2 + 6, y, bgPaint);
-        Paint countPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG);
+        final Paint countPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG);
         countPaint.setColor(Color.WHITE);
         countPaint.setTextSize(textSize);
         countPaint.setTypeface(Typeface.DEFAULT_BOLD);
@@ -553,11 +553,11 @@ public final class BitmapUtils {
      * @param path 路径
      */
     public static void bitmap2File(Bitmap bm, String path) {
-        File file = new File(path);
+        final File file = new File(path);
         try {
-            boolean result = file.createNewFile();
+            final boolean result = file.createNewFile();
             if (result) {
-                FileOutputStream out = new FileOutputStream(file);
+                final FileOutputStream out = new FileOutputStream(file);
                 if (bm.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
                     out.flush();
                     out.close();
@@ -578,7 +578,7 @@ public final class BitmapUtils {
         if (null == bitmap) {
             return new byte[0];
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
     }
@@ -630,19 +630,19 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap screenShot(Activity activity) {
-        View view = activity.getWindow().getDecorView();
+        final View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
-        Bitmap b1 = view.getDrawingCache();
+        final Bitmap b1 = view.getDrawingCache();
         // 获取状态栏高度  
-        Rect frame = new Rect();
+        final Rect frame = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
+        final int statusBarHeight = frame.top;
         // 获取屏幕长和高  
-        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
-        int width = displayMetrics.widthPixels;
-        int height = displayMetrics.heightPixels;
-        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
+        final DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+        final int width = displayMetrics.widthPixels;
+        final int height = displayMetrics.heightPixels;
+        final Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
         view.destroyDrawingCache();
         return b;
     }
@@ -654,9 +654,9 @@ public final class BitmapUtils {
      * @return
      */
     public static String bitmapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
         bitmap.compress(CompressFormat.JPEG, 100, baos);
-        byte[] bmByte = baos.toByteArray();// 转为byte数组
+        final byte[] bmByte = baos.toByteArray();// 转为byte数组
         try {
             baos.close();
         } catch (IOException e) {

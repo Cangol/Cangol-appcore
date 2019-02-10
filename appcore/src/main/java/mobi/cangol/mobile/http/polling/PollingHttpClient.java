@@ -127,10 +127,10 @@ public class PollingHttpClient {
      * @param mayInterruptIfRunning
      */
     public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
+        final List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
@@ -138,12 +138,12 @@ public class PollingHttpClient {
         }
         requestMap.remove(tag);
 
-        for (Call call : httpClient.dispatcher().queuedCalls()) {
+        for (final Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(tag)) {
                 call.cancel();
             }
         }
-        for (Call call : httpClient.dispatcher().runningCalls()) {
+        for (final Call call : httpClient.dispatcher().runningCalls()) {
             if (call.request().tag().equals(tag)) {
                 call.cancel();
             }
@@ -181,7 +181,7 @@ public class PollingHttpClient {
                 while (exec < retryTimes) {
                     try {
                         exec++;
-                        Response response = client.newCall(request).execute();
+                        final Response response = client.newCall(request).execute();
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
                                 if (isSuccess = responseHandler.sendResponseMessage(response)) {
