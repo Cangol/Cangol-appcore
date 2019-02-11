@@ -54,7 +54,7 @@ public class FileUtils {
      * @return 文件删除成功返回true, 否则返回false
      */
     public static boolean delete(String fileName) {
-        File file = new File(fileName);
+        final File file = new File(fileName);
         if (!file.exists()) {
             Log.d(TAG, "delete File fail! " + fileName + " not exist");
             return false;
@@ -201,10 +201,8 @@ public class FileUtils {
         PrintWriter myFile = null;
         try {
             final File myFilePath = new File(filePath);
-            if (!myFilePath.exists()) {
-                if (!myFilePath.createNewFile()) {
-                    Log.d(TAG, "newFile createNewFile fail" + filePath);
-                }
+            if (!myFilePath.exists()&&!myFilePath.createNewFile()) {
+                Log.d(TAG, "newFile createNewFile fail" + filePath);
             }
             outWrite = new OutputStreamWriter(new FileOutputStream(myFilePath), UTF_8);
             myFile = new PrintWriter(outWrite);
@@ -281,10 +279,8 @@ public class FileUtils {
             } else {
                 temp = new File(path + File.separator + tempList[i]);
             }
-            if (temp.isFile()) {
-                if (!temp.delete()) {
+            if (temp.isFile()&&!temp.delete()) {
                     //do nothings
-                }
             }
             if (temp.isDirectory()) {
                 delAllFile(path + "/ " + tempList[i]);// 先删除文件夹里面的文件
@@ -536,7 +532,7 @@ public class FileUtils {
         final float sizeKb = sizeBt * 1024.0f;
         final float sizeMb = sizeKb * 1024.0f;
         final float sizeGb = sizeMb * 1024.0f;
-        int scale = 2;
+        final int scale = 2;
         if (length >= 0 && length < sizeBt) {
             return Math.round(length * 10.0f) / 10.0 + "B";
         } else if (length >= sizeBt && length < sizeKb) {
@@ -544,11 +540,11 @@ public class FileUtils {
         } else if (length >= sizeKb && length < sizeMb) {
             return Math.round((length / sizeKb) * 10.0f) / 10.0f + "MB";
         } else if (length >= sizeMb && length < sizeGb) {
-            BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
+            final BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
                     .toString());
-            BigDecimal sizeMB = new BigDecimal(Double.valueOf(sizeMb + "")
+            final BigDecimal sizeMB = new BigDecimal(Double.valueOf(sizeMb + "")
                     .toString());
-            String result = longs.divide(sizeMB, scale,
+            final String result = longs.divide(sizeMB, scale,
                     BigDecimal.ROUND_HALF_UP).toString();
             return result + "GB";
         } else {

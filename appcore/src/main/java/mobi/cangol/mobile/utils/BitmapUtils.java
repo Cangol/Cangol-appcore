@@ -67,13 +67,12 @@ public final class BitmapUtils {
                                       int size, int alpha) {
         final int w = src.getWidth();
         final int h = src.getHeight();
-        Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        final Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
         Canvas canvas = new Canvas(dst);
         final Paint p = new Paint();
         p.setAntiAlias(true);
         canvas.drawBitmap(src, 0, 0, p);
-        final String fontName = "sans";
-        final Typeface font = Typeface.create(fontName, Typeface.BOLD);
+        final Typeface font = Typeface.create("sans", Typeface.BOLD);
         p.setAntiAlias(true);
         p.setTextAlign(Paint.Align.CENTER);
         p.setColor(color);
@@ -123,7 +122,7 @@ public final class BitmapUtils {
         final int w = pro.getWidth();
         final int h = pro.getHeight();
         final  Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
-        Canvas canvas = new Canvas(dst);
+        final Canvas canvas = new Canvas(dst);
         canvas.drawBitmap(src, 0, 0, null);
         canvas.drawBitmap(pro, 0, pro.getHeight() * (100 - progress) / 100.0f, null);
         canvas.save(Canvas.ALL_SAVE_FLAG);
@@ -164,14 +163,13 @@ public final class BitmapUtils {
                 .getHeight(), Config.ARGB_8888);
         final Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         final RectF rectF = new RectF(rect);
 
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
+        paint.setColor(0xff424242);
         canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 
         paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
@@ -187,8 +185,8 @@ public final class BitmapUtils {
      */
     public static Bitmap createReflectionImageWithOrigin(Bitmap bitmap) {
         final int reflectionGap = 4;
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
 
         Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
@@ -196,16 +194,16 @@ public final class BitmapUtils {
         final Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 2,
                 width, height / 2, matrix, false);
 
-        Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
+       final Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
                 (height + height / 2), Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(bitmapWithReflection);
+        final Canvas canvas = new Canvas(bitmapWithReflection);
         canvas.drawBitmap(bitmap, 0, 0, null);
         final Paint deafalutPaint = new Paint();
         canvas.drawRect(0, height, width, height + reflectionGap,
                 deafalutPaint);
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
-         Paint paint = new Paint();
+        final Paint paint = new Paint();
         final LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0,
                 bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff,
                 0x00ffffff, TileMode.CLAMP);
@@ -228,7 +226,7 @@ public final class BitmapUtils {
         final int width = originalImage.getWidth();
         final int height = originalImage.getHeight();
 
-        Matrix matrix = new Matrix();
+        final Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
 
         //倒影部分
@@ -292,7 +290,7 @@ public final class BitmapUtils {
      * @return
      */
     public static int[] getSize(String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         return new int[]{options.outWidth, options.outHeight};
@@ -354,7 +352,7 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap compressImage(Bitmap image, long maxSize) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         int quality = 100;
         while (baos.toByteArray().length > maxSize) {
