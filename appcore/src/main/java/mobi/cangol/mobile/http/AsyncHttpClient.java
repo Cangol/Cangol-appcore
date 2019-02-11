@@ -128,9 +128,9 @@ public class AsyncHttpClient {
      */
     public void get(Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
 
-        StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
+        final StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (params != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 sb.append(entry.getKey())
                         .append('&')
                         .append(entry.getValue());
@@ -299,7 +299,7 @@ public class AsyncHttpClient {
             }
         }
 
-        FormBody.Builder requestBodyBuilder = new FormBody.Builder();
+        final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
         if (params != null) {
             for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
@@ -335,9 +335,9 @@ public class AsyncHttpClient {
      * @param responseHandler
      */
     public void execMethod(String method, Object context, String url, Map<String, String> headers, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        Headers.Builder headerBuilder = new Headers.Builder();
+       final Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
-            for (ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+            for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
@@ -345,7 +345,7 @@ public class AsyncHttpClient {
 
         if (params.fileParams != null) {
             for (final ConcurrentHashMap.Entry<String, File> entry : params.fileParams.entrySet()) {
-                RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), entry.getValue());
+                final RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), entry.getValue());
                 requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue().getName(), fileBody);
             }
         }

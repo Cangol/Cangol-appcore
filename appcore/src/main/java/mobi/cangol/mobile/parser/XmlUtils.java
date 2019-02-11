@@ -68,13 +68,13 @@ public class XmlUtils extends Converter {
     private static void toXml(XmlSerializer serializer, Object obj, boolean useAnnotation) {
         try {
             serializer.startTag(null, obj.getClass().getSimpleName());
-            Field[] fields = obj.getClass().getDeclaredFields();
-            for (Field field : fields) {
+            final Field[] fields = obj.getClass().getDeclaredFields();
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) {
                     continue;
                 }
-                String filedName = getFieldName(field, useAnnotation);
+               final String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
                     if (isBaseClass(field.getType())) {
@@ -91,7 +91,7 @@ public class XmlUtils extends Converter {
                 } else {
                     //集合类型
                     if (field.getGenericType() instanceof ParameterizedType) {
-                        List<?> list = (List<?>) field.get(obj);
+                        final List<?> list = (List<?>) field.get(obj);
                         if (list != null) {
                             for (int i = 0; i < list.size(); i++) {
                                 toXml(serializer, list.get(i), useAnnotation);
@@ -177,7 +177,7 @@ public class XmlUtils extends Converter {
      * @throws XMLParserException
      */
     public static <T> List<T> parserToList(Class<T> c, InputStream inputSteam, boolean useAnnotation) throws XMLParserException {
-        DocumentParser documentParser = new DocumentParser(inputSteam);
+        final DocumentParser documentParser = new DocumentParser(inputSteam);
         documentParser.parserDom();
         return parserToList(c, (NodeList) documentParser.getRoot(), useAnnotation);
     }
@@ -189,12 +189,12 @@ public class XmlUtils extends Converter {
         }
         T t = null;
         try {
-            Constructor constructor = c.getDeclaredConstructor();
+            final Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
             t = (T) constructor.newInstance();
-            Field[] fields = c.getDeclaredFields();
+            final Field[] fields = c.getDeclaredFields();
             String filedName = null;
-            for (Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) {
                     continue;
@@ -207,9 +207,9 @@ public class XmlUtils extends Converter {
                     setField(t, field, node, useAnnotation, filedName);
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
-                        ParameterizedType pt = (ParameterizedType) field.getGenericType();
-                        Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
-                        List<?> list = parserToList(genericClazz, getNodeList(node, filedName), useAnnotation);
+                        final ParameterizedType pt = (ParameterizedType) field.getGenericType();
+                        final Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
+                        final List<?> list = parserToList(genericClazz, getNodeList(node, filedName), useAnnotation);
                         field.set(t, list);
                     } else {
                         Log.i(TAG, field.getName() + " require have generic");
@@ -227,7 +227,7 @@ public class XmlUtils extends Converter {
         if (null == nodeList) {
             return new ArrayList<>();
         }
-        List<T> list = new ArrayList<>();
+        final List<T> list = new ArrayList<>();
         T t = null;
         for (int i = 0; i < nodeList.getLength(); i++) {
             t = parserToObject(c, nodeList.item(i), useAnnotation);

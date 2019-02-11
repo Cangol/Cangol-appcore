@@ -60,8 +60,8 @@ public class AESUtils {
 
 
     private static byte[] encrypt(byte[] raw, byte[] clear) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");   //AES/CBC/PKCS5Padding
+        final SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+        final Cipher cipher = Cipher.getInstance("AES");   //AES/CBC/PKCS5Padding
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
         return cipher.doFinal(clear);
     }
@@ -83,7 +83,7 @@ public class AESUtils {
     }
 
     private static String toHex(byte[] buf) {
-        final String hex = "0123456789ABCDEF";
+        String hex = "0123456789ABCDEF";
         if (buf == null) {
             return "";
         }

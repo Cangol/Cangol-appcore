@@ -47,12 +47,12 @@ public class RSAUtils {
      * @throws NoSuchAlgorithmException
      */
     public static Map<String, Object> getKeys() throws NoSuchAlgorithmException {
-        Map<String, Object> map = new HashMap<>();
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+        final Map<String, Object> map = new HashMap<>();
+        final KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(1024);
-        KeyPair keyPair = keyPairGen.generateKeyPair();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        final KeyPair keyPair = keyPairGen.generateKeyPair();
+        final RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        final RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         map.put("public", publicKey);
         map.put("private", privateKey);
         return map;
@@ -69,10 +69,10 @@ public class RSAUtils {
      */
     public static RSAPublicKey getPublicKey(String modulus, String exponent) {
         try {
-            BigInteger b1 = new BigInteger(modulus);
-            BigInteger b2 = new BigInteger(exponent);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
+            final BigInteger b1 = new BigInteger(modulus);
+            final BigInteger b2 = new BigInteger(exponent);
+            final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            final RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
             return (RSAPublicKey) keyFactory.generatePublic(keySpec);
         } catch (Exception e) {
             return null;
@@ -90,10 +90,10 @@ public class RSAUtils {
      */
     public static RSAPrivateKey getPrivateKey(String modulus, String exponent) {
         try {
-            BigInteger b1 = new BigInteger(modulus);
-            BigInteger b2 = new BigInteger(exponent);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
+            final BigInteger b1 = new BigInteger(modulus);
+            final BigInteger b2 = new BigInteger(exponent);
+            final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            final RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
             return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
         } catch (Exception e) {
             return null;
@@ -134,14 +134,14 @@ public class RSAUtils {
      */
     public static String decryptByPrivateKey(String data, RSAPrivateKey privateKey)
             throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
+        final Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         //模长   
         final int keyLen = privateKey.getModulus().bitLength() / 8;
         final byte[] bytes = data.getBytes(CHARSET);
         final byte[] bcd = asciiToBcd(bytes, bytes.length);
         //如果密文长度大于模长则要分组解密
-        StringBuilder ming = new StringBuilder();
+        final StringBuilder ming = new StringBuilder();
         final byte[][] arrays = splitArray(bcd, keyLen);
         for (final byte[] arr : arrays) {
             ming.append(new String(cipher.doFinal(arr), CHARSET));
@@ -222,8 +222,8 @@ public class RSAUtils {
      * 拆分数组
      */
     protected static byte[][] splitArray(byte[] data, int len) {
-        int x = data.length / len;
-        int y = data.length % len;
+        final int x = data.length / len;
+        final int y = data.length % len;
         int z = 0;
         if (y != 0) {
             z = 1;

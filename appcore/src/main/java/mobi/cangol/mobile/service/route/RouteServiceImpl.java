@@ -65,7 +65,7 @@ class RouteServiceImpl implements RouteService {
     @Override
     public void register(Class clazz) {
         if (clazz.isAnnotationPresent(Route.class)) {
-            Route route = (Route) clazz.getAnnotation(Route.class);
+            final Route route = (Route) clazz.getAnnotation(Route.class);
             register(route.path(), clazz);
         } else {
             throw new IllegalStateException(clazz + " is not Annotation Route");
@@ -117,7 +117,7 @@ class RouteServiceImpl implements RouteService {
     }
 
     Intent navigationActivity(Class clazz, Bundle bundle, Context context) {
-        Intent intent = new Intent(context, clazz);
+        final Intent intent = new Intent(context, clazz);
         intent.putExtras(bundle);
         return intent;
     }

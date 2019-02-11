@@ -79,8 +79,8 @@ public class PollingHttpClient {
 
         Request request = null;
         if (params != null) {
-            FormBody.Builder requestBodyBuilder = new FormBody.Builder();
-            for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
+            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
             request = new Request.Builder()
@@ -108,7 +108,7 @@ public class PollingHttpClient {
 
     protected void sendRequest(OkHttpClient client, Request uriRequest, PollingResponseHandler responseHandler, Object context, int retryTimes, long sleeptimes) {
 
-        Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, retryTimes, sleeptimes));
+        final Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, retryTimes, sleeptimes));
         if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);

@@ -127,7 +127,7 @@ class DownloadManagerImpl implements DownloadManager {
         if (null == executorMap) {
             return;
         }
-        Enumeration<DownloadExecutor<?>> en = executorMap.elements();
+        final Enumeration<DownloadExecutor<?>> en = executorMap.elements();
         while (en.hasMoreElements()) {
             en.nextElement().close();
         }
@@ -153,7 +153,7 @@ class DownloadManagerImpl implements DownloadManager {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(DOWNLOADSERVICE_THREADPOOL_NAME, TAG);
         sp.putInt(DOWNLOADSERVICE_THREAD_MAX, DEFAULT_MAX_THREAD);
         return sp;

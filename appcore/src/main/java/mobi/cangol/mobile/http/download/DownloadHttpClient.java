@@ -92,7 +92,7 @@ public class DownloadHttpClient {
      * @return
      */
     public Future send(Object tag, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 .tag(tag)
                 .addHeader("Range", "bytes=" + from + "-")
                 .url(url)
@@ -101,7 +101,7 @@ public class DownloadHttpClient {
     }
 
     protected Future sendRequest(Request urlRequest, DownloadResponseHandler responseHandler, String saveFile) {
-        Future<?> request = threadPool.submit(new DownloadThread(this, httpClient, urlRequest, responseHandler, saveFile));
+        final Future<?> request = threadPool.submit(new DownloadThread(this, httpClient, urlRequest, responseHandler, saveFile));
         if (urlRequest.tag() != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(urlRequest.tag());
@@ -123,10 +123,10 @@ public class DownloadHttpClient {
      */
     public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
 
-        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
+        final List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
@@ -139,7 +139,7 @@ public class DownloadHttpClient {
                 call.cancel();
             }
         }
-        for (Call call : httpClient.dispatcher().runningCalls()) {
+        for (final Call call : httpClient.dispatcher().runningCalls()) {
             if (call.request().tag().equals(group)) {
                 call.cancel();
             }

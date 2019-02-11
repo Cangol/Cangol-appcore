@@ -77,7 +77,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
         long result = -1;
         try {
             db.beginTransaction();
-            for (T paramT : paramTs) {
+            for (final T paramT : paramTs) {
                 result = result + db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT));
             }
             db.setTransactionSuccessful();
@@ -158,7 +158,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         final ArrayList<T> list = new ArrayList<>();
         try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+            final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             Cursor cursor = query(db, queryBuilder);
             T obj;
@@ -182,7 +182,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
             final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             final QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), DatabaseUtils.getIdValue(paramT), "=");
-            Cursor cursor = query(db, queryBuilder);
+            final Cursor cursor = query(db, queryBuilder);
             if (cursor.getCount() > 0 && cursor.moveToFirst()) {
                 result = DatabaseUtils.cursorToObject(paramT, cursor, columns);
             }
@@ -250,7 +250,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int delete(T paramT) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
@@ -294,7 +294,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int deleteByIds(Collection<I> paramCollection) throws SQLException {
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = 0;
         try {
             db.beginTransaction();

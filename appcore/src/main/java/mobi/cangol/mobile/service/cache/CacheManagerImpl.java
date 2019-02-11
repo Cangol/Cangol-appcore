@@ -70,10 +70,10 @@ class CacheManagerImpl implements CacheManager {
     public void init(ServiceProperty serviceProperty) {
         if (mDebug) Log.d(TAG, "init " + serviceProperty);
         this.mServiceProperty = serviceProperty;
-        String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
-        long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
+        final String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
+        final long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
         final ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
-        String cacheDir = configService.getCacheDir().getAbsolutePath() + File.separator + (!TextUtils.isEmpty(dir) ? dir : "contentCache");
+        final String cacheDir = configService.getCacheDir().getAbsolutePath() + File.separator + (!TextUtils.isEmpty(dir) ? dir : "contentCache");
         setDiskCache(new File(cacheDir), size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
     }
 
@@ -208,7 +208,7 @@ class CacheManagerImpl implements CacheManager {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject cacheObject = contextMap.get(id);
+        final CacheObject cacheObject = contextMap.get(id);
         if (cacheObject == null) {
             return hasContentFromDiskCache(id);
         } else {
@@ -436,7 +436,7 @@ class CacheManagerImpl implements CacheManager {
         String id = null;
         while (iterator.hasNext()) {
             id = iterator.next();
-            String key = hashKeyForDisk(id);
+            final String key = hashKeyForDisk(id);
             try {
                 if (mDiskLruCache != null) {
                     mDiskLruCache.remove(key);
@@ -600,7 +600,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(CACHE_DIR, "contentCache");
         sp.putInt(CACHE_SIZE, 20971520);
         return sp;
