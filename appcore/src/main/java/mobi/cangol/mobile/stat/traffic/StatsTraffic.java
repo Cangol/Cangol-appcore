@@ -153,10 +153,10 @@ public class StatsTraffic {
             dateTraffic.wifiTx = 0;
             dateTraffic.status = 0;
         }
-        long rx = TrafficStats.getUidRxBytes(appTraffic.uid);
-        long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
-        long rxDelta = rx - appTraffic.totalRx;
-        long txDelta = tx - appTraffic.totalTx;
+        final long rx = TrafficStats.getUidRxBytes(appTraffic.uid);
+        final long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
+        final long rxDelta = rx - appTraffic.totalRx;
+        final long txDelta = tx - appTraffic.totalTx;
         dateTraffic.totalRx = dateTraffic.totalRx + rxDelta;
         dateTraffic.totalTx = dateTraffic.totalTx + txDelta;
         if (!wifi) {
@@ -170,7 +170,7 @@ public class StatsTraffic {
     }
 
     public void calcAppTraffic(String date, boolean wifi) {
-        List<AppTraffic> list = trafficDbService.getAppTrafficList();
+        final List<AppTraffic> list = trafficDbService.getAppTrafficList();
         AppTraffic appTraffic = null;
         for (int i = 0; i < list.size(); i++) {
             appTraffic = list.get(i);
@@ -260,7 +260,7 @@ public class StatsTraffic {
     public void registerAlarmForDateTraffic() {
         final  int day = 24 * 60 * 60 * 1000;
         final Intent intent = new Intent(DATE_ACTION);
-        PendingIntent sender = PendingIntent.getBroadcast(this.context, 1, intent, 0);
+        final PendingIntent sender = PendingIntent.getBroadcast(this.context, 1, intent, 0);
 
         // 开机之后到现在的运行时间(包括睡眠时间)
         long firstTime = SystemClock.elapsedRealtime();

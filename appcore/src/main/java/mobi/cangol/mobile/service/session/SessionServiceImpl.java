@@ -37,7 +37,7 @@ class SessionServiceImpl implements SessionService {
         mContext = (CoreApplication) context;
         //这里使用application中的session也可实例化一个新的
         mSessionMap = new ConcurrentHashMap<>();
-        ConfigService configService = (ConfigService) mContext.getAppService(AppService.CONFIG_SERVICE);
+        final ConfigService configService = (ConfigService) mContext.getAppService(AppService.CONFIG_SERVICE);
         mSession = newSession(mContext, configService.getSharedName());
     }
 
@@ -49,8 +49,8 @@ class SessionServiceImpl implements SessionService {
     @Override
     public void onDestroy() {
         mSession.clear();
-        for (Map.Entry<String, Session> entry : mSessionMap.entrySet()) {
-            Session session = entry.getValue();
+        for (final Map.Entry<String, Session> entry : mSessionMap.entrySet()) {
+           final Session session = entry.getValue();
             if (session != null) {
                 session.clear();
             }
@@ -89,7 +89,7 @@ class SessionServiceImpl implements SessionService {
 
     private Session newSession(Context context, String name) {
         if (mDebug) Log.d(TAG, "newSession " + name);
-        Session session = new Session(context, name);
+        final Session session = new Session(context, name);
         mSessionMap.put(name, session);
         session.refresh();
         return session;

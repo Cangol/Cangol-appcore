@@ -77,7 +77,7 @@ class TrafficDbService {
     }
 
     public DateTraffic getDateTrafficByDate(int uid, String date) {
-        QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
+        final QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "=");
         final List<DateTraffic> list = dateTrafficDao.query(queryBuilder);

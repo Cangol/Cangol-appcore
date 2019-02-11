@@ -246,7 +246,7 @@ public abstract class DownloadExecutor<T> {
             return;
         }
         if (mDownloadRes.contains(resource)) {
-            DownloadTask downloadTask = resource.getDownloadTask();
+            final DownloadTask downloadTask = resource.getDownloadTask();
             downloadTask.restart();
         }
     }
@@ -299,7 +299,7 @@ public abstract class DownloadExecutor<T> {
     public void recoverAll() {
         synchronized (mDownloadRes) {
             DownloadTask downloadTask = null;
-            for (DownloadResource resource : mDownloadRes) {
+            for (final DownloadResource resource : mDownloadRes) {
                 downloadTask = resource.getDownloadTask();
                 if (resource.getStatus() == Download.STATUS_RERUN) {
                     downloadTask.resume();
@@ -314,7 +314,7 @@ public abstract class DownloadExecutor<T> {
     public void interruptAll() {
         synchronized (mDownloadRes) {
             DownloadTask downloadTask = null;
-            for (DownloadResource resource : mDownloadRes) {
+            for (final DownloadResource resource : mDownloadRes) {
                 downloadTask = resource.getDownloadTask();
                 if (resource.getStatus() < Download.STATUS_STOP) {
                     downloadTask.interrupt();
@@ -366,7 +366,7 @@ public abstract class DownloadExecutor<T> {
         if (null == downloadStatusListener) {
             throw new IllegalArgumentException("downloadStatusListener is null!");
         }
-        for (WeakReference<DownloadStatusListener> listener : listeners) {
+        for (final WeakReference<DownloadStatusListener> listener : listeners) {
             if (downloadStatusListener.equals(listener.get())) {
                 listeners.remove(listener);
                 break;

@@ -59,13 +59,13 @@ public abstract class SocketSerializableHandler extends SocketHandler {
 
 
     protected void write(OutputStream os, Serializable obj) throws IOException {
-        ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(os));
+        final ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(os));
         oos.writeObject(obj);
     }
 
     protected Serializable read(DataInputStream is) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is));
-        Object object = ois.readObject();
+        final ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is));
+        final Object object = ois.readObject();
         return (Serializable) object;
     }
 
@@ -78,7 +78,7 @@ public abstract class SocketSerializableHandler extends SocketHandler {
 
     @Override
     public boolean handleSocketWrite(DataOutputStream outputStream) throws IOException {
-        Serializable sendMsg = (Serializable) getSend();
+        final Serializable sendMsg = (Serializable) getSend();
         if (sendMsg == null || outputStream == null) return false;
         if (DEBUG) Log.d(TAG, "sendMsg=" + sendMsg);
         write(outputStream, sendMsg);
@@ -88,7 +88,7 @@ public abstract class SocketSerializableHandler extends SocketHandler {
     @Override
     public boolean handleSocketRead(DataInputStream inputStream) throws IOException, ClassNotFoundException {
         if (inputStream == null) return false;
-        Serializable receivedMsg = read(inputStream);
+        final Serializable receivedMsg = read(inputStream);
         if (DEBUG) Log.d(TAG, "receivedMsg=" + receivedMsg);
         sendReceiveMessage(receivedMsg);
         return true;

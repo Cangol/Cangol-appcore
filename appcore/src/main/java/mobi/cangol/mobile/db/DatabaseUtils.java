@@ -86,7 +86,7 @@ public class DatabaseUtils {
             final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName).append('(');
-            Field[] fields = clazz.getDeclaredFields();
+            final Field[] fields = clazz.getDeclaredFields();
             String filedName = null;
             boolean isFirst = true;
             for (final Field field : fields) {
@@ -158,7 +158,7 @@ public class DatabaseUtils {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             final StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
             final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName);
             db.execSQL(sql.toString());
         } else {
@@ -285,7 +285,7 @@ public class DatabaseUtils {
      * @throws IllegalAccessException
      */
     public static ContentValues getContentValues(Object object) throws IllegalAccessException {
-        ContentValues v = new ContentValues();
+        final ContentValues v = new ContentValues();
         String filedName = null;
         for (final Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
@@ -335,8 +335,8 @@ public class DatabaseUtils {
      * @return
      */
     public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) {
-        Field[] fields = obj.getClass().getDeclaredFields();
-        Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
+        final Field[] fields = obj.getClass().getDeclaredFields();
+        final Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
         String columnName = null;
         for (final Field field : fields) {
             field.setAccessible(true);

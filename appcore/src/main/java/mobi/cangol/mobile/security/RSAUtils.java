@@ -110,7 +110,7 @@ public class RSAUtils {
      */
     public static String encryptByPublicKey(String data, RSAPublicKey publicKey)
             throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
+        final Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         // 模长   
         final int keyLen = publicKey.getModulus().bitLength() / 8;

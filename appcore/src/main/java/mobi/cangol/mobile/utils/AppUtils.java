@@ -41,12 +41,12 @@ public class AppUtils {
      * @param locale
      */
     public static void changeLocale(Context context, Locale locale) {
-        Configuration config = context.getResources().getConfiguration();
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+       final Configuration config = context.getResources().getConfiguration();
+        final DisplayMetrics dm = context.getResources().getDisplayMetrics();
         config.locale = locale;
         context.getResources().updateConfiguration(config, dm);
 
-        Application app = (Application) context.getApplicationContext();
+        final Application app = (Application) context.getApplicationContext();
         app.onConfigurationChanged(config);
 
     }
@@ -58,7 +58,7 @@ public class AppUtils {
      * @param apkUri
      */
     public static void install(Context context, Uri apkUri) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+       final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setDataAndType(apkUri,
@@ -73,7 +73,7 @@ public class AppUtils {
      * @param apkPath
      */
     public static void install(Context context, String apkPath) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(Uri.parse("file://"
                         + apkPath),
@@ -88,8 +88,8 @@ public class AppUtils {
      * @param packageName
      */
     public static void unInstall(Context context, String packageName) {
-        Uri uri = Uri.parse("package:" + packageName);
-        Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+        final Uri uri = Uri.parse("package:" + packageName);
+        final Intent intent = new Intent(Intent.ACTION_DELETE, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
@@ -101,8 +101,8 @@ public class AppUtils {
      * @param packageName
      */
     public static void launch(Context context, String packageName) {
-        PackageManager packageManager = context.getPackageManager();
-        Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+        final PackageManager packageManager = context.getPackageManager();
+        final Intent intent = packageManager.getLaunchIntentForPackage(packageName);
         context.startActivity(intent);
     }
 
@@ -114,8 +114,8 @@ public class AppUtils {
      * @return
      */
     public static boolean isInstalled(Context context, String packageName) {
-        PackageManager pManager = context.getPackageManager();
-        List<PackageInfo> apps = pManager.getInstalledPackages(0);
+        final PackageManager pManager = context.getPackageManager();
+        final List<PackageInfo> apps = pManager.getInstalledPackages(0);
         for (int i = 0; i < apps.size(); i++) {
             if (apps.get(i).packageName.equals(packageName)) {
                 return true;
@@ -132,7 +132,7 @@ public class AppUtils {
      * @return
      */
     public static String getPackageName(Context context, String apkPath) {
-        ApplicationInfo appInfo = getApplicationInfo(context, apkPath);
+        final ApplicationInfo appInfo = getApplicationInfo(context, apkPath);
         if (appInfo != null) {
             return appInfo.packageName;
         }
@@ -147,8 +147,8 @@ public class AppUtils {
      * @return
      */
     public static Drawable getApplicationIcon(Context context, String apkPath) {
-        PackageManager packageManager = context.getPackageManager();
-        ApplicationInfo appInfo = getApplicationInfo(context, apkPath);
+        final PackageManager packageManager = context.getPackageManager();
+        final ApplicationInfo appInfo = getApplicationInfo(context, apkPath);
         if (appInfo != null) {
             appInfo.sourceDir = apkPath;
             appInfo.publicSourceDir = apkPath;
@@ -165,8 +165,8 @@ public class AppUtils {
      * @return
      */
     public static ApplicationInfo getApplicationInfo(Context context, String apkPath) {
-        PackageManager packageManager = context.getPackageManager();
-        PackageInfo info = packageManager.getPackageArchiveInfo(apkPath,
+        final PackageManager packageManager = context.getPackageManager();
+        final PackageInfo info = packageManager.getPackageArchiveInfo(apkPath,
                 PackageManager.GET_ACTIVITIES);
         if (info != null) {
             return info.applicationInfo;
@@ -181,11 +181,11 @@ public class AppUtils {
      * @return
      */
     public static List<PackageInfo> getAllApps(Context context) {
-        List<PackageInfo> apps = new ArrayList<>();
-        PackageManager pManager = context.getPackageManager();
-        List<PackageInfo> paklist = pManager.getInstalledPackages(0);
+        final List<PackageInfo> apps = new ArrayList<>();
+        final PackageManager pManager = context.getPackageManager();
+        final List<PackageInfo> paklist = pManager.getInstalledPackages(0);
         for (int i = 0; i < paklist.size(); i++) {
-            PackageInfo pak = paklist.get(i);
+           final PackageInfo pak = paklist.get(i);
             //not system app
             if ((pak.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
                 apps.add(pak);

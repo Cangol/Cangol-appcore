@@ -61,7 +61,7 @@ public class DownloadThread implements Runnable {
     private void makeRequest() throws IOException {
         if (!Thread.currentThread().isInterrupted()) {
 
-            Response response = client.newCall(request).execute();
+            final Response response = client.newCall(request).execute();
             if (!Thread.currentThread().isInterrupted()) {
                 if (responseHandler != null) {
                     responseHandler.sendResponseMessage(response, saveFile);
@@ -89,7 +89,7 @@ public class DownloadThread implements Runnable {
     private void makeRequestWithRetries() throws Exception {
         boolean retry = true;
         Exception cause = null;
-        DownloadRetryHandler retryHandler = this.context.getDownloadRetryHandler();
+        final DownloadRetryHandler retryHandler = this.context.getDownloadRetryHandler();
         while (retry) {
             try {
                 makeRequest();

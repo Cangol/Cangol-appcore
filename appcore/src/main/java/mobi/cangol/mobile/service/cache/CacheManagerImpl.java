@@ -163,7 +163,7 @@ class CacheManagerImpl implements CacheManager {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject cacheObject = contextMap.get(id);
+        final CacheObject cacheObject = contextMap.get(id);
         if (cacheObject == null) {
             mApplication.post(new Task<CacheObject>() {
 
@@ -428,7 +428,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public void removeContext(String context) {
-        HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
+        final HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap || contextMap.isEmpty()) {
             return;
         }

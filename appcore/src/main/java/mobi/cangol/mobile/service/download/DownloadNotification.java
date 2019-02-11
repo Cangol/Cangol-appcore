@@ -70,7 +70,7 @@ public class DownloadNotification {
     public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (notificationManager.getNotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID) == null) {
-                NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_1_name), NotificationManager.IMPORTANCE_LOW);
+                final NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_1_name), NotificationManager.IMPORTANCE_LOW);
                 channel.setDescription(context.getString(R.string.notification_channel_1_desc));
                 channel.enableLights(false);
                 channel.enableVibration(false);
@@ -85,7 +85,7 @@ public class DownloadNotification {
 
     public void createNotification() {
         id = new Random().nextInt(10000);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
@@ -124,7 +124,7 @@ public class DownloadNotification {
     }
 
     public void finishNotification() {
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);

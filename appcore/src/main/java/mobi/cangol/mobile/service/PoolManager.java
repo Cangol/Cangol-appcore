@@ -114,7 +114,7 @@ public class PoolManager {
     public static void closeAll() {
         if (null != poolMap) {
             Pool pool = null;
-            for (String name : poolMap.keySet()) {
+            for (final String name : poolMap.keySet()) {
                 pool = poolMap.get(name);
                 if (pool != null)
                     pool.close(false);

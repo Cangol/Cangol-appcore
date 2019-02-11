@@ -83,7 +83,7 @@ public class AESUtils {
     }
 
     private static String toHex(byte[] buf) {
-        String hex = "0123456789ABCDEF";
+        final String hex = "0123456789ABCDEF";
         if (buf == null) {
             return "";
         }
