@@ -168,7 +168,7 @@ class LocationServiceImpl implements LocationService {
         if (null == location) {
             return false;
         }
-        long timeDelta = System.currentTimeMillis() - location.getTime();
+        final long timeDelta = System.currentTimeMillis() - location.getTime();
         Log.d(TAG, "location time :" + TimeUtils.formatYmdHms(location.getTime()));
         return (timeDelta < mBetterTime);
     }

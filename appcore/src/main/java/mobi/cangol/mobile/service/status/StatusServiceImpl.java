@@ -53,13 +53,13 @@ class StatusServiceImpl implements StatusService {
         public void onReceive(Context context, Intent intent) {
             State wifiState = null;
             State mobileState = null;
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             if (networkInfoWifi != null) {
                 wifiState = networkInfoWifi.getState();
             }
 
-            NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if (networkInfo != null) {
                 mobileState = networkInfo.getState();
             }

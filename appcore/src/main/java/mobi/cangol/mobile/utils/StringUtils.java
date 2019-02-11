@@ -177,10 +177,10 @@ public class StringUtils {
         try {
             final byte[] strTemp = s.getBytes("UTF-8");
             //MessageDigest md5
-            MessageDigest mdTemp = MessageDigest.getInstance("MD5");
+            final MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(strTemp);
             byte[] md = mdTemp.digest();
-            int j = md.length;
+            final int j = md.length;
             char[] str = new char[j * 2];
             int k = 0;
             for (int i = 0; i < j; i++) {
