@@ -32,9 +32,9 @@ public class Base64 {
     }
 
     public static String encode(String source) {
-        char[] sourceBytes = getPaddedBytes(source);
-        int numGroups = (sourceBytes.length + 2) / 3;
-        char[] targetBytes = new char[4];
+        final char[] sourceBytes = getPaddedBytes(source);
+        final int numGroups = (sourceBytes.length + 2) / 3;
+        final char[] targetBytes = new char[4];
         char[] target = new char[4 * numGroups];
         for (int group = 0; group < numGroups; group++) {
             convert3To4(sourceBytes, group * 3, targetBytes);
@@ -42,7 +42,7 @@ public class Base64 {
                 target[i + 4 * group] = ENCODING_CHAR.charAt(targetBytes[i]);
             }
         }
-        int numPadBytes = sourceBytes.length - source.length();
+        final int numPadBytes = sourceBytes.length - source.length();
         for (int i = target.length - numPadBytes; i < target.length; i++) {
             target[i] = '=';
         }
@@ -50,9 +50,9 @@ public class Base64 {
     }
 
     private static char[] getPaddedBytes(String source) {
-        char[] converted = source.toCharArray();
-        int requiredLength = 3 * ((converted.length + 2) / 3);
-        char[] result = new char[requiredLength];
+        final char[] converted = source.toCharArray();
+        final int requiredLength = 3 * ((converted.length + 2) / 3);
+        final char[] result = new char[requiredLength];
         System.arraycopy(converted, 0, result, 0, converted.length);
         return result;
     }
@@ -68,9 +68,9 @@ public class Base64 {
         if (source.length() % 4 != 0) {
             throw new RuntimeException("valid Base64 codes have a multiple of 4 characters");
         }
-        int numGroups = source.length() / 4;
-        int numExtraBytes = source.endsWith("==") ? 2 : (source.endsWith("=") ? 1 : 0);
-        byte[] targetBytes = new byte[3 * numGroups];
+        final int numGroups = source.length() / 4;
+        final int numExtraBytes = source.endsWith("==") ? 2 : (source.endsWith("=") ? 1 : 0);
+        final byte[] targetBytes = new byte[3 * numGroups];
         byte[] sourceBytes = new byte[4];
         for (int group = 0; group < numGroups; group++) {
             for (int i = 0; i < sourceBytes.length; i++) {

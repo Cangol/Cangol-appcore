@@ -71,8 +71,8 @@ public class RouteHttpClient {
     public void send(Object tag, String url, Map<String, String> params, RouteResponseHandler responseHandler, String... host) {
         Request request = null;
         if (params != null) {
-            FormBody.Builder requestBodyBuilder = new FormBody.Builder();
-            for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
+            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
             request = new Request.Builder()
@@ -90,8 +90,8 @@ public class RouteHttpClient {
     }
 
     private Request getNewRequest(Request request, String host) {
-        String hostStr = request.url().url().getHost();
-        String urlStr = request.url().url().toString().replace(hostStr, host);
+        final String hostStr = request.url().url().getHost();
+        final String urlStr = request.url().url().toString().replace(hostStr, host);
 
         return new Request.Builder()
                 .tag(request.tag())
@@ -101,7 +101,7 @@ public class RouteHttpClient {
 
     protected void sendRequest(OkHttpClient client, Request uriRequest, RouteResponseHandler responseHandler, Object context, String... host) {
 
-        Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, host));
+        final Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, host));
         if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
@@ -120,22 +120,22 @@ public class RouteHttpClient {
      * @param mayInterruptIfRunning
      */
     public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
+       final List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
             }
         }
         requestMap.remove(tag);
-        for (Call call : httpClient.dispatcher().queuedCalls()) {
+        for (final Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(tag)) {
                 call.cancel();
             }
         }
-        for (Call call : httpClient.dispatcher().runningCalls()) {
+        for (final Call call : httpClient.dispatcher().runningCalls()) {
             if (call.request().tag().equals(tag)) {
                 call.cancel();
             }
@@ -164,7 +164,7 @@ public class RouteHttpClient {
                     try {
                         request = getNewRequest(request, host[exec]);
                         exec++;
-                        Response response = client.newCall(request).execute();
+                        final Response response = client.newCall(request).execute();
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
                                 if (responseHandler.sendResponseMessage(response)) {

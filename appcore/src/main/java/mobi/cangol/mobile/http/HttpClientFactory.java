@@ -92,7 +92,7 @@ public class HttpClientFactory {
                 .authenticator(new Authenticator() {
                     @Override
                     public Request authenticate(Route route, Response response) {
-                        String credential = Credentials.basic(username, password);
+                        final  String credential = Credentials.basic(username, password);
                         return response.request().newBuilder()
                                 .header("Authorization", credential)
                                 .build();
@@ -135,8 +135,8 @@ public class HttpClientFactory {
         SSLContext sslContext = null;
         SSLSocketFactory sslSocketFactory = null;
         try {
-            TrustManager[] trustManagers = prepareTrustManager(certificates);
-            KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
+            final TrustManager[] trustManagers = prepareTrustManager(certificates);
+            final KeyManager[] keyManagers = prepareKeyManager(bksFile, password);
             sslContext = SSLContext.getInstance("TLS");
             X509TrustManager trustManager = null;
             if (trustManagers != null) {
@@ -167,12 +167,12 @@ public class HttpClientFactory {
         if (certificates == null || certificates.length <= 0) return new TrustManager[0];
         try {
 
-            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            final CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
             keyStore.load(null);
             int index = 0;
-            for (InputStream certificate : certificates) {
-                String certificateAlias = Integer.toString(index++);
+            for (final InputStream certificate : certificates) {
+                final String certificateAlias = Integer.toString(index++);
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate));
                 try {
                     if (certificate != null)
@@ -199,9 +199,9 @@ public class HttpClientFactory {
         try {
             if (bksFile == null || password == null) return  new KeyManager[0];
 
-            KeyStore clientKeyStore = KeyStore.getInstance("BKS");
+            final KeyStore clientKeyStore = KeyStore.getInstance("BKS");
             clientKeyStore.load(bksFile, password.toCharArray());
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(clientKeyStore, password.toCharArray());
             return keyManagerFactory.getKeyManagers();
 
@@ -212,7 +212,7 @@ public class HttpClientFactory {
     }
 
     private static X509TrustManager chooseTrustManager(TrustManager[] trustManagers) {
-        for (TrustManager trustManager : trustManagers) {
+        for (final TrustManager trustManager : trustManagers) {
             if (trustManager instanceof X509TrustManager) {
                 return (X509TrustManager) trustManager;
             }
@@ -228,7 +228,7 @@ public class HttpClientFactory {
         private X509TrustManager localTrustManager;
 
         public MyTrustManager(X509TrustManager localTrustManager) throws NoSuchAlgorithmException, KeyStoreException {
-            TrustManagerFactory var4 = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            final TrustManagerFactory var4 = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             var4.init((KeyStore) null);
             defaultTrustManager = chooseTrustManager(var4.getTrustManagers());
             this.localTrustManager = localTrustManager;
@@ -264,7 +264,7 @@ public class HttpClientFactory {
     public static OkHttpClient createUnSafeHttpClient() {
         SSLContext sslContext = null;
         SSLSocketFactory sslSocketFactory = null;
-        X509TrustManager trustManager = new UnSafeTrustManager();
+        final X509TrustManager trustManager = new UnSafeTrustManager();
         try {
             sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{trustManager}, new SecureRandom());

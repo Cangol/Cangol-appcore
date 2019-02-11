@@ -130,15 +130,15 @@ public class DownloadResponseHandler {
 
     void sendResponseMessage(Response response, String saveFile) throws IOException {
         if (response.isSuccessful()) {
-            ResponseBody responseBody = response.body();
-            long length = responseBody.contentLength();
-            RandomAccessFile threadfile = new RandomAccessFile(saveFile, "rwd");
-            InputStream inputStream = responseBody.byteStream();
+            final ResponseBody responseBody = response.body();
+            final long length = responseBody.contentLength();
+            final RandomAccessFile threadfile = new RandomAccessFile(saveFile, "rwd");
+            final InputStream inputStream = responseBody.byteStream();
             long oldLength = threadfile.length();
             sendStartMessage(oldLength, length);
             if (oldLength < length) {
                 threadfile.seek(oldLength);
-                byte[] block = new byte[BUFF_SIZE];
+                final byte[] block = new byte[BUFF_SIZE];
                 long starTime = System.currentTimeMillis();
                 long startLength = 0;
                 int readCount = 0;
@@ -147,8 +147,8 @@ public class DownloadResponseHandler {
                     oldLength += readCount;
                     startLength += readCount;
                     if ((System.currentTimeMillis() - starTime) > 500L) {
-                        int progress = (int) (oldLength * 1.0f / length * 100);
-                        int speed = (int) (startLength * 1000.0f / (System.currentTimeMillis() - starTime));
+                        final int progress = (int) (oldLength * 1.0f / length * 100);
+                        final int speed = (int) (startLength * 1000.0f / (System.currentTimeMillis() - starTime));
                         sendProgressMessage(oldLength, progress, speed);
                         starTime = System.currentTimeMillis();
                         startLength = 0;
