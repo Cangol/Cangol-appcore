@@ -60,12 +60,12 @@ public class ValidatorUtils {
             return false;
         }
 
-        String rx = "[a-zA-Z0-9]";
-        String rx2 = "[\u4e00-\u9fa5]";
+        final String rx = "[a-zA-Z0-9]";
+        final String rx2 = "[\u4e00-\u9fa5]";
         int num = 0;
         boolean flag = false;
         for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
+            final char c = str.charAt(i);
             if (Pattern.compile(rx).matcher(c + "").matches()) {
                 num += 1;
             } else if (Pattern.compile(rx2).matcher(c + "").matches()) {
@@ -102,7 +102,7 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
+        final Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -132,7 +132,7 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
+        final Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -147,7 +147,7 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.EMAIL_ADDRESS;
+        final Pattern p = Patterns.EMAIL_ADDRESS;
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -162,7 +162,7 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.WEB_URL;
+        final Pattern p = Patterns.WEB_URL;
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -177,7 +177,7 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.IP_ADDRESS;
+       final Pattern p = Patterns.IP_ADDRESS;
         Matcher m = p.matcher(str);
         return m.matches();
     }

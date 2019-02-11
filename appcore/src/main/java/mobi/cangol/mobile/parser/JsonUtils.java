@@ -56,7 +56,7 @@ public class JsonUtils extends Converter {
      * @return
      */
     public static <T> JSONArray toJSONArray(List<T> obj, boolean useAnnotation) {
-        JSONArray jsonArray = new JSONArray();
+       final JSONArray jsonArray = new JSONArray();
         if (obj != null) {
             for (int i = 0; i < obj.size(); i++) {
                 if (isBaseClass(obj.get(i).getClass())) {
@@ -84,15 +84,15 @@ public class JsonUtils extends Converter {
             return null;
         }
 
-        JSONObject json = new JSONObject();
-        Field[] fields = obj.getClass().getDeclaredFields();
+        final JSONObject json = new JSONObject();
+        final Field[] fields = obj.getClass().getDeclaredFields();
         try {
-            for (Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
-                String filedName = getFieldName(field, useAnnotation);
+                final String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
                     if (isBaseClass(field.getType())) {
@@ -103,7 +103,7 @@ public class JsonUtils extends Converter {
                 } else {
                     //集合类型
                     if (field.getGenericType() instanceof ParameterizedType) {
-                        List<?> list = (List<?>) field.get(obj);
+                        final List<?> list = (List<?>) field.get(obj);
                         JSONArray jsonArray = new JSONArray();
                         if (list != null) {
                             for (int i = 0; i < list.size(); i++) {
@@ -165,7 +165,7 @@ public class JsonUtils extends Converter {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
-        String json = formatJson(str);
+        final String json = formatJson(str);
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(json);
@@ -202,8 +202,8 @@ public class JsonUtils extends Converter {
     }
 
     private static String inputStreamTOString(InputStream in) throws Exception {
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[4096];
+       final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        final byte[] data = new byte[4096];
         int count = -1;
         while ((count = in.read(data, 0, 4096)) != -1) {
             outStream.write(data, 0, count);
@@ -217,13 +217,13 @@ public class JsonUtils extends Converter {
         }
         T t = null;
         try {
-            Map<String, Class> typeMap = new HashMap<>();
-            Constructor constructor = c.getDeclaredConstructor();
+            final Map<String, Class> typeMap = new HashMap<>();
+            final Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
             t = (T) constructor.newInstance();
-            Field[] fields = c.getDeclaredFields();
+            final Field[] fields = c.getDeclaredFields();
             String filedName = null;
-            for (Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
@@ -233,7 +233,7 @@ public class JsonUtils extends Converter {
                     Class<?> filedClass = null;
 
                     if (field.getGenericType() instanceof TypeVariable) {
-                        TypeVariable aType = (TypeVariable) field.getGenericType();
+                        final TypeVariable aType = (TypeVariable) field.getGenericType();
                         filedClass = typeMap.get(aType.getName());
                     } else {
                         filedClass = field.getType();
@@ -242,9 +242,9 @@ public class JsonUtils extends Converter {
                         field.set(t, getValueFromJson(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
-                        ParameterizedType pt = (ParameterizedType) field.getGenericType();
-                        Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
-                        List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
+                        final ParameterizedType pt = (ParameterizedType) field.getGenericType();
+                        final Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
+                        final List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
                         field.set(t, list);
                     } else {
                         Log.i(TAG, field.getName() + " require have generic");
@@ -262,7 +262,7 @@ public class JsonUtils extends Converter {
         if (jsonArray == null) {
             return new ArrayList<>();
         }
-        List<T> list = new ArrayList<>();
+        final List<T> list = new ArrayList<>();
         T t = null;
         for (int i = 0; i < jsonArray.length(); i++) {
             try {

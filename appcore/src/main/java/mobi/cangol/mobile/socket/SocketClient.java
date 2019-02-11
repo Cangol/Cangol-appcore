@@ -95,7 +95,7 @@ public class SocketClient {
         }
         requestMap.remove(tag);
 
-        for (Map.Entry<String, WeakReference<SocketHandler>> entry : handlerMap.entrySet()) {
+        for (final Map.Entry<String, WeakReference<SocketHandler>> entry : handlerMap.entrySet()) {
             if (entry.getKey().equals(tag) && entry.getValue().get() != null) {
                 entry.getValue().get().interrupted();
             }
@@ -109,7 +109,7 @@ public class SocketClient {
         }
         for (final Map.Entry<String, List<WeakReference<Future<?>>>> entry : requestMap.entrySet()) {
             for (final WeakReference<Future<?>> requestRef : entry.getValue()) {
-                Future<?> request = requestRef.get();
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }

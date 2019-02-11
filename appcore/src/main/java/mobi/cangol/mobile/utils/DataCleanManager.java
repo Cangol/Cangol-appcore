@@ -92,9 +92,9 @@ public class DataCleanManager {
     private static void deleteFilesByDirectory(File directory) {
         Log.d("deleteFilesByDirectory=" + directory);
         if (directory != null && directory.exists() && directory.isDirectory()) {
-            for (File item : directory.listFiles()) {
+            for (final File item : directory.listFiles()) {
                 if (!item.isDirectory()) {
-                    boolean result = item.delete();
+                    final boolean result = item.delete();
                     Log.d("delete " + item.getAbsoluteFile() + ",result=" + result);
                 } else {
                     deleteFilesByDirectory(item);
@@ -105,7 +105,7 @@ public class DataCleanManager {
 
     public static long getFolderSize(File file) {
         long size = 0;
-        for (File item : file.listFiles()) {
+        for (final File item : file.listFiles()) {
             if (!item.isDirectory()) {
                 size = size + getFolderSize(item);
             } else {
@@ -122,7 +122,7 @@ public class DataCleanManager {
         size = size + getFolderSize(context.getFilesDir());
         size = size + getFolderSize(new File(DATA_DATA + context.getPackageName() + SHARED_PREFS));
         size = size + getFolderSize(new File(DATA_DATA + context.getPackageName() + DATABASES));
-        for (String filePath : filepath) {
+        for (final String filePath : filepath) {
             size = size + getFolderSize(new File(filePath));
         }
         return size;

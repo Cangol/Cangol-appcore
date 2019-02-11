@@ -132,8 +132,8 @@ public class StatAgent {
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private HashMap<String, String> getCommonParams() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<>();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        final HashMap<String, String> params = new HashMap<>();
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("deviceId", getDeviceId(context));
         params.put("platform", DeviceInfo.getOS());
@@ -171,8 +171,8 @@ public class StatAgent {
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private HashMap<String, String> getDeviceParams() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<>();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        final HashMap<String, String> params = new HashMap<>();
         params.put("os", DeviceInfo.getOS());
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("model", DeviceInfo.getDeviceModel());
@@ -228,7 +228,7 @@ public class StatAgent {
     }
 
     public void send(Builder eventBuilder) {
-        IMapBuilder builder = IMapBuilder.build();
+        final IMapBuilder builder = IMapBuilder.build();
         builder.setAll(commonParams);
         builder.setAll(eventBuilder.build());
         switch (eventBuilder.type) {
@@ -421,7 +421,7 @@ public class StatAgent {
                 , String sessionDuration
                 , String endSession
                 , String activityId) {
-            Builder builder = new Builder();
+            final Builder builder = new Builder();
             builder.set("sessionId", sessionId);
             builder.set("beginSession", beginSession);
             builder.set("sessionDuration", sessionDuration);

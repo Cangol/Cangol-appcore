@@ -44,7 +44,7 @@ public class DatabaseUtils {
      */
     public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName, String... fieldNames) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             final StringBuilder sql = new StringBuilder("CREATE INDEX ");
             sql.append(indexName).append(" on ").append(tableName).append('(');
@@ -57,7 +57,7 @@ public class DatabaseUtils {
                     if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                         continue;
                     } else if (field.isAnnotationPresent(DatabaseField.class)) {
-                        DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                        final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                         columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                         sql.append(columnName);
                         if (i < fieldNames.length - 1)
@@ -83,7 +83,7 @@ public class DatabaseUtils {
     public static void createTable(SQLiteDatabase db, Class<?> clazz) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             final StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName).append('(');
             Field[] fields = clazz.getDeclaredFields();
@@ -102,7 +102,7 @@ public class DatabaseUtils {
                         isFirst = false;
                     }
 
-                    DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                    final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                     filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     sql.append(filedName);
                     sql.append(' ').append(getDbType(field.getType()));
@@ -157,7 +157,7 @@ public class DatabaseUtils {
     public static void dropTable(SQLiteDatabase db, Class<?> clazz) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             final StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName);
             db.execSQL(sql.toString());
@@ -226,7 +226,7 @@ public class DatabaseUtils {
         for (final Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 map.put("".equals(dbField.value()) ? field.getName() : dbField.value(), field);
             }
         }
@@ -241,7 +241,7 @@ public class DatabaseUtils {
                 continue;
             }
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 if (dbField.primaryKey()) {
                     columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     break;
@@ -267,7 +267,7 @@ public class DatabaseUtils {
             }
 
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 if (dbField.primaryKey()) {
                     value = field.get(obj);
                     break;
@@ -290,7 +290,7 @@ public class DatabaseUtils {
         for (final Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 if (!dbField.primaryKey()) {
                     filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     v.put(filedName, String.valueOf(field.get(object)));
@@ -316,7 +316,7 @@ public class DatabaseUtils {
         for (final Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                 final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                 if (!dbField.primaryKey() && (set.isEmpty() || set.contains(filedName))) {
                     v.put(filedName, String.valueOf(field.get(object)));
@@ -366,7 +366,7 @@ public class DatabaseUtils {
      * @throws InvocationTargetException
      */
     public static <T> T cursorToClassObject(Class<T> clazz, Cursor cursor, String[] columns) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Constructor constructor = clazz.getDeclaredConstructor();
+        final Constructor constructor = clazz.getDeclaredConstructor();
         constructor.setAccessible(true);
         final T obj = (T) constructor.newInstance();
         return cursorToObject(obj, cursor, columns);

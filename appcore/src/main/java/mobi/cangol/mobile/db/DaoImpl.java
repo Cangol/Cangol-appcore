@@ -39,7 +39,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
     public DaoImpl(CoreSQLiteOpenHelper databaseHelper, Class<T> clazz) {
         this.mDatabaseHelper = databaseHelper;
         this.mClazz = clazz;
-        DatabaseTable dbTable = clazz.getAnnotation(DatabaseTable.class);
+        final DatabaseTable dbTable = clazz.getAnnotation(DatabaseTable.class);
         if (dbTable != null) {
             this.mTableName = "".equals(dbTable.value()) ? clazz.getSimpleName() : dbTable.value();
         } else {
@@ -116,7 +116,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
     @Override
     public List<T> query(QueryBuilder queryBuilder, String... columns) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        ArrayList<T> list = new ArrayList<>();
+        final ArrayList<T> list = new ArrayList<>();
         try {
             SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             final Cursor cursor = query(db, queryBuilder, columns);
@@ -159,7 +159,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
         final ArrayList<T> list = new ArrayList<>();
         try {
             final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
+            final QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             Cursor cursor = query(db, queryBuilder);
             T obj;
             while (cursor.moveToNext()) {
@@ -235,7 +235,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int updateById(T paramT, I paramID, String... columns) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
 
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;

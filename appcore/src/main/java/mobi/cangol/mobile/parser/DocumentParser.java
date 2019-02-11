@@ -36,17 +36,17 @@ public class DocumentParser {
     }
 
     public static String getNodeAttr(Node node, String attrName) {
-        Element element = ((Element) node);
+       final Element element = ((Element) node);
         return element.getAttribute(attrName);
     }
 
     public static String getNodeValue(Node parent, String... nodeName) {
-        NodeList nodeList = ((Element) parent).getElementsByTagName(nodeName[0]);
+       final NodeList nodeList = ((Element) parent).getElementsByTagName(nodeName[0]);
         if (null == nodeList) {
             return null;
         } else {
             if (nodeList.getLength() > 0) {
-                Node node = nodeList.item(0);
+                final Node node = nodeList.item(0);
                 if (nodeName.length == 1) {
                     return node.getTextContent();
                 } else {
@@ -67,7 +67,7 @@ public class DocumentParser {
     }
 
     public static Node getNode(Node parent, String nodeName) {
-        NodeList nodeList = ((Element) parent).getElementsByTagName(nodeName);
+        final NodeList nodeList = ((Element) parent).getElementsByTagName(nodeName);
         if (null == nodeList) {
             return null;
         } else {
@@ -79,7 +79,7 @@ public class DocumentParser {
         DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
-            Document document = builder.parse(is);
+            final Document document = builder.parse(is);
             root = document.getDocumentElement();
         } catch (Exception e) {
             throw new XMLParserException(e);

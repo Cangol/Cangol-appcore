@@ -39,7 +39,7 @@ class ConnectionQueue {
     }
 
     public void beginSession(String page) {
-        SessionEntity data = new SessionEntity();
+       final SessionEntity data = new SessionEntity();
         data.sessionId = StringUtils.md5(String.valueOf(page.hashCode()));
         data.beginSession = 1;//currTime
         data.endSession = 0;
@@ -56,8 +56,8 @@ class ConnectionQueue {
     public void updateSession(long duration) {
         SessionEntity data = null;
         try {
-            for (Iterator<String> itr = entitys.keySet().iterator(); itr.hasNext(); ) {
-                String page = itr.next();
+            for (final Iterator<String> itr = entitys.keySet().iterator(); itr.hasNext(); ) {
+                final String page = itr.next();
                 data = (SessionEntity) entitys.get(page).clone();
                 data.beginSession = 0;
                 data.sessionDuration = duration;

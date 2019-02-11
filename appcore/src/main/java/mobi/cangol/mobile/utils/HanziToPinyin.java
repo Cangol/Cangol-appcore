@@ -380,14 +380,14 @@ public class HanziToPinyin {
      * @return true when the table looks correct.
      */
     private static boolean doSelfValidation() {
-        char lastChar = UNIHANS[0];
+        final char lastChar = UNIHANS[0];
         String lastString = Character.toString(lastChar);
-        for (char c : UNIHANS) {
+        for (final char c : UNIHANS) {
             if (lastChar == c) {
                 continue;
             }
             final String curString = Character.toString(c);
-            int cmp = COLLATOR.compare(lastString, curString);
+            final int cmp = COLLATOR.compare(lastString, curString);
             if (cmp >= 0) {
                 Log.e(TAG, "Internal error in Unihan table. " + "The last string \"" + lastString
                         + "\" is greater than current string \"" + curString + "\".");
@@ -403,12 +403,12 @@ public class HanziToPinyin {
                 Locale.CHINA)) {
             return source;
         }
-        List<Token> tokens = HanziToPinyin.getInstance().get(source);
+        final List<Token> tokens = HanziToPinyin.getInstance().get(source);
         if (tokens == null || tokens.isEmpty()) {
             return source;
         }
-        StringBuilder result = new StringBuilder();
-        for (Token token : tokens) {
+       final StringBuilder result = new StringBuilder();
+        for (final Token token : tokens) {
             if (token.type == Token.PINYIN) {
                 result.append(token.target);
             } else {
@@ -428,7 +428,7 @@ public class HanziToPinyin {
             return source;
         }
 
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         for (Token token : tokens) {
             if (token.type == Token.PINYIN) {
                 result.append(token.target.charAt(0));
@@ -440,7 +440,7 @@ public class HanziToPinyin {
     }
 
     private Token getToken(char character) {
-        Token token = new Token();
+        final Token token = new Token();
         final String letter = Character.toString(character);
         token.source = letter;
         int offset = -1;
@@ -491,7 +491,7 @@ public class HanziToPinyin {
         if (cmp < 0) {
             offset--;
         }
-        StringBuilder pinyin = new StringBuilder();
+        final StringBuilder pinyin = new StringBuilder();
         for (int j = 0; j < PINYINS[offset].length && PINYINS[offset][j] != 0; j++) {
             pinyin.append((char) PINYINS[offset][j]);
         }
@@ -509,7 +509,7 @@ public class HanziToPinyin {
      * Token. If these is no China collator, the empty token array is returned.
      */
     public List<Token> get(final String input) {
-        List<Token> tokens = new ArrayList<>();
+        final List<Token> tokens = new ArrayList<>();
         if (!mHasChinaCollator || TextUtils.isEmpty(input)) {
             // return empty tokens.
             return tokens;
@@ -534,7 +534,7 @@ public class HanziToPinyin {
                 tokenType = Token.LATIN;
                 sb.append(character);
             } else {
-                Token t = getToken(character);
+                final Token t = getToken(character);
                 if (t.type == Token.PINYIN) {
                     if (sb.length() > 0) {
                         addToken(sb, tokens, tokenType);
@@ -557,7 +557,7 @@ public class HanziToPinyin {
     }
 
     private void addToken(final StringBuilder sb, final List<Token> tokens, final int tokenType) {
-        String str = sb.toString();
+        final String str = sb.toString();
         tokens.add(new Token(tokenType, str, str));
         sb.setLength(0);
     }
