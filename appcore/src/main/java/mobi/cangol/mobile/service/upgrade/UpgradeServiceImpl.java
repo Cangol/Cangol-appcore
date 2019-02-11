@@ -78,8 +78,8 @@ class UpgradeServiceImpl implements UpgradeService {
         if (debug) Log.d("onDestory");
         if (mDownloadHttpClient != null)
             mDownloadHttpClient.cancelAll();
-        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        for (Integer id : mIds) {
+        final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        for (final Integer id : mIds) {
             notificationManager.cancel(id);
             if (debug) Log.d("notification cancel " + id);
         }
@@ -117,14 +117,14 @@ class UpgradeServiceImpl implements UpgradeService {
 
     private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean install, final boolean safe) {
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
-        File saveFile = new File(savePath);
+        final File saveFile = new File(savePath);
         if (debug) Log.d("upgrade savePath:" + savePath);
         if (saveFile.exists()) {
-            boolean result=saveFile.delete();
+            final boolean result=saveFile.delete();
             if(!result)Log.d("delete oldFile fail:" + savePath);
         } else {
             try {
-                boolean result=saveFile.createNewFile();
+                final boolean result=saveFile.createNewFile();
                 if(!result)Log.d("createNewFile  fail:" + savePath);
             } catch (IOException e) {
                 Log.e(e.getMessage());
@@ -198,9 +198,9 @@ class UpgradeServiceImpl implements UpgradeService {
         switch (upgradeType) {
             case APK:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    String authority = mContext.getPackageName() + ".fileprovider";
+                    final String authority = mContext.getPackageName() + ".fileprovider";
                     if (debug) Log.e("authority=" + authority);
-                    Uri contentUri = FileProvider.getUriForFile(mContext, authority, new File(savePath));
+                    final Uri contentUri = FileProvider.getUriForFile(mContext, authority, new File(savePath));
                     AppUtils.install(mContext, contentUri);
                 } else {
                     AppUtils.install(mContext, savePath);
@@ -231,16 +231,16 @@ class UpgradeServiceImpl implements UpgradeService {
 
     private Intent createFinishIntent(String savePath, UpgradeType upgradeType) {
         Intent intent = null;
-        File file = new File(savePath);
+        final File file = new File(savePath);
         switch (upgradeType) {
             case APK:
                 intent = new Intent(Intent.ACTION_VIEW);
                 //判断是否是AndroidN以及更高的版本
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    String authority = mContext.getPackageName() + ".fileprovider";
+                    final String authority = mContext.getPackageName() + ".fileprovider";
                     if (debug) Log.e("authority=" + authority);
-                    Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
+                    final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
                     if (debug) Log.e("uri=" + contentUri);
                     intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
                 } else {

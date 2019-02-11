@@ -240,9 +240,13 @@ public class StatsTraffic {
         NetworkInfo.State mobileState = null;
         final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (networkInfoWifi != null) {
             wifiState = networkInfoWifi.getState();
+        }
+        final NetworkInfo networkInfoMobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (networkInfoMobile != null) {
+            mobileState = networkInfoMobile.getState();
         }
         if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
             // 无线网络连接

@@ -99,7 +99,7 @@ class ConnectionQueue {
             @Override
             public void run() {
                 while (true) {
-                    SessionEntity data = queue.peek();
+                    final SessionEntity data = queue.peek();
 
                     if (data == null) {
                         break;

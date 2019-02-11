@@ -195,7 +195,7 @@ public class TimeUtils {
      * @param period yyyy-MM
      */
     public static String getStartDateInPeriod(String period) {
-        DateFormat df = new SimpleDateFormat(YYYY_MM);
+        final DateFormat df = new SimpleDateFormat(YYYY_MM);
         try {
             if (df.parse(period) == null) {
                 return null;
@@ -204,9 +204,9 @@ public class TimeUtils {
             Log.d(e.getMessage());
             return null;
         }
-        int year = Integer.parseInt(period.substring(0, 4));
-        int month = Integer.parseInt(period.substring(5, 7));
-        Calendar cl = Calendar.getInstance();
+        final int year = Integer.parseInt(period.substring(0, 4));
+        final int month = Integer.parseInt(period.substring(5, 7));
+        final Calendar cl = Calendar.getInstance();
         cl.set(year, month - 1, 1);
         return df.format(cl.getTime());
 
@@ -249,7 +249,7 @@ public class TimeUtils {
             timeStr = null;
         } else {
             try {
-                Date date = new SimpleDateFormat(YYYYMMDD).parse(str);
+                final Date date = new SimpleDateFormat(YYYYMMDD).parse(str);
                 timeStr = new SimpleDateFormat(YYYY_MM_DD).format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
@@ -270,7 +270,7 @@ public class TimeUtils {
             timeStr = null;
         } else {
             try {
-                Date date = new SimpleDateFormat(YYYY_MM_DD).parse(str);
+                final Date date = new SimpleDateFormat(YYYY_MM_DD).parse(str);
                 timeStr = new SimpleDateFormat(YYYYMMDD).format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
@@ -562,7 +562,7 @@ public class TimeUtils {
             return sb.toString();
         }
         if (second != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(second).append("秒前");
             return sb.toString();
         }

@@ -112,7 +112,7 @@ public class Object2FileUtils {
      */
     public static void writeJSONArray(JSONArray jsonArray, OutputStream os) {
         try {
-            byte[] buffer = jsonArray.toString().getBytes(CHARSET);
+            final byte[] buffer = jsonArray.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
         } catch (IOException e) {
@@ -136,7 +136,7 @@ public class Object2FileUtils {
      */
     public static void writeJSONObject(JSONObject jsonObject, OutputStream os) {
         try {
-            byte[] buffer = jsonObject.toString().getBytes(CHARSET);
+            final byte[] buffer = jsonObject.toString().getBytes(CHARSET);
             os.write(buffer);
             os.flush();
         } catch (Exception e) {
@@ -194,7 +194,7 @@ public class Object2FileUtils {
         String content = null;
         JSONArray jsonArray = null;
         try {
-            byte[] buffer = new byte[is.available()];
+            final byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
                 content = new String(buffer, CHARSET);
                 if (!TextUtils.isEmpty(content)) {
@@ -274,7 +274,7 @@ public class Object2FileUtils {
      */
     public static void writeObject(Serializable obj, String objPath) {
 
-        File file = new File(objPath);
+        final File file = new File(objPath);
         if (file.exists()) {
             file.delete();
         }

@@ -33,7 +33,7 @@ class TrafficDbService {
 
     public TrafficDbService(Context context) {
         try {
-            StatDatabaseHelper dbHelper = StatDatabaseHelper
+            final StatDatabaseHelper dbHelper = StatDatabaseHelper
                     .createDataBaseHelper(context);
             dateTrafficDao = dbHelper.getDao(DateTraffic.class);
             appTrafficDao = dbHelper.getDao(AppTraffic.class);
@@ -80,7 +80,7 @@ class TrafficDbService {
         QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "=");
-        List<DateTraffic> list = dateTrafficDao.query(queryBuilder);
+        final List<DateTraffic> list = dateTrafficDao.query(queryBuilder);
         if (!list.isEmpty()) {
             return list.get(0);
         } else {
@@ -90,9 +90,9 @@ class TrafficDbService {
     }
 
     public AppTraffic getAppTraffic(int uid) {
-        QueryBuilder queryBuilder = new QueryBuilder(AppTraffic.class);
+        final QueryBuilder queryBuilder = new QueryBuilder(AppTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
-        List<AppTraffic> list = appTrafficDao.query(queryBuilder);
+        final List<AppTraffic> list = appTrafficDao.query(queryBuilder);
         if (!list.isEmpty()) {
             return list.get(0);
         } else {
@@ -106,7 +106,7 @@ class TrafficDbService {
     }
 
     public List<DateTraffic> getDateTrafficByStatus(int uid, String date, int status) {
-        QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
+        final QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "<");
         queryBuilder.addQuery("status", status, "=");

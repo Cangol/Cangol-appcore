@@ -157,11 +157,11 @@ public final class DeviceInfo {
     public static long getMemTotalSize() {
         long result = 0;
         try {
-            Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
+            final Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             final String memStr = "MemTotal:";
-            String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
+            final String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
             result = Long.parseLong(resultStr.trim()) * 1024;
         } catch (IOException e) {
@@ -179,9 +179,9 @@ public final class DeviceInfo {
         long result = 0;
         try {
             final Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             bufferedReader.readLine();
-            String str = bufferedReader.readLine();
+            final String str = bufferedReader.readLine();
             final String memStr = "MemFree:";
             final String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
             bufferedReader.close();
@@ -397,11 +397,11 @@ public final class DeviceInfo {
             final NetworkInfo network = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getActiveNetworkInfo();
             if (network != null && network.isAvailable() && network.isConnected()) {
-                int type = network.getType();
+                final int type = network.getType();
                 if (type == ConnectivityManager.TYPE_WIFI) {
                     networkType = NETWORK_TYPE_WIFI;
                 } else if (type == ConnectivityManager.TYPE_MOBILE) {
-                    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                    final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                     networkType = telephonyManager.getNetworkType();
                 }
             } else {
@@ -766,7 +766,7 @@ public final class DeviceInfo {
         String did = "";
         final  WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         final WifiInfo wifiInfo = manager.getConnectionInfo();
-        String macAddress = wifiInfo.getMacAddress();
+        final String macAddress = wifiInfo.getMacAddress();
         Log.i("macAddress did:" + macAddress);
         if (null != macAddress && !SPECIAL_MAC.equals(macAddress)) {
             did = macAddress.replace(".", "").replace(":", "")
@@ -841,7 +841,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isGPSLocation(Context context) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
@@ -891,14 +891,14 @@ public final class DeviceInfo {
             final InputStream input = new ByteArrayInputStream(cert);
             //证书工厂类，这个类实现了出厂合格证算法的功能
             final  CertificateFactory cf = CertificateFactory.getInstance("X509");
-            X509Certificate c = (X509Certificate) cf.generateCertificate(input);
+            final X509Certificate c = (X509Certificate) cf.generateCertificate(input);
             //获得公钥
-            byte[] publicKey = md.digest(c.getEncoded());
+            final byte[] publicKey = md.digest(c.getEncoded());
             //字节到十六进制的格式转换
-            char[] hexArray = "0123456789ABCDEF".toCharArray();
+            final char[] hexArray = "0123456789ABCDEF".toCharArray();
             char[] hexChars = new char[publicKey.length * 2];
             for (int j = 0; j < publicKey.length; j++) {
-                int v = publicKey[j] & 0xFF;
+                final int v = publicKey[j] & 0xFF;
                 hexChars[j * 2] = hexArray[v >>> 4];
                 hexChars[j * 2 + 1] = hexArray[v & 0x0F];
             }
@@ -926,10 +926,10 @@ public final class DeviceInfo {
         if (context == null || TextUtils.isEmpty(activityName)) {
             return false;
         }
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
+        final ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
         if (list != null && !list.isEmpty()) {
-            ComponentName cpn = list.get(0).topActivity;
+            final ComponentName cpn = list.get(0).topActivity;
             return activityName.equals(cpn.getClassName());
         }
         return false;
@@ -944,13 +944,13 @@ public final class DeviceInfo {
      */
     public static boolean isForegroundApplication(String packageName, Context context) {
         boolean result = false;
-        ActivityManager am = (ActivityManager) context
+        final ActivityManager am = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
+        final List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
         if (appProcesses != null) {
-            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
+            for (final ActivityManager.RunningAppProcessInfo runningAppProcessInfo : appProcesses) {
                 if (runningAppProcessInfo.processName.equals(packageName)) {
-                    int status = runningAppProcessInfo.importance;
+                    final int status = runningAppProcessInfo.importance;
                     if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
                             || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
                         result = true;
@@ -969,11 +969,11 @@ public final class DeviceInfo {
      */
     public static String getCurProcessName(Context context) {
 
-        int pid = android.os.Process.myPid();
+        final int pid = android.os.Process.myPid();
 
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 
-        for (ActivityManager.RunningAppProcessInfo appProcess : activityManager
+        for (final ActivityManager.RunningAppProcessInfo appProcess : activityManager
                 .getRunningAppProcesses()) {
 
             if (appProcess.pid == pid) {
@@ -995,7 +995,7 @@ public final class DeviceInfo {
         int proxyPort;
         if (IS_ICS_OR_LATER) {
             proxyAddress = System.getProperty("http.proxyHost");
-            String portStr = System.getProperty("http.proxyPort");
+            final String portStr = System.getProperty("http.proxyPort");
             proxyPort = Integer.parseInt((portStr != null ? portStr : "-1"));
         } else {
             proxyAddress = android.net.Proxy.getHost(context);
@@ -1021,28 +1021,28 @@ public final class DeviceInfo {
      */
     public static boolean checkDeviceHasNavigationBar(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = windowManager.getDefaultDisplay();
-            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+           final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+           final Display display = windowManager.getDefaultDisplay();
+            final DisplayMetrics realDisplayMetrics = new DisplayMetrics();
             display.getRealMetrics(realDisplayMetrics);
-            int realHeight = realDisplayMetrics.heightPixels;
-            int realWidth = realDisplayMetrics.widthPixels;
-            DisplayMetrics displayMetrics = new DisplayMetrics();
+            final int realHeight = realDisplayMetrics.heightPixels;
+            final int realWidth = realDisplayMetrics.widthPixels;
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
             display.getMetrics(displayMetrics);
-            int displayHeight = displayMetrics.heightPixels;
-            int displayWidth = displayMetrics.widthPixels;
+            final int displayHeight = displayMetrics.heightPixels;
+            final int displayWidth = displayMetrics.widthPixels;
             return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
         } else {
             boolean hasNavigationBar = false;
-            Resources resources = context.getResources();
-            int id = resources.getIdentifier("config_showNavigationBar", "bool", ANDROID);
+            final Resources resources = context.getResources();
+            final int id = resources.getIdentifier("config_showNavigationBar", "bool", ANDROID);
             if (id > 0) {
                 hasNavigationBar = resources.getBoolean(id);
             }
             try {
-                Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-                Method m = systemPropertiesClass.getMethod("get", String.class);
-                String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+                final Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+                final Method m = systemPropertiesClass.getMethod("get", String.class);
+                final String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
                 if ("1".equals(navBarOverride)) {
                     hasNavigationBar = false;
                 } else if ("0".equals(navBarOverride)) {

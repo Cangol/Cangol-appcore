@@ -149,10 +149,10 @@ class StatusServiceImpl implements StatusService {
     public void onCreate(Application context) {
         mContext = context;
 
-        IntentFilter intentFileter1 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        final IntentFilter intentFileter1 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         mContext.registerReceiver(networkStatusReceiver, intentFileter1);
 
-        IntentFilter intentFileter2 = new IntentFilter("android.intent.action.ACTION_MEDIA_MOUNTED");
+        final IntentFilter intentFileter2 = new IntentFilter("android.intent.action.ACTION_MEDIA_MOUNTED");
         intentFileter2.addAction("android.intent.action.ACTION_MEDIA_REMOVED");
         mContext.registerReceiver(storageStatusReceiver, intentFileter2);
 
@@ -241,7 +241,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyNetworkConnect(Context context) {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.networkConnect(context);
             }
@@ -259,7 +259,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyNetworkTo3G(Context context) {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.networkTo3G(context);
             }
@@ -267,7 +267,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyStorageRemove(Context context) {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.storageRemove(context);
             }
@@ -283,7 +283,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyCallStateIdle() {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.callStateIdle();
             }
@@ -291,7 +291,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyCallStateOffhook() {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.callStateOffhook();
             }
@@ -299,7 +299,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyCallStateRinging() {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.callStateRinging();
             }

@@ -284,8 +284,8 @@ public class StatAgent {
     }
 
     public void sendTraffic() {
-        StatsTraffic statsTraffic = StatsTraffic.getInstance(context);
-        List<Map> list = statsTraffic.getUnPostDateTraffic(context.getApplicationInfo().uid, TimeUtils.getCurrentDate());
+        final StatsTraffic statsTraffic = StatsTraffic.getInstance(context);
+        final List<Map> list = statsTraffic.getUnPostDateTraffic(context.getApplicationInfo().uid, TimeUtils.getCurrentDate());
         for (int i = 0; i < list.size(); i++) {
             send(Builder.createTraffic(list.get(i)));
         }
@@ -440,7 +440,7 @@ public class StatAgent {
          * @return
          */
         protected static Builder createTraffic(Map<String, String> map) {
-            Builder builder = new Builder();
+            final Builder builder = new Builder();
             builder.set("date", map.get("date"));
             builder.set("totalRx", map.get("totalRx"));
             builder.set("totalTx", map.get("totalTx"));
