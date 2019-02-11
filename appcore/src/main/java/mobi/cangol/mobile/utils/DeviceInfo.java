@@ -158,7 +158,7 @@ public final class DeviceInfo {
         long result = 0;
         try {
             final Process process = new ProcessBuilder("/system/bin/cat", "/proc/meminfo").start();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), CHARSET));
             String str = bufferedReader.readLine();
             final String memStr = "MemTotal:";
             final String resultStr = str.substring(str.indexOf(memStr) + memStr.length(), str.indexOf(" kB"));
@@ -416,13 +416,13 @@ public final class DeviceInfo {
 
     public static String getNetworkTypeName(Context context) {
         String typeName = null;
-        int networkType = getNetworkType(context);
+        final int networkType = getNetworkType(context);
         if (networkType == NETWORK_TYPE_WIFI) {
             typeName = "WIFI";
         } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
             typeName = "UNAVAILABLE";
         } else {
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             try {
                 final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName", Integer.class);
                 method.setAccessible(true);

@@ -54,8 +54,8 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int create(T paramT) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         long result = -1;
         try {
             db.beginTransaction();
@@ -72,8 +72,8 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int create(Collection<T> paramTs) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         long result = -1;
         try {
             db.beginTransaction();
@@ -115,10 +115,10 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public List<T> query(QueryBuilder queryBuilder, String... columns) {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         final ArrayList<T> list = new ArrayList<>();
         try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+           final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             final Cursor cursor = query(db, queryBuilder, columns);
             T obj = null;
             while (cursor.moveToNext()) {
@@ -135,13 +135,13 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public T queryForId(I paramID, String... columns) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         T obj = null;
         try {
-            SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-            QueryBuilder queryBuilder = new QueryBuilder(mClazz);
+            final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+            final QueryBuilder queryBuilder = new QueryBuilder(mClazz);
             queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz), paramID, "=");
-            Cursor cursor = query(db, queryBuilder);
+            final Cursor cursor = query(db, queryBuilder);
             if (cursor.getCount() > 0 && cursor.moveToFirst()) {
                 obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns);
             }
@@ -160,7 +160,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
         try {
             final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
             final QueryBuilder queryBuilder = new QueryBuilder(mClazz);
-            Cursor cursor = query(db, queryBuilder);
+            final Cursor cursor = query(db, queryBuilder);
             T obj;
             while (cursor.moveToNext()) {
                 obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns);
@@ -176,7 +176,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public T refresh(T paramT, String... columns) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         T result = null;
         try {
             final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
@@ -201,8 +201,8 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int update(T paramT, String... columns) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT, columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
@@ -215,8 +215,8 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public int update(Collection<T> paramTs, String... columns) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
             db.beginTransaction();
@@ -237,7 +237,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
     public int updateById(T paramT, I paramID, String... columns) throws SQLException {
         final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
 
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT, columns), DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + paramID});
@@ -251,7 +251,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
     @Override
     public int delete(T paramT) throws SQLException {
         final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = -1;
         try {
             result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz) + "=?", new String[]{"" + DatabaseUtils.getIdValue(paramT)});
@@ -265,7 +265,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
     @Override
     public int delete(Collection<T> paramCollection) throws SQLException {
         final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+        final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         int result = 0;
         try {
             db.beginTransaction();

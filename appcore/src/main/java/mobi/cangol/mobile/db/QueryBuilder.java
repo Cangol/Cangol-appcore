@@ -139,7 +139,7 @@ public class QueryBuilder {
     }
 
     protected String getSelection() {
-        StringBuilder sql = new StringBuilder();
+        final StringBuilder sql = new StringBuilder();
         if (paraKey != null) {
             for (int i = 0; i < paraKey.size(); i++) {
                 if (i > 0) {

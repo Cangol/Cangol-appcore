@@ -56,9 +56,9 @@ public class ClassUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<Class<? extends T>> getAllClassByInterface(Class<T> c, Context context, String packageName) {
-        List<Class<? extends T>> returnClassList = new ArrayList<>();
+        final List<Class<? extends T>> returnClassList = new ArrayList<>();
         if (c.isInterface()) {
-            List<Class<?>> allClass = getAllClassByPackage(packageName, context);
+            final List<Class<?>> allClass = getAllClassByPackage(packageName, context);
             for (int i = 0; i < allClass.size(); i++) {
                 if (c.isAssignableFrom(allClass.get(i)) && !allClass.get(i).isInterface()) {
                     returnClassList.add((Class<? extends T>) allClass.get(i));
@@ -78,13 +78,13 @@ public class ClassUtils {
      * @return
      */
     public static List<Class<?>> getAllClassByPackage(String packageName, Context context) {
-        List<Class<?>> classList = new ArrayList<>();
-        List<String> list = getAllClassNameFromDexFile(context, packageName);
+        final List<Class<?>> classList = new ArrayList<>();
+        final List<String> list = getAllClassNameFromDexFile(context, packageName);
         Class<?> clazz;
         try {
-            for (String classNane : list) {
-                if (classNane.startsWith(packageName)) {
-                    clazz = context.getClassLoader().loadClass(classNane);
+            for (final String className : list) {
+                if (className.startsWith(packageName)) {
+                    clazz = context.getClassLoader().loadClass(className);
                     classList.add(clazz);
                 }
             }
@@ -101,11 +101,11 @@ public class ClassUtils {
      * @return
      */
     public static List<String> getAllClassNameFromDexFile(Context context, String packageName) {
-        List<String> classList = new ArrayList<>();
+        final List<String> classList = new ArrayList<>();
         try {
-            DexFile df = new DexFile(context.getPackageCodePath());
+            final DexFile df = new DexFile(context.getPackageCodePath());
             String str;
-            for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
+            for (final Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
                 str = iter.nextElement();
                 if ((packageName != null && str.startsWith(packageName))
                         || (packageName == null || "".equals(packageName))) {
@@ -126,12 +126,12 @@ public class ClassUtils {
      * @return
      */
     public static List<Class<?>> getAllClassFromDexFile(Context context, String packageName) {
-        List<Class<?>> classList = new ArrayList<>();
+        final List<Class<?>> classList = new ArrayList<>();
         try {
-            DexFile df = new DexFile(context.getPackageCodePath());
+            final DexFile df = new DexFile(context.getPackageCodePath());
             Class<?> clazz;
             String str;
-            for (Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
+            for (final Enumeration<String> iter = df.entries(); iter.hasMoreElements(); ) {
                 str = iter.nextElement();
                 if ((packageName != null && str.startsWith(packageName))
                         || (packageName == null || "".equals(packageName))) {
