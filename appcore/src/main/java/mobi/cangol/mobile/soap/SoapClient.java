@@ -87,7 +87,7 @@ public class SoapClient {
                 paramsStr.append('?');
             }
             final SoapObject rpc = new SoapObject(namespace, action);
-            for (Map.Entry<String, String> entry : params.entrySet()) {
+            for (final Map.Entry<String, String> entry : params.entrySet()) {
                 rpc.addProperty(entry.getKey(), entry.getValue());
                 paramsStr.append(entry.getKey())
                         .append('=')

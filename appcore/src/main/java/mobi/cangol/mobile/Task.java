@@ -18,7 +18,7 @@ public abstract class Task<R> implements Runnable {
 
     @Override
     public void run() {
-        R r = call();
+        final R r = call();
         Message.obtain(handler, 1, r).sendToTarget();
     }
 

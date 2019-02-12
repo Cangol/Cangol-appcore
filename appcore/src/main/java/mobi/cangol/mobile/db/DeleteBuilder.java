@@ -129,7 +129,7 @@ public class DeleteBuilder {
     }
 
     protected String getWhere() {
-        StringBuilder sql = new StringBuilder();
+        final StringBuilder sql = new StringBuilder();
         if (paraKey != null) {
             for (int i = 0; i < paraKey.size(); i++) {
                 if (i > 0) {
@@ -146,7 +146,7 @@ public class DeleteBuilder {
 
     protected String[] getWhereArgs() {
         if (paraValue != null) {
-            String[] args = new String[paraValue.size()];
+            final String[] args = new String[paraValue.size()];
             for (int i = 0; i < paraValue.size(); i++) {
                 paraKey.get(i);
                 args[i] = String.valueOf(paraValue.get(i));
