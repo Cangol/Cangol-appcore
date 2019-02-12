@@ -43,7 +43,7 @@ public class ServiceProperty {
     }
 
     public String getString(String key, String defaultValue) {
-        Object o = mMap.get(key);
+        final Object o = mMap.get(key);
         if (o == null) {
             return defaultValue;
         }
@@ -83,7 +83,7 @@ public class ServiceProperty {
     }
 
     public double getDouble(String key, double defaultValue) {
-        Object o = mMap.get(key);
+        final Object o = mMap.get(key);
         if (o == null) {
             return defaultValue;
         }
@@ -103,7 +103,7 @@ public class ServiceProperty {
     }
 
     public boolean getBoolean(String key, boolean defaultValue) {
-        Object o = mMap.get(key);
+        final Object o = mMap.get(key);
         if (o == null) {
             return defaultValue;
         }
@@ -123,7 +123,7 @@ public class ServiceProperty {
     }
 
     public long getLong(String key, long defaultValue) {
-        Object o = mMap.get(key);
+       final Object o = mMap.get(key);
         if (o == null) {
             return defaultValue;
         }
@@ -143,7 +143,7 @@ public class ServiceProperty {
     }
 
     public float getFloat(String key, float defaultValue) {
-        Object o = mMap.get(key);
+       final Object o = mMap.get(key);
         if (o == null) {
             return defaultValue;
         }

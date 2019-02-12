@@ -532,7 +532,7 @@ public class TimeUtils {
         final long second = between % 60 / 60;
 
         if (year != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(year).append("年前");
             return sb.toString();
         }
@@ -542,22 +542,22 @@ public class TimeUtils {
             return sb.toString();
         }
         if (week != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(week).append("周前");
             return sb.toString();
         }
         if (day != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(day).append("天前");
             return sb.toString();
         }
         if (hour != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(hour).append("小时前");
             return sb.toString();
         }
         if (minute != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(minute).append("分钟前");
             return sb.toString();
         }

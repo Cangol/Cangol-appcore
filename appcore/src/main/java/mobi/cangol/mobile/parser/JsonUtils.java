@@ -104,7 +104,7 @@ public class JsonUtils extends Converter {
                     //集合类型
                     if (field.getGenericType() instanceof ParameterizedType) {
                         final List<?> list = (List<?>) field.get(obj);
-                        JSONArray jsonArray = new JSONArray();
+                        final JSONArray jsonArray = new JSONArray();
                         if (list != null) {
                             for (int i = 0; i < list.size(); i++) {
                                 if (isBaseClass(list.get(i).getClass())) {
@@ -141,7 +141,7 @@ public class JsonUtils extends Converter {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
-        String json = formatJson(str);
+        final String json = formatJson(str);
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);

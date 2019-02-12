@@ -71,7 +71,7 @@ public class LocationUtils {
     public static String getOffset(double lat, double lng) {
         final String url = String.format("http://www.mapdigit.com/guidebeemap/offsetinchina.php?lng=%f&lat=%f", lat, lng);
         String response = null;
-        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        final OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
         Request request = new Request.Builder()
                 .url(url)
                 .get()

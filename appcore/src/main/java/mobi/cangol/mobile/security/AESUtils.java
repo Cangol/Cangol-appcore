@@ -38,7 +38,7 @@ public class AESUtils {
     }
 
     public static String encrypt(String seed, String content) throws UnsupportedEncodingException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
+        final byte[] rawKey = getRawKey(seed.getBytes(CHARSET));
         final byte[] result = encrypt(rawKey, content.getBytes(CHARSET));
         return toHex(result);
     }

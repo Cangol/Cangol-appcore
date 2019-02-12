@@ -46,7 +46,7 @@ public class Session {
         final ConfigService configService = (ConfigService) mCoreApplication.getAppService(AppService.CONFIG_SERVICE);
         mSessionDir = configService.getCacheDir().getAbsolutePath() + File.separator + "session_" + name;
 
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         FileUtils.newFolder(mSessionDir);
         StrictMode.setThreadPolicy(oldPolicy);
     }

@@ -81,7 +81,7 @@ public abstract class CoreSQLiteOpenHelper {
             if (android.os.Build.VERSION.SDK_INT >= 9) {
                 oldPolicy = StrictMode.allowThreadDiskWrites();
             }
-            SQLiteDatabase database = mDbHelper.getWritableDatabase();
+            final SQLiteDatabase database = mDbHelper.getWritableDatabase();
             if (android.os.Build.VERSION.SDK_INT >= 9) {
                 StrictMode.setThreadPolicy(oldPolicy);
             }
@@ -102,7 +102,7 @@ public abstract class CoreSQLiteOpenHelper {
             if (android.os.Build.VERSION.SDK_INT >= 9) {
                 oldPolicy = StrictMode.allowThreadDiskReads();
             }
-            SQLiteDatabase database = mDbHelper.getReadableDatabase();
+            final SQLiteDatabase database = mDbHelper.getReadableDatabase();
             if (android.os.Build.VERSION.SDK_INT >= 9) {
                 StrictMode.setThreadPolicy(oldPolicy);
             }

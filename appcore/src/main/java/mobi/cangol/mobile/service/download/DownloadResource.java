@@ -201,7 +201,7 @@ public class DownloadResource implements Serializable {
             return false;
         }
 
-        DownloadResource that = (DownloadResource) o;
+        final DownloadResource that = (DownloadResource) o;
 
         return key.equals(that.key);
 

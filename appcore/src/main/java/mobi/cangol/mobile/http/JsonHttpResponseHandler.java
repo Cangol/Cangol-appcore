@@ -105,7 +105,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
     @Override
     protected void sendSuccessMessage(int statusCode, String responseBody) {
         try {
-            Object jsonResponse = parseResponse(responseBody);
+            final Object jsonResponse = parseResponse(responseBody);
             sendMessage(obtainMessage(SUCCESS_JSON_MESSAGE, new Object[]{statusCode, jsonResponse}));
         } catch (JSONException e) {
             sendFailureMessage(e, responseBody);
@@ -120,7 +120,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
     @Override
     protected void handleMessage(Message msg) {
         if (msg.what == SUCCESS_JSON_MESSAGE) {
-            Object[] response = (Object[]) msg.obj;
+            final Object[] response = (Object[]) msg.obj;
             handleSuccessJsonMessage(((Integer) response[0]).intValue(), response[1]);
         } else {
             super.handleMessage(msg);
@@ -154,7 +154,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
     protected void handleFailureMessage(Throwable e, String responseBody) {
         try {
             if (responseBody != null) {
-                Object jsonResponse = parseResponse(responseBody);
+               final Object jsonResponse = parseResponse(responseBody);
                 if (jsonResponse instanceof JSONObject) {
                     onFailure(e, (JSONObject) jsonResponse);
                 } else if (jsonResponse instanceof JSONArray) {

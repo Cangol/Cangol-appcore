@@ -179,7 +179,7 @@ public class StringUtils {
             //MessageDigest md5
             final MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(strTemp);
-            byte[] md = mdTemp.digest();
+            final byte[] md = mdTemp.digest();
             final int j = md.length;
             char[] str = new char[j * 2];
             int k = 0;

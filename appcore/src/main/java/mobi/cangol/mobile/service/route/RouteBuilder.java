@@ -38,7 +38,7 @@ public class RouteBuilder {
 
     public void navigation(Context context) {
         this.context = context;
-        Class clazz = routeService.getClassByPath(getPath());
+        final Class clazz = routeService.getClassByPath(getPath());
         if (clazz != null) {
             if (clazz.isAnnotationPresent(Route.class)) {
                 Route route = (Route) clazz.getAnnotation(Route.class);

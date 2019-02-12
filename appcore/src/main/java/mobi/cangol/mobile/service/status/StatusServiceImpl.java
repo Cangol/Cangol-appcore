@@ -275,7 +275,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyStorageMount(Context context) {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.storageMount(context);
             }

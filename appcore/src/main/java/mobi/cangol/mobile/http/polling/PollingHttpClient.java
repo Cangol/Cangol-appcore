@@ -98,7 +98,7 @@ public class PollingHttpClient {
     }
 
     public void send(Object tag, String url, RequestBody requestBody, PollingResponseHandler responseHandler, int retryTimes, long sleeptimes) {
-        Request request = new Request.Builder()
+        final Request request = new Request.Builder()
                 .tag(tag)
                 .url(url)
                 .post(requestBody)

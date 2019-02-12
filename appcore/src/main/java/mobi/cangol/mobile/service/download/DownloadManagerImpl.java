@@ -83,7 +83,7 @@ class DownloadManagerImpl implements DownloadManager {
     private DownloadExecutor<?> createDownloadExecutor(String name, Class<? extends DownloadExecutor<?>> clazz, int max) {
         DownloadExecutor<?> downloadExecutor = null;
         try {
-            Constructor<? extends DownloadExecutor<?>> c = clazz.getDeclaredConstructor(String.class);
+            final Constructor<? extends DownloadExecutor<?>> c = clazz.getDeclaredConstructor(String.class);
             c.setAccessible(true);
             downloadExecutor = c.newInstance(name);
             downloadExecutor.setContext(mContext);
@@ -101,7 +101,7 @@ class DownloadManagerImpl implements DownloadManager {
         if (null == executorMap) {
             return;
         }
-        Enumeration<DownloadExecutor<?>> en = executorMap.elements();
+        final Enumeration<DownloadExecutor<?>> en = executorMap.elements();
         DownloadExecutor<?> downloadExecutor = null;
         while (en.hasMoreElements()) {
             downloadExecutor = en.nextElement();
@@ -114,7 +114,7 @@ class DownloadManagerImpl implements DownloadManager {
         if (null == executorMap) {
             return;
         }
-        Enumeration<DownloadExecutor<?>> en = executorMap.elements();
+        final Enumeration<DownloadExecutor<?>> en = executorMap.elements();
         DownloadExecutor<?> downloadExecutor = null;
         while (en.hasMoreElements()) {
             downloadExecutor = en.nextElement();

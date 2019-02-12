@@ -63,7 +63,7 @@ public class StatsSession {
         long currTime = System.currentTimeMillis() / 1000;
         unSentSessionLength += currTime - mLastTime;
 
-        int duration = (int) unSentSessionLength;
+        final int duration = (int) unSentSessionLength;
         mQueue.endSession(page, duration);
         unSentSessionLength -= duration;
     }
@@ -73,7 +73,7 @@ public class StatsSession {
         unSentSessionLength += currTime - mLastTime;
         mLastTime = currTime;
 
-        int duration = (int) unSentSessionLength;
+        final int duration = (int) unSentSessionLength;
         mQueue.updateSession(duration);
         unSentSessionLength -= duration;
     }

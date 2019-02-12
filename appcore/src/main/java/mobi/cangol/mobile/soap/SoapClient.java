@@ -127,8 +127,8 @@ public class SoapClient {
     public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
         final List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }

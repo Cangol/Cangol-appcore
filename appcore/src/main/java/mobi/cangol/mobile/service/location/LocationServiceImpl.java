@@ -83,7 +83,7 @@ class LocationServiceImpl implements LocationService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putInt(LOCATIONSERVICE_BETTERTIME, 120000);
         sp.putInt(LOCATIONSERVICE_TIMEOUT, 300000);
         sp.putInt(LOCATIONSERVICE_GPS_MINTIME, 1000);

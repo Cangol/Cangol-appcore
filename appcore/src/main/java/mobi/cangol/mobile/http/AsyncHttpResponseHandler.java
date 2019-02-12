@@ -152,7 +152,7 @@ public class AsyncHttpResponseHandler {
     }
 
     void sendResponseMessage(Response response) {
-        ResponseBody requestBody = response.body();
+        final ResponseBody requestBody = response.body();
         if (response.isSuccessful()) {
             try {
                 sendSuccessMessage(response.code(), requestBody.string());

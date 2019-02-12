@@ -81,7 +81,7 @@ public class DataCleanManager {
         cleanDatabases(context);
         cleanSharedPreference(context);
         cleanFiles(context);
-        for (String filePath : filepath) {
+        for (final String filePath : filepath) {
             cleanCustomCache(filePath);
         }
     }

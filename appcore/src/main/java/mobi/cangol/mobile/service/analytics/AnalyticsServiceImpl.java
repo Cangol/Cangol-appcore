@@ -69,7 +69,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(ANALYTICSSERVICE_THREADPOOL_NAME, TAG);
         sp.putInt(ANALYTICSSERVICE_THREAD_MAX, 2);
         return sp;
@@ -77,7 +77,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
-        RequestParams params = new RequestParams(paramsMap);
+        final RequestParams params = new RequestParams(paramsMap);
         if (mDebug) Log.v(TAG, "send " + url + "?" + params.toString());
         if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
         mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
@@ -108,7 +108,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         if (mTrackers.containsKey(trackingId)) {
             return mTrackers.get(trackingId);
         } else {
-            ITracker tracker = new ITracker(trackingId, this);
+           final ITracker tracker = new ITracker(trackingId, this);
             mTrackers.put(trackingId, tracker);
             return tracker;
         }
@@ -116,7 +116,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public void closeTracker(String trackingId) {
-        ITracker tracker = mTrackers.get(trackingId);
+        final ITracker tracker = mTrackers.get(trackingId);
         if (tracker != null) {
             mTrackers.remove(trackingId);
             tracker.setClosed(true);

@@ -292,7 +292,7 @@ public class AsyncHttpClient {
      * @param responseHandler
      */
     public void execMethod(String method, Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
-        Headers.Builder headerBuilder = new Headers.Builder();
+        final Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
             for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());

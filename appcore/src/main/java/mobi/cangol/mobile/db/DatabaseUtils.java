@@ -84,7 +84,7 @@ public class DatabaseUtils {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             final StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
             final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName).append('(');
             final Field[] fields = clazz.getDeclaredFields();
             String filedName = null;
@@ -312,7 +312,7 @@ public class DatabaseUtils {
     public static ContentValues getContentValues(Object object, String[] columns) throws IllegalAccessException {
         final ContentValues v = new ContentValues();
         String filedName = null;
-        Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
+        final Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
         for (final Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {

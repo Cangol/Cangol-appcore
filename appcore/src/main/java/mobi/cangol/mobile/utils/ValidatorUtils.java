@@ -103,7 +103,7 @@ public class ValidatorUtils {
             return false;
         }
         final Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
-        Matcher m = p.matcher(str);
+        final Matcher m = p.matcher(str);
         return m.matches();
     }
 
@@ -117,8 +117,8 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.PHONE;
-        Matcher m = p.matcher(str);
+       final Pattern p = Patterns.PHONE;
+       final Matcher m = p.matcher(str);
         return m.matches();
     }
 
@@ -133,7 +133,7 @@ public class ValidatorUtils {
             return false;
         }
         final Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
-        Matcher m = p.matcher(str);
+        final Matcher m = p.matcher(str);
         return m.matches();
     }
 
@@ -148,7 +148,7 @@ public class ValidatorUtils {
             return false;
         }
         final Pattern p = Patterns.EMAIL_ADDRESS;
-        Matcher m = p.matcher(str);
+        final Matcher m = p.matcher(str);
         return m.matches();
     }
 
@@ -163,7 +163,7 @@ public class ValidatorUtils {
             return false;
         }
         final Pattern p = Patterns.WEB_URL;
-        Matcher m = p.matcher(str);
+        final Matcher m = p.matcher(str);
         return m.matches();
     }
 
@@ -177,8 +177,8 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-       final Pattern p = Patterns.IP_ADDRESS;
-        Matcher m = p.matcher(str);
+        final Pattern p = Patterns.IP_ADDRESS;
+        final Matcher m = p.matcher(str);
         return m.matches();
     }
 }

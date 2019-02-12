@@ -64,7 +64,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(IMAGE_DIR, "image");
         sp.putString(DOWNLOAD_DIR, "download");
         sp.putString(TEMP_DIR, "temp");
@@ -105,14 +105,14 @@ class ConfigServiceImpl implements ConfigService {
     @Override
     public void setCustomAppDir(String path) {
         if(mDebug) Log.d(TAG,"setCustomAppDir "+path);
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        File file = new File(path);
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final File file = new File(path);
         if (file.exists()) {
             StrictMode.setThreadPolicy(oldPolicy);
             mAppDir = file;
             mIsCustomAppDir = true;
         } else {
-            boolean mkdirs = file.mkdirs();
+            final boolean mkdirs = file.mkdirs();
             StrictMode.setThreadPolicy(oldPolicy);
             if (mkdirs) {
                 mAppDir = file;
@@ -136,7 +136,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private File initAppDir() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
         if (mUseInternalStorage) {
             file = mContext.getFilesDir().getParentFile();
@@ -153,7 +153,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public File getFileDir(String name) {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
         if (mIsCustomAppDir) {
             file = new File(mAppDir, name);
@@ -179,7 +179,7 @@ class ConfigServiceImpl implements ConfigService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public File getCacheDir() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
         if (mIsCustomAppDir) {
             file = new File(mAppDir, "cache");

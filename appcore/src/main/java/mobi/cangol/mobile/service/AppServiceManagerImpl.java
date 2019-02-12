@@ -137,7 +137,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
             } else {
                 final Method method = clazz.getMethod("getName");
                 final Object t = clazz.newInstance();
-                String name = (String) method.invoke(t);
+                final String name = (String) method.invoke(t);
                 mServiceMap.put(name, clazz);
             }
         } catch (Exception e) {

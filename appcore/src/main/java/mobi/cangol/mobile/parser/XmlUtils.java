@@ -49,8 +49,8 @@ public class XmlUtils extends Converter {
      * @return
      */
     public static String toXml(Object obj, boolean useAnnotation) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        XmlSerializer serializer = Xml.newSerializer();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final XmlSerializer serializer = Xml.newSerializer();
         String result = null;
         try {
             serializer.setOutput(baos, UTF_8);
@@ -141,7 +141,7 @@ public class XmlUtils extends Converter {
      * @throws XMLParserException
      */
     public static <T> T parserToObject(Class<T> c, InputStream inputSteam, boolean useAnnotation) throws XMLParserException {
-        DocumentParser documentParser = new DocumentParser(inputSteam);
+        final DocumentParser documentParser = new DocumentParser(inputSteam);
         documentParser.parserDom();
         return parserToObject(c, documentParser.getRoot(), useAnnotation);
     }

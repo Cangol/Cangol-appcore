@@ -174,7 +174,7 @@ public class DownloadTask {
     }
 
     public void sendDownloadMessage(int what, DownloadResource obj) {
-        Message msg = handler.obtainMessage(what);
+        final Message msg = handler.obtainMessage(what);
         msg.obj = obj;
         msg.sendToTarget();
     }

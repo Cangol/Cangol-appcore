@@ -423,13 +423,13 @@ public class HanziToPinyin {
                 Locale.CHINA)) {
             return source;
         }
-        List<Token> tokens = HanziToPinyin.getInstance().get(source);
+        final List<Token> tokens = HanziToPinyin.getInstance().get(source);
         if (tokens == null || tokens.isEmpty()) {
             return source;
         }
 
         final StringBuilder result = new StringBuilder();
-        for (Token token : tokens) {
+        for (final Token token : tokens) {
             if (token.type == Token.PINYIN) {
                 result.append(token.target.charAt(0));
             } else {

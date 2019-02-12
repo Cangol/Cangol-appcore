@@ -57,9 +57,9 @@ public class StatsTraffic {
             } else if (NETWORK_ACTION.equals(intent.getAction())) {
                 NetworkInfo.State wifiState = null;
                 NetworkInfo.State mobileState = null;
-                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                 if (networkInfoWifi != null) {
                     wifiState = networkInfoWifi.getState();
                 }

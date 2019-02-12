@@ -117,7 +117,7 @@ class ObserverManagerImpl implements ObserverManager {
             subscriptions = subscriptionsByEvent.get(event);
         }
         if (subscriptions != null && !subscriptions.isEmpty()) {
-            for (Subscription subscription : subscriptions) {
+            for (final Subscription subscription : subscriptions) {
                 invokeSubscriber(subscription, data, Looper.getMainLooper() == Looper.myLooper());
             }
         } else {

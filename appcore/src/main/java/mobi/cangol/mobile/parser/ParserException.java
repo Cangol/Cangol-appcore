@@ -54,8 +54,7 @@ public class ParserException extends Exception {
     public String getMessage() {
         if (clazz != null) {
             if (field != null) {
-                String fieldName = field.getName();
-                return "\nError '" + super.getMessage() + "' occurred in " + clazz.getName() + "@" + fieldName + "\n" + getCause().getMessage();
+                return "\nError '" + super.getMessage() + "' occurred in " + clazz.getName() + "@" + field.getName() + "\n" + getCause().getMessage();
             } else {
                 return "\nError '" + super.getMessage() + "' occurred in " + clazz.getName() + "\n" + getCause().getMessage();
             }

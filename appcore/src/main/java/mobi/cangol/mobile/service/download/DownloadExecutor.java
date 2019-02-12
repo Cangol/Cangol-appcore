@@ -160,7 +160,7 @@ public abstract class DownloadExecutor<T> {
      * @return
      */
     public DownloadResource getDownloadResource(String key) {
-        for (DownloadResource resource : mDownloadRes) {
+        for (final DownloadResource resource : mDownloadRes) {
             if (key != null && key.equals(resource.getKey())) {
                 return resource;
             }
@@ -348,7 +348,7 @@ public abstract class DownloadExecutor<T> {
             throw new IllegalArgumentException("downloadStatusListener is null!");
         }
         boolean isExist = false;
-        for (WeakReference<DownloadStatusListener> listener : listeners) {
+        for (final WeakReference<DownloadStatusListener> listener : listeners) {
             if (downloadStatusListener.equals(listener.get())) {
                 isExist = true;
                 break;

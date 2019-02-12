@@ -99,7 +99,7 @@ public final class BitmapUtils {
         final  int w = src.getWidth();
         final int h = src.getHeight();
         final Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
-        Canvas canvas = new Canvas(dst);
+        final Canvas canvas = new Canvas(dst);
         final Paint p = new Paint();
         p.setAntiAlias(true);
         canvas.drawBitmap(src, 0, 0, p);
@@ -188,7 +188,7 @@ public final class BitmapUtils {
         final int width = bitmap.getWidth();
         final int height = bitmap.getHeight();
 
-        Matrix matrix = new Matrix();
+        final Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
 
         final Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 2,
@@ -264,7 +264,7 @@ public final class BitmapUtils {
      * @return
      */
     public static int getWidth(String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         return options.outWidth;
@@ -277,7 +277,7 @@ public final class BitmapUtils {
      * @return
      */
     public static int getHeight(String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         return options.outHeight;
@@ -339,7 +339,7 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap compressImage(Bitmap image, int quality) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         return BitmapFactory.decodeByteArray(baos.toByteArray(), 0, baos.toByteArray().length);
     }
