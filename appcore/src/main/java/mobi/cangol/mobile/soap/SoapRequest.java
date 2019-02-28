@@ -53,7 +53,7 @@ public class SoapRequest implements Runnable {
                 ht.debug = true;
                 ht.call(namespace, envelope);
                 if (envelope.getResponse() != null) {
-                    String response = envelope.getResponse().toString();
+                    final String response = envelope.getResponse().toString();
                     if (!Thread.currentThread().isInterrupted()) {
                         if (responseHandler != null) {
                             responseHandler.sendResponseMessage(response);

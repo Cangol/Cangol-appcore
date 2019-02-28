@@ -69,7 +69,7 @@ public class StatsSession {
     }
 
     private void onTimer() {
-        long currTime = System.currentTimeMillis() / 1000;
+        final long currTime = System.currentTimeMillis() / 1000;
         unSentSessionLength += currTime - mLastTime;
         mLastTime = currTime;
 

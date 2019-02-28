@@ -173,7 +173,7 @@ public class AsyncHttpResponseHandler {
         }
 
         public void handleMessage(Message msg) {
-            Context context = mContext.get();
+            final Context context = mContext.get();
             if (context != null) {
                 handleMessage(msg);
             }

@@ -155,7 +155,7 @@ class DaoImpl<T, I> implements Dao<T, I> {
 
     @Override
     public List<T> queryForAll(String... columns) throws SQLException {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         final ArrayList<T> list = new ArrayList<>();
         try {
             final SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();

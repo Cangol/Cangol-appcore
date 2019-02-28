@@ -87,7 +87,7 @@ public class SocketClient {
         final  List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
             for (final WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(true);
                 }

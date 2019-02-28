@@ -34,7 +34,7 @@ public class RequestParams {
     public RequestParams(Map<String, String> source) {
         init();
 
-        for (Map.Entry<String, String> entry : source.entrySet()) {
+        for (final Map.Entry<String, String> entry : source.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }
@@ -52,8 +52,8 @@ public class RequestParams {
             throw new IllegalArgumentException("Supplied arguments must be even");
         }
         for (int i = 0; i < len; i += 2) {
-            String key = String.valueOf(keysAndValues[i]);
-            String val = String.valueOf(keysAndValues[i + 1]);
+            final String key = String.valueOf(keysAndValues[i]);
+            final String val = String.valueOf(keysAndValues[i + 1]);
             put(key, val);
         }
     }

@@ -81,7 +81,7 @@ public class RouteResponseHandler {
 
     protected boolean sendResponseMessage(Response response) {
         boolean result = false;
-        ResponseBody responseBody = response.body();
+        final ResponseBody responseBody = response.body();
         String content = null;
         if (response.isSuccessful()) {
             if (responseBody != null) {

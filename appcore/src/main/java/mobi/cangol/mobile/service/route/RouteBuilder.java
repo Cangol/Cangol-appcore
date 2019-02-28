@@ -41,7 +41,7 @@ public class RouteBuilder {
         final Class clazz = routeService.getClassByPath(getPath());
         if (clazz != null) {
             if (clazz.isAnnotationPresent(Route.class)) {
-                Route route = (Route) clazz.getAnnotation(Route.class);
+                final Route route = (Route) clazz.getAnnotation(Route.class);
                 routeService.handleNavigation(clazz, getBundle(), getContext(), route.standalone());
             } else {
                 routeService.handleNavigation(clazz, getBundle(), getContext(), this.standalone);

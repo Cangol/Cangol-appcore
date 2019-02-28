@@ -537,7 +537,7 @@ public class TimeUtils {
             return sb.toString();
         }
         if (month != 0) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append(month).append("个月前");
             return sb.toString();
         }

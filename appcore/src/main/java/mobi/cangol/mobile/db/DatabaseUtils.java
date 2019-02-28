@@ -45,7 +45,7 @@ public class DatabaseUtils {
     public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName, String... fieldNames) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
             final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             final StringBuilder sql = new StringBuilder("CREATE INDEX ");
             sql.append(indexName).append(" on ").append(tableName).append('(');
             Field field = null;

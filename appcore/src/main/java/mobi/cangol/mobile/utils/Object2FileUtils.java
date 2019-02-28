@@ -162,7 +162,7 @@ public class Object2FileUtils {
         String content = null;
         JSONObject jsonObject = null;
         try {
-            byte[] buffer = new byte[is.available()];
+            final byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
                 content = new String(buffer, CHARSET);
                 if (!TextUtils.isEmpty(content)) {

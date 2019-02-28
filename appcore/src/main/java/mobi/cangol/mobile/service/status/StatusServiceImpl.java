@@ -249,7 +249,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyNetworkDisconnect(Context context) {
-        for (StatusListener listener : mListeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.networkDisconnect(context);
             } else {

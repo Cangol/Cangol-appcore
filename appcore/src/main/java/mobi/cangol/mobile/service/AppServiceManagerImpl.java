@@ -237,7 +237,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
         if (Build.VERSION.SDK_INT >= 9) {
             // Temporarily disable logging of disk reads on the Looper thread
             final  StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-            InputStream is = this.getClass().getResourceAsStream("properties.xml");
+            final InputStream is = this.getClass().getResourceAsStream("properties.xml");
             initSource(is);
             StrictMode.setThreadPolicy(oldPolicy);
         } else {

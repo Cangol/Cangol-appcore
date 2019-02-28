@@ -63,7 +63,7 @@ public class ServiceProperty {
     }
 
     public int getInt(String key, int defaultValue) {
-        Object o = mMap.get(key);
+        final Object o = mMap.get(key);
         if (o == null) {
             return defaultValue;
         }

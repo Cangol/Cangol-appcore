@@ -395,7 +395,7 @@ public class StatAgent {
          * @return
          */
         protected static Builder createLaunch(String exitCode, String exitVersion, boolean isNew, String launchTime) {
-            Builder builder = new Builder();
+            final Builder builder = new Builder();
             builder.set("exitCode", exitCode);
             builder.set("exitVersion", exitVersion);
             builder.set("launchTime", launchTime);

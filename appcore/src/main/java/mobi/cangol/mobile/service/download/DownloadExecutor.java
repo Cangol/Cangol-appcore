@@ -230,7 +230,7 @@ public abstract class DownloadExecutor<T> {
             return;
         }
         if (mDownloadRes.contains(resource)) {
-            DownloadTask downloadTask = resource.getDownloadTask();
+            final DownloadTask downloadTask = resource.getDownloadTask();
             downloadTask.resume();
         }
     }
