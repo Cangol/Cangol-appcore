@@ -3,6 +3,7 @@ package mobi.cangol.mobile.appcore.demo.appservice;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -74,8 +75,7 @@ public class LocationServiceFragment extends Fragment{
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locationService.requestLocationUpdates();
-                showToast();
+                locationService.requestLocationUpdates(getActivity());
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +86,18 @@ public class LocationServiceFragment extends Fragment{
             }
         });
         locationService.setBetterLocationListener(new BetterLocationListener() {
+
+            @Override
+            public void needPermission(String[] permissions) {
+                ActivityCompat.requestPermissions(getActivity(), permissions, 200);
+            }
+
+            @Override
+            public void providerDisabled(String provider) {
+                Log.d("providerDisabled "+provider);
+                Toast.makeText(getContext(),provider,Toast.LENGTH_SHORT).show();
+            }
+
             @Override
             public void onBetterLocation(Location location) {
                 Log.d("onBetterLocation");
@@ -102,6 +114,11 @@ public class LocationServiceFragment extends Fragment{
                     updateViews();
                     hideToast();
                 }
+            }
+
+            @Override
+            public void positioning() {
+                showToast();
             }
         });
     }
