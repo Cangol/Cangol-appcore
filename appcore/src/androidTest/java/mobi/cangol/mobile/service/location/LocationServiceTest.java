@@ -44,12 +44,27 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
     public void testSetBetterLocationListener() {
         locationService.setBetterLocationListener(new BetterLocationListener() {
             @Override
+            public void needPermission(String[] permissions) {
+
+            }
+
+            @Override
+            public void providerDisabled(String provider) {
+
+            }
+
+            @Override
             public void onBetterLocation(Location mLocation) {
 
             }
 
             @Override
             public void timeout(Location mLocation) {
+
+            }
+
+            @Override
+            public void positioning() {
 
             }
         });
