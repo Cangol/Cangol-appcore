@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import mobi.cangol.mobile.service.Service;
@@ -38,18 +39,14 @@ import mobi.cangol.mobile.service.ServiceProperty;
  */
 @Service("ObserverManager")
 class ObserverManagerImpl implements ObserverManager {
-    private final static String TAG = "ObserverManager";
-    private boolean debug = true;
-    private Application mContext;
+    private static final  String TAG = "ObserverManager";
     private ServiceProperty mServiceProperty = null;
-    private Application context;
-    private HashMap<String, List<SubscriberMethod>> subscriberMaps = new HashMap<String, List<SubscriberMethod>>();
-    private HashMap<String, CopyOnWriteArrayList<Subscription>> subscriptionsByEvent = new HashMap<String, CopyOnWriteArrayList<Subscription>>();
-    private HashMap<Object, List<String>> eventBySubscriber = new HashMap<Object, List<String>>();
-
+    private Map<String, List<SubscriberMethod>> subscriberMaps = new HashMap<>();
+    private Map<String, CopyOnWriteArrayList<Subscription>> subscriptionsByEvent = new HashMap<>();
+    private Map<Object, List<String>> eventBySubscriber = new HashMap<>();
+    private boolean mDebug;
     @Override
-    public void onCreate(Application context) {
-        mContext = context;
+    public void onCreate(Application context){
     }
 
     @Override
@@ -65,8 +62,8 @@ class ObserverManagerImpl implements ObserverManager {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -76,8 +73,7 @@ class ObserverManagerImpl implements ObserverManager {
 
     @Override
     public ServiceProperty getServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
-        return sp;
+        return new ServiceProperty(TAG);
     }
 
     @Override
@@ -87,11 +83,11 @@ class ObserverManagerImpl implements ObserverManager {
 
     @Override
     public void register(Object subscriber) {
-        Log.d(TAG, "register subscriber=" + subscriber);
-        Class<?> subscriberClass = subscriber.getClass();
-        List<SubscriberMethod> subscriberMethods = findSubscriberMethods(subscriberClass);
+        if(mDebug)Log.d(TAG, "register subscriber=" + subscriber);
+        final Class<?> subscriberClass = subscriber.getClass();
+        final List<SubscriberMethod> subscriberMethods = findSubscriberMethods(subscriberClass);
         synchronized (this) {
-            for (SubscriberMethod subscriberMethod : subscriberMethods) {
+            for (final SubscriberMethod subscriberMethod : subscriberMethods) {
                 subscribe(subscriber, subscriberMethod);
             }
         }
@@ -99,10 +95,10 @@ class ObserverManagerImpl implements ObserverManager {
 
     @Override
     public void unregister(Object subscriber) {
-        Log.d(TAG, "unregister subscriber=" + subscriber);
-        String key = subscriber.getClass().getName();
+        if(mDebug)Log.d(TAG, "unregister subscriber=" + subscriber);
+        final String key = subscriber.getClass().getName();
         synchronized (subscriptionsByEvent) {
-            List<String> events = eventBySubscriber.get(subscriber);
+           final List<String> events = eventBySubscriber.get(subscriber);
             for (int i = 0; i < events.size(); i++) {
                 subscriptionsByEvent.remove(events.get(i));
             }
@@ -115,13 +111,13 @@ class ObserverManagerImpl implements ObserverManager {
 
     @Override
     public void post(String event, Object data) {
-        Log.d(TAG, "post event=" + event + ",data=" + data);
+        if(mDebug)Log.d(TAG, "post event=" + event + ",data=" + data);
         CopyOnWriteArrayList<Subscription> subscriptions;
         synchronized (this) {
             subscriptions = subscriptionsByEvent.get(event);
         }
         if (subscriptions != null && !subscriptions.isEmpty()) {
-            for (Subscription subscription : subscriptions) {
+            for (final Subscription subscription : subscriptions) {
                 invokeSubscriber(subscription, data, Looper.getMainLooper() == Looper.myLooper());
             }
         } else {
@@ -146,9 +142,7 @@ class ObserverManagerImpl implements ObserverManager {
                             if (msg.what == 1) {
                                 try {
                                     method.invoke(subscriber, msg.obj);
-                                } catch (IllegalAccessException e) {
-                                    Log.e(TAG, "No subscribers IllegalAccessException " + e.getMessage());
-                                } catch (InvocationTargetException e) {
+                                } catch (Exception e) {
                                     Log.e(TAG, "No subscribers InvocationTargetException " + e.getMessage());
                                 }
                             }
@@ -187,20 +181,20 @@ class ObserverManagerImpl implements ObserverManager {
     }
 
     private List<SubscriberMethod> findSubscriberMethods(Class<?> subscriberClass) {
-        List<SubscriberMethod> subscriberMethods = new ArrayList<SubscriberMethod>();
+        final List<SubscriberMethod> subscriberMethods = new ArrayList<>();
         Class<?> clazz = subscriberClass;
-        String key = clazz.getName();
+        final String key = clazz.getName();
         while (clazz != null) {
-            String name = clazz.getName();
+            final String name = clazz.getName();
             if (name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.")) {
                 // Skip system classes, this just degrades performance
                 break;
             }
-            Method[] methods = clazz.getDeclaredMethods();
-            for (Method method : methods) {
-                Subscribe subscribe = method.getAnnotation(Subscribe.class);
+            final Method[] methods = clazz.getDeclaredMethods();
+            for (final Method method : methods) {
+                final Subscribe subscribe = method.getAnnotation(Subscribe.class);
                 if (subscribe != null) {
-                    String event = subscribe.value();
+                    final String event = subscribe.value();
                     subscriberMethods.add(new SubscriberMethod(method, subscribe.threadType(), subscribe.priority(), event));
                 }
             }
@@ -217,23 +211,23 @@ class ObserverManagerImpl implements ObserverManager {
     }
 
     private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {
-        String event = subscriberMethod.event;
+        final String event = subscriberMethod.event;
 
         CopyOnWriteArrayList<Subscription> subscriptions = subscriptionsByEvent.get(event);
-        Subscription newSubscription = new Subscription(subscriber, subscriberMethod, subscriberMethod.priority);
+        final Subscription newSubscription = new Subscription(subscriber, subscriberMethod, subscriberMethod.priority);
 
         if (subscriptions == null) {
-            subscriptions = new CopyOnWriteArrayList<Subscription>();
+            subscriptions = new CopyOnWriteArrayList<>();
             subscriptionsByEvent.put(event, subscriptions);
         } else {
-            for (Subscription subscription : subscriptions) {
+            for (final Subscription subscription : subscriptions) {
                 if (subscription.equals(newSubscription)) {
                     throw new IllegalArgumentException("Subscriber " + subscriber.getClass() + " already registered to event " + event);
                 }
             }
         }
 
-        int size = subscriptions.size();
+        final int size = subscriptions.size();
         for (int i = 0; i <= size; i++) {
             if (i == size || newSubscription.priority > subscriptions.get(i).priority) {
                 subscriptions.add(i, newSubscription);
@@ -243,7 +237,7 @@ class ObserverManagerImpl implements ObserverManager {
 
         List<String> subscribedevents = eventBySubscriber.get(subscriber);
         if (subscribedevents == null) {
-            subscribedevents = new ArrayList<String>();
+            subscribedevents = new ArrayList<>();
             eventBySubscriber.put(subscriber, subscribedevents);
         }
         subscribedevents.add(event);

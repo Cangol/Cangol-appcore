@@ -29,8 +29,8 @@ import javax.net.ssl.SSLHandshakeException;
 
 public class RetryHandler {
     private static final long RETRY_SLEEP_TIME_MILLIS = 1500L;
-    private static HashSet<Class<?>> exceptionWhitelist = new HashSet<Class<?>>();
-    private static HashSet<Class<?>> exceptionBlacklist = new HashSet<Class<?>>();
+    private static HashSet<Class<?>> exceptionWhitelist = new HashSet<>();
+    private static HashSet<Class<?>> exceptionBlacklist = new HashSet<>();
 
     static {
         // Retry if the server dropped connection on us
@@ -64,7 +64,6 @@ public class RetryHandler {
             retry = false;
         } else if (exceptionWhitelist.contains(exception.getClass())) {
             // immediately retry if error is whitelisted
-            retry = true;
         }
 
         if (retry) {

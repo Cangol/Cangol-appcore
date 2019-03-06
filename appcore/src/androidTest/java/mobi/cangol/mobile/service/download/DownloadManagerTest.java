@@ -31,11 +31,11 @@ public class DownloadManagerTest extends ApplicationTestCase<CoreApplication> {
         downloadManager = (DownloadManager) coreApplication.getAppService(AppService.DOWNLOAD_MANAGER);
     }
 
-    public void testGetDownloadExecutor() throws Exception {
+    public void testGetDownloadExecutor() {
         downloadManager.getDownloadExecutor(TAG);
     }
 
-    public void testRegisterExecutor() throws Exception {
+    public void testRegisterExecutor() {
         //downloadManager.registerExecutor(TAG,new Dow);
         downloadManager.registerExecutor("app", AppDownloadExecutor.class, 2);
         downloadExecutor = (AppDownloadExecutor) downloadManager.getDownloadExecutor("app");
@@ -47,11 +47,11 @@ public class DownloadManagerTest extends ApplicationTestCase<CoreApplication> {
         });
     }
 
-    public void testRecoverAllAllDownloadExecutor() throws Exception {
+    public void testRecoverAllAllDownloadExecutor() {
         downloadManager.recoverAllAllDownloadExecutor();
     }
 
-    public void testInterruptAllDownloadExecutor() throws Exception {
+    public void testInterruptAllDownloadExecutor() {
         downloadManager.interruptAllDownloadExecutor();
     }
 }

@@ -31,164 +31,164 @@ public class DeviceInfoTest extends AndroidTestCase {
         super.setUp();
     }
 
-    public void testGetOS() throws Exception {
+    public void testGetOS() {
         assertNotNull(DeviceInfo.getOS());
     }
 
-    public void testGetOSVersion() throws Exception {
+    public void testGetOSVersion() {
         assertNotNull(DeviceInfo.getOSVersion());
     }
 
-    public void testGetDeviceModel() throws Exception {
+    public void testGetDeviceModel() {
         assertNotNull(DeviceInfo.getDeviceModel());
     }
 
-    public void testGetDeviceBrand() throws Exception {
+    public void testGetDeviceBrand() {
         assertNotNull(DeviceInfo.getDeviceBrand());
     }
 
-    public void testGetMobileInfo() throws Exception {
+    public void testGetMobileInfo() {
         assertNotNull(DeviceInfo.getMobileInfo());
     }
 
-    public void testGetMemSize() throws Exception {
+    public void testGetMemSize() {
         assertNotNull(DeviceInfo.getMemTotalSize());
     }
 
-    public void testGetMemInfo() throws Exception {
+    public void testGetMemInfo() {
         assertNotNull(DeviceInfo.getMemInfo());
     }
 
-    public void testGetCPUInfo() throws Exception {
+    public void testGetCPUInfo() {
         assertNotNull(DeviceInfo.getCPUInfo());
     }
 
-    public void testGetCPUABI() throws Exception {
+    public void testGetCPUABI() {
         assertNotNull(DeviceInfo.getCPUABI());
     }
 
-    public void testGetResolution() throws Exception {
+    public void testGetResolution() {
         assertNotNull(DeviceInfo.getResolution(getContext()));
     }
 
-    public void testGetStatusBarHeight() throws Exception {
+    public void testGetStatusBarHeight() {
         //assertNotNull(DeviceInfo.getStatusBarHeight(getContext()));
     }
 
-    public void testGetDisplayMetrics() throws Exception {
+    public void testGetDisplayMetrics() {
         assertNotNull(DeviceInfo.getDisplayMetrics(getContext()));
     }
 
-    public void testGetDensity() throws Exception {
+    public void testGetDensity() {
         assertNotNull(DeviceInfo.getDensity(getContext()));
     }
 
-    public void testGetDensityDpi() throws Exception {
+    public void testGetDensityDpi() {
         assertNotNull(DeviceInfo.getDensityDpi(getContext()));
     }
 
-    public void testGetDensityDpiStr() throws Exception {
+    public void testGetDensityDpiStr() {
         assertNotNull(DeviceInfo.getDensityDpiStr(getContext()));
     }
 
-    public void testGetScreenSize() throws Exception {
+    public void testGetScreenSize() {
         assertNotNull(DeviceInfo.getScreenSize(getContext()));
     }
 
-    public void testGetOperator() throws Exception {
+    public void testGetOperator() {
         assertNotNull(DeviceInfo.getNetworkOperatorName(getContext()));
     }
 
-    public void testGetLocale() throws Exception {
+    public void testGetLocale() {
         assertNotNull(DeviceInfo.getLocale());
     }
 
-    public void testGetLanguage() throws Exception {
+    public void testGetLanguage() {
         assertNotNull(DeviceInfo.getLanguage());
     }
 
-    public void testGetCountry() throws Exception {
+    public void testGetCountry() {
         assertNotNull(DeviceInfo.getCountry());
     }
 
-    public void testGetAppVersion() throws Exception {
+    public void testGetAppVersion() {
         DeviceInfo.getAppVersion(getContext());
     }
 
-    public void testGetAppVersionCode() throws Exception {
+    public void testGetAppVersionCode() {
         assertNotNull(DeviceInfo.getAppVersionCode(getContext()));
     }
 
-    public void testGetAppMetaData() throws Exception {
+    public void testGetAppMetaData() {
         //DeviceInfo.getAppMetaData(getContext(),"test");
     }
 
-    public void testGetAppStringMetaData() throws Exception {
+    public void testGetAppStringMetaData() {
         DeviceInfo.getAppStringMetaData(getContext(),"test");
     }
 
-    public void testGetMacAddress() throws Exception {
+    public void testGetMacAddress() {
         DeviceInfo.getMacAddress(getContext());
     }
 
-    public void testGetIpAddress() throws Exception {
+    public void testGetIpAddress() {
         assertNotNull(DeviceInfo.getIpAddress(getContext()));
     }
 
-    public void testGetIpStr() throws Exception {
+    public void testGetIpStr() {
         assertNotNull(DeviceInfo.getIpStr(getContext()));
     }
 
-    public void testGetCharset() throws Exception {
+    public void testGetCharset() {
         assertNotNull(DeviceInfo.getCharset());
     }
 
-    public void testGetOpenUDID() throws Exception {
+    public void testGetOpenUDID() {
         DeviceInfo.syncOpenUDID(getContext());
         DeviceInfo.getOpenUDID(getContext());
     }
 
-    public void testSyncOpenUDID() throws Exception {
+    public void testSyncOpenUDID() {
        DeviceInfo.syncOpenUDID(getContext());
     }
 
-    public void testGetDeviceId() throws Exception {
+    public void testGetDeviceId() {
         assertNotNull(DeviceInfo.getDeviceId(getContext()));
     }
 
-    public void testGetNetworkType() throws Exception {
+    public void testGetNetworkType() {
         assertNotNull(DeviceInfo.getNetworkType(getContext()));
     }
 
-    public void testIsWifiConnection() throws Exception {
+    public void testIsWifiConnection() {
         assertNotNull(DeviceInfo.isWifiConnection(getContext()));
     }
 
-    public void testIsConnection() throws Exception {
+    public void testIsConnection() {
         assertNotNull(DeviceInfo.isConnection(getContext()));
     }
 
-    public void testIsGPSLocation() throws Exception {
+    public void testIsGPSLocation() {
         assertNotNull(DeviceInfo.isGPSLocation(getContext()));
     }
 
-    public void testIsNetworkLocation() throws Exception {
+    public void testIsNetworkLocation() {
         assertNotNull(DeviceInfo.isNetworkLocation(getContext()));
     }
 
-    public void testGetMD5Fingerprint() throws Exception {
+    public void testGetMD5Fingerprint() {
         assertNotNull(DeviceInfo.getMD5Fingerprint(getContext()));
     }
 
-    public void testGetSHA1Fingerprint() throws Exception {
+    public void testGetSHA1Fingerprint() {
         assertNotNull(DeviceInfo.getSHA1Fingerprint(getContext()));
     }
 
-    public void testIsForegroundActivity() throws Exception {
+    public void testIsForegroundActivity() {
         //assertNotNull(DeviceInfo.isForegroundActivity("mobi.cangol.mobile.MainActivity",getContext()));
     }
 
-    public void testIsForegroundApplication() throws Exception {
+    public void testIsForegroundApplication() {
         //assertNotNull(DeviceInfo.isForegroundApplication(getContext().getPackageName(),getContext()));
     }
 }

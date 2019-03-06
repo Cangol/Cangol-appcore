@@ -23,8 +23,8 @@ import mobi.cangol.mobile.db.DatabaseTable;
  */
 @DatabaseTable("APP_TRAFFIC")
 public class AppTraffic {
-    @DatabaseField(primaryKey = true, notNull = true)
-    public int _id;
+    @DatabaseField(primaryKey = true, notNull = true, value = "id")
+    public int id;
     @DatabaseField(value = "package_name", notNull = true)
     public String packageName;
     @DatabaseField(value = "uid", notNull = true)
@@ -45,7 +45,7 @@ public class AppTraffic {
     @Override
     public String toString() {
         return "AppTraffic{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", packageName='" + packageName + '\'' +
                 ", uid=" + uid +
                 ", totalRx=" + totalRx +

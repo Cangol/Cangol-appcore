@@ -15,7 +15,6 @@
  */
 package mobi.cangol.mobile.utils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -32,37 +31,35 @@ import okhttp3.Response;
 public class LocationUtils {
     private LocationUtils() {
     }
-//	/**
-//	 * 获取偏移值
-//	 * @param longitude
-//	 * @param latitude
-//	 * @param path
-//	 * @return
-//	 */
-//	public static GeoPoint adjustLoction(double lng, double lat) {
-//		String offsetString = getOffset(lat,lng);
-//		int index = offsetString.indexOf(",");
-//		if (index > 0) {
-//			// 将坐标值转为18级相应的像素值
-//			double lngPixel = lonToPixel(lng, 18);
-//			double latPixel = latToPixel(lat, 18);
-//			// 获取偏移值
-//			String OffsetX = offsetString.substring(0, index).trim();
-//			String OffsetY = offsetString.substring(index + 1).trim();
-//			//加上偏移值
-//			double adjustLngPixel = lngPixel + Double.valueOf(OffsetX);
-//			double adjustLatPixel = latPixel + Double.valueOf(OffsetY);
-//			//由像素值再转为经纬度
-//			double adjustLng = pixelToLon(adjustLngPixel, 18);
-//			double adjustLat = pixelToLat(adjustLatPixel, 18);
-//
-//			return new GeoPoint((int) (adjustLat * 1000000),
-//					(int) (adjustLng * 1000000));
-//		}
-//		//经验公式
-//		return new GeoPoint((int) ((lat - 0.0025) * 1000000),
-//				(int) ((lng + 0.0045) * 1000000));
-//	}
+
+    /**
+     * 获取偏移值
+     *
+     * @return
+     */
+    public static double[] adjustLoction(double lng, double lat) {
+        final String offsetString = getOffset(lat, lng);
+        if (offsetString == null) return new double[]{lng, lat};
+        final int index = offsetString.indexOf(',');
+        if (index > 0) {
+            // 将坐标值转为18级相应的像素值
+            final double lngPixel = lonToPixel(lng, 18);
+            final double latPixel = latToPixel(lat, 18);
+            // 获取偏移值
+            final  String offsetX = offsetString.substring(0, index).trim();
+            final String offsetY = offsetString.substring(index + 1).trim();
+            //加上偏移值
+            final double adjustLngPixel = lngPixel + Double.valueOf(offsetX);
+            final double adjustLatPixel = latPixel + Double.valueOf(offsetY);
+            //由像素值再转为经纬度
+            final double adjustLng = pixelToLon(adjustLngPixel, 18);
+            final double adjustLat = pixelToLat(adjustLatPixel, 18);
+
+            return new double[]{(int) (adjustLat * 1000000), (int) (adjustLng * 1000000)};
+        }
+        //经验公式
+        return new double[]{(int) ((lat - 0.0025) * 1000000), (int) ((lng + 0.0045) * 1000000)};
+    }
 
     /**
      * 获取偏移变量
@@ -71,12 +68,10 @@ public class LocationUtils {
      * @param lng
      * @return
      */
-    private static String getOffset(double lat, double lng) {
-        String url = String
-                .format("http://www.mapdigit.com/guidebeemap/offsetinchina.php?lng=%f&lat=%f",
-                        lat, lng);
+    public static String getOffset(double lat, double lng) {
+        final String url = String.format("http://www.mapdigit.com/guidebeemap/offsetinchina.php?lng=%f&lat=%f", lat, lng);
         String response = null;
-        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        final OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -86,8 +81,6 @@ public class LocationUtils {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
                 response = httpResponse.body().string();
-            } else {
-                Log.d("response fail :" + httpResponse.code());
             }
             return response;
         } catch (IOException e) {
@@ -129,8 +122,8 @@ public class LocationUtils {
      * @return
      */
     public static double latToPixel(double lat, int zoom) {
-        double siny = Math.sin(lat * Math.PI / 180);
-        double y = Math.log((1 + siny) / (1 - siny));
+        final  double siny = Math.sin(lat * Math.PI / 180);
+        final double y = Math.log((1 + siny) / (1 - siny));
         return (128 << zoom) * (1 - y / (2 * Math.PI));
     }
 
@@ -142,9 +135,9 @@ public class LocationUtils {
      * @return
      */
     public static double pixelToLat(double pixelY, int zoom) {
-        double y = 2 * Math.PI * (1 - pixelY / (128 << zoom));
-        double z = Math.pow(Math.E, y);
-        double siny = (z - 1) / (z + 1);
+        final double y = 2 * Math.PI * (1 - pixelY / (128 << zoom));
+        final double z = Math.pow(Math.E, y);
+        final double siny = (z - 1) / (z + 1);
         return Math.asin(siny) * 180 / Math.PI;
     }
 
@@ -154,7 +147,7 @@ public class LocationUtils {
      * @return
      */
     public static Long getUTCTime() {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("gmt"));
         return cal.getTimeInMillis();
     }
@@ -165,8 +158,7 @@ public class LocationUtils {
      * @return
      */
     public static Long getLocalTime() {
-        Calendar cal = Calendar.getInstance();
-        return cal.getTimeInMillis();
+        return Calendar.getInstance().getTimeInMillis();
     }
 
     /**
@@ -178,11 +170,11 @@ public class LocationUtils {
      * @return
      */
     public static String getAddressByBaidu(double lat, double lng, String ak) {
-        String url = String
+        final String url = String
                 .format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderReverse&location=%f,%f&output=json&pois=0",
                         ak, lat, lng);
         String address = null;
-        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        final OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -191,19 +183,14 @@ public class LocationUtils {
         try {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
-                String response = httpResponse.body().string();
-                int start = "renderReverse&&renderReverse(".length();
-                int end = response.lastIndexOf(')');
-                JSONObject json = new JSONObject(response.substring(start, end));
+                final String response = httpResponse.body().string();
+                final int start = "renderReverse&&renderReverse(".length();
+                final int end = response.lastIndexOf(')');
+                final JSONObject json = new JSONObject(response.substring(start, end));
                 address = json.getJSONObject("result").getString("formatted_address");
-            } else {
-                Log.d("response fail :" + httpResponse.code());
             }
             return address;
-        } catch (IOException e) {
-            Log.d(e.getMessage());
-            return null;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
         } finally {
@@ -221,12 +208,12 @@ public class LocationUtils {
      * @return
      */
     public static String getAddressByGoogle(double lat, double lng) {
-        String url = String
+        final String url = String
                 .format("http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&language=zh-cn&sensor=true",
                         lat, lng);
         String address = null;
-        OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
-        Request request = new Request.Builder()
+        final OkHttpClient httpClient = HttpClientFactory.createDefaultHttpClient();
+        final Request request = new Request.Builder()
                 .url(url)
                 .get()
                 .build();
@@ -234,17 +221,12 @@ public class LocationUtils {
         try {
             httpResponse = httpClient.newCall(request).execute();
             if (httpResponse.isSuccessful()) {
-                String response = httpResponse.body().string();
-                JSONObject json = new JSONObject(response);
+                final String response = httpResponse.body().string();
+                final JSONObject json = new JSONObject(response);
                 address = json.getJSONArray("results").getJSONObject(0).getString("formatted_address");
-            } else {
-                Log.d("response fail :" + httpResponse.code());
             }
             return address;
-        } catch (IOException e) {
-            Log.d(e.getMessage());
-            return null;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
         } finally {

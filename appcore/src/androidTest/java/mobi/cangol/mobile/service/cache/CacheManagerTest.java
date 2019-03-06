@@ -24,11 +24,11 @@ public class CacheManagerTest extends ApplicationTestCase<CoreApplication> {
         coreApplication=getApplication();
         cacheManager= (CacheManager) coreApplication.getAppService(AppService.CACHE_MANAGER);
     }
-    public void testGetContent() throws Exception {
+    public void testGetContent() {
         cacheManager.getContent(TAG,"user");
     }
 
-    public void testGetContent1() throws Exception {
+    public void testGetContent1() {
         cacheManager.getContent(TAG, "user", new CacheLoader() {
             @Override
             public void loading() {
@@ -42,36 +42,36 @@ public class CacheManagerTest extends ApplicationTestCase<CoreApplication> {
         });
     }
 
-    public void testHasContent() throws Exception {
+    public void testHasContent() {
         cacheManager.hasContent(TAG,"user");
     }
 
-    public void testAddContent() throws Exception {
+    public void testAddContent() {
         User user=new User(1,"Jick","12");
         cacheManager.addContent(TAG,"user",user);
     }
 
-    public void testRemoveContext() throws Exception {
+    public void testRemoveContext() {
         cacheManager.removeContext(TAG);
     }
 
-    public void testRemoveContent() throws Exception {
+    public void testRemoveContent() {
         cacheManager.removeContent(TAG,"user");
     }
 
-    public void testSize() throws Exception {
+    public void testSize() {
         cacheManager.size();
     }
 
-    public void testFlush() throws Exception {
+    public void testFlush() {
         cacheManager.flush();
     }
 
-    public void testClose() throws Exception {
+    public void testClose() {
         cacheManager.close();
     }
 
-    public void testClearCache() throws Exception {
+    public void testClearCache() {
         cacheManager.clearCache();
     }
 

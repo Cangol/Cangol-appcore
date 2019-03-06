@@ -15,7 +15,9 @@
  */
 package mobi.cangol.mobile.service.location;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.location.Location;
@@ -25,7 +27,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -36,9 +42,9 @@ import mobi.cangol.mobile.utils.TimeUtils;
  */
 @Service("LocationService")
 class LocationServiceImpl implements LocationService {
-    private final static String TAG = "LocationService";
-    private final static int FLAG_TIMEOUT = 1;
-    private final static int FLAG_BETTER_LOCATION = 2;
+    private static final String TAG = "LocationService";
+    private static final int FLAG_TIMEOUT = 1;
+    private static final int FLAG_BETTER_LOCATION = 2;
     private boolean mDebug = false;
     private int mBetterTime = 1000 * 60 * 2;
     private int mTimeOut = 1000 * 60 * 5;
@@ -47,23 +53,22 @@ class LocationServiceImpl implements LocationService {
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
     private Location mLocation;
-    private boolean isRemove;
-    private BetterLocationListener mMyLocationListener;
+    private boolean mIsRemove;
+    private BetterLocationListener mBetterLocationListener;
     private volatile ServiceHandler mServiceHandler;
 
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate(Application context) {
         this.mContext = context;
-//		HandlerThread thread = new HandlerThread("LocationService");
-//        thread.start();
-//        mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(Looper.getMainLooper());
         mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
 
+    @Override
     public void init(ServiceProperty serviceProperty) {
+        Log.d(TAG, "init " + serviceProperty.toString());
         this.mServiceProperty = serviceProperty;
         mBetterTime = mServiceProperty.getInt(LOCATIONSERVICE_BETTERTIME);
         mTimeOut = mServiceProperty.getInt(LOCATIONSERVICE_TIMEOUT);
@@ -86,7 +91,7 @@ class LocationServiceImpl implements LocationService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putInt(LOCATIONSERVICE_BETTERTIME, 120000);
         sp.putInt(LOCATIONSERVICE_TIMEOUT, 300000);
         sp.putInt(LOCATIONSERVICE_GPS_MINTIME, 1000);
@@ -98,70 +103,114 @@ class LocationServiceImpl implements LocationService {
 
     private void handleBetterLocation() {
         removeLocationUpdates();
-        if (mMyLocationListener != null) {
-            mMyLocationListener.onBetterLocation(mLocation);
+        if (mBetterLocationListener != null) {
+            mBetterLocationListener.onBetterLocation(mLocation);
         }
+    }
+
+    private boolean checkLocationPermission(Activity activity) {
+        List<String> list = new ArrayList<>();
+        if (PermissionChecker.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PermissionChecker.PERMISSION_GRANTED) {
+            list.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        } else {
+            Log.e(TAG, "requestLocation need Permission " + Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (PermissionChecker.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PermissionChecker.PERMISSION_GRANTED) {
+            list.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        } else {
+            Log.e(TAG, "requestLocation  NETWORK_PROVIDER is disabled ");
+        }
+        if (!list.isEmpty()) {
+            Log.e(TAG, "requestLocation need Permission " + list.toString());
+            String[] permissions = new String[list.size()];
+            list.toArray(permissions);
+            mBetterLocationListener.needPermission(permissions);
+            return false;
+        }
+        return true;
     }
 
     @SuppressLint("MissingPermission")
     @Override
-    public void requestLocationUpdates() {
-        if (null != mLocationListener) {
+    public void requestLocationUpdates(Activity activity) {
+
+        if (!checkLocationPermission(activity)) {
             return;
         }
 
-        mLocationListener = new LocationListener() {
+        boolean gpsProvider = false;
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            gpsProvider = true;
+        } else {
+            Log.e(TAG, "requestLocation  GPS_PROVIDER is disabled ");
+            mBetterLocationListener.providerDisabled(LocationManager.GPS_PROVIDER);
+        }
 
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.d(TAG, "location " + location.getProvider() + ":" + location.getLatitude() + "," + location.getLongitude());
-                if (isBetterLocation(location)) {
-                    mLocation = location;
-                    mServiceHandler.sendEmptyMessage(FLAG_BETTER_LOCATION);
-                } else {
-                    Log.d(TAG, "location " + location.toString());
+        boolean networkProvider = false;
+        if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            networkProvider = true;
+        } else {
+            Log.e(TAG, "requestLocation  NETWORK_PROVIDER is disabled ");
+            mBetterLocationListener.providerDisabled(LocationManager.NETWORK_PROVIDER);
+        }
+
+        if (networkProvider || gpsProvider) {
+            if (null != mLocationListener) {
+                return;
+            }
+            mLocationListener = new LocationListener() {
+
+                @Override
+                public void onLocationChanged(Location location) {
+                    Log.d(TAG, "location " + location.getProvider() + ":" + location.getLatitude() + "," + location.getLongitude());
+                    if (isBetterLocation(location)) {
+                        mLocation = location;
+                        mServiceHandler.sendEmptyMessage(FLAG_BETTER_LOCATION);
+                    } else {
+                        Log.d(TAG, "location " + location.toString());
+                    }
                 }
+
+                @Override
+                public void onStatusChanged(String provider, int status,
+                                            Bundle extras) {
+                    Log.d(TAG, "onStatusChanged provider " + provider);
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                    Log.d(TAG, "onProviderEnabled provider " + provider);
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+                    Log.d(TAG, "onProviderDisabled provider " + provider);
+                }
+
+            };
+            if (gpsProvider) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME),
+                        mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE),
+                        mLocationListener);
             }
-
-            @Override
-            public void onStatusChanged(String provider, int status,
-                                        Bundle extras) {
-                Log.d(TAG, "onStatusChanged provider " + provider);
+            if (networkProvider) {
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME),
+                        mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE),
+                        mLocationListener);
             }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-                Log.d(TAG, "onProviderEnabled provider " + provider);
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Log.d(TAG, "onProviderDisabled provider " + provider);
-            }
-
-        };
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINTIME),
-                mServiceProperty.getInt(LOCATIONSERVICE_GPS_MINDISTANCE),
-                mLocationListener);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINTIME),
-                mServiceProperty.getInt(LOCATIONSERVICE_NETWORK_MINDISTANCE),
-                mLocationListener);
-        mServiceHandler.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut);
-    }
-
-    private void getLocationAddress(Location location) {
-        final double lat = location.getLatitude();
-        final double lng = location.getLongitude();
+            mServiceHandler.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut);
+            mBetterLocationListener.positioning();
+        }
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void removeLocationUpdates() {
-        if (mLocationListener != null && !isRemove) {
+        if (mLocationListener != null && !mIsRemove) {
             mLocationManager.removeUpdates(mLocationListener);
-            isRemove = true;
+            mIsRemove = true;
         }
         mLocationListener = null;
     }
@@ -176,17 +225,17 @@ class LocationServiceImpl implements LocationService {
         if (null == location) {
             return false;
         }
-        long timeDelta = System.currentTimeMillis() - location.getTime();
+        final long timeDelta = System.currentTimeMillis() - location.getTime();
         Log.d(TAG, "location time :" + TimeUtils.formatYmdHms(location.getTime()));
         return (timeDelta < mBetterTime);
     }
 
     @Override
     public void setBetterLocationListener(BetterLocationListener locationListener) {
-        this.mMyLocationListener = locationListener;
+        this.mBetterLocationListener = locationListener;
         if (mLocation != null && !isBetterLocation(mLocation)) {
-            if (mMyLocationListener != null) {
-                mMyLocationListener.onBetterLocation(mLocation);
+            if (mBetterLocationListener != null) {
+                mBetterLocationListener.onBetterLocation(mLocation);
             } else {
                 //
             }
@@ -194,8 +243,8 @@ class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.mDebug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     private final class ServiceHandler extends Handler {
@@ -208,12 +257,14 @@ class LocationServiceImpl implements LocationService {
             switch (msg.what) {
                 case FLAG_TIMEOUT:
                     removeLocationUpdates();
-                    if (mMyLocationListener != null) {
-                        mMyLocationListener.timeout(mLocation);
+                    if (mBetterLocationListener != null) {
+                        mBetterLocationListener.timeout(mLocation);
                     }
                     break;
                 case FLAG_BETTER_LOCATION:
                     handleBetterLocation();
+                    break;
+                default:
                     break;
             }
         }

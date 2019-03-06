@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
+import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.security.AESUtils;
@@ -48,16 +49,16 @@ public class SecurityFragment extends Fragment {
     }
 
     private void initViews() {
-        editText1= (EditText) this.getView().findViewById(R.id.editText1);
-        editText2= (EditText) this.getView().findViewById(R.id.editText2);
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
+        editText1= this.getView().findViewById(R.id.editText1);
+        editText2= this.getView().findViewById(R.id.editText2);
+        textView1 = this.getView().findViewById(R.id.textView1);
 
-        button1 = (Button) this.getView().findViewById(R.id.button1);
-        button2 = (Button) this.getView().findViewById(R.id.button2);
-        button3 = (Button) this.getView().findViewById(R.id.button3);
-        button4 = (Button) this.getView().findViewById(R.id.button4);
-        button5 = (Button) this.getView().findViewById(R.id.button5);
-        button6 = (Button) this.getView().findViewById(R.id.button6);
+        button1 = this.getView().findViewById(R.id.button1);
+        button2 = this.getView().findViewById(R.id.button2);
+        button3 = this.getView().findViewById(R.id.button3);
+        button4 = this.getView().findViewById(R.id.button4);
+        button5 = this.getView().findViewById(R.id.button5);
+        button6 = this.getView().findViewById(R.id.button6);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +165,7 @@ public class SecurityFragment extends Fragment {
         }
     }
     static{
-        HashMap<String, Object> map = null;
+        Map<String, Object> map = null;
         try {
             map = RSAUtils.getKeys();
         } catch (NoSuchAlgorithmException e) {

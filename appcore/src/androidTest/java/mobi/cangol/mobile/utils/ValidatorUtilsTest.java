@@ -26,13 +26,13 @@ import android.test.InstrumentationTestCase;
 public class ValidatorUtilsTest extends InstrumentationTestCase {
 
     
-    public void testValidateNull() throws Exception {
+    public void testValidateNull() {
         assertEquals(false,ValidatorUtils.validateNull(null));
         assertEquals(false,ValidatorUtils.validateNull(""));
     }
 
    
-    public void testValidateContent() throws Exception {
+    public void testValidateContent() {
         assertEquals(false,ValidatorUtils.validateContent(null));
         assertEquals(false,ValidatorUtils.validateContent(""));
         assertEquals(false,ValidatorUtils.validateContent("1234"));
@@ -55,7 +55,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidateNickname() throws Exception {
+    public void testValidateNickname() {
         assertEquals(false,ValidatorUtils.validateNickname(null));
         assertEquals(false,ValidatorUtils.validateNickname(""));
         System.out.print("ab".length());
@@ -71,7 +71,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidateAccount() throws Exception {
+    public void testValidateAccount() {
 
         assertEquals(false,ValidatorUtils.validateAccount(null));
         assertEquals(false,ValidatorUtils.validateAccount(""));
@@ -89,7 +89,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidatePassword() throws Exception {
+    public void testValidatePassword() {
         assertEquals(false,ValidatorUtils.validatePassword(null));
         assertEquals(false,ValidatorUtils.validatePassword(""));
         assertEquals(false,ValidatorUtils.validatePassword("1234"));
@@ -101,7 +101,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidatePhone() throws Exception {
+    public void testValidatePhone() {
         assertEquals(false,ValidatorUtils.validatePhone(null));
         assertEquals(false,ValidatorUtils.validatePhone(""));
         assertEquals(true,ValidatorUtils.validatePhone("12345"));
@@ -113,7 +113,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidateMobile() throws Exception {
+    public void testValidateMobile() {
         assertEquals(false,ValidatorUtils.validateMobile(null));
         assertEquals(false,ValidatorUtils.validateMobile(""));
         assertEquals(false,ValidatorUtils.validateMobile("12345"));
@@ -125,7 +125,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidateEmail() throws Exception {
+    public void testValidateEmail() {
         assertEquals(false,ValidatorUtils.validateEmail(null));
         assertEquals(false,ValidatorUtils.validateEmail(""));
         assertEquals(false,ValidatorUtils.validateEmail("123g"));
@@ -135,7 +135,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidateURL() throws Exception {
+    public void testValidateURL() {
         assertEquals(false,ValidatorUtils.validateURL(null));
         assertEquals(false,ValidatorUtils.validateURL(""));
         assertEquals(false,ValidatorUtils.validateURL("123g"));
@@ -147,7 +147,7 @@ public class ValidatorUtilsTest extends InstrumentationTestCase {
     }
 
    
-    public void testValidateIP() throws Exception {
+    public void testValidateIP() {
         assertEquals(false,ValidatorUtils.validateIP(null));
         assertEquals(false,ValidatorUtils.validateIP(""));
         assertEquals(false,ValidatorUtils.validateIP("266@g"));

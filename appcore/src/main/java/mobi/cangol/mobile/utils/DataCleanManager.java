@@ -11,6 +11,11 @@ import mobi.cangol.mobile.logging.Log;
  * 本应用数据清除管理器
  */
 public class DataCleanManager {
+
+    public static final String DATA_DATA = "/data/data/";
+    public static final String SHARED_PREFS = "/shared_prefs";
+    public static final String DATABASES = "/databases";
+
     private DataCleanManager() {
     }
 
@@ -25,7 +30,7 @@ public class DataCleanManager {
      * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases) * * @param context
      */
     public static void cleanDatabases(Context context) {
-        deleteFilesByDirectory(new File("/data/data/" + context.getPackageName() + "/databases"));
+        deleteFilesByDirectory(new File(DATA_DATA + context.getPackageName() + DATABASES));
     }
 
     /**
@@ -33,7 +38,7 @@ public class DataCleanManager {
      * context
      */
     public static void cleanSharedPreference(Context context) {
-        deleteFilesByDirectory(new File("/data/data/" + context.getPackageName() + "/shared_prefs"));
+        deleteFilesByDirectory(new File(DATA_DATA + context.getPackageName() + SHARED_PREFS));
     }
 
     /**
@@ -73,10 +78,10 @@ public class DataCleanManager {
     public static void cleanApplicationData(Context context, String... filepath) {
         cleanInternalCache(context);
         cleanExternalCache(context);
-        // cleanDatabases(context);
-        // cleanSharedPreference(context);
-        // cleanFiles(context);
-        for (String filePath : filepath) {
+        cleanDatabases(context);
+        cleanSharedPreference(context);
+        cleanFiles(context);
+        for (final String filePath : filepath) {
             cleanCustomCache(filePath);
         }
     }
@@ -85,11 +90,12 @@ public class DataCleanManager {
      * 删除方法 这里只会删除某个文件夹下的文件，如果传入的directory是个文件夹，将递归删除文件 * * @param directory
      */
     private static void deleteFilesByDirectory(File directory) {
-        Log.d("deleteFilesByDirectory=" + directory.getAbsolutePath());
+        Log.d("deleteFilesByDirectory=" + directory);
         if (directory != null && directory.exists() && directory.isDirectory()) {
-            for (File item : directory.listFiles()) {
+            for (final File item : directory.listFiles()) {
                 if (!item.isDirectory()) {
-                    Log.d("delete " + item.getAbsoluteFile() + ",result=" + item.delete());
+                    final boolean result = item.delete();
+                    Log.d("delete " + item.getAbsoluteFile() + ",result=" + result);
                 } else {
                     deleteFilesByDirectory(item);
                 }
@@ -99,7 +105,7 @@ public class DataCleanManager {
 
     public static long getFolderSize(File file) {
         long size = 0;
-        for (File item : file.listFiles()) {
+        for (final File item : file.listFiles()) {
             if (!item.isDirectory()) {
                 size = size + getFolderSize(item);
             } else {
@@ -113,12 +119,10 @@ public class DataCleanManager {
         long size = 0;
         size = size + getFolderSize(context.getCacheDir());
         size = size + getFolderSize(context.getExternalCacheDir());
-        // size=size+getFolderSize(context.getFilesDir());
-        // size=size+getFolderSize(new File("/data/data/"+
-        // context.getPackageName() + "/shared_prefs"));
-        // size=size+getFolderSize(new File("/data/data/"+
-        // context.getPackageName() + "/databases"));
-        for (String filePath : filepath) {
+        size = size + getFolderSize(context.getFilesDir());
+        size = size + getFolderSize(new File(DATA_DATA + context.getPackageName() + SHARED_PREFS));
+        size = size + getFolderSize(new File(DATA_DATA + context.getPackageName() + DATABASES));
+        for (final String filePath : filepath) {
             size = size + getFolderSize(new File(filePath));
         }
         return size;

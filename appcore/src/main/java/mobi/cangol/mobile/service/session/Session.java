@@ -29,23 +29,24 @@ import mobi.cangol.mobile.utils.StringUtils;
  * Created by xuewu.wei on 2018/5/2.
  */
 public class Session {
-    private final static String TAG = "session_";
-    private final static String JSON = ".json";
-    private final static String JSONA = ".jsona";
-    private final static String SER = ".ser";
+    private static final String TAG = "session_";
+    private static final String JSON = ".json";
+    private static final String JSONA = ".jsona";
+    private static final String SER = ".ser";
     private SharedPreferences mSharedPreferences = null;
     private Map<String, Object> mMap = new HashMap<>();
     private String mSessionDir;
     private String mName;
     private CoreApplication mCoreApplication;
-    public Session(Context context, String name) {
-        mName=name;
-        mCoreApplication= (CoreApplication) context;
-        mSharedPreferences = context.getSharedPreferences("session_"+name, Context.MODE_MULTI_PROCESS);
-        ConfigService configService = (ConfigService) mCoreApplication.getAppService(AppService.CONFIG_SERVICE);
-        mSessionDir =configService.getCacheDir().getAbsolutePath()+File.separator+ "session_"+name;
 
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+    public Session(Context context, String name) {
+        mName = name;
+        mCoreApplication = (CoreApplication) context;
+        mSharedPreferences = context.getSharedPreferences("session_" + name, Context.MODE_MULTI_PROCESS);
+        final ConfigService configService = (ConfigService) mCoreApplication.getAppService(AppService.CONFIG_SERVICE);
+        mSessionDir = configService.getCacheDir().getAbsolutePath() + File.separator + "session_" + name;
+
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         FileUtils.newFolder(mSessionDir);
         StrictMode.setThreadPolicy(oldPolicy);
     }
@@ -166,7 +167,7 @@ public class Session {
         mCoreApplication.post(new Runnable() {
             @Override
             public void run() {
-                Log.e(TAG+mName,mSessionDir + File.separator + key + JSON);
+                Log.e(TAG + mName, mSessionDir + File.separator + key + JSON);
                 FileUtils.delete(mSessionDir + File.separator + key + JSON);
                 Object2FileUtils.writeJSONObject2File(value, mSessionDir + File.separator + key + JSON);
                 FileUtils.delete(mSessionDir + File.separator + key + JSONA);
@@ -188,7 +189,7 @@ public class Session {
         });
     }
 
-    public void saveSerializable(final String key,final Serializable value) {
+    public void saveSerializable(final String key, final Serializable value) {
         mMap.put(key, value);
         mCoreApplication.post(new Runnable() {
             @Override
@@ -202,7 +203,7 @@ public class Session {
     }
 
     public void saveAll(Map<String, ?> map) {
-        for (String key : map.keySet()) {
+        for (final String key : map.keySet()) {
             if (map.get(key) instanceof Float) {
                 saveFloat(key, (Float) map.get(key));
             } else if (map.get(key) instanceof Boolean) {
@@ -273,8 +274,8 @@ public class Session {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void refresh() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        Map<String, ?> map = getShared().getAll();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        final Map<String, ?> map = getShared().getAll();
         StrictMode.setThreadPolicy(oldPolicy);
         mMap.putAll(map);
         mCoreApplication.post(new Runnable() {
@@ -286,24 +287,24 @@ public class Session {
     }
 
     private Map<String, Object> loadDiskMap() {
-        Log.d(TAG+mName,"scan cache file");
-        List<File> files = FileUtils.searchBySuffix(new File(mSessionDir), null, JSON, JSONA, SER);
-        Log.d(TAG+mName,"cache file="+files);
-        Map<String, Object> map = new ConcurrentHashMap<>();
-        for (File file : files) {
+        Log.d(TAG + mName, "scan cache file");
+        final  List<File> files = FileUtils.searchBySuffix(new File(mSessionDir), null, JSON, JSONA, SER);
+        Log.d(TAG + mName, "cache file=" + files);
+        final Map<String, Object> map = new ConcurrentHashMap<>();
+        for (final File file : files) {
             if (file.getName().endsWith(JSON)) {
-                JSONObject json = Object2FileUtils.readFile2JSONObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
+                final JSONObject json = Object2FileUtils.readFile2JSONObject(file);
+                final String key = file.getName().substring(0, file.getName().lastIndexOf(JSON));
                 if (json != null && StringUtils.isNotBlank(key))
                     map.put(key, json);
             } else if (file.getName().endsWith(JSONA)) {
-                JSONArray jsona = Object2FileUtils.readFile2JSONArray(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
+                final JSONArray jsona = Object2FileUtils.readFile2JSONArray(file);
+                final String key = file.getName().substring(0, file.getName().lastIndexOf(JSONA));
                 if (jsona != null && StringUtils.isNotBlank(key))
                     map.put(key, jsona);
             } else if (file.getName().endsWith(SER)) {
-                Object obj = Object2FileUtils.readObject(file);
-                String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
+                final Object obj = Object2FileUtils.readObject(file);
+                final String key = file.getName().substring(0, file.getName().lastIndexOf(SER));
                 if (obj != null && StringUtils.isNotBlank(key))
                     map.put(key, obj);
             } else {

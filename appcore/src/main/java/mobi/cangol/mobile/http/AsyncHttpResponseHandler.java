@@ -56,12 +56,15 @@ public class AsyncHttpResponseHandler {
     }
 
     public void onStart() {
+        //do nothings
     }
 
     public void onFinish() {
+        //do nothings
     }
 
     public void onSuccess(String content) {
+        //do nothings
     }
 
     public void onSuccess(int statusCode, String content) {
@@ -69,6 +72,7 @@ public class AsyncHttpResponseHandler {
     }
 
     public void onFailure(Throwable error) {
+        //do nothings
     }
 
     public void onFailure(Throwable error, String content) {
@@ -77,7 +81,7 @@ public class AsyncHttpResponseHandler {
     }
 
     protected void sendSuccessMessage(int statusCode, String responseBody) {
-        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{new Integer(statusCode), responseBody}));
+        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, responseBody}));
     }
 
     protected void sendFailureMessage(Throwable e, String responseBody) {
@@ -122,6 +126,8 @@ public class AsyncHttpResponseHandler {
             case FINISH_MESSAGE:
                 onFinish();
                 break;
+            default:
+                break;
         }
     }
 
@@ -146,7 +152,7 @@ public class AsyncHttpResponseHandler {
     }
 
     void sendResponseMessage(Response response) {
-        ResponseBody requestBody = response.body();
+        final ResponseBody requestBody = response.body();
         if (response.isSuccessful()) {
             try {
                 sendSuccessMessage(response.code(), requestBody.string());
@@ -159,15 +165,15 @@ public class AsyncHttpResponseHandler {
         response.close();
     }
 
-    final static class InternalHandler extends Handler {
+    static final class InternalHandler extends Handler {
         private final WeakReference<Context> mContext;
 
         public InternalHandler(Context context) {
-            mContext = new WeakReference<Context>(context);
+            mContext = new WeakReference<>(context);
         }
 
         public void handleMessage(Message msg) {
-            Context context = mContext.get();
+            final Context context = mContext.get();
             if (context != null) {
                 handleMessage(msg);
             }

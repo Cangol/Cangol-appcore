@@ -15,28 +15,24 @@
  *  limitations under the License.
  */
 
-package mobi.cangol.mobile.socket;
+package mobi.cangol.mobile.service.route;
 
-import java.io.IOException;
 
-/**
- * Created by jince on 2016/1/6.
- */
-public class SocketHandleException extends IOException {
-    private Object object;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    public SocketHandleException() {
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+@Inherited
+public @interface Route {
+    String value() default "";
 
-    public SocketHandleException(Object object) {
-        this.object = object;
-    }
+    String path();
 
-    public Object getObject() {
-        return object;
-    }
-
-    public void setObject(Object object) {
-        this.object = object;
-    }
+    boolean standalone() default false;
 }

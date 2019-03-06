@@ -49,7 +49,7 @@ public class StatusServiceFragment extends Fragment {
     }
 
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
+        textView1 = this.getView().findViewById(R.id.textView1);
     }
     private void updateViews(){
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());

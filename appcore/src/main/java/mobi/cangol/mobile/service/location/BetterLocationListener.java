@@ -19,16 +19,31 @@ import android.location.Location;
 
 public interface BetterLocationListener {
     /**
+     * 需要权限
+     */
+    void needPermission(String[] permissions);
+
+    /**
+     * provider 无效
+     * @param provider
+     */
+    void providerDisabled(String provider);
+    /**
      * 获取最新有效地位置
      *
-     * @param mLocation
+     * @param location
      */
-    void onBetterLocation(Location mLocation);
+    void onBetterLocation(Location location);
 
     /**
      * 更新位置超时,返回最后的有效位置
      *
-     * @param mLocation
+     * @param location
      */
-    void timeout(Location mLocation);
+    void timeout(Location location);
+
+    /**
+     * 定位中
+     */
+    void positioning();
 }

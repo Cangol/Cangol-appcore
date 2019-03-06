@@ -20,6 +20,7 @@ public interface SessionService extends AppService {
      * @param name
      */
     Session getUserSession(String name);
+
     /**
      * 是否包含
      *

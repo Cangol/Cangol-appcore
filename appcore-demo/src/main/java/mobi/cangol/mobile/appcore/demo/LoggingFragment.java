@@ -39,8 +39,8 @@ public class LoggingFragment extends Fragment {
     }
 
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +48,7 @@ public class LoggingFragment extends Fragment {
                 Log.d(TAG,"test logging");
             }
         });
-        button2 = (Button) this.getView().findViewById(R.id.button2);
+        button2 = this.getView().findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

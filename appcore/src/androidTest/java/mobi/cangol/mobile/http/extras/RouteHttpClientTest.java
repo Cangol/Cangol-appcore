@@ -27,7 +27,7 @@ import mobi.cangol.mobile.http.route.RouteResponseHandler;
  */
 public class RouteHttpClientTest extends AndroidTestCase {
     private String url = "http://www.cangol.mobi/cmweb/api/station/sync.do";
-    public void testSend() throws Exception {
+    public void testSend() {
         RouteHttpClient httpClient = new RouteHttpClient();
         httpClient.send(getContext(), url, null, new RouteResponseHandler(){
             @Override

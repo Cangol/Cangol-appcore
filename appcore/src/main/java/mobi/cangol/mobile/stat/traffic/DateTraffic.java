@@ -24,8 +24,8 @@ import mobi.cangol.mobile.db.DatabaseTable;
 
 @DatabaseTable("DATE_TRAFFIC")
 public class DateTraffic {
-    @DatabaseField(primaryKey = true, notNull = true)
-    public int _id;
+    @DatabaseField(primaryKey = true, notNull = true, value = "id")
+    public int id;
     @DatabaseField(value = "status", notNull = true)
     public int status;
     @DatabaseField(value = "date", notNull = true)
@@ -48,7 +48,7 @@ public class DateTraffic {
     @Override
     public String toString() {
         return "DateTraffic{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", status=" + status +
                 ", date='" + date + '\'' +
                 ", uid=" + uid +

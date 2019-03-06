@@ -97,15 +97,17 @@ public class DownloadTask {
         }
 
     };
+
     public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler) {
-        this(downloadResource,pool,handler,true);
+        this(downloadResource, pool, handler, true);
     }
-    public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler,boolean safe) {
+
+    public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler, boolean safe) {
         this.downloadResource = downloadResource;
         this.pool = pool;
         this.handler = handler;
-        downloadHttpClient = DownloadHttpClient.build(pool.getName(),safe);
-        downloadHttpClient.setThreadPool(pool);
+        downloadHttpClient = DownloadHttpClient.build(pool.getName(), safe);
+        DownloadHttpClient.setThreadPool(pool);
     }
 
     public void setDownloadNotification(DownloadNotification downloadNotification) {
@@ -172,7 +174,7 @@ public class DownloadTask {
     }
 
     public void sendDownloadMessage(int what, DownloadResource obj) {
-        Message msg = handler.obtainMessage(what);
+        final Message msg = handler.obtainMessage(what);
         msg.obj = obj;
         msg.sendToTarget();
     }

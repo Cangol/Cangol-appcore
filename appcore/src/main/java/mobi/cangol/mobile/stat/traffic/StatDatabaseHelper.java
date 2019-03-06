@@ -59,7 +59,7 @@ class StatDatabaseHelper extends CoreSQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("onUpgrade " + oldVersion + "->" + newVersion);
         if (db.getVersion() < DATABASE_VERSION) {
-            //DatabaseUtils.dropTable(db, Goddess.class);
+            //do nothings
         }
     }
 }

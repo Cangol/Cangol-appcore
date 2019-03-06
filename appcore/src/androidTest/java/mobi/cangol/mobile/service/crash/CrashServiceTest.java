@@ -27,12 +27,12 @@ public class CrashServiceTest extends ApplicationTestCase<CoreApplication> {
         crashService = (CrashService) coreApplication.getAppService(AppService.CRASH_SERVICE);
     }
 
-    public void testSetReport() throws Exception {
+    public void testSetReport() {
         String url="http://www.cangol.mobi/cmweb/api/countly/crash.do";
         crashService.setReport(url,new HashMap<String, String>());
     }
 
-    public void testReport() throws Exception {
+    public void testReport() {
         crashService.report(new CrashReportListener() {
             @Override
             public void report(String path, String error, String position, String context, String timestamp, String fatal) {

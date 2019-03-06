@@ -44,8 +44,8 @@ public class SoapFragment extends Fragment {
         initViews();
     }
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

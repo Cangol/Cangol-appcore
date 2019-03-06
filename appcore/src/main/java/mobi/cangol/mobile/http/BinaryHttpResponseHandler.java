@@ -61,6 +61,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
      * @param binaryData the body of the HTTP response from the server
      */
     public void onSuccess(byte[] binaryData) {
+        //do nothings
     }
 
     /**
@@ -78,7 +79,6 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
      *
      * @param error      the underlying cause of the failure
      * @param binaryData the response body, if any
-     * @deprecated
      */
     public void onFailure(Throwable error, byte[] binaryData) {
         // By default, call the deprecated onFailure(Throwable) for compatibility
@@ -105,9 +105,8 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
     protected void handleFailureMessage(Throwable e, byte[] responseBody) {
         onFailure(e, responseBody);
     }
-
+    @Override
     protected void handleFailureMessage(Throwable e, String responseBody) {
-        byte[] response = null;
         if (responseBody != null) {
             try {
                 onFailure(e, responseBody.getBytes("utf-8"));
@@ -115,7 +114,7 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
                 Log.d("UnsupportedEncoding", e.getMessage());
             }
         } else {
-            onFailure(e, response);
+            onFailure(e, (byte[]) null);
         }
     }
 
@@ -141,13 +140,14 @@ public class BinaryHttpResponseHandler extends AsyncHttpResponseHandler {
         }
     }
 
+    @Override
     void sendResponseMessage(Response response) {
         Log.d(">>", "sendResponseMessage=");
-        ResponseBody responseBody = response.body();
+        final ResponseBody responseBody = response.body();
         if (response.isSuccessful()) {
-            String contentType = response.body().contentType().toString();
+            final String contentType = response.body().contentType().toString();
             boolean foundAllowedContentType = false;
-            for (String anAllowedContentType : mAllowedContentTypes) {
+            for (final String anAllowedContentType : mAllowedContentTypes) {
                 if (anAllowedContentType.equals(contentType)) {
                     foundAllowedContentType = true;
                 }

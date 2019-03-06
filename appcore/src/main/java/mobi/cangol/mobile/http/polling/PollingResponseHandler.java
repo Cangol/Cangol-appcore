@@ -21,6 +21,7 @@ import android.os.Message;
 
 import java.io.IOException;
 
+import mobi.cangol.mobile.logging.Log;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -29,8 +30,6 @@ public class PollingResponseHandler {
     protected static final int SUCCESS_MESSAGE = 0;
     protected static final int FAILURE_MESSAGE = 1;
     protected static final int FINISH_MESSAGE = 2;
-    private final static String TAG = PollingHttpClient.TAG;
-    private final static boolean DEBUG = true;
     private Handler handler;
 
     public PollingResponseHandler() {
@@ -57,6 +56,7 @@ public class PollingResponseHandler {
      * 启动开始
      */
     public void onStart() {
+        //do nothings
     }
 
     /**
@@ -66,6 +66,7 @@ public class PollingResponseHandler {
      * @param content
      */
     public void onPollingFinish(int execTimes, String content) {
+        //do nothings
     }
 
     /**
@@ -75,6 +76,7 @@ public class PollingResponseHandler {
      * @param content
      */
     public void onSuccess(int statusCode, String content) {
+        //do nothings
     }
 
     /**
@@ -84,18 +86,19 @@ public class PollingResponseHandler {
      * @param content
      */
     public void onFailure(Throwable error, String content) {
+        //do nothings
     }
 
     protected void sendStartMessage() {
-        sendMessage(obtainMessage(START_MESSAGE, new Object[]{new Integer(-1), "exec start"}));
+        sendMessage(obtainMessage(START_MESSAGE, new Object[]{-1, "exec start"}));
     }
 
     protected void sendFinishMessage(int execTimes) {
-        sendMessage(obtainMessage(FINISH_MESSAGE, new Object[]{new Integer(execTimes), "exec finish"}));
+        sendMessage(obtainMessage(FINISH_MESSAGE, new Object[]{execTimes, "exec finish"}));
     }
 
     protected void sendSuccessMessage(int statusCode, String responseBody) {
-        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{new Integer(statusCode), responseBody}));
+        sendMessage(obtainMessage(SUCCESS_MESSAGE, new Object[]{statusCode, responseBody}));
     }
 
     protected void sendFailureMessage(IOException e, String responseBody) {
@@ -104,14 +107,14 @@ public class PollingResponseHandler {
 
     protected boolean sendResponseMessage(Response response) {
         boolean result = false;
-        ResponseBody responseBody = response.body();
+        final ResponseBody responseBody = response.body();
         String content = null;
         if (response.isSuccessful()) {
             if (responseBody != null) {
                 try {
                     content = responseBody.string();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(e.getMessage());
                 }
             }
             if (isFailResponse(content)) {
@@ -147,6 +150,7 @@ public class PollingResponseHandler {
             case START_MESSAGE:
                 handleStartMessage();
                 break;
+                default:break;
         }
     }
 

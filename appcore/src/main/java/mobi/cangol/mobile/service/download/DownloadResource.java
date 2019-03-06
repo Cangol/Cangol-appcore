@@ -50,7 +50,7 @@ public class DownloadResource implements Serializable {
 
     protected transient DownloadTask downloadTask;
 
-    protected transient HashMap<Object, BaseViewHolder> viewHolders = new HashMap<Object, BaseViewHolder>();
+    protected transient HashMap<Object, BaseViewHolder> viewHolders = new HashMap<>();
 
     public DownloadResource() {
     }
@@ -70,7 +70,7 @@ public class DownloadResource implements Serializable {
 
     public void setViewHolder(Object obj, BaseViewHolder viewHolder) {
         if (viewHolders == null) {
-            viewHolders = new HashMap<Object, BaseViewHolder>();
+            viewHolders = new HashMap<>();
         }
         this.viewHolders.put(obj, viewHolder);
     }
@@ -201,7 +201,7 @@ public class DownloadResource implements Serializable {
             return false;
         }
 
-        DownloadResource that = (DownloadResource) o;
+        final DownloadResource that = (DownloadResource) o;
 
         return key.equals(that.key);
 

@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -24,22 +25,20 @@ import mobi.cangol.mobile.service.conf.ConfigService;
  */
 @Service("SessionService")
 class SessionServiceImpl implements SessionService {
-    private final static String TAG = "SessionService";
-    private final static String JSON = ".json";
-    private final static String JSONA = ".jsona";
-    private final static String SER = ".ser";
+    private static final String TAG = "SessionService";
     private CoreApplication mContext = null;
     private ServiceProperty mServiceProperty = null;
-    private boolean debug = false;
-    private Map<String, Session> mSessionMap =null;
+    private boolean mDebug = false;
+    private Map<String, Session> mSessionMap = null;
     private Session mSession = null;
+
     @Override
     public void onCreate(Application context) {
         mContext = (CoreApplication) context;
         //这里使用application中的session也可实例化一个新的
-        mSessionMap = new ConcurrentHashMap<String, Session>();
-        ConfigService configService = (ConfigService) mContext.getAppService(AppService.CONFIG_SERVICE);
-        mSession = newSession(mContext,configService.getSharedName());
+        mSessionMap = new ConcurrentHashMap<>();
+        final ConfigService configService = (ConfigService) mContext.getAppService(AppService.CONFIG_SERVICE);
+        mSession = newSession(mContext, configService.getSharedName());
     }
 
     @Override
@@ -50,17 +49,17 @@ class SessionServiceImpl implements SessionService {
     @Override
     public void onDestroy() {
         mSession.clear();
-        for (Map.Entry<String, Session> entry :  mSessionMap.entrySet()) {
-            Session session = entry.getValue();
-            if(session!=null){
+        for (final Map.Entry<String, Session> entry : mSessionMap.entrySet()) {
+           final Session session = entry.getValue();
+            if (session != null) {
                 session.clear();
             }
         }
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -75,25 +74,27 @@ class SessionServiceImpl implements SessionService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
-        return sp;
+        return new ServiceProperty(TAG);
     }
 
     @Override
     public Session getUserSession(String name) {
-        if(mSessionMap.containsKey(name)){
+        if (mDebug) Log.d(TAG, "getUserSession " + name);
+        if (mSessionMap.containsKey(name)) {
             return mSessionMap.get(name);
-        }else{
-            return newSession(mContext,name);
+        } else {
+            return newSession(mContext, name);
         }
     }
 
-    private Session newSession(Context context,String name) {
-        Session session=new Session(context,name);
-        mSessionMap.put(name,session);
+    private Session newSession(Context context, String name) {
+        if (mDebug) Log.d(TAG, "newSession " + name);
+        final Session session = new Session(context, name);
+        mSessionMap.put(name, session);
         session.refresh();
         return session;
     }
+
     @Override
     public boolean containsKey(String key) {
         return mSession.containsKey(key);
@@ -223,6 +224,7 @@ class SessionServiceImpl implements SessionService {
     public void refresh() {
         mSession.refresh();
     }
+
     @Override
     public void clearAll() {
         mSession.clearAll();

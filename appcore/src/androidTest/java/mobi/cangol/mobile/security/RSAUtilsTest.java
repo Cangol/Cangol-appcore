@@ -22,13 +22,14 @@ import android.test.InstrumentationTestCase;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by xuewu.wei on 2016/6/6.
  */
 public class RSAUtilsTest extends InstrumentationTestCase {
     public void testRSA() throws Exception {
-        HashMap<String, Object> map = RSAUtils.getKeys();
+        Map<String, Object> map = RSAUtils.getKeys();
         //生成公钥和私钥
         RSAPublicKey publicKey = (RSAPublicKey) map.get("public");
         RSAPrivateKey privateKey = (RSAPrivateKey) map.get("private");

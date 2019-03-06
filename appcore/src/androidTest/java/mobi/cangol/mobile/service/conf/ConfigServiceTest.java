@@ -24,56 +24,56 @@ public class ConfigServiceTest extends ApplicationTestCase<CoreApplication> {
         coreApplication = getApplication();
         configService = (ConfigService) coreApplication.getAppService(AppService.CONFIG_SERVICE);
     }
-    public void testGetCacheDir() throws Exception {
+    public void testGetCacheDir() {
         configService.getCacheDir();
     }
-    public void testGetImageDir() throws Exception {
+    public void testGetImageDir() {
         configService.getImageDir();
     }
 
-    public void testGetTempDir() throws Exception {
+    public void testGetTempDir() {
         configService.getTempDir();
     }
 
-    public void testGetDownloadDir() throws Exception {
+    public void testGetDownloadDir() {
         configService.getDownloadDir();
     }
 
-    public void testGetUpgradeDir() throws Exception {
+    public void testGetUpgradeDir() {
         configService.getUpgradeDir();
     }
 
-    public void testGetDatabaseName() throws Exception {
+    public void testGetDatabaseName() {
         configService.getDatabaseName();
     }
 
-    public void testGetSharedName() throws Exception {
+    public void testGetSharedName() {
         configService.getSharedName();
     }
 
-    public void testSetUseInternalStorage() throws Exception {
+    public void testSetUseInternalStorage() {
         configService.setUseInternalStorage(true);
         configService.setUseInternalStorage(false);
     }
 
-    public void testIsUseInternalStorage() throws Exception {
+    public void testIsUseInternalStorage() {
         configService.isUseInternalStorage();
     }
 
-    public void testGetAppDir() throws Exception {
+    public void testGetAppDir() {
         configService.getAppDir();
     }
 
-    public void testSetCustomAppDir() throws Exception {
+    public void testSetCustomAppDir() {
         String path="/sdcard/appcore";
         //configService.setCustomAppDir(path);
     }
 
-    public void testIsCustomAppDir() throws Exception {
+    public void testIsCustomAppDir() {
         configService.isCustomAppDir();
     }
 
-    public void testResetAppDir() throws Exception {
+    public void testResetAppDir() {
         configService.resetAppDir();
     }
 }
