@@ -49,8 +49,7 @@ public class JSONParserException extends ParserException {
     @Override
     public String getMessage() {
         if (mNode != null) {
-            String nodeText = mNode.toString();
-            return "\nError '" + super.getMessage() + "' occurred in \n" + nodeText + "\n" + getCause().getMessage();
+            return "\nError '" + super.getMessage() + "' occurred in \n" + mNode.toString() + "\n" + getCause().getMessage();
         } else {
             return super.getMessage();
         }

@@ -20,12 +20,12 @@ Maven
      <dependency>
          <groupId>mobi.cangol.mobile</groupId>
          <artifactId>appcore</artifactId>
-         <version>1.1.26/version>
+         <version>1.1.33/version>
          <type>pom</type>
      </dependency>
 Gradle
  
-    compile 'mobi.cangol.mobile:appcore:1.1.26@aar'
+    compile 'mobi.cangol.mobile:appcore:1.1.33@aar'
  
 ## CoreApplication
 核心Application 提供整个库的初始化和一些方法，
@@ -123,5 +123,5 @@ License
     limitations under the License.
 
 
-
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FCangol%2FCangol-appcore?ref=badge_large)
+

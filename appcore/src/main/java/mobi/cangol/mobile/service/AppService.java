@@ -55,14 +55,13 @@ public interface AppService {
      */
     String SESSION_SERVICE = "SessionService";
     /**
-     * PluginManager
-     */
-    //String PLUGIN_MANAGER = "PluginManager";
-
-    /**
      * ObserverManager
      */
     String OBSERVER_MANAGER = "ObserverManager";
+    /**
+     *
+     */
+    String ROUTE_SERVICE = "RouteService";
 
     /**
      * 当创建时
@@ -86,9 +85,9 @@ public interface AppService {
     /**
      * 设置debug模式
      *
-     * @param debug
+     * @param mDebug
      */
-    void setDebug(boolean debug);
+    void setDebug(boolean mDebug);
 
     /**
      * 初始化应用服务属性

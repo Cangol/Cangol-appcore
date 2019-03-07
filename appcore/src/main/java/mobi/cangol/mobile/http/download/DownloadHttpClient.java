@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import mobi.cangol.mobile.http.HttpClientFactory;
 import mobi.cangol.mobile.service.PoolManager;
@@ -30,24 +29,20 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class DownloadHttpClient {
-    public final static String TAG = "DownloadHttpClient";
-    private final static boolean DEBUG = false;
-    private final static int DEFAULT_RETRYTIMES = 10;
-    private final static int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_MAX = 3;
+    public static final  String TAG = "DownloadHttpClient";
+    private static final  int DEFAULT_RETRYTIMES = 10;
+    private static final  int DEFAULT_MAX = 3;
     private static PoolManager.Pool threadPool;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
     private OkHttpClient httpClient;
     private DownloadRetryHandler downloadRetryHandler;
     private String group;
 
-    protected DownloadHttpClient(final String group,boolean safe) {
+    protected DownloadHttpClient(final String group, boolean safe) {
         this.group = group;
-        httpClient = safe? HttpClientFactory.createDefaultHttpClient():HttpClientFactory.createUnSafeHttpClient();
+        this.httpClient = safe ? HttpClientFactory.createDefaultHttpClient() : HttpClientFactory.createUnSafeHttpClient();
         threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
-        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
+        this.requestMap = new WeakHashMap<>();
         this.downloadRetryHandler = new DownloadRetryHandler(DEFAULT_RETRYTIMES);
 
     }
@@ -64,14 +59,15 @@ public class DownloadHttpClient {
 
     /**
      * 构造实例
+     *
      * @param group
      * @param safe
      * @return
      */
-    public static DownloadHttpClient build(String group,boolean safe) {
-        DownloadHttpClient asyncHttpClient = new DownloadHttpClient(group,safe);
-        return asyncHttpClient;
+    public static DownloadHttpClient build(String group, boolean safe) {
+        return new DownloadHttpClient(group, safe);
     }
+
     /**
      * 设置线程池
      *
@@ -95,8 +91,8 @@ public class DownloadHttpClient {
      * @param saveFile
      * @return
      */
-    public Future<?> send(Object tag, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
-        Request request = new Request.Builder()
+    public Future send(Object tag, String url, DownloadResponseHandler responseHandler, long from, String saveFile) {
+        final Request request = new Request.Builder()
                 .tag(tag)
                 .addHeader("Range", "bytes=" + from + "-")
                 .url(url)
@@ -104,13 +100,13 @@ public class DownloadHttpClient {
         return sendRequest(request, responseHandler, saveFile);
     }
 
-    protected Future<?> sendRequest(Request urlRequest, DownloadResponseHandler responseHandler, String saveFile) {
-        Future<?> request = threadPool.submit(new DownloadThread(this, httpClient, urlRequest, responseHandler, saveFile));
+    protected Future sendRequest(Request urlRequest, DownloadResponseHandler responseHandler, String saveFile) {
+        final Future<?> request = threadPool.submit(new DownloadThread(this, httpClient, urlRequest, responseHandler, saveFile));
         if (urlRequest.tag() != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(urlRequest.tag());
             if (requestList == null) {
-                requestList = new LinkedList<WeakReference<Future<?>>>();
+                requestList = new LinkedList<>();
                 requestMap.put(urlRequest.tag(), requestList);
             }
             requestList.add(new WeakReference<Future<?>>(request));
@@ -127,10 +123,10 @@ public class DownloadHttpClient {
      */
     public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
 
-        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
+        final List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
@@ -138,12 +134,12 @@ public class DownloadHttpClient {
         }
         requestMap.remove(tag);
 
-        for (Call call : httpClient.dispatcher().queuedCalls()) {
+        for (final Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(group)) {
                 call.cancel();
             }
         }
-        for (Call call : httpClient.dispatcher().runningCalls()) {
+        for (final Call call : httpClient.dispatcher().runningCalls()) {
             if (call.request().tag().equals(group)) {
                 call.cancel();
             }

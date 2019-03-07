@@ -34,10 +34,7 @@ public class ValidatorUtils {
      * @return
      */
     public static boolean validateNull(String str) {
-        if (str == null || "".equals(str)) {
-            return false;
-        }
-        return true;
+        return str != null && !"".equals(str);
     }
 
     /**
@@ -49,11 +46,7 @@ public class ValidatorUtils {
     public static boolean validateContent(String str) {
         if (str == null || "".equals(str)) {
             return false;
-        } else if (str.length() >= 5 && str.length() <= 140) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return str.length() >= 5 && str.length() <= 140;
     }
 
     /**
@@ -67,18 +60,17 @@ public class ValidatorUtils {
             return false;
         }
 
-        String rx = "[a-zA-Z0-9]";
-        String rx2 = "[\u4e00-\u9fa5]";
+        final String rx = "[a-zA-Z0-9]";
+        final String rx2 = "[\u4e00-\u9fa5]";
         int num = 0;
         boolean flag = false;
         for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
+            final char c = str.charAt(i);
             if (Pattern.compile(rx).matcher(c + "").matches()) {
                 num += 1;
             } else if (Pattern.compile(rx2).matcher(c + "").matches()) {
                 num += 2;
             } else {
-                flag = false;
                 break;
             }
         }
@@ -110,13 +102,9 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
-        Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        final Pattern p = Pattern.compile("^[a-zA-Z0-9_.]{5,20}$");
+        final Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     /**
@@ -129,13 +117,9 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.PHONE;
-        Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+       final Pattern p = Patterns.PHONE;
+       final Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     /**
@@ -148,13 +132,9 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
-        Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        final Pattern p = Pattern.compile("^[1][3,4,5,7,8][0-9]{9}$"); // 验证手机号
+        final Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     /**
@@ -167,13 +147,9 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.EMAIL_ADDRESS;
-        Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        final Pattern p = Patterns.EMAIL_ADDRESS;
+        final Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     /**
@@ -186,13 +162,9 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.WEB_URL;
-        Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        final Pattern p = Patterns.WEB_URL;
+        final Matcher m = p.matcher(str);
+        return m.matches();
     }
 
     /**
@@ -205,12 +177,8 @@ public class ValidatorUtils {
         if (str == null || "".equals(str)) {
             return false;
         }
-        Pattern p = Patterns.IP_ADDRESS;
-        Matcher m = p.matcher(str);
-        if (m.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        final Pattern p = Patterns.IP_ADDRESS;
+        final Matcher m = p.matcher(str);
+        return m.matches();
     }
 }

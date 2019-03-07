@@ -26,7 +26,7 @@ final public class IMapBuilder {
     private Map<String, String> mParams;
 
     private IMapBuilder() {
-        mParams = new HashMap<String, String>();
+        mParams = new HashMap<>();
     }
 
     public static IMapBuilder build() {
@@ -64,11 +64,11 @@ final public class IMapBuilder {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         builder.append("url=")
                 .append(mUrl)
                 .append('\n');
-        for (String key : mParams.keySet()) {
+        for (final String key : mParams.keySet()) {
             builder.append(key).append('=').append(mParams.get(key));
         }
         return builder.toString();

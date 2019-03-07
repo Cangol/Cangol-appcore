@@ -31,7 +31,7 @@ public class PollingHttpClientTest extends AndroidTestCase {
 
     private String url = "http://www.cangol.mobi/cmweb/api/station/sync.do";
 
-    public void testGet() throws Exception {
+    public void testGet() {
         PollingHttpClient httpClient = new PollingHttpClient("polling");
         httpClient.send(getContext(), url, new HashMap<String, String>(), new PollingResponseHandler(){
             @Override

@@ -28,7 +28,6 @@ public class RouteResponseHandler {
     protected static final int START_MESSAGE = 1;
     protected static final int SUCCESS_MESSAGE = 2;
     protected static final int FAILURE_MESSAGE = 3;
-    private final static boolean DEBUG = true;
     private Handler handler;
 
     public RouteResponseHandler() {
@@ -45,6 +44,7 @@ public class RouteResponseHandler {
      * 开始请求
      */
     public void onStart() {
+        //do nothings
     }
 
     /**
@@ -54,6 +54,7 @@ public class RouteResponseHandler {
      * @param content
      */
     public void onSuccess(int statusCode, String content) {
+        //do nothings
     }
 
     /**
@@ -63,6 +64,7 @@ public class RouteResponseHandler {
      * @param content
      */
     public void onFailure(Throwable error, String content) {
+        //do nothings
     }
 
     protected void sendStartMessage() {
@@ -79,7 +81,7 @@ public class RouteResponseHandler {
 
     protected boolean sendResponseMessage(Response response) {
         boolean result = false;
-        ResponseBody responseBody = response.body();
+        final ResponseBody responseBody = response.body();
         String content = null;
         if (response.isSuccessful()) {
             if (responseBody != null) {
@@ -108,6 +110,8 @@ public class RouteResponseHandler {
                 break;
             case START_MESSAGE:
                 handleStartMessage();
+                break;
+            default:
                 break;
         }
     }

@@ -34,7 +34,7 @@ public class RequestParams {
     public RequestParams(Map<String, String> source) {
         init();
 
-        for (Map.Entry<String, String> entry : source.entrySet()) {
+        for (final Map.Entry<String, String> entry : source.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }
@@ -47,13 +47,13 @@ public class RequestParams {
 
     public RequestParams(Object... keysAndValues) {
         init();
-        int len = keysAndValues.length;
+        final int len = keysAndValues.length;
         if (len % 2 != 0) {
             throw new IllegalArgumentException("Supplied arguments must be even");
         }
         for (int i = 0; i < len; i += 2) {
-            String key = String.valueOf(keysAndValues[i]);
-            String val = String.valueOf(keysAndValues[i + 1]);
+            final String key = String.valueOf(keysAndValues[i]);
+            final String val = String.valueOf(keysAndValues[i + 1]);
             put(key, val);
         }
     }
@@ -80,8 +80,8 @@ public class RequestParams {
     }
 
     public String toDebugString() {
-        StringBuilder result = new StringBuilder();
-        for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+        final StringBuilder result = new StringBuilder();
+        for (final ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
 
             result.append(entry.getKey())
                     .append('=')
@@ -89,7 +89,7 @@ public class RequestParams {
                     .append('\n');
         }
 
-        for (ConcurrentHashMap.Entry<String, File> entry : fileParams.entrySet()) {
+        for (final ConcurrentHashMap.Entry<String, File> entry : fileParams.entrySet()) {
             result.append(entry.getKey())
                     .append("=FILE\n");
         }
@@ -99,8 +99,8 @@ public class RequestParams {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+        final StringBuilder result = new StringBuilder();
+        for (final ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
             if (result.length() > 0) {
                 result.append('&');
             }
@@ -110,7 +110,7 @@ public class RequestParams {
                     .append(entry.getValue());
         }
 
-        for (ConcurrentHashMap.Entry<String, File> entry : fileParams.entrySet()) {
+        for (final ConcurrentHashMap.Entry<String, File> entry : fileParams.entrySet()) {
             if (result.length() > 0) {
                 result.append('&');
             }
@@ -123,7 +123,7 @@ public class RequestParams {
     }
 
     private void init() {
-        urlParams = new ConcurrentHashMap<String, String>();
-        fileParams = new ConcurrentHashMap<String, File>();
+        urlParams = new ConcurrentHashMap<>();
+        fileParams = new ConcurrentHashMap<>();
     }
 }

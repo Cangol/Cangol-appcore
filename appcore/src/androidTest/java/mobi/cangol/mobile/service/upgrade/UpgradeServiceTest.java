@@ -25,16 +25,16 @@ public class UpgradeServiceTest extends ApplicationTestCase<CoreApplication> {
         upgradeService = (UpgradeService) coreApplication.getAppService(AppService.UPGRADE_SERVICE);
     }
 
-    public void testUpgrade() throws Exception {
+    public void testUpgrade() {
         String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
         upgradeService.upgrade(TAG,url,true);
     }
 
-    public void testCancel() throws Exception {
+    public void testCancel() {
         upgradeService.cancel(TAG);
     }
 
-    public void testSetOnUpgradeListener() throws Exception {
+    public void testSetOnUpgradeListener() {
         upgradeService.setOnUpgradeListener(TAG, new OnUpgradeListener() {
             @Override
             public void upgrade(boolean force) {

@@ -33,12 +33,12 @@ import mobi.cangol.mobile.service.ServiceProperty;
  */
 @Service("AnalyticsService")
 class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
-    private final static String TAG = "AnalyticsService";
+    private static final String TAG = "AnalyticsService";
     private boolean mDebug = false;
     private Application mContext = null;
     private AsyncHttpClient mAsyncHttpClient = null;
     private ServiceProperty mServiceProperty = null;
-    private Map<String, ITracker> mTrackers = new HashMap<String, ITracker>();
+    private Map<String, ITracker> mTrackers = new HashMap<>();
 
     @Override
     public void onCreate(Application context) {
@@ -54,7 +54,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public String getName() {
-        return "AnalyticsService";
+        return TAG;
     }
 
     @Override
@@ -69,7 +69,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(ANALYTICSSERVICE_THREADPOOL_NAME, TAG);
         sp.putInt(ANALYTICSSERVICE_THREAD_MAX, 2);
         return sp;
@@ -77,15 +77,11 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
-        RequestParams params = new RequestParams(paramsMap);
-        if (mDebug) Log.v(TAG, "send " + url+"?"+params.toString());
+        final RequestParams params = new RequestParams(paramsMap);
+        if (mDebug) Log.v(TAG, "send " + url + "?" + params.toString());
         if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
         mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
 
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
 
             @Override
             public void onSuccess(String content) {
@@ -103,8 +99,8 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.mDebug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -112,7 +108,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         if (mTrackers.containsKey(trackingId)) {
             return mTrackers.get(trackingId);
         } else {
-            ITracker tracker = new ITracker(trackingId, this);
+           final ITracker tracker = new ITracker(trackingId, this);
             mTrackers.put(trackingId, tracker);
             return tracker;
         }
@@ -120,7 +116,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
 
     @Override
     public void closeTracker(String trackingId) {
-        ITracker tracker = mTrackers.get(trackingId);
+        final ITracker tracker = mTrackers.get(trackingId);
         if (tracker != null) {
             mTrackers.remove(trackingId);
             tracker.setClosed(true);

@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -12,6 +13,9 @@ import mobi.cangol.mobile.logging.Log;
  * @author Kevin Kowalewski
  */
 public class RootUtils {
+
+    public static final String SYSTEM_APP_SUPERUSER_APK = "/system/app/Superuser.apk";
+
     private RootUtils() {
     }
 
@@ -20,25 +24,24 @@ public class RootUtils {
     }
 
     public static boolean checkRootMethod1() {
-        String buildTags = android.os.Build.TAGS;
+        final String buildTags = android.os.Build.TAGS;
         return buildTags != null && buildTags.contains("test-keys");
     }
 
     public static boolean checkRootMethod2() {
         try {
-            File file = new File("/system/app/Superuser.apk");
-            return file.exists();
+            return new File(SYSTEM_APP_SUPERUSER_APK).exists();
         } catch (Exception e) {
             return false;
         }
     }
 
     public static boolean checkRootMethod3() {
-        return new ExecShell().executeCommand(SHELL_CMD.check_su_binary) != null;
+        return new ExecShell().executeCommand(SHELL_CMD.CHECK_SU_BINARY) != null;
     }
 
-    public static enum SHELL_CMD {
-        check_su_binary(new String[]{"/system/xbin/which", "su"});
+    public enum SHELL_CMD {
+        CHECK_SU_BINARY(new String[]{"/system/xbin/which", "su"});
 
         String[] command;
 
@@ -52,14 +55,14 @@ public class RootUtils {
      */
     private static class ExecShell {
 
-        public ArrayList<String> executeCommand(SHELL_CMD shellCmd) {
+        public List<String> executeCommand(SHELL_CMD shellCmd) {
             String line = null;
-            ArrayList<String> fullResponse = new ArrayList<String>();
+            final List<String> fullResponse = new ArrayList<>();
             Process localProcess = null;
             try {
                 localProcess = Runtime.getRuntime().exec(shellCmd.command);
             } catch (Exception e) {
-                return null;
+                return new ArrayList<>();
             }
             BufferedReader in;
             try {

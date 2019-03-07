@@ -22,7 +22,7 @@ public class CoreApplicationTest extends ApplicationTestCase<CoreApplication> {
         coreApplication=getApplication();
     }
 
-    public void testGetAppService() throws Exception {
+    public void testGetAppService() {
         ConfigService configService= (ConfigService) coreApplication.getAppService(AppService.CONFIG_SERVICE);
         assertNotNull(configService.getAppDir());
     }

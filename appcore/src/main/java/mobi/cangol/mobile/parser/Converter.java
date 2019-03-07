@@ -19,7 +19,7 @@ package mobi.cangol.mobile.parser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
+import java.util.List;
 
 import mobi.cangol.mobile.utils.StringUtils;
 
@@ -27,13 +27,14 @@ import mobi.cangol.mobile.utils.StringUtils;
  * Created by xuewu.wei on 2016/5/31.
  */
 public class Converter {
-
+    protected Converter() {
+    }
 
     public static <T> T parserXml(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
         return XmlUtils.parserToObject(c, str, useAnnotation);
     }
 
-    public static <T> ArrayList<T> parserXmlList(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
+    public static <T> List<T> parserXmlList(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
         return XmlUtils.parserToList(c, str, useAnnotation);
     }
 
@@ -41,7 +42,7 @@ public class Converter {
         return JsonUtils.parserToObject(c, str, useAnnotation);
     }
 
-    public static <T> ArrayList<T> parserJsonList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+    public static <T> List<T> parserJsonList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
         return JsonUtils.parserToList(c, str, useAnnotation);
     }
 
@@ -55,9 +56,7 @@ public class Converter {
     public static int parseInt(String str, int defaultValue) {
         try {
             return Integer.parseInt(str);
-        } catch (NullPointerException e) {
-            return defaultValue;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -72,9 +71,7 @@ public class Converter {
     public static double parseDouble(String str, double defaultValue) {
         try {
             return Double.parseDouble(str);
-        } catch (NullPointerException e) {
-            return defaultValue;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -89,9 +86,7 @@ public class Converter {
     public static boolean parseBoolean(String str, boolean defaultValue) {
         try {
             return Boolean.parseBoolean(str);
-        } catch (NullPointerException e) {
-            return defaultValue;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -106,9 +101,7 @@ public class Converter {
     public static long parseLong(String str, long defaultValue) {
         try {
             return Long.parseLong(str);
-        } catch (NullPointerException e) {
-            return defaultValue;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -123,9 +116,7 @@ public class Converter {
     public static float parseFloat(String str, float defaultValue) {
         try {
             return Float.parseFloat(str);
-        } catch (NullPointerException e) {
-            return defaultValue;
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -170,13 +161,13 @@ public class Converter {
         String filedName = null;
         if (useAnnotation) {
             if (field.isAnnotationPresent(Attribute.class)) {
-                Attribute attr = field.getAnnotation(Attribute.class);
+               final Attribute attr = field.getAnnotation(Attribute.class);
                 filedName = StringUtils.isEmpty(attr.value()) ? field.getName() : attr.value();
             } else if (field.isAnnotationPresent(Element.class)) {
-                Element element = field.getAnnotation(Element.class);
+                final Element element = field.getAnnotation(Element.class);
                 filedName = StringUtils.isEmpty(element.value()) ? field.getName() : element.value();
             } else if (field.isAnnotationPresent(ElementList.class)) {
-                ElementList elementList = field.getAnnotation(ElementList.class);
+                final ElementList elementList = field.getAnnotation(ElementList.class);
                 filedName = StringUtils.isEmpty(elementList.value()) ? field.getName() : elementList.value();
             } else {
                 //do nothing

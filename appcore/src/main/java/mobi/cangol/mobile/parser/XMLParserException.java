@@ -53,9 +53,8 @@ public class XMLParserException extends ParserException {
     @Override
     public String getMessage() {
         if (mNode != null) {
-            String nodeText = mNode.getTextContent();
-            if (nodeText != null) {
-                return "\nError '" + super.getMessage() + "' occurred in \n" + nodeText + "\n" + getCause().getMessage();
+            if (mNode.getTextContent() != null) {
+                return "\nError '" + super.getMessage() + "' occurred in \n" + mNode.getTextContent() + "\n" + getCause().getMessage();
             } else {
                 return "\nError '" + super.getMessage() + "' occurred in " + mNode.getNodeName() + "\n" + getCause().getMessage();
             }

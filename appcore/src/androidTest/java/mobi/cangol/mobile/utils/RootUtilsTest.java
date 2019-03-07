@@ -7,19 +7,19 @@ import android.test.AndroidTestCase;
  */
 public class RootUtilsTest extends AndroidTestCase {
 
-    public void testIsDeviceRooted() throws Exception {
+    public void testIsDeviceRooted() {
         RootUtils.isDeviceRooted();
     }
 
-    public void testCheckRootMethod1() throws Exception {
+    public void testCheckRootMethod1() {
         RootUtils.checkRootMethod1();
     }
 
-    public void testCheckRootMethod2() throws Exception {
+    public void testCheckRootMethod2() {
         RootUtils.checkRootMethod2();
     }
 
-    public void testCheckRootMethod3() throws Exception {
+    public void testCheckRootMethod3() {
         RootUtils.checkRootMethod3();
     }
 }

@@ -72,7 +72,7 @@ class AsyncHttpRequest implements Runnable {
 
     private void makeRequest() throws IOException {
         if (!Thread.currentThread().isInterrupted()) {
-            Response response = content.newCall(request).execute();
+            final Response response = content.newCall(request).execute();
             if (!Thread.currentThread().isInterrupted()) {
                 if (responseHandler != null) {
                     responseHandler.sendResponseMessage(response);
@@ -88,7 +88,7 @@ class AsyncHttpRequest implements Runnable {
         // See: https://github.com/kaeppler/droid-fu/blob/master/src/main/java/com/github/droidfu/http/BetterHttpRequestBase.java
         boolean retry = true;
         IOException cause = null;
-        RetryHandler retryHandler = client.getRetryHandler();
+        final RetryHandler retryHandler = client.getRetryHandler();
         while (retry) {
             try {
                 makeRequest();
@@ -117,7 +117,7 @@ class AsyncHttpRequest implements Runnable {
         }
 
         // no retries left, crap out with exception
-        ConnectException ex = new ConnectException();
+        final ConnectException ex = new ConnectException();
         ex.initCause(cause);
         throw ex;
     }

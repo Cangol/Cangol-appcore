@@ -2,6 +2,8 @@ package mobi.cangol.mobile.socket;
 
 import android.test.AndroidTestCase;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,16 +14,17 @@ import java.io.Serializable;
  */
 public class SocketClientTest extends AndroidTestCase {
 
-    public void testSend() throws Exception {
+    public void testSend() {
         final SocketClient socketClient=new SocketClient();
-        socketClient.connect(getContext(), "127.0.0.1", 8080, true, 10 * 1000, new SocketHandler() {
+        socketClient.connect("SocketClientTest","127.0.0.1", 8080, true, 10 * 1000, new SocketHandler() {
+
             @Override
-            public boolean handleSocketWrite(OutputStream outputStream) throws IOException {
+            public boolean handleSocketWrite(DataOutputStream outputStream) throws IOException {
                 return false;
             }
 
             @Override
-            public boolean handleSocketRead(int timeout, InputStream inputStream) throws IOException, ClassNotFoundException {
+            public boolean handleSocketRead(DataInputStream inputStream) throws IOException, ClassNotFoundException {
                 return false;
             }
 
@@ -32,10 +35,10 @@ public class SocketClientTest extends AndroidTestCase {
 
             @Override
             protected void onFail(Object obj, Exception e) {
-                socketClient.close(true);
+
             }
         });
-        socketClient.connect(getContext(), "127.0.0.1", 8080, true, 10 * 1000, new SocketSerializableHandler() {
+        socketClient.connect("SocketClientTest","127.0.0.1", 8080, true, 10 * 1000, new SocketSerializableHandler() {
 
             @Override
             protected Object getSend() {

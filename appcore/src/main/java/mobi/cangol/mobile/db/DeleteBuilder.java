@@ -34,9 +34,9 @@ public class DeleteBuilder {
         mDbtable = clazz.getAnnotation(DatabaseTable.class);
         table = mDbtable.value();
 
-        paraKey = new ArrayList<String>();
-        paraValue = new ArrayList<Object>();
-        condList = new ArrayList<String>();
+        paraKey = new ArrayList<>();
+        paraValue = new ArrayList<>();
+        condList = new ArrayList<>();
     }
 
     /**
@@ -129,13 +129,10 @@ public class DeleteBuilder {
     }
 
     protected String getWhere() {
-        StringBuffer sql = new StringBuffer();
+        final StringBuilder sql = new StringBuilder();
         if (paraKey != null) {
             for (int i = 0; i < paraKey.size(); i++) {
-                if (i == 0) {
-                    //sql.append(" where ");
-                    ;
-                } else {
+                if (i > 0) {
                     sql.append(condList.get(i));
                 }
 
@@ -149,14 +146,14 @@ public class DeleteBuilder {
 
     protected String[] getWhereArgs() {
         if (paraValue != null) {
-            String[] args = new String[paraValue.size()];
+            final String[] args = new String[paraValue.size()];
             for (int i = 0; i < paraValue.size(); i++) {
                 paraKey.get(i);
                 args[i] = String.valueOf(paraValue.get(i));
             }
             return args;
         } else {
-            return null;
+            return new String[0];
         }
 
     }

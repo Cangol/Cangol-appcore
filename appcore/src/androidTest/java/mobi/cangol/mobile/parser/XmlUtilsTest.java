@@ -29,7 +29,7 @@ public class XmlUtilsTest extends InstrumentationTestCase {
     private String xmlStr="<?xml version='1.0' encoding='utf-8' standalone='yes' ?><ParserObject><name>Nick</name><id>1</id><height>1.75</height><isChild>true</isChild></ParserObject>";
 
 
-    public void testToXml() throws Exception {
+    public void testToXml() {
         ParserObject obj=new ParserObject(1,"Nick",1.75d,true);
         String xml=XmlUtils.toXml(obj,false);
         assertNotNull(xml);

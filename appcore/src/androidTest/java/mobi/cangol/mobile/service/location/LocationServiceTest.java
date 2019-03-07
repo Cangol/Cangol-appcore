@@ -25,24 +25,34 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
         locationService = (LocationService) coreApplication.getAppService(AppService.LOCATION_SERVICE);
     }
 
-    public void testRequestLocationUpdates() throws Exception {
+    public void testRequestLocationUpdates() {
         //locationService.requestLocationUpdates();
     }
 
-    public void testRemoveLocationUpdates() throws Exception {
+    public void testRemoveLocationUpdates() {
         locationService.removeLocationUpdates();
     }
 
-    public void testGetLastKnownLocation() throws Exception {
+    public void testGetLastKnownLocation() {
         locationService.getLastKnownLocation();
     }
 
-    public void testIsBetterLocation() throws Exception {
+    public void testIsBetterLocation() {
         locationService.isBetterLocation(new Location(TAG));
     }
 
-    public void testSetBetterLocationListener() throws Exception {
+    public void testSetBetterLocationListener() {
         locationService.setBetterLocationListener(new BetterLocationListener() {
+            @Override
+            public void needPermission(String[] permissions) {
+
+            }
+
+            @Override
+            public void providerDisabled(String provider) {
+
+            }
+
             @Override
             public void onBetterLocation(Location mLocation) {
 
@@ -52,10 +62,11 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
             public void timeout(Location mLocation) {
 
             }
-        });
-    }
 
-    public void testGetAddress() throws Exception {
-        locationService.getAddress();
+            @Override
+            public void positioning() {
+
+            }
+        });
     }
 }

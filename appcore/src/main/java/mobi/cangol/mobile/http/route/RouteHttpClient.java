@@ -17,7 +17,6 @@ package mobi.cangol.mobile.http.route;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +33,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RouteHttpClient {
-    public final static String TAG = "RouteHttpClient";
-    private final static boolean DEBUG = true;
-    private final static int DEFAULT_RETRYTIMES = 10;
-    private final static int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_READ_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
-    private final static int DEFAULT_MAX = 3;
-    private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
+    public static final String TAG = "RouteHttpClient";
+    private static final int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
+    private static final int DEFAULT_READ_TIMEOUT = 30 * 1000;
+    private static final int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
+    private static final int DEFAULT_MAX = 3;
+    private static Map<Object, List<WeakReference<Future<?>>>> requestMap = new WeakHashMap<>();
     private OkHttpClient httpClient;
     private PoolManager.Pool threadPool;
 
@@ -60,7 +57,6 @@ public class RouteHttpClient {
                 .build();
         threadPool = PoolManager.buildPool(TAG, DEFAULT_MAX);
 
-        requestMap = new WeakHashMap<Object, List<WeakReference<Future<?>>>>();
     }
 
     /**
@@ -72,11 +68,11 @@ public class RouteHttpClient {
      * @param responseHandler
      * @param host
      */
-    public void send(Object tag, String url, HashMap<String, String> params, RouteResponseHandler responseHandler, String... host) {
+    public void send(Object tag, String url, Map<String, String> params, RouteResponseHandler responseHandler, String... host) {
         Request request = null;
         if (params != null) {
-            FormBody.Builder requestBodyBuilder = new FormBody.Builder();
-            for (ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
+            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
             request = new Request.Builder()
@@ -94,25 +90,23 @@ public class RouteHttpClient {
     }
 
     private Request getNewRequest(Request request, String host) {
-        String hostStr = request.url().url().getHost();
-        String urlStr = request.url().url().toString().replace(hostStr, host);
+        final String hostStr = request.url().url().getHost();
+        final String urlStr = request.url().url().toString().replace(hostStr, host);
 
-        Request newRequest = new Request.Builder()
+        return new Request.Builder()
                 .tag(request.tag())
                 .url(urlStr)
                 .build();
-
-        return newRequest;
     }
 
     protected void sendRequest(OkHttpClient client, Request uriRequest, RouteResponseHandler responseHandler, Object context, String... host) {
 
-        Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, host));
+        final Future<?> request = threadPool.submit(new HttpRequestTask(client, uriRequest, responseHandler, host));
         if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
             if (requestList == null) {
-                requestList = new LinkedList<WeakReference<Future<?>>>();
+                requestList = new LinkedList<>();
                 requestMap.put(context, requestList);
             }
             requestList.add(new WeakReference<Future<?>>(request));
@@ -126,22 +120,22 @@ public class RouteHttpClient {
      * @param mayInterruptIfRunning
      */
     public void cancelRequests(Object tag, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
+       final List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
             }
         }
         requestMap.remove(tag);
-        for (Call call : httpClient.dispatcher().queuedCalls()) {
+        for (final Call call : httpClient.dispatcher().queuedCalls()) {
             if (call.request().tag().equals(tag)) {
                 call.cancel();
             }
         }
-        for (Call call : httpClient.dispatcher().runningCalls()) {
+        for (final Call call : httpClient.dispatcher().runningCalls()) {
             if (call.request().tag().equals(tag)) {
                 call.cancel();
             }
@@ -170,7 +164,7 @@ public class RouteHttpClient {
                     try {
                         request = getNewRequest(request, host[exec]);
                         exec++;
-                        Response response = client.newCall(request).execute();
+                        final Response response = client.newCall(request).execute();
                         if (!Thread.currentThread().isInterrupted()) {
                             if (responseHandler != null) {
                                 if (responseHandler.sendResponseMessage(response)) {
@@ -187,7 +181,6 @@ public class RouteHttpClient {
                             responseHandler.sendFailureMessage(e, "IOException");
                             break;
                         }
-                        continue;
                     }
                 }
             }

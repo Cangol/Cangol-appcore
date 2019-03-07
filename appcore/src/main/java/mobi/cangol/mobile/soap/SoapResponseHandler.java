@@ -41,18 +41,19 @@ public class SoapResponseHandler {
     }
 
     public void onStart() {
+        //do nothings
     }
 
     public void onFinish() {
-
+        //do nothings
     }
 
     public void onSuccess(String content) {
-
+        //do nothings
     }
 
     public void onFailure(String error) {
-
+        //do nothings
     }
 
     protected void sendStartMessage() {
@@ -87,6 +88,8 @@ public class SoapResponseHandler {
                 break;
             case FINISH_MESSAGE:
                 onFinish();
+                break;
+            default:
                 break;
         }
     }

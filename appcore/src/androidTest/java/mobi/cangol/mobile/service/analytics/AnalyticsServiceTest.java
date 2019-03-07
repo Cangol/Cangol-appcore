@@ -25,11 +25,11 @@ public class AnalyticsServiceTest extends ApplicationTestCase<CoreApplication> {
         analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
     }
 
-    public void testGetTracker() throws Exception {
+    public void testGetTracker() {
         ITracker tracker = analyticsService.getTracker(TAG);
     }
 
-    public void testSends() throws Exception {
+    public void testSends() {
         ITracker tracker = analyticsService.getTracker(TAG);
         IMapBuilder builder = IMapBuilder.build();
         builder.setUrl("http://www.cangol.mobi/cmweb/api/countly/event.do");
@@ -40,7 +40,7 @@ public class AnalyticsServiceTest extends ApplicationTestCase<CoreApplication> {
         boolean result = tracker.send(builder);
     }
 
-    public void testCloseTracker() throws Exception {
+    public void testCloseTracker() {
         analyticsService.closeTracker(TAG);
     }
 }

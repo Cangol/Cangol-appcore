@@ -23,8 +23,8 @@ public class ParserException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
-    private Field mField;
-    private Class<?> mClass;
+    private Field field = null;
+    private Class<?> clazz = null;
 
     public ParserException(String message) {
         super(message);
@@ -40,24 +40,23 @@ public class ParserException extends Exception {
 
     public ParserException(Class<?> clazz, String message, Throwable throwable) {
         super(message, throwable);
-        mField = null;
-        mClass = clazz;
+        this.field = null;
+        this.clazz = clazz;
     }
 
     public ParserException(Class<?> clazz, Field field, String message, Throwable throwable) {
         super(message, throwable);
-        mField = field;
-        mClass = clazz;
+        this.field = field;
+        this.clazz = clazz;
     }
 
     @Override
     public String getMessage() {
-        if (mClass != null) {
-            if (mField != null) {
-                String fieldName = mField.getName();
-                return "\nError '" + super.getMessage() + "' occurred in " + mClass.getName() + "@" + fieldName + "\n" + getCause().getMessage();
+        if (clazz != null) {
+            if (field != null) {
+                return "\nError '" + super.getMessage() + "' occurred in " + clazz.getName() + "@" + field.getName() + "\n" + getCause().getMessage();
             } else {
-                return "\nError '" + super.getMessage() + "' occurred in " + mClass.getName() + "\n" + getCause().getMessage();
+                return "\nError '" + super.getMessage() + "' occurred in " + clazz.getName() + "\n" + getCause().getMessage();
             }
         } else {
             return super.getMessage();

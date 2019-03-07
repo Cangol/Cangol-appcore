@@ -24,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -43,7 +42,8 @@ import mobi.cangol.mobile.logging.Log;
  * @author Cangol
  */
 public class JsonUtils extends Converter {
-    private final static String TAG = "JsonUtils";
+    private static final String TAG = "JsonUtils";
+    public static final String UTF_8 = "utf-8";
 
     private JsonUtils() {
     }
@@ -56,7 +56,7 @@ public class JsonUtils extends Converter {
      * @return
      */
     public static <T> JSONArray toJSONArray(List<T> obj, boolean useAnnotation) {
-        JSONArray jsonArray = new JSONArray();
+       final JSONArray jsonArray = new JSONArray();
         if (obj != null) {
             for (int i = 0; i < obj.size(); i++) {
                 if (isBaseClass(obj.get(i).getClass())) {
@@ -84,15 +84,15 @@ public class JsonUtils extends Converter {
             return null;
         }
 
-        JSONObject json = new JSONObject();
-        Field[] fields = obj.getClass().getDeclaredFields();
+        final JSONObject json = new JSONObject();
+        final Field[] fields = obj.getClass().getDeclaredFields();
         try {
-            for (Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
                 }
-                String filedName = getFieldName(field, useAnnotation);
+                final String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
                     if (isBaseClass(field.getType())) {
@@ -103,8 +103,8 @@ public class JsonUtils extends Converter {
                 } else {
                     //集合类型
                     if (field.getGenericType() instanceof ParameterizedType) {
-                        List<?> list = (List<?>) field.get(obj);
-                        JSONArray jsonArray = new JSONArray();
+                        final List<?> list = (List<?>) field.get(obj);
+                        final JSONArray jsonArray = new JSONArray();
                         if (list != null) {
                             for (int i = 0; i < list.size(); i++) {
                                 if (isBaseClass(list.get(i).getClass())) {
@@ -121,11 +121,7 @@ public class JsonUtils extends Converter {
                 }
 
             }
-        } catch (JSONException e) {
-            Log.d(TAG, e.getMessage());
-        } catch (IllegalArgumentException e) {
-            Log.d(TAG, e.getMessage());
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
         return json;
@@ -145,7 +141,7 @@ public class JsonUtils extends Converter {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
-        String json = formatJson(str);
+        final String json = formatJson(str);
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(json);
@@ -165,11 +161,11 @@ public class JsonUtils extends Converter {
      * @return
      * @throws JSONParserException
      */
-    public static <T> ArrayList<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+    public static <T> List<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
-        String json = formatJson(str);
+        final String json = formatJson(str);
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(json);
@@ -206,15 +202,13 @@ public class JsonUtils extends Converter {
     }
 
     private static String inputStreamTOString(InputStream in) throws Exception {
-        int BUFFER_SIZE = 4096;
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        byte[] data = new byte[BUFFER_SIZE];
+       final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        final byte[] data = new byte[4096];
         int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
+        while ((count = in.read(data, 0, 4096)) != -1) {
             outStream.write(data, 0, count);
         }
-        data = null;
-        return new String(outStream.toByteArray(), "utf-8");
+        return new String(outStream.toByteArray(), UTF_8);
     }
 
     public static <T> T parserToObject(Class<T> c, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
@@ -223,16 +217,13 @@ public class JsonUtils extends Converter {
         }
         T t = null;
         try {
-            Map<String, Class> typeMap = new HashMap<String, Class>();
-            for (TypeVariable type : c.getTypeParameters()) {
-                //typeMap.put("T",type);
-            }
-            Constructor constructor = c.getDeclaredConstructor();
+            final Map<String, Class> typeMap = new HashMap<>();
+            final Constructor constructor = c.getDeclaredConstructor();
             constructor.setAccessible(true);
             t = (T) constructor.newInstance();
-            Field[] fields = c.getDeclaredFields();
+            final Field[] fields = c.getDeclaredFields();
             String filedName = null;
-            for (Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
@@ -242,47 +233,36 @@ public class JsonUtils extends Converter {
                     Class<?> filedClass = null;
 
                     if (field.getGenericType() instanceof TypeVariable) {
-                        TypeVariable aType = (TypeVariable) field.getGenericType();
+                        final TypeVariable aType = (TypeVariable) field.getGenericType();
                         filedClass = typeMap.get(aType.getName());
                     } else {
                         filedClass = field.getType();
                     }
-                    field.set(t, getField(t, filedClass, filedName, jsonObject, useAnnotation));
+                    if (jsonObject.has(filedName))
+                        field.set(t, getValueFromJson(t, filedClass, filedName, jsonObject, useAnnotation));
                 } else {
                     if (field.getGenericType() instanceof ParameterizedType) {
-                        ParameterizedType pt = (ParameterizedType) field.getGenericType();
-                        Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
-                        List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
-                        try {
-                            field.set(t, list);
-                        } catch (IllegalArgumentException e) {
-                            throw new JSONParserException(c, field, "", e);
-                        } catch (IllegalAccessException e) {
-                            throw new JSONParserException(c, field, "", e);
-                        }
+                        final ParameterizedType pt = (ParameterizedType) field.getGenericType();
+                        final Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
+                        final List<?> list = parserToList(genericClazz, getJSONArray(jsonObject, filedName), useAnnotation);
+                        field.set(t, list);
                     } else {
                         Log.i(TAG, field.getName() + " require have generic");
                     }
                 }
             }
-        } catch (InstantiationException e) {
-            throw new JSONParserException(c, "must have zero-argument constructor", e);
-        } catch (IllegalAccessException e) {
-            throw new JSONParserException(c, "constructor is not accessible", e);
-        } catch (NoSuchMethodException e) {
-            throw new JSONParserException(c, "must have zero-argument constructor", e);
-        } catch (InvocationTargetException e) {
-            throw new JSONParserException(c, "must have zero-argument constructor", e);
+        } catch (Exception e) {
+            throw new JSONParserException(c, "constructor is not accessible,must have zero-argument constructor", e);
         }
         return t;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> ArrayList<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation) throws JSONParserException {
+    public static <T> List<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation) throws JSONParserException {
         if (jsonArray == null) {
-            return null;
+            return new ArrayList<>();
         }
-        ArrayList<T> list = new ArrayList<T>();
+        final List<T> list = new ArrayList<>();
         T t = null;
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
@@ -301,7 +281,7 @@ public class JsonUtils extends Converter {
         return list;
     }
 
-    private static <T> Object getField(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
+    private static <T> Object getValueFromJson(T t, Class<?> fieldClass, String key, JSONObject jsonObject, boolean useAnnotation) {
         Object value = null;
         try {
             if (isBaseClass(fieldClass)) {

@@ -27,7 +27,7 @@ import org.json.JSONObject;
 public class AsyncHttpClientTest extends AndroidTestCase {
     private String url = "http://www.cangol.mobi/cmweb/api/station/sync.do";
 
-    public void testGet() throws Exception {
+    public void testGet() {
         AsyncHttpClient httpClient = AsyncHttpClient.build("test");
         RequestParams params=new RequestParams();
         params.put("deviceId","111");

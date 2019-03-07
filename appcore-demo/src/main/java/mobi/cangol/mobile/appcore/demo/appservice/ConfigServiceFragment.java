@@ -47,17 +47,17 @@ public class ConfigServiceFragment extends Fragment {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
-        button2 = (Button) this.getView().findViewById(R.id.button2);
-        button3 = (Button) this.getView().findViewById(R.id.button3);
-        button4 = (Button) this.getView().findViewById(R.id.button4);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
+        button2 = this.getView().findViewById(R.id.button2);
+        button3 = this.getView().findViewById(R.id.button3);
+        button4 = this.getView().findViewById(R.id.button4);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String path="/sdcard/appcore";
-                boolean result=configService.setCustomAppDir(path);
-                showToast("setCustomAppDir "+(result?"success":"fail")+"\n"+path);
+                 configService.setCustomAppDir(path);
+                showToast("setCustomAppDir "+configService.getAppDir());
                 updateViews();
             }
         });

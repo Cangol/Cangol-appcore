@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service.location;
 
+import android.app.Activity;
 import android.location.Location;
 
 import mobi.cangol.mobile.service.AppService;
@@ -28,10 +29,6 @@ public interface LocationService extends AppService {
      * 定位超市时间,单位豪秒
      */
     String LOCATIONSERVICE_TIMEOUT = "timeout";
-    /**
-     * 百度LBS 的apikey
-     */
-    String LOCATIONSERVICE_BAIDU_AK = "baidu_ak";
     /**
      * GPS定位 最小时间间隔,单位豪秒
      */
@@ -52,7 +49,7 @@ public interface LocationService extends AppService {
     /**
      * 请求位置更新
      */
-    void requestLocationUpdates();
+    void requestLocationUpdates(Activity activity);
 
     /**
      * 停止位置更新
@@ -80,11 +77,4 @@ public interface LocationService extends AppService {
      * @param locationListener
      */
     void setBetterLocationListener(BetterLocationListener locationListener);
-
-    /**
-     * 获取地址
-     *
-     * @return
-     */
-    String getAddress();
 }

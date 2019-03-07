@@ -27,16 +27,17 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.Random;
 
+import mobi.cangol.mobile.core.R;
 import mobi.cangol.mobile.utils.FileUtils;
 
 
 public class DownloadNotification {
-    public static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID="101";
-    public static final String DOWNLOAD_NOTIFICATION_CHANNEL_NAME="channel_1";
+    private static final String DOWNLOAD_NOTIFICATION_CHANNEL_ID = "101";
     private NotificationManager notificationManager;
-    private NotificationChannel channel;
     private int id;
-    private String titleText, successText, failureText;
+    private String titleText;
+    private String successText;
+    private String failureText;
     private String savePath;
     private Context context;
     private Intent finishIntent;
@@ -50,30 +51,31 @@ public class DownloadNotification {
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, DOWNLOAD_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
-            channel.setDescription("channel_1");
-            channel.enableLights(false);
-            channel.enableVibration(false);
-            notificationManager.createNotificationChannel(channel);
-        }
+        createNotificationChannel(context);
     }
+
 
     public DownloadNotification(Context context, String title, String savePath, Intent finishIntent) {
         this.context = context;
         this.savePath = savePath;
         this.titleText = title;
-        this.successText = "下载成功!";
-        this.failureText = "下载失败!";
+        this.successText = context.getString(R.string.upgrade_success);
+        this.failureText = context.getString(R.string.upgrade_failure);
         this.finishIntent = finishIntent;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+        createNotificationChannel(context);
+    }
+
+    public void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID,DOWNLOAD_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
-            channel.setDescription("channel_1");
-            channel.enableLights(false);
-            channel.enableVibration(false);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager.getNotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID) == null) {
+                final NotificationChannel channel = new NotificationChannel(DOWNLOAD_NOTIFICATION_CHANNEL_ID, context.getString(R.string.notification_channel_1_name), NotificationManager.IMPORTANCE_LOW);
+                channel.setDescription(context.getString(R.string.notification_channel_1_desc));
+                channel.enableLights(false);
+                channel.enableVibration(false);
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
@@ -83,12 +85,12 @@ public class DownloadNotification {
 
     public void createNotification() {
         id = new Random().nextInt(10000);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder =null;
+        final PendingIntent pendingIntent = PendingIntent.getActivity(context, id, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
-        }else{
-            builder=new NotificationCompat.Builder(context);
+            builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        } else {
+            builder = new NotificationCompat.Builder(context);
         }
         builder.setContentTitle(titleText)
                 .setContentText("")
@@ -104,11 +106,11 @@ public class DownloadNotification {
     }
 
     public void updateNotification(int progress, int speed) {
-        NotificationCompat.Builder builder =null;
+        NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
-        }else{
-            builder=new NotificationCompat.Builder(context);
+            builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        } else {
+            builder = new NotificationCompat.Builder(context);
         }
         builder.setContentTitle(titleText)
                 .setContentText(FileUtils.formatSize(speed) + "/s")
@@ -122,12 +124,12 @@ public class DownloadNotification {
     }
 
     public void finishNotification() {
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder =null;
+        final PendingIntent pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
-        }else{
-            builder=new NotificationCompat.Builder(context);
+            builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        } else {
+            builder = new NotificationCompat.Builder(context);
         }
         builder.setContentTitle(titleText)
                 .setContentText(successText)
@@ -141,11 +143,11 @@ public class DownloadNotification {
     }
 
     public void failureNotification() {
-        NotificationCompat.Builder builder =null;
+        NotificationCompat.Builder builder = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder=new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
-        }else{
-            builder=new NotificationCompat.Builder(context);
+            builder = new NotificationCompat.Builder(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID);
+        } else {
+            builder = new NotificationCompat.Builder(context);
         }
         builder.setContentTitle(titleText)
                 .setContentText(failureText)

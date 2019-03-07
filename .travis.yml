@@ -33,8 +33,9 @@ before_install:
     - export GRADLE_HOME=$PWD/gradle-4.1
     - export PATH=$GRADLE_HOME/bin:$PATH
     - sudo apt-get install jq
-    - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
-    - mkdir "$ANDROID_HOME/licenses" || true
+    #- wget --timeout=120 --retry-connrefused -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
+    - wget -O ~/codacy-coverage-reporter-assembly-latest.jar https://github.com/codacy/codacy-coverage-reporter/releases/download/4.0.5/codacy-coverage-reporter-4.0.5-assembly.jar
+    -  mkdir "$ANDROID_HOME/licenses" || true
     - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
     - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 # Emulator Management: Create, Start and Wait
@@ -43,13 +44,12 @@ before_script:
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
-#script:
-#
+script:
+  -  gradle appcore:build connectedCheck
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r appcore/build/reports/coverage/debug/report.xml
   - gradle cobertura coveralls
-  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r appcore/build/reports/coverage/debug/report.xml
-
 #deploy:
 #  provider: testfairy
 #  api-key: "47ea7365f8383a1cb728d0f84a918503f8acaae4"

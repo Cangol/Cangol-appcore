@@ -24,7 +24,7 @@ public class DatabaseTest extends AndroidTestCase {
         dataService = new DataService(getContext());
         atomicInteger = new AtomicInteger();
     }
-    public void testDatabase() throws Exception {
+    public void testDatabase() {
         Data data=new Data("name_" + atomicInteger.addAndGet(1));
         data.setNickname("nickname_"+new Random().nextInt(100));
         dataService.save(data);
@@ -220,7 +220,7 @@ class Data {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Data{");
+        final StringBuilder sb = new StringBuilder("Data{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
         sb.append(", nickname='").append(nickname).append('\'');
