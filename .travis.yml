@@ -5,8 +5,8 @@ android:
   components:
      - tools
      - platform-tools
-     - build-tools-26.0.2
-     - android-26
+     - build-tools-27.0.3
+     - android-27
      - android-22
      - extra-android-m2repository
      - extra-android-support
@@ -28,9 +28,9 @@ cache:
     - $HOME/.android/build-cache
 before_install:
     # Gradle
-    - wget -q http://services.gradle.org/distributions/gradle-4.1-all.zip
-    - unzip -q gradle-4.1-all.zip
-    - export GRADLE_HOME=$PWD/gradle-4.1
+    - wget -q http://services.gradle.org/distributions/gradle-4.4-all.zip
+    - unzip -q gradle-4.4-all.zip
+    - export GRADLE_HOME=$PWD/gradle-4.4
     - export PATH=$GRADLE_HOME/bin:$PATH
     - sudo apt-get install jq
     #- wget --timeout=120 --retry-connrefused -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
