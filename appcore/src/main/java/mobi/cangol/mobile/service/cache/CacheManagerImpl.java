@@ -569,13 +569,8 @@ class CacheManagerImpl implements CacheManager {
         return sb.toString();
     }
 
-    @TargetApi(9)
     private long getUsableSpace(File path) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            return path.getUsableSpace();
-        }
-        final StatFs stats = new StatFs(path.getPath());
-        return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+        return path.getUsableSpace();
     }
 
     @Override

@@ -214,7 +214,7 @@ public class Session {
                 saveInt(key, (Integer) map.get(key));
             } else if (map.get(key) instanceof Long) {
                 saveLong(key, (Long) map.get(key));
-            } else if (map.get(key) instanceof Set && Build.VERSION.SDK_INT >= 11) {
+            } else if (map.get(key) instanceof Set) {
                 saveStringSet(key, (Set<String>) map.get(key));
             } else if (map.get(key) instanceof JSONObject) {
                 saveJSONObject(key, (JSONObject) map.get(key));
