@@ -242,17 +242,7 @@ public final class DeviceInfo {
      * @return
      */
     public static String getCPUABI() {
-        String result = "";
-        try {
-            final Process process = Runtime.getRuntime().exec("getprop ro.product.cpu.abi");
-            final InputStreamReader inputStreamReader = new InputStreamReader(process.getInputStream(), CHARSET);
-            final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            final String str = bufferedReader.readLine();
-            result = str.trim();
-        } catch (Exception e) {
-            result = UNKNOWN;
-        }
-        return result;
+        return android.os.Build.CPU_ABI;
     }
 
     /**
