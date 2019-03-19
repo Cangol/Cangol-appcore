@@ -403,7 +403,43 @@ public final class DeviceInfo {
 
         return networkType;
     }
-
+    public static final int NETWORK_CLASS_WIFI = -101;
+    public static final int NETWORK_CLASS_UNAVAILABLE = -1;
+    public static final int NETWORK_CLASS_2G = 1;
+    public static final int NETWORK_CLASS_3G = 2;
+    public static final int NETWORK_CLASS_4G = 3;
+    public static final int NETWORK_CLASS_UNKNOWN=0;
+    public static int getNetworkClass(Context context) {
+        int networkType= getNetworkType(context);
+        if (networkType == NETWORK_TYPE_WIFI) {
+            return NETWORK_CLASS_WIFI;
+        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
+            return NETWORK_CLASS_UNAVAILABLE;
+        }else{
+            switch (networkType) {
+                case TelephonyManager.NETWORK_TYPE_GPRS:
+                case TelephonyManager.NETWORK_TYPE_EDGE:
+                case TelephonyManager.NETWORK_TYPE_CDMA:
+                case TelephonyManager.NETWORK_TYPE_1xRTT:
+                case TelephonyManager.NETWORK_TYPE_IDEN:
+                    return NETWORK_CLASS_2G;
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                case TelephonyManager.NETWORK_TYPE_EHRPD:
+                case TelephonyManager.NETWORK_TYPE_HSPAP:
+                    return NETWORK_CLASS_3G;
+                case TelephonyManager.NETWORK_TYPE_LTE:
+                    return NETWORK_CLASS_4G;
+                default:
+                    return NETWORK_CLASS_UNKNOWN;
+            }
+        }
+    }
     public static String getNetworkClassName(Context context) {
         int networkType= getNetworkType(context);
         if (networkType == NETWORK_TYPE_WIFI) {
