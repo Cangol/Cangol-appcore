@@ -83,7 +83,6 @@ public class UtilsFragment extends Fragment {
                 sb.append("\nMacAddress="+DeviceInfo.getMacAddress(getContext()));
 
                 sb.append("\nNetworkOperatorName="+DeviceInfo.getNetworkOperatorName(getContext()));
-                sb.append("\nNetworkTypeName="+DeviceInfo.getNetworkTypeName(getContext()));
                 sb.append("\nNetworkClassName="+DeviceInfo.getNetworkClassName(getContext()));
                 sb.append("\nWifiRssiString="+DeviceInfo.getWifiRssiString(getContext()));
                 sb.append("\nWifiRssi="+DeviceInfo.getWifiRssi(getContext()));

@@ -404,76 +404,36 @@ public final class DeviceInfo {
         return networkType;
     }
 
-    public static String getNetworkTypeName(Context context) {
-        String typeName = null;
-        final int networkType = getNetworkType(context);
-        if (networkType == NETWORK_TYPE_WIFI) {
-            typeName = "WIFI";
-        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
-            typeName = "UNAVAILABLE";
-        } else {
-            final TelephonyManager telephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-            try {
-                final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName", Integer.class);
-                method.setAccessible(true);
-                typeName = (String) method.invoke(telephonyManager, networkType);
-            } catch (Exception e) {
-                Log.e("getNetworkTypeName", "" + e.getMessage(), e);
-            }
-        }
-        return typeName;
-    }
-
-    private static final int NETWORK_CLASS_WIFI = -101;
-    private static final int NETWORK_CLASS_UNAVAILABLE = -1;
-
-    public static int getNetworkClass(Context context) {
-        int networkClass = 0;
-        final int networkType = getNetworkType(context);
-        if (networkType == NETWORK_TYPE_WIFI) {
-            networkClass = NETWORK_CLASS_WIFI;
-        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
-            networkClass = NETWORK_CLASS_UNAVAILABLE;
-        } else {
-            final TelephonyManager telephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-            try {
-               final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass", Integer.class);
-                method.setAccessible(true);
-                final Integer classInteger = (Integer) method.invoke(telephonyManager, networkType);
-                networkClass = classInteger.intValue();
-            } catch (Exception e) {
-                Log.e("getNetworkClass", "" + e.getMessage(), e);
-            }
-        }
-        return networkClass;
-    }
-
     public static String getNetworkClassName(Context context) {
-        final int networkClass = getNetworkClass(context);
-        String type = UNKNOWN;
-        switch (networkClass) {
-            case NETWORK_CLASS_UNAVAILABLE:
-                type = "UNAVAILABLE";
-                break;
-            case NETWORK_CLASS_WIFI:
-                type = "WIFI";
-                break;
-            case 1://TelephonyManager.NETWORK_CLASS_2_G
-                type = "2G";
-                break;
-            case 2://TelephonyManager.NETWORK_CLASS_3_G
-                type = "3G";
-                break;
-            case 3://TelephonyManager.NETWORK_CLASS_4_G
-                type = "4G";
-                break;
-            case 0://TelephonyManager.NETWORK_CLASS_UNKNOWN:
-                type = UNKNOWN;
-                break;
-            default:
-                break;
+        int networkType= getNetworkType(context);
+        if (networkType == NETWORK_TYPE_WIFI) {
+            return "WIFI";
+        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
+            return "UNAVAILABLE";
+        }else{
+            switch (networkType) {
+                case TelephonyManager.NETWORK_TYPE_GPRS:
+                case TelephonyManager.NETWORK_TYPE_EDGE:
+                case TelephonyManager.NETWORK_TYPE_CDMA:
+                case TelephonyManager.NETWORK_TYPE_1xRTT:
+                case TelephonyManager.NETWORK_TYPE_IDEN:
+                    return "2G";
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                case TelephonyManager.NETWORK_TYPE_EHRPD:
+                case TelephonyManager.NETWORK_TYPE_HSPAP:
+                    return "3G";
+                case TelephonyManager.NETWORK_TYPE_LTE:
+                    return "4G";
+                default:
+                    return UNKNOWN;
+            }
         }
-        return type;
     }
 
     public static int getWifiRssi(Context context) {
