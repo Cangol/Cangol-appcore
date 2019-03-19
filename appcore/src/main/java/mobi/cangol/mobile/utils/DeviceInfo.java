@@ -263,7 +263,7 @@ public final class DeviceInfo {
      */
     public static String getResolution(Context context) {
         final DisplayMetrics dm = new DisplayMetrics();
-        final  WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        final  WindowManager wm = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             wm.getDefaultDisplay().getRealMetrics(dm);
         } else {
@@ -394,14 +394,14 @@ public final class DeviceInfo {
     public static int getNetworkType(Context context) {
         int networkType = TelephonyManager.NETWORK_TYPE_UNKNOWN;
         try {
-            final NetworkInfo network = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
+            final NetworkInfo network = ((ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getActiveNetworkInfo();
             if (network != null && network.isAvailable() && network.isConnected()) {
                 final int type = network.getType();
                 if (type == ConnectivityManager.TYPE_WIFI) {
                     networkType = NETWORK_TYPE_WIFI;
                 } else if (type == ConnectivityManager.TYPE_MOBILE) {
-                    final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                    final TelephonyManager telephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
                     networkType = telephonyManager.getNetworkType();
                 }
             } else {
@@ -422,7 +422,7 @@ public final class DeviceInfo {
         } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
             typeName = "UNAVAILABLE";
         } else {
-            final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final TelephonyManager telephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
             try {
                 final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkTypeName", Integer.class);
                 method.setAccessible(true);
@@ -445,7 +445,7 @@ public final class DeviceInfo {
         } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
             networkClass = NETWORK_CLASS_UNAVAILABLE;
         } else {
-            final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final TelephonyManager telephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
             try {
                final Method method = telephonyManager.getClass().getDeclaredMethod("getNetworkClass", Integer.class);
                 method.setAccessible(true);
@@ -489,13 +489,13 @@ public final class DeviceInfo {
     public static int getWifiRssi(Context context) {
         int asu = 85;
         try {
-            final NetworkInfo network = ((ConnectivityManager) context
+            final NetworkInfo network = ((ConnectivityManager) context.getApplicationContext()
                     .getSystemService(Context.CONNECTIVITY_SERVICE))
                     .getActiveNetworkInfo();
             if (network != null && network.isAvailable() && network.isConnected()) {
                 final int type = network.getType();
                 if (type == ConnectivityManager.TYPE_WIFI) {
-                    final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                    final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
                     final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo != null) {
@@ -650,7 +650,7 @@ public final class DeviceInfo {
             }
             return "02:00:00:00:00:00";
         } else {
-            final WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            final WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             return manager.getConnectionInfo().getMacAddress();
         }
     }
@@ -663,7 +663,7 @@ public final class DeviceInfo {
      */
     public static int getIpAddress(Context context) {
         int ipAddress = 0;
-        final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        final WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo == null || wifiInfo.equals("")) {
             return ipAddress;
@@ -764,7 +764,7 @@ public final class DeviceInfo {
 
     public static String getDeviceId(Context context) {
         String did = "";
-        final  WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        final  WifiManager manager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         final WifiInfo wifiInfo = manager.getConnectionInfo();
         final String macAddress = wifiInfo.getMacAddress();
         Log.i("macAddress did:" + macAddress);
@@ -773,7 +773,7 @@ public final class DeviceInfo {
                     .replace("-", "").replace("_", "");
             Log.i("macAddress did:" + did);
         } else {
-            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final TelephonyManager tm = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
             String imei = null;
             try {
                 imei = tm.getDeviceId();
@@ -785,8 +785,7 @@ public final class DeviceInfo {
                 did = imei;
                 Log.i("imei did:" + did);
             } else {
-                final String deviceId = Secure.getString(context.getContentResolver(),
-                        Secure.ANDROID_ID);
+                final String deviceId = Secure.getString(context.getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
                 // sdk: android_id
                 if (null != deviceId
                         && !SPECIAL_ANDROID_ID.equals(deviceId)) {
@@ -799,7 +798,7 @@ public final class DeviceInfo {
                         final SharedPreferences.Editor editor = sp.edit();
                         uid = UUID.randomUUID().toString().replace("-", "");
                         editor.putString("uid", uid);
-                        editor.commit();
+                        editor.apply();
                         Log.i("uid did:" + did);
                     }
 
@@ -817,7 +816,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isWifiConnection(Context context) {
-        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return networkInfo != null && networkInfo.isConnected();
     }
@@ -829,7 +828,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isConnection(Context context) {
-        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
@@ -841,7 +840,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isGPSLocation(Context context) {
-        final LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        final LocationManager locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
@@ -852,7 +851,7 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isNetworkLocation(Context context) {
-        final  LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        final  LocationManager locationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
@@ -926,7 +925,7 @@ public final class DeviceInfo {
         if (context == null || TextUtils.isEmpty(activityName)) {
             return false;
         }
-        final ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager am = (ActivityManager) context.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
         final List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
         if (list != null && !list.isEmpty()) {
             final ComponentName cpn = list.get(0).topActivity;
@@ -971,7 +970,7 @@ public final class DeviceInfo {
 
         final int pid = android.os.Process.myPid();
 
-        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager activityManager = (ActivityManager) context.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 
         for (final ActivityManager.RunningAppProcessInfo appProcess : activityManager
                 .getRunningAppProcesses()) {
@@ -1021,7 +1020,7 @@ public final class DeviceInfo {
      */
     public static boolean checkDeviceHasNavigationBar(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-           final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+           final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
            final Display display = windowManager.getDefaultDisplay();
             final DisplayMetrics realDisplayMetrics = new DisplayMetrics();
             display.getRealMetrics(realDisplayMetrics);

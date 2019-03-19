@@ -53,7 +53,7 @@ class StatusServiceImpl implements StatusService {
         public void onReceive(Context context, Intent intent) {
             State wifiState = null;
             State mobileState = null;
-            final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             if (networkInfoWifi != null) {
                 wifiState = networkInfoWifi.getState();
@@ -156,7 +156,7 @@ class StatusServiceImpl implements StatusService {
         intentFileter2.addAction("android.intent.action.ACTION_MEDIA_REMOVED");
         mContext.registerReceiver(storageStatusReceiver, intentFileter2);
 
-        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 

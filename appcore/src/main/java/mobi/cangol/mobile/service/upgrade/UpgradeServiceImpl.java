@@ -78,7 +78,7 @@ class UpgradeServiceImpl implements UpgradeService {
         if (debug) Log.d("onDestory");
         if (mDownloadHttpClient != null)
             mDownloadHttpClient.cancelAll();
-        final NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationManager notificationManager = (NotificationManager) mContext.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         for (final Integer id : mIds) {
             notificationManager.cancel(id);
             if (debug) Log.d("notification cancel " + id);

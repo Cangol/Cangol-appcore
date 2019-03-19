@@ -34,7 +34,7 @@ class TrafficDbService {
     public TrafficDbService(Context context) {
         try {
             final StatDatabaseHelper dbHelper = StatDatabaseHelper
-                    .createDataBaseHelper(context);
+                    .createDataBaseHelper(context.getApplicationContext());
             dateTrafficDao = dbHelper.getDao(DateTraffic.class);
             appTrafficDao = dbHelper.getDao(AppTraffic.class);
         } catch (SQLException e) {

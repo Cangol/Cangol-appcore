@@ -48,7 +48,6 @@ class LocationServiceImpl implements LocationService {
     private boolean mDebug = false;
     private int mBetterTime = 1000 * 60 * 2;
     private int mTimeOut = 1000 * 60 * 5;
-    private Application mContext = null;
     private ServiceProperty mServiceProperty = null;
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
@@ -60,9 +59,8 @@ class LocationServiceImpl implements LocationService {
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate(Application context) {
-        this.mContext = context;
         mServiceHandler = new ServiceHandler(Looper.getMainLooper());
-        mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) context.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
 

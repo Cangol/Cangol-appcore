@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.stat.traffic;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -57,13 +58,13 @@ public class StatsTraffic {
             } else if (NETWORK_ACTION.equals(intent.getAction())) {
                 NetworkInfo.State wifiState = null;
                 NetworkInfo.State mobileState = null;
-                final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                @SuppressLint("MissingPermission") final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                 if (networkInfoWifi != null) {
                     wifiState = networkInfoWifi.getState();
                 }
-                final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                @SuppressLint("MissingPermission") final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
                 if (networkInfo != null) {
                     mobileState = networkInfo.getState();
                 }
@@ -97,13 +98,13 @@ public class StatsTraffic {
     };
 
     private StatsTraffic(Context context) {
-        this.context = context.getApplicationContext();
+        this.context = context;
         this.onCreated();
     }
 
     public static StatsTraffic getInstance(Context context) {
         if (instance == null) {
-            instance = new StatsTraffic(context);
+            instance = new StatsTraffic(context.getApplicationContext());
         }
         return instance;
     }
@@ -238,13 +239,13 @@ public class StatsTraffic {
         final String date = TimeUtils.getCurrentDate();
         NetworkInfo.State wifiState = null;
         NetworkInfo.State mobileState = null;
-        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        @SuppressLint("MissingPermission") final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (networkInfoWifi != null) {
             wifiState = networkInfoWifi.getState();
         }
-        final NetworkInfo networkInfoMobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        @SuppressLint("MissingPermission") final NetworkInfo networkInfoMobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         if (networkInfoMobile != null) {
             mobileState = networkInfoMobile.getState();
         }
@@ -285,7 +286,7 @@ public class StatsTraffic {
         final long time = selectTime - systemTime;
         firstTime += time;
         // 进行闹铃注册
-        final  AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        final  AlarmManager manager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, day, sender);
 
     }

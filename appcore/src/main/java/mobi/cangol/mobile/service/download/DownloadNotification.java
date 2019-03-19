@@ -49,7 +49,7 @@ public class DownloadNotification {
         this.successText = successText;
         this.failureText = failureText;
         this.finishIntent = finishIntent;
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         createNotificationChannel(context);
     }
@@ -62,7 +62,7 @@ public class DownloadNotification {
         this.successText = context.getString(R.string.upgrade_success);
         this.failureText = context.getString(R.string.upgrade_failure);
         this.finishIntent = finishIntent;
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
         createNotificationChannel(context);
     }

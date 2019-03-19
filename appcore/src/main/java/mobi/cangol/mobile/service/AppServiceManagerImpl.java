@@ -234,7 +234,7 @@ public class AppServiceManagerImpl extends AppServiceManager {
      */
     @Deprecated
     public void initServiceProperties() {
-        if (Build.VERSION.SDK_INT >= 9) {
+        if (Build.VERSION.SDK_INT >= 14) {
             // Temporarily disable logging of disk reads on the Looper thread
             final  StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
             final InputStream is = this.getClass().getResourceAsStream("properties.xml");

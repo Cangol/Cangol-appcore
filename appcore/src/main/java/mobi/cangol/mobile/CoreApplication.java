@@ -61,7 +61,7 @@ public class CoreApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if (DeviceInfo.isAppProcess(this)) {
-            if (mStrictMode && Build.VERSION.SDK_INT >= 9) {
+            if (mStrictMode && Build.VERSION.SDK_INT >= 14) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
             }
