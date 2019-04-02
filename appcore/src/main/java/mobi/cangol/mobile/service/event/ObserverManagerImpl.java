@@ -99,10 +99,12 @@ class ObserverManagerImpl implements ObserverManager {
         final String key = subscriber.getClass().getName();
         synchronized (subscriptionsByEvent) {
            final List<String> events = eventBySubscriber.get(subscriber);
-            for (int i = 0; i < events.size(); i++) {
-                subscriptionsByEvent.remove(events.get(i));
-            }
-            eventBySubscriber.remove(subscriber);
+           if(events!=null&&!events.isEmpty()){
+               for (int i = 0; i < events.size(); i++) {
+                   subscriptionsByEvent.remove(events.get(i));
+               }
+               eventBySubscriber.remove(subscriber);
+           }
         }
         synchronized (subscriberMaps) {
             subscriberMaps.remove(key);
