@@ -41,21 +41,18 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String SDK_VERSION = BuildConfig.VERSION_NAME;
-    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
-    private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
-    private final static String STAT_ACTION_EVENT = "api/countly/event.do";
-    private final static String STAT_ACTION_TIMING = "api/countly/qos.do";
-    private final static String STAT_ACTION_LAUNCH = "api/countly/launch.do";
-    private final static String STAT_ACTION_DEVICE = "api/countly/device.do";
-    private final static String STAT_ACTION_SESSION = "api/countly/session.do";
-    private final static String STAT_ACTION_TRAFFIC = "api/countly/traffic.do";
+    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/";
+    private final static String STAT_ACTION_EXCEPTION = "api/countly/crash";
+    private final static String STAT_ACTION_EVENT = "api/countly/event";
+    private final static String STAT_ACTION_TIMING = "api/countly/qos";
+    private final static String STAT_ACTION_LAUNCH = "api/countly/launch";
+    private final static String STAT_ACTION_SESSION = "api/countly/session";
+    private final static String STAT_ACTION_TRAFFIC = "api/countly/traffic";
     private final static String STAT_TRACKING_ID = "stat";
     private final static String TIMESTAMP = "timestamp";
     private static StatAgent instance;
     private CoreApplication context;
     private ITracker itracker;
-    private HashMap<String, String> commonParams;
     private AnalyticsService analyticsService;
     private SessionService sessionService;
     private CrashService crashService;
@@ -93,19 +90,19 @@ public class StatAgent {
     }
     private void init() {
         sendLaunch();
-        StatsSession.getInstance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
+        StatsSession.getInstance().setOnSessionListener(new StatsSession.OnSessionListener() {
             @Override
             public void onTick(String sessionId, String beginSession, String sessionDuration, String endSession, String activityId) {
                 send(Builder.createSession(sessionId, beginSession, sessionDuration, endSession, activityId));
             }
         });
         StatsTraffic.getInstance(context).onCreated();
-       crashService.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, null);
+        crashService.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, null);
     }
 
     public void destroy() {
         analyticsService.closeTracker(STAT_TRACKING_ID);
-        StatsSession.getInstance(context).onDestroy();
+        StatsSession.getInstance().onDestroy();
         StatsTraffic.getInstance(context).onDestroy();
     }
 
@@ -115,14 +112,8 @@ public class StatAgent {
 
     public void send(Builder eventBuilder) {
         final IMapBuilder builder = IMapBuilder.build();
-        builder.setAll(commonParams);
-        IMapBuilder builder = IMapBuilder.build();
         builder.setAll(eventBuilder.build());
         switch (eventBuilder.type) {
-            case DEVICE:
-                builder.setAll(getDeviceParams());
-                builder.setUrl(getStatHostUrl() + STAT_ACTION_DEVICE);
-                break;
             case EVENT:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_EVENT);
                 break;
@@ -136,9 +127,6 @@ public class StatAgent {
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_LAUNCH);
                 break;
             case SESSION:
-                if ("1".equals(eventBuilder.get("beginSession"))) {
-                    builder.setAll(getDeviceParams());
-                }
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_SESSION);
                 break;
             case TRAFFIC:
@@ -192,14 +180,8 @@ public class StatAgent {
     }
 
     public static class Builder {
-        Type type;
-        private Map<String, String> map = new HashMap<String, String>();
-
-        protected static Builder createDevice() {
-            Builder builder = new Builder();
-            builder.type = Type.Device;
-            return builder;
-        }
+        protected  Type type;
+        private Map<String, String> map = new HashMap<>();
 
         public static Builder createAppView(String view) {
             Builder builder = new Builder();
@@ -350,16 +332,8 @@ public class StatAgent {
             return this;
         }
 
-        public Builder setAll(Map<String, String> params) {
-            if (params == null) {
-                return this;
-            }
-            this.map.putAll(new HashMap<String, String>(params));
-            return this;
-        }
-
         public String get(String paramName) {
-            return (String) this.map.get(paramName);
+            return this.map.get(paramName);
         }
 
         public Map<String, String> build() {
@@ -367,7 +341,6 @@ public class StatAgent {
         }
 
         enum Type {
-            DEVICE,
             EVENT,
             TIMING,
             EXCEPTION,
