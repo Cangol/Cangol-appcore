@@ -8,9 +8,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.stat.StatAgent;
 
 
 public class DynamicActivity extends FragmentActivity {
+    private static final String TAG = "DynamicActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -18,7 +20,17 @@ public class DynamicActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         handleIntent(getIntent());
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onActivityPause(TAG);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

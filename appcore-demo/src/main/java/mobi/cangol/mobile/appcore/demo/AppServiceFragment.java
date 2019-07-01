@@ -22,11 +22,13 @@ import mobi.cangol.mobile.appcore.demo.appservice.OberserverManagerFragment;
 import mobi.cangol.mobile.appcore.demo.appservice.SessionServiceFragment;
 import mobi.cangol.mobile.appcore.demo.appservice.StatusServiceFragment;
 import mobi.cangol.mobile.appcore.demo.appservice.UpgradeServiceFragment;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
  */
 public class AppServiceFragment extends ListFragment {
+    private static final String TAG = "AppServiceFragment";
     private List<Class<? extends Fragment>> list;
     public AppServiceFragment(){
         this.list=new ArrayList<Class<? extends Fragment>>();
@@ -69,5 +71,16 @@ public class AppServiceFragment extends ListFragment {
         super.onStart();
         getActivity().setTitle("AppService");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }

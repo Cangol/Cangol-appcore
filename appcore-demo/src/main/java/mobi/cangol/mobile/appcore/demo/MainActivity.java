@@ -19,6 +19,7 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 //import com.testfairy.TestFairy;
 
 public class MainActivity extends FragmentActivity implements OnNavigation {
+    private static final String TAG = "MainActivity";
     private RouteService mRouteService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,17 +65,27 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onActivityPause(TAG);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         ((CoreApplication)getApplication()).exit();
     }
 
-    @Override
     public void toActivity(Intent intent,boolean standalone) {
         Log.i("activity ");
     }
 
-    @Override
     public void toFragment(Fragment fragment,boolean standalone) {
         Log.i("fragment ");
         FragmentManager fm = this.getSupportFragmentManager();

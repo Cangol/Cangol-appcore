@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
 /**
@@ -98,5 +99,16 @@ public class UtilsFragment extends Fragment {
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.append(message);
         Log.d(message);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }

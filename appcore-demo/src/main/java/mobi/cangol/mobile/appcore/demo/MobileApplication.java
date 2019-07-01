@@ -17,7 +17,7 @@ public class MobileApplication extends CoreApplication {
     public void onCreate() {
         this.setDevMode(true);
         this.setAsyncInit(false);
-        this.getModuleManager().add(new LibApplication());
+        //this.getModuleManager().add(new LibApplication());
         super.onCreate();
     }
 

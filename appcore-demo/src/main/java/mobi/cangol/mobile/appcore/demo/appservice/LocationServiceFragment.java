@@ -27,7 +27,7 @@ import mobi.cangol.mobile.service.location.LocationService;
  * Created by weixuewu on 16/4/30.
  */
 public class LocationServiceFragment extends Fragment{
-
+    private static final String TAG = "LocationServiceFragment";
     private LocationService locationService;
     private TextView textView1;
     private Button button1, button2,button3,button4;

@@ -26,6 +26,7 @@ import mobi.cangol.mobile.http.polling.PollingResponseHandler;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.conf.ConfigService;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.FileUtils;
 
 /**
@@ -226,5 +227,17 @@ public class HttpFragment extends Fragment {
                 printLog("onFailure error"+error.getMessage()+",content"+content);
             }
         },10,1000L);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }

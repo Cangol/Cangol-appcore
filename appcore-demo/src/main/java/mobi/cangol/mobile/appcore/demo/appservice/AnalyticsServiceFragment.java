@@ -27,7 +27,7 @@ import mobi.cangol.mobile.utils.TimeUtils;
  * Created by weixuewu on 16/4/30.
  */
 public class AnalyticsServiceFragment extends Fragment{
-
+    private static final String TAG = "AnalyticsServiceFragment";
     private AnalyticsService analyticsService;
     private ITracker tracker;
     private TextView textView1;

@@ -39,7 +39,7 @@ import mobi.cangol.mobile.service.event.Subscribe;
  * Created by weixuewu on 16/4/30.
  */
 public class OberserverManagerFragment extends Fragment{
-
+    private static final String TAG = "OberserverManagerFragment";
     private ObserverManager observerManager;
     private TextView textView1;
     private Button button1, button2;

@@ -24,7 +24,7 @@ import mobi.cangol.mobile.service.cache.CacheObject;
  * Created by weixuewu on 16/4/30.
  */
 public class CacheManagerFragment extends Fragment{
-    private static String  TAG="CacheManagerFragment";
+    private static final String TAG = "CacheManagerFragment";
     private CacheManager cacheManager;
     private TextView textView1;
     private Button button1, button2,button3,button4,button5;

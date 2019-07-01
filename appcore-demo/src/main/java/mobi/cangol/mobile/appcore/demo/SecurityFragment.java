@@ -22,11 +22,13 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.security.AESUtils;
 import mobi.cangol.mobile.security.Base64;
 import mobi.cangol.mobile.security.RSAUtils;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
  */
 public class SecurityFragment extends Fragment {
+    private static final String TAG = "SecurityFragment";
     private EditText editText1,editText2;
     private TextView textView1,textView2;
     private Button button1,button2,button3,button4,button5,button6,button7,button8;
@@ -212,6 +214,16 @@ public class SecurityFragment extends Fragment {
 
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
+    }
 
 }

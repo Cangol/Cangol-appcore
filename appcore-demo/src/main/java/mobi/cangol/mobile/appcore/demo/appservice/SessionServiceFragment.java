@@ -25,8 +25,7 @@ import mobi.cangol.mobile.service.session.SessionService;
  * Created by weixuewu on 16/4/30.
  */
 public class SessionServiceFragment extends Fragment{
-
-    private static String  TAG="SessionServiceFragment";
+    private static final String TAG = "SessionServiceFragment";
     private SessionService sessionService;
     private TextView textView1;
     private Button button1, button2,button3,button33,button4,button5;

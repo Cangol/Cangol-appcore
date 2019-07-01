@@ -21,6 +21,7 @@ import mobi.cangol.mobile.service.conf.ConfigService;
  * Created by weixuewu on 16/4/30.
  */
 public class ConfigServiceFragment extends Fragment {
+    private static final String TAG = "ConfigServiceFragment";
     private ConfigService configService;
     private TextView textView1;
     private Button button1, button2,button3,button4;

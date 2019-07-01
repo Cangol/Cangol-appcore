@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.soap.SoapClient;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -56,5 +57,16 @@ public class LoggingFragment extends Fragment {
                 Log.d(TAG,"test logging");
             }
         });
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }

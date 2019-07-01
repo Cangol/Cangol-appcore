@@ -21,7 +21,7 @@ import mobi.cangol.mobile.service.crash.CrashService;
  * Created by weixuewu on 16/4/30.
  */
 public class CrashServiceFragment extends Fragment{
-
+    private static final String TAG = "CrashServiceFragment";
     private CrashService crashService;
     private Button button1;
     private TextView textView1;

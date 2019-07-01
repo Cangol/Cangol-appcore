@@ -16,6 +16,7 @@ import java.util.HashMap;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.soap.SoapClient;
 import mobi.cangol.mobile.soap.SoapResponseHandler;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -92,5 +93,16 @@ public class SoapFragment extends Fragment {
                     }
                 }
         );
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }

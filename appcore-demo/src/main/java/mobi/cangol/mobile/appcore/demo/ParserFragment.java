@@ -31,6 +31,7 @@ import mobi.cangol.mobile.parser.JSONParserException;
 import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.parser.XMLParserException;
 import mobi.cangol.mobile.parser.XmlUtils;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -196,6 +197,17 @@ public class ParserFragment extends Fragment {
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.append(message);
         Log.d(message);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }
 class ParserObject<T,R> {

@@ -31,10 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import mobi.cangol.mobile.stat.StatAgent;
+
 /**
  * Created by xuewu.wei on 2016/8/31.
  */
 public class MainFragment extends ListFragment {
+    private static final String TAG="MainFragment";
     private static List<Class<? extends Fragment>> fragments=new ArrayList<Class<? extends Fragment>>();
     static {
         fragments.add(AppServiceFragment.class);
@@ -92,5 +95,16 @@ public class MainFragment extends ListFragment {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
             }
         }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }

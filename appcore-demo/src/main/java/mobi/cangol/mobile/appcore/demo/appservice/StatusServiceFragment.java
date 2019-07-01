@@ -22,6 +22,7 @@ import mobi.cangol.mobile.service.status.StatusService;
  * Created by weixuewu on 16/4/30.
  */
 public class StatusServiceFragment extends Fragment {
+    private static final String TAG = "StatusServiceFragment";
     private StatusService statusService;
     private TextView textView1;
 

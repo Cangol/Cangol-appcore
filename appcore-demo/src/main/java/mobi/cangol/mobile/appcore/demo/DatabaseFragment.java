@@ -27,6 +27,7 @@ import mobi.cangol.mobile.db.DatabaseTable;
 import mobi.cangol.mobile.db.DatabaseUtils;
 import mobi.cangol.mobile.db.QueryBuilder;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -134,6 +135,17 @@ public class DatabaseFragment extends Fragment {
             dataService.delete(data.getId());
             simpleAdapter.remove(data);
         }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
 }
 
@@ -294,7 +306,6 @@ class DatabaseHelper extends CoreSQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onUpgrade " + oldVersion + "->" + newVersion);
     }
-
 }
 
 @DatabaseTable("TEST_DATA")
@@ -465,6 +476,8 @@ class Data {
         sb.append('}');
         return sb.toString();
     }
+
+
 }
 
 interface BaseService<T> {
