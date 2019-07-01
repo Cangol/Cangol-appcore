@@ -4,26 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
-import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.conf.ConfigService;
 import mobi.cangol.mobile.service.download.DownloadExecutor;
 import mobi.cangol.mobile.service.download.DownloadManager;
@@ -68,11 +62,11 @@ public class DownloadManagerFragment extends Fragment {
     }
 
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button11 = (Button) this.getView().findViewById(R.id.button11);
-        button12 = (Button) this.getView().findViewById(R.id.button12);
-        button13 = (Button) this.getView().findViewById(R.id.button13);
-        button14 = (Button) this.getView().findViewById(R.id.button14);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button11 = this.getView().findViewById(R.id.button11);
+        button12 = this.getView().findViewById(R.id.button12);
+        button13 = this.getView().findViewById(R.id.button13);
+        button14 = this.getView().findViewById(R.id.button14);
 
         button11.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,11 +97,11 @@ public class DownloadManagerFragment extends Fragment {
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
 
 
-        textView2 = (TextView) this.getView().findViewById(R.id.textView2);
-        button21 = (Button) this.getView().findViewById(R.id.button21);
-        button22 = (Button) this.getView().findViewById(R.id.button22);
-        button23 = (Button) this.getView().findViewById(R.id.button23);
-        button24 = (Button) this.getView().findViewById(R.id.button24);
+        textView2 = this.getView().findViewById(R.id.textView2);
+        button21 = this.getView().findViewById(R.id.button21);
+        button22 = this.getView().findViewById(R.id.button22);
+        button23 = this.getView().findViewById(R.id.button23);
+        button24 = this.getView().findViewById(R.id.button24);
 
         button21.setOnClickListener(new View.OnClickListener() {
             @Override

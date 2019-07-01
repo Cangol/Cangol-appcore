@@ -22,41 +22,41 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
         coreApplication=getApplication();
         StatAgent.initInstance(coreApplication);
     }
-    public void testSetDebug() throws Exception {
+    public void testSetDebug() {
         StatAgent.getInstance().setDebug(true);
 
     }
-    public void testSend() throws Exception {
+    public void testSend() {
         StatAgent.getInstance().send(StatAgent.Builder.createAppView(TAG));
         StatAgent.getInstance().send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
         StatAgent.getInstance().send(StatAgent.Builder.createEvent("test", TAG, "test", null, null));
         StatAgent.getInstance().send(StatAgent.Builder.createTiming(TAG, 1000L));
     }
 
-    public void testSendLaunch() throws Exception {
+    public void testSendLaunch() {
         StatAgent.getInstance().sendLaunch();
     }
 
-    public void testSendDevice() throws Exception {
+    public void testSendDevice() {
         StatAgent.getInstance().sendDevice();
     }
 
-    public void testSendTraffic() throws Exception {
+    public void testSendTraffic() {
         StatAgent.getInstance().sendTraffic();
     }
 
-    public void testOnActivityResume() throws Exception {
+    public void testOnActivityResume() {
         StatAgent.getInstance().onActivityResume(TAG);
     }
 
-    public void testOnActivityPause() throws Exception {
+    public void testOnActivityPause() {
         StatAgent.getInstance().onActivityPause(TAG);
     }
 
-    public void testOnFragmentResume() throws Exception {
+    public void testOnFragmentResume() {
         StatAgent.getInstance().onFragmentResume(TAG);
     }
-    public void testOnFragmentPause() throws Exception {
+    public void testOnFragmentPause() {
         StatAgent.getInstance().onFragmentPause(TAG);
     }
 }

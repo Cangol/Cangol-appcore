@@ -17,8 +17,6 @@
 
 package mobi.cangol.mobile.socket;
 
-import android.content.Context;
-
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,34 +24,32 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
 
-import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 
 /**
  * Created by weixuewu on 15/11/11.
  */
 public class SocketClient {
-    private final static String TAG = "SocketClient";
-    private final static boolean DEBUG = false;
-    private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
-
-    private PoolManager.Pool threadPool;
-    private int port;
-    private String host;
-    private boolean isLong;
-    private int timeout = 10 * 1000;
-
-    protected SocketClient() {
-        threadPool = PoolManager.buildPool("SocketClient", 3);
-        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
-    }
+    private static final String TAG = "SocketClient";
+    private final Map<String, List<WeakReference<Future<?>>>> requestMap;
+    private final Map<String, WeakReference<SocketHandler>> handlerMap;
 
     public static SocketClient build() {
         return new SocketClient();
     }
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    private int port;
+    private String host;
+    private boolean isLong;
+
+    private static final int TIME_OUT = 20 * 1000;
+
+    private PoolManager.Pool pool;
+
+    protected SocketClient() {
+        handlerMap = new WeakHashMap<>();
+        requestMap = new WeakHashMap<>();
+        pool = PoolManager.buildPool(TAG, 3);
     }
 
     public void setLong(boolean aLong) {
@@ -68,37 +64,60 @@ public class SocketClient {
         this.port = port;
     }
 
-    public Future<?> connect(Context context, SocketHandler socketHandler) {
-        return connect(context, this.host, this.port, this.isLong, this.timeout, socketHandler);
+    public Future connect(String tag, SocketHandler socketHandler) {
+        return connect(tag, this.host, this.port, this.isLong, TIME_OUT, socketHandler);
     }
 
-    public Future<?> connect(Context context, String host, int port, boolean isLong, int timeout, SocketHandler socketHandler) {
-        Future<?> request = threadPool.submit(new SocketThread(host, port, isLong, timeout, threadPool.getExecutorService(), socketHandler));
+    public Future connect(String tag, String host, int port, boolean isLong, int timeout, SocketHandler socketHandler) {
+        final Future request = pool.submit(new SocketThread(host, port, isLong, timeout, pool.getExecutorService(), socketHandler));
+        if (tag != null && socketHandler != null) {
+            handlerMap.put(tag, new WeakReference<>(socketHandler));
+        }
         // Add request to request map
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+        List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList == null) {
-            requestList = new LinkedList<WeakReference<Future<?>>>();
-            requestMap.put(context, requestList);
+            requestList = new LinkedList<>();
+            requestMap.put(tag, requestList);
         }
         requestList.add(new WeakReference<Future<?>>(request));
         return request;
     }
 
-    public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+    public void cancelRequests(String tag) {
+        final  List<WeakReference<Future<?>>> requestList = requestMap.get(tag);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
-                    request.cancel(mayInterruptIfRunning);
-                    if (DEBUG) Log.d(TAG, "cancelRequests");
+                    request.cancel(true);
                 }
             }
         }
-        requestMap.remove(context);
+        requestMap.remove(tag);
+
+        for (final Map.Entry<String, WeakReference<SocketHandler>> entry : handlerMap.entrySet()) {
+            if (entry.getKey().equals(tag) && entry.getValue().get() != null) {
+                entry.getValue().get().interrupted();
+            }
+        }
+        handlerMap.remove(tag);
     }
 
-    public void close(boolean shutDownNow) {
-        threadPool.close(shutDownNow);
+    public void cancel(boolean mayInterruptIfRunning) {
+        for (final Map.Entry<String, WeakReference<SocketHandler>> entry : handlerMap.entrySet()) {
+            entry.getValue().get().interrupted();
+        }
+        for (final Map.Entry<String, List<WeakReference<Future<?>>>> entry : requestMap.entrySet()) {
+            for (final WeakReference<Future<?>> requestRef : entry.getValue()) {
+                final Future<?> request = requestRef.get();
+                if (request != null) {
+                    request.cancel(mayInterruptIfRunning);
+                }
+            }
+        }
+    }
+
+    public void shutdown() {
+        pool.getExecutorService().shutdown();
     }
 }

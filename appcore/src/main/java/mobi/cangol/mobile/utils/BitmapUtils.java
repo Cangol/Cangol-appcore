@@ -16,7 +16,6 @@
 package mobi.cangol.mobile.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
@@ -40,7 +39,6 @@ import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -67,15 +65,14 @@ public final class BitmapUtils {
      */
     public static Bitmap addWatermark(Bitmap src, float left, float top, String content, int color,
                                       int size, int alpha) {
-        int w = src.getWidth();
-        int h = src.getHeight();
-        Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        final int w = src.getWidth();
+        final int h = src.getHeight();
+        final Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
         Canvas canvas = new Canvas(dst);
-        Paint p = new Paint();
+        final Paint p = new Paint();
         p.setAntiAlias(true);
         canvas.drawBitmap(src, 0, 0, p);
-        String fontName = "sans";
-        Typeface font = Typeface.create(fontName, Typeface.BOLD);
+        final Typeface font = Typeface.create("sans", Typeface.BOLD);
         p.setAntiAlias(true);
         p.setTextAlign(Paint.Align.CENTER);
         p.setColor(color);
@@ -99,11 +96,11 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap addWatermark(Bitmap src, float left, float top, Bitmap img, int alpha) {
-        int w = src.getWidth();
-        int h = src.getHeight();
-        Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
-        Canvas canvas = new Canvas(dst);
-        Paint p = new Paint();
+        final  int w = src.getWidth();
+        final int h = src.getHeight();
+        final Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        final Canvas canvas = new Canvas(dst);
+        final Paint p = new Paint();
         p.setAntiAlias(true);
         canvas.drawBitmap(src, 0, 0, p);
         p.setAlpha(alpha * 255 / 100);
@@ -122,10 +119,10 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap addProgress(Bitmap src, Bitmap pro, int progress) {
-        int w = pro.getWidth();
-        int h = pro.getHeight();
-        Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
-        Canvas canvas = new Canvas(dst);
+        final int w = pro.getWidth();
+        final int h = pro.getHeight();
+        final  Bitmap dst = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+        final Canvas canvas = new Canvas(dst);
         canvas.drawBitmap(src, 0, 0, null);
         canvas.drawBitmap(pro, 0, pro.getHeight() * (100 - progress) / 100.0f, null);
         canvas.save(Canvas.ALL_SAVE_FLAG);
@@ -162,18 +159,17 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap roundedCornerBitmap(Bitmap bitmap, float roundPx) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
                 .getHeight(), Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
+        final Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         final RectF rectF = new RectF(rect);
 
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
+        paint.setColor(0xff424242);
         canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 
         paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
@@ -189,26 +185,26 @@ public final class BitmapUtils {
      */
     public static Bitmap createReflectionImageWithOrigin(Bitmap bitmap) {
         final int reflectionGap = 4;
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
 
-        Matrix matrix = new Matrix();
+        final Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
 
-        Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 2,
+        final Bitmap reflectionImage = Bitmap.createBitmap(bitmap, 0, height / 2,
                 width, height / 2, matrix, false);
 
-        Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
+       final Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
                 (height + height / 2), Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(bitmapWithReflection);
+        final Canvas canvas = new Canvas(bitmapWithReflection);
         canvas.drawBitmap(bitmap, 0, 0, null);
-        Paint deafalutPaint = new Paint();
+        final Paint deafalutPaint = new Paint();
         canvas.drawRect(0, height, width, height + reflectionGap,
                 deafalutPaint);
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
-        Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0,
+        final Paint paint = new Paint();
+        final LinearGradient shader = new LinearGradient(0, bitmap.getHeight(), 0,
                 bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff,
                 0x00ffffff, TileMode.CLAMP);
         paint.setShader(shader);
@@ -227,31 +223,31 @@ public final class BitmapUtils {
      */
     public static Bitmap createReflectedImage(Bitmap originalImage) {
         final int reflectionGap = 4;  //倒影和原图片间的距离
-        int width = originalImage.getWidth();
-        int height = originalImage.getHeight();
+        final int width = originalImage.getWidth();
+        final int height = originalImage.getHeight();
 
-        Matrix matrix = new Matrix();
+        final Matrix matrix = new Matrix();
         matrix.preScale(1, -1);
 
         //倒影部分
-        Bitmap reflectionImage = Bitmap.createBitmap(originalImage,
+        final Bitmap reflectionImage = Bitmap.createBitmap(originalImage,
                 0, height / 2, width, height / 2, matrix, false);
         //要返回的倒影图片
-        Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
+        final Bitmap bitmapWithReflection = Bitmap.createBitmap(width,
                 (height + height / 2), Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(bitmapWithReflection);
+        final Canvas canvas = new Canvas(bitmapWithReflection);
         //画原来的图片
         canvas.drawBitmap(originalImage, 0, 0, null);
 
-        Paint defaultPaint = new Paint();
+        final Paint defaultPaint = new Paint();
         //倒影和原图片间的距离
         canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
         //画倒影部分
         canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
 
-        Paint paint = new Paint();
-        LinearGradient shader = new LinearGradient(0, originalImage.getHeight(),
+        final Paint paint = new Paint();
+        final LinearGradient shader = new LinearGradient(0, originalImage.getHeight(),
                 0, bitmapWithReflection.getHeight() + reflectionGap,
                 0x70ffffff, 0x00ffffff,
                 TileMode.MIRROR);
@@ -268,7 +264,7 @@ public final class BitmapUtils {
      * @return
      */
     public static int getWidth(String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         return options.outWidth;
@@ -281,7 +277,7 @@ public final class BitmapUtils {
      * @return
      */
     public static int getHeight(String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         return options.outHeight;
@@ -294,7 +290,7 @@ public final class BitmapUtils {
      * @return
      */
     public static int[] getSize(String filepath) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         return new int[]{options.outWidth, options.outHeight};
@@ -309,11 +305,11 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap scale(Bitmap bitmap, int newWidth, int newHeight) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        Matrix matrix = new Matrix();
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        final float scaleWidth = ((float) newWidth) / width;
+        final float scaleHeight = ((float) newHeight) / height;
+        final Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
@@ -327,7 +323,7 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap scaleFile(String filepath, int maxWidth, int maxHeight) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
         options.inJustDecodeBounds = false;
@@ -343,7 +339,7 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap compressImage(Bitmap image, int quality) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         return BitmapFactory.decodeByteArray(baos.toByteArray(), 0, baos.toByteArray().length);
     }
@@ -356,7 +352,7 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap compressImage(Bitmap image, long maxSize) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         int quality = 100;
         while (baos.toByteArray().length > maxSize) {
@@ -379,24 +375,24 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap resizeBitmap(String filepath, int maxWidth, int maxHeight) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filepath, options);
-        int originWidth = options.outWidth;
-        int originHeight = options.outHeight;
+        final int originWidth = options.outWidth;
+        final int originHeight = options.outHeight;
         // no need to resize
         if (originWidth < maxWidth && originHeight < maxHeight) {
-
+            //do nothings
         } else {
-            float wb = originWidth / maxWidth;
-            float hb = originHeight / maxHeight;
+            final float wb = (1.0f * originWidth) / maxWidth;
+            final float hb = (1.0f * originHeight) / maxHeight;
             if (originWidth > maxWidth || originHeight > maxHeight) {
                 if (wb >= hb) {
-                    int i = (int) Math.floor(originWidth * 1.0 / maxWidth);
+                    final int i = (int) Math.floor(originWidth * 1.0 / maxWidth);
                     options.inSampleSize = i;
 
                 } else {
-                    int i = (int) Math.floor(originHeight * 1.0 / maxHeight);
+                    final int i = (int) Math.floor(originHeight * 1.0 / maxHeight);
                     options.inSampleSize = i;
                 }
             }
@@ -413,26 +409,26 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
-        int originWidth = bitmap.getWidth();
-        int originHeight = bitmap.getHeight();
+        final int originWidth = bitmap.getWidth();
+        final int originHeight = bitmap.getHeight();
         // no need to resize
         if (originWidth < maxWidth && originHeight < maxHeight) {
             return bitmap;
         }
-        int width = originWidth;
-        int height = originHeight;
-        float wb = originWidth / maxWidth;
-        float hb = originHeight / maxHeight;
+        int width;
+        int height;
+        final float wb = (1.0f * originWidth) / maxWidth;
+        final  float hb = (1.0f * originHeight) / maxHeight;
         // 若图片过宽, 则保持长宽比缩放图片
         if (originWidth > maxWidth || originHeight > maxHeight) {
             if (wb > hb) {
                 width = maxWidth;
-                double i = originWidth * 1.0 / maxWidth;
+                final double i = originWidth * 1.0 / maxWidth;
                 height = (int) Math.floor(originHeight / i);
                 bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
             } else {
                 height = maxHeight;
-                double i = originHeight * 1.0 / maxHeight;
+                final double i = originHeight * 1.0 / maxHeight;
                 width = (int) Math.floor(originWidth / i);
                 bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
             }
@@ -450,7 +446,7 @@ public final class BitmapUtils {
      */
     public static int computeSampleSize(BitmapFactory.Options options,
                                         int minSideLength, int maxNumOfPixels) {
-        int initialSize = computeInitialSampleSize(options, minSideLength, maxNumOfPixels);
+        final int initialSize = computeInitialSampleSize(options, minSideLength, maxNumOfPixels);
 
         int roundedSize;
         if (initialSize <= 8) {
@@ -474,12 +470,12 @@ public final class BitmapUtils {
      * @return
      */
     private static int computeInitialSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
-        double w = options.outWidth;
-        double h = options.outHeight;
+        final double w = options.outWidth;
+        final  double h = options.outHeight;
 
-        int lowerBound = (maxNumOfPixels == -1) ? 1 :
+        final int lowerBound = (maxNumOfPixels == -1) ? 1 :
                 (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
-        int upperBound = (minSideLength == -1) ? 128 :
+        final int upperBound = (minSideLength == -1) ? 128 :
                 (int) Math.min(Math.floor(w / minSideLength),
                         Math.floor(h / minSideLength));
 
@@ -504,32 +500,31 @@ public final class BitmapUtils {
      * @param number   数字
      * @param textSize 字体大小
      * @param bitmap   图片
-     * @param context  上下文
      * @return
      */
-    public static Bitmap createAlbumIcon(int number, int textSize, Bitmap bitmap, Context context) {
+    public static Bitmap createAlbumIcon(int number, int textSize, Bitmap bitmap) {
         if (number == 0) {
             return bitmap;
         }
-        int len = getNumberLength(number);
-        int x = len * (textSize);
-        int y = textSize;
+        final int len = getNumberLength(number);
+        final int x = len * (textSize);
+        final int y = textSize;
 
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        Bitmap contactIcon = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-        Canvas canvas = new Canvas(contactIcon);
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        final Bitmap contactIcon = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        final Canvas canvas = new Canvas(contactIcon);
 
-        Paint iconPaint = new Paint();
+        final Paint iconPaint = new Paint();
         iconPaint.setDither(true);
         iconPaint.setFilterBitmap(true);
-        Rect src1 = new Rect(0, 0, width, height);
-        Rect dst1 = new Rect(0, 0, width, height);
+        final Rect src1 = new Rect(0, 0, width, height);
+        final Rect dst1 = new Rect(0, 0, width, height);
         canvas.drawBitmap(bitmap, src1, dst1, iconPaint);
-        Paint bgPaint = new Paint();
+        final Paint bgPaint = new Paint();
         bgPaint.setColor(Color.RED);
         canvas.drawRect(width - x / 2 - 6, 0, width + x / 2 + 6, y, bgPaint);
-        Paint countPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG);
+        final Paint countPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG);
         countPaint.setColor(Color.WHITE);
         countPaint.setTextSize(textSize);
         countPaint.setTypeface(Typeface.DEFAULT_BOLD);
@@ -556,16 +551,16 @@ public final class BitmapUtils {
      * @param path 路径
      */
     public static void bitmap2File(Bitmap bm, String path) {
-        File file = new File(path);
+        final File file = new File(path);
         try {
-            file.createNewFile();
-            FileOutputStream out = new FileOutputStream(file);
-            if (bm.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
-                out.flush();
-                out.close();
+            final boolean result = file.createNewFile();
+            if (result) {
+                final FileOutputStream out = new FileOutputStream(file);
+                if (bm.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                    out.flush();
+                    out.close();
+                }
             }
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
         } catch (IOException e) {
             Log.d(e.getMessage());
         }
@@ -579,9 +574,9 @@ public final class BitmapUtils {
      */
     public static byte[] bitmap2Bytes(Bitmap bitmap) {
         if (null == bitmap) {
-            return null;
+            return new byte[0];
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
     }
@@ -633,19 +628,19 @@ public final class BitmapUtils {
      * @return
      */
     public static Bitmap screenShot(Activity activity) {
-        View view = activity.getWindow().getDecorView();
+        final View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
-        Bitmap b1 = view.getDrawingCache();
+        final Bitmap b1 = view.getDrawingCache();
         // 获取状态栏高度  
-        Rect frame = new Rect();
+        final Rect frame = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
+        final int statusBarHeight = frame.top;
         // 获取屏幕长和高  
-        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
-        int width = displayMetrics.widthPixels;
-        int height = displayMetrics.heightPixels;
-        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
+        final DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+        final int width = displayMetrics.widthPixels;
+        final int height = displayMetrics.heightPixels;
+        final Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
         view.destroyDrawingCache();
         return b;
     }
@@ -657,9 +652,9 @@ public final class BitmapUtils {
      * @return
      */
     public static String bitmapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();// outputstream
         bitmap.compress(CompressFormat.JPEG, 100, baos);
-        byte[] bmByte = baos.toByteArray();// 转为byte数组
+        final byte[] bmByte = baos.toByteArray();// 转为byte数组
         try {
             baos.close();
         } catch (IOException e) {
@@ -679,7 +674,7 @@ public final class BitmapUtils {
      */
     public static String imageFileToString(String imagePath) {
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(CompressFormat.JPEG, 100, baos);
         try {
             baos.close();

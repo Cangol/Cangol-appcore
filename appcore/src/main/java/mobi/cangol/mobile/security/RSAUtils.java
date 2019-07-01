@@ -31,11 +31,12 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.Cipher;
 
 public class RSAUtils {
-    private final static String CHARSET = "utf-8";
+    private static final String CHARSET = "utf-8";
 
     private RSAUtils() {
     }
@@ -45,13 +46,13 @@ public class RSAUtils {
      *
      * @throws NoSuchAlgorithmException
      */
-    public static HashMap<String, Object> getKeys() throws NoSuchAlgorithmException {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+    public static Map<String, Object> getKeys() throws NoSuchAlgorithmException {
+        final Map<String, Object> map = new HashMap<>();
+        final KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         keyPairGen.initialize(1024);
-        KeyPair keyPair = keyPairGen.generateKeyPair();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+        final KeyPair keyPair = keyPairGen.generateKeyPair();
+        final RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        final RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         map.put("public", publicKey);
         map.put("private", privateKey);
         return map;
@@ -68,10 +69,10 @@ public class RSAUtils {
      */
     public static RSAPublicKey getPublicKey(String modulus, String exponent) {
         try {
-            BigInteger b1 = new BigInteger(modulus);
-            BigInteger b2 = new BigInteger(exponent);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
+            final BigInteger b1 = new BigInteger(modulus);
+            final BigInteger b2 = new BigInteger(exponent);
+            final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            final RSAPublicKeySpec keySpec = new RSAPublicKeySpec(b1, b2);
             return (RSAPublicKey) keyFactory.generatePublic(keySpec);
         } catch (Exception e) {
             return null;
@@ -89,10 +90,10 @@ public class RSAUtils {
      */
     public static RSAPrivateKey getPrivateKey(String modulus, String exponent) {
         try {
-            BigInteger b1 = new BigInteger(modulus);
-            BigInteger b2 = new BigInteger(exponent);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
+            final BigInteger b1 = new BigInteger(modulus);
+            final BigInteger b2 = new BigInteger(exponent);
+            final KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            final RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(b1, b2);
             return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
         } catch (Exception e) {
             return null;
@@ -109,18 +110,18 @@ public class RSAUtils {
      */
     public static String encryptByPublicKey(String data, RSAPublicKey publicKey)
             throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
+        final Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         // 模长   
-        int key_len = publicKey.getModulus().bitLength() / 8;
+        final int keyLen = publicKey.getModulus().bitLength() / 8;
         // 加密数据长度 <= 模长-11   
-        String[] datas = splitString(data, key_len - 11);
-        String mi = "";
+        final String[] datas = splitString(data, keyLen - 11);
+        final StringBuilder mi = new StringBuilder();
         //如果明文长度大于模长-11则要分组加密   
-        for (String s : datas) {
-            mi += bcd2Str(cipher.doFinal(s.getBytes(CHARSET)));
+        for (final String s : datas) {
+            mi.append(bcd2Str(cipher.doFinal(s.getBytes(CHARSET))));
         }
-        return mi;
+        return mi.toString();
     }
 
     /**
@@ -133,30 +134,30 @@ public class RSAUtils {
      */
     public static String decryptByPrivateKey(String data, RSAPrivateKey privateKey)
             throws Exception {
-        Cipher cipher = Cipher.getInstance("RSA");
+        final Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         //模长   
-        int key_len = privateKey.getModulus().bitLength() / 8;
-        byte[] bytes = data.getBytes(CHARSET);
-        byte[] bcd = asciiToBcd(bytes, bytes.length);
+        final int keyLen = privateKey.getModulus().bitLength() / 8;
+        final byte[] bytes = data.getBytes(CHARSET);
+        final byte[] bcd = asciiToBcd(bytes, bytes.length);
         //如果密文长度大于模长则要分组解密
-        String ming = "";
-        byte[][] arrays = splitArray(bcd, key_len);
-        for (byte[] arr : arrays) {
-            ming += new String(cipher.doFinal(arr), CHARSET);
+        final StringBuilder ming = new StringBuilder();
+        final byte[][] arrays = splitArray(bcd, keyLen);
+        for (final byte[] arr : arrays) {
+            ming.append(new String(cipher.doFinal(arr), CHARSET));
         }
-        return ming;
+        return ming.toString();
     }
 
     /**
      * ASCII码转BCD码
      */
-    protected static byte[] asciiToBcd(byte[] ascii, int asc_len) {
-        byte[] bcd = new byte[asc_len / 2];
+    protected static byte[] asciiToBcd(byte[] ascii, int ascLen) {
+        byte[] bcd = new byte[ascLen / 2];
         int j = 0;
-        for (int i = 0; i < (asc_len + 1) / 2; i++) {
+        for (int i = 0; i < (ascLen + 1) / 2; i++) {
             bcd[i] = ascToBcd(ascii[j++]);
-            bcd[i] = (byte) (((j >= asc_len) ? 0x00 : ascToBcd(ascii[j++])) + (bcd[i] << 4));
+            bcd[i] = (byte) (((j >= ascLen) ? 0x00 : ascToBcd(ascii[j++])) + (bcd[i] << 4));
         }
         return bcd;
     }
@@ -181,7 +182,8 @@ public class RSAUtils {
      * BCD转字符串
      */
     protected static String bcd2Str(byte[] bytes) {
-        char temp[] = new char[bytes.length * 2], val;
+        char temp[] = new char[bytes.length * 2];
+        char val;
 
         for (int i = 0; i < bytes.length; i++) {
             val = (char) (((bytes[i] & 0xf0) >> 4) & 0x0f);
@@ -197,8 +199,8 @@ public class RSAUtils {
      * 拆分字符串
      */
     protected static String[] splitString(String string, int len) {
-        int x = string.length() / len;
-        int y = string.length() % len;
+        final int x = string.length() / len;
+        final int y = string.length() % len;
         int z = 0;
         if (y != 0) {
             z = 1;
@@ -220,8 +222,8 @@ public class RSAUtils {
      * 拆分数组
      */
     protected static byte[][] splitArray(byte[] data, int len) {
-        int x = data.length / len;
-        int y = data.length % len;
+        final int x = data.length / len;
+        final int y = data.length % len;
         int z = 0;
         if (y != 0) {
             z = 1;

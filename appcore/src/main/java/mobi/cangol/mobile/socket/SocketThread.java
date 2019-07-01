@@ -18,34 +18,31 @@
 package mobi.cangol.mobile.socket;
 
 
+import android.os.Process;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.ExecutorService;
 
 import mobi.cangol.mobile.logging.Log;
 
 /**
- * Created by Canogl on 15/11/11.
+ * Created by weixuewu on 15/11/11.
  * 链接异常后开始重试（重试次数RETRY_TIMES次）
  * 重试次数用完后，发消息断开，由使用者决定是否继续重试
+ * 参考 http://www.cnblogs.com/jerrychoi/archive/2010/04/15/1712931.html
  */
-public class SocketThread implements Runnable {
-    private static final boolean DEBUG = true;
+public class SocketThread extends Thread {
+    private static final String TAG = "SocketThread";
     private static final int BUFFER_SIZE = 8192;
-    private static final int KEEPALIVE_TIME = 1 * 60 * 1000;
-    private static final int READ_DELAY_TIME = 1000;
-    private static final int WRITE_DELAY_TIME = 60;
-    private static final int LINGER_TIME = 5;
+    private static final int WRITE_DELAY_TIME = 1;
+    private static final int LINGER_TIME = 5;//阻塞时间 单位秒
     private static final int CONNECT_TIME_OUT = 20 * 1000;
     private static final int RETRY_TIMES_SHORT = 1;//3
-    private static final int RETRY_TIMES_LONG = 3;//5
-    private static final String TAG = "SocketThread";
-    protected boolean isConnecting;
+    private static final int RETRY_TIMES_LONG = 1;//5
     private String host;
     private int port;
     private boolean isLong;
@@ -55,74 +52,54 @@ public class SocketThread implements Runnable {
     private Socket socket;
     private ExecutorService executorService;
     private int executionCount;
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    protected boolean isConnecting;
+    private DataInputStream inputStream;
+    private DataOutputStream outputStream;
 
     public SocketThread(String host, int port, boolean isLong, int timeout, ExecutorService executorService, SocketHandler socketHandler) {
         this.port = port;
         this.host = host;
         this.isLong = isLong;
-        if (timeout > 0) {
-            this.timeout = timeout;
-        }
+        if (timeout > 0) this.timeout = timeout;
         this.executorService = executorService;
         this.socketHandler = socketHandler;
         this.retryHandler = new SocketRetryHandler(isLong ? RETRY_TIMES_LONG : RETRY_TIMES_SHORT);
+        this.setPriority(Thread.MAX_PRIORITY); // 10
     }
 
-    private void makeRequest() throws ClassNotFoundException, IllegalBlockingModeException, IllegalArgumentException, SocketTimeoutException, IOException {
-        if (DEBUG) {
-            Log.d(TAG, "socket connect executionCount=" + executionCount);
-        }
-//        if(TextUtils.isEmpty(host)||port==0){
-//            Object[] response = {null, new IllegalArgumentException(" host or port isn't valid")};
-//            socketHandler.sendFailMessage(response);
-//            disconnect();
-//        }else
+    private void makeRequest() throws IOException {
+        Log.d(TAG, "socket connect executionCount=" + executionCount);
         if (!Thread.currentThread().isInterrupted()) {
             socket = new Socket();
-            socket.setTrafficClass(0x10);
+            socket.setTrafficClass(0x04);//低成本0x02;高可靠性0x04;最高吞吐量;0x08;小延迟0x10
             socket.setTcpNoDelay(true);
-            socket.setSoTimeout(CONNECT_TIME_OUT);
-            socket.setReceiveBufferSize(BUFFER_SIZE);
+            socket.setSoTimeout(isLong ? CONNECT_TIME_OUT * 3 : timeout);
+            socket.setReceiveBufferSize(BUFFER_SIZE * 2);
             socket.setSendBufferSize(BUFFER_SIZE);
             socket.setKeepAlive(isLong);
-            socket.setPerformancePreferences(0, 1, 0);
-            socket.setReuseAddress(true);
-            socket.setSoLinger(true, LINGER_TIME);
-            if (DEBUG) {
-                Log.d(TAG, "socket " + host + ":" + port + " connect...");
-            }
+            socket.setPerformancePreferences(3, 2, 1);//相对重要性 (connectionTime:表示用最少时间建立连接;latency:表示最小延迟;bandwidth:表示最高带宽)
+            socket.setReuseAddress(false);
+            socket.setSoLinger(true, LINGER_TIME);//linger=0:当close时立即关闭,丢弃剩余数据
+            Log.d(TAG, "socket " + host + ":" + port + " connect...");
             socket.connect(new InetSocketAddress(host, port), CONNECT_TIME_OUT);
             isConnecting = true;
-            if (DEBUG) {
-                Log.d(TAG, "socket is connected.");
-            }
+            Log.d(TAG, "socket is connected. " + socket.getLocalPort());
             socketHandler.sendConnectedMessage();
 
-            inputStream = socket.getInputStream();
-            outputStream = socket.getOutputStream();
-            if (DEBUG) {
-                Log.d(TAG, "socket is " + (isLong ? "isLong" : "") + " connect.");
-            }
-
+            inputStream = new DataInputStream(socket.getInputStream());
+            outputStream = new DataOutputStream(socket.getOutputStream());
+            Log.d(TAG, "socket is " + (isLong ? "isLong" : "") + " connect.");
             if (!isLong) {
                 handleSocketWrite();
-                handleSocketRead(timeout);
+                handleSocketRead();
                 disconnect();
             } else {
-                //socketHandler.whileRunnable(new SocketWriteThread(socketHandler, outputStream), WRITE_DELAY_TIME);
-                //socketHandler.waitWrite();
                 executorService.submit(new SocketWriteThread(socketHandler, outputStream));
                 executorService.submit(new SocketReadThread(socketHandler, inputStream));
-                //new Thread(new SocketWriteThread(socketHandler, outputStream)).start();
-                //new Thread(new SocketReadThread(socketHandler, inputStream)).start();
             }
         } else {
             isConnecting = false;
-            if (DEBUG) {
-                Log.d(TAG, "Thread.isInterrupted");
-            }
+            Log.d(TAG, "Thread.isInterrupted");
         }
     }
 
@@ -130,65 +107,39 @@ public class SocketThread implements Runnable {
         boolean result = false;
         try {
             result = socketHandler.handleSocketWrite(outputStream);
-        } catch (Throwable e) {
-            if (DEBUG) {
-                Log.d(TAG, "handleSocketWrite " + e);
-            }
-
-            Object[] response = {null, e};
-            socketHandler.sendFailMessage(response);
-            if (e instanceof SocketTimeoutException) {
-                //socket read timeout,disconnect
-            }
+        } catch (Exception e) {
+            Log.d(TAG, "handleSocketWrite " + e);
+            socketHandler.sendFailMessage(new Object[]{null, e});
             disconnect();
         }
         return result;
     }
 
-    public boolean handleSocketRead(int timeout) {
+    public boolean handleSocketRead() {
         boolean result = false;
         try {
-            result = socketHandler.handleSocketRead(timeout, inputStream);
-        } catch (Throwable e) {
-            if (DEBUG) {
-                Log.d(TAG, "handleSocketRead " + e);
-            }
-            Object[] response = {null, e};
-            socketHandler.sendFailMessage(response);
-            if (e instanceof SocketTimeoutException) {
-                //socket read timeout,don't disconnect
-            }
+            result = socketHandler.handleSocketRead(inputStream);
+        } catch (Exception e) {
+            Log.d(TAG, "handleSocketRead " + e);
+            socketHandler.sendFailMessage(new Object[]{null, e});
             disconnect();
         }
         return result;
     }
 
     public synchronized void disconnect() {
-        if (DEBUG) {
-            Log.d(TAG, "disconnect");
-        }
+        Log.d(TAG, "disconnect");
         isConnecting = false;
         socketHandler.sendDisconnectedMessage();
         try {
-            if (outputStream != null) {
-                outputStream.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
-
+            if (outputStream != null) outputStream.close();
+            if (inputStream != null) inputStream.close();
             if (socket != null) {
                 socket.close();
             }
-            if (DEBUG) {
-                Log.d(TAG, "socket close.");
-            }
-
+            Log.d(TAG, "socket close.");
         } catch (IOException e) {
-            if (DEBUG) {
-                Log.d(TAG, "disconnect Exception " + e.getMessage());
-            }
-
+            Log.d(TAG, "disconnect Exception " + e.getMessage());
         }
     }
 
@@ -204,51 +155,53 @@ public class SocketThread implements Runnable {
                 retry = retryHandler.retryRequest(e, ++executionCount, socket);
             }
         }
-        Exception ex = new Exception("Retry count exceeded, exception " + cause.getMessage());
-        ex.initCause(cause);
-        throw ex;
+        throw new Exception("Retry count exceeded, exception " + cause, cause);
     }
 
 
     @Override
     public void run() {
+        Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
         try {
             socketHandler.sendStartMessage();
             makeRequestWithRetries();
+
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             isConnecting = false;
-            if (DEBUG) {
-                Log.d(TAG, "InterruptedException " + e.getMessage());
-            }
+            Log.d(TAG, "InterruptedException " + e.getMessage());
             disconnect();
         } catch (Exception e) {
-            Log.d(e.getMessage());
+            isConnecting = false;
+            Log.d(TAG, "" + e.getCause());
             Object[] result = {null, e.getCause()};
             socketHandler.sendFailMessage(result);
             disconnect();
         }
     }
 
-    class SocketWriteThread implements Runnable {
+    class SocketWriteThread extends Thread {
         SocketHandler socketHandler;
-        OutputStream outputStream;
+        DataOutputStream outputStream;
 
-        SocketWriteThread(SocketHandler socketHandler, OutputStream outputStream) {
+        SocketWriteThread(SocketHandler socketHandler, DataOutputStream outputStream) {
             super();
             this.socketHandler = socketHandler;
             this.outputStream = outputStream;
+            this.setPriority(Thread.MAX_PRIORITY); // 10
         }
 
         @Override
         public void run() {
-            while (isConnecting) {
+            Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
+            while (isConnecting && !socketHandler.isInterrupted()) {
                 synchronized (socketHandler.writeLocker) {
                     if (!handleSocketWrite()) {
-                        //socketHandler.waitWrite();
                         try {
-                            Thread.sleep(WRITE_DELAY_TIME);
+                            socketHandler.writeLocker.wait(WRITE_DELAY_TIME);
                         } catch (InterruptedException e) {
-                            Log.d(e.getMessage());
+                            Thread.currentThread().interrupt();
+                            Log.d(TAG, "InterruptedException " + e.getMessage());
                         }
                     }
                 }
@@ -256,21 +209,22 @@ public class SocketThread implements Runnable {
         }
     }
 
-    class SocketReadThread implements Runnable {
+    class SocketReadThread extends Thread {
         SocketHandler socketHandler;
-        InputStream inputStream;
+        DataInputStream inputStream;
 
-        SocketReadThread(SocketHandler socketHandler, InputStream inputStream) {
+        SocketReadThread(SocketHandler socketHandler, DataInputStream inputStream) {
             this.socketHandler = socketHandler;
             this.inputStream = inputStream;
+            this.setPriority(Thread.MAX_PRIORITY); // 10
         }
 
         @Override
         public void run() {
-            while (isConnecting) {
+            Process.setThreadPriority(Process.THREAD_PRIORITY_AUDIO);
+            while (isConnecting && !socketHandler.isInterrupted()) {
                 synchronized (socketHandler.readLocker) {
-                    handleSocketRead(timeout);
-                    //Thread.sleep(READ_DELAY_TIME);
+                    handleSocketRead();
                 }
             }
         }

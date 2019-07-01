@@ -25,19 +25,19 @@ import android.test.InstrumentationTestCase;
  */
 public class HanziToPinyinTest extends InstrumentationTestCase {
 
-    public void testGetInstance() throws Exception {
+    public void testGetInstance() {
         assertNotNull(HanziToPinyin.getInstance());
     }
 
-    public void testGet() throws Exception {
+    public void testGet() {
         assertNotNull(HanziToPinyin.getInstance().get("曹操"));
     }
 
-    public void testGetFullPinYin() throws Exception {
+    public void testGetFullPinYin() {
         assertNotNull(HanziToPinyin.getFullPinYin("曹操"));
     }
 
-    public void testGetFirstPinYin() throws Exception {
+    public void testGetFirstPinYin() {
         assertNotNull(HanziToPinyin.getFirstPinYin("曹操"));
     }
 }

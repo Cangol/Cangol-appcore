@@ -46,12 +46,12 @@ public class CacheManagerFragment extends Fragment{
         initViews();
     }
     private void initViews(){
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
-        button2 = (Button) this.getView().findViewById(R.id.button2);
-        button3 = (Button) this.getView().findViewById(R.id.button3);
-        button4 = (Button) this.getView().findViewById(R.id.button4);
-        button5 = (Button) this.getView().findViewById(R.id.button5);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
+        button2 = this.getView().findViewById(R.id.button2);
+        button3 = this.getView().findViewById(R.id.button3);
+        button4 = this.getView().findViewById(R.id.button4);
+        button5 = this.getView().findViewById(R.id.button5);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

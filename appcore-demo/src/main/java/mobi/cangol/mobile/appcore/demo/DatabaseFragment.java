@@ -59,29 +59,29 @@ public class DatabaseFragment extends Fragment {
     }
 
     private void initViews() {
-        listView = (ListView) this.getView().findViewById(R.id.listview);
-        button0 = (Button) this.getView().findViewById(R.id.button0);
+        listView = this.getView().findViewById(R.id.listview);
+        button0 = this.getView().findViewById(R.id.button0);
         button0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadData();
             }
         });
-        button1 = (Button) this.getView().findViewById(R.id.button1);
+        button1 = this.getView().findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addData();
             }
         });
-        button2 = (Button) this.getView().findViewById(R.id.button2);
+        button2 = this.getView().findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateData();
             }
         });
-        button3 = (Button) this.getView().findViewById(R.id.button3);
+        button3 = this.getView().findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -458,7 +458,7 @@ class Data {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Data{");
+        final StringBuilder sb = new StringBuilder("Data{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
         sb.append(", nickname='").append(nickname).append('\'');

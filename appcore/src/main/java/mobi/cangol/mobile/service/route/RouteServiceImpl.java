@@ -2,6 +2,7 @@ package mobi.cangol.mobile.service.route;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,7 @@ import android.support.v4.app.Fragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 
@@ -17,24 +18,22 @@ import mobi.cangol.mobile.service.ServiceProperty;
  * Created by xuewu.wei on 2018/10/15.
  */
 @Service("RouteService")
-public class RouteServiceImpl implements RouteService {
-    private final static String TAG = "RouteService";
-    private CoreApplication mContext = null;
+class RouteServiceImpl implements RouteService {
+    private static final String TAG = "RouteService";
     private ServiceProperty mServiceProperty = null;
-    private Map<String, Class<Activity>> mActivityMap = null;
-    private Map<String, Class<Fragment>> mFragmentMap = null;
-    private boolean debug = false;
+    private Map<String, Class<?>> mRouteMap = null;
+    private OnNavigation mOnNavigation;
+
+    private boolean mDebug = false;
 
     @Override
     public void onCreate(Application context) {
-        mContext = (CoreApplication) context;
-        mActivityMap = new HashMap<>();
-        mFragmentMap = new HashMap<>();
+        mRouteMap = new HashMap<>();
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -59,37 +58,72 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public void onDestroy() {
+        mRouteMap.clear();
     }
+
 
     @Override
-    public void registerActivityRoute(String path, Class<Activity> activityClass) {
-        mActivityMap.put(path, activityClass);
-    }
-
-    @Override
-    public void registerFragmentRoute(String path, Class<Activity> activityClass, Class<Fragment> fragmentClass) {
-        mFragmentMap.put(path, fragmentClass);
-    }
-
-    public Intent navigationActivity(RouteAction routeAction) {
-        if(mActivityMap.containsKey(routeAction.getPath())){
-            Class<Activity> activityClass = mActivityMap.get(routeAction.getPath());
-            Intent intent = new Intent(routeAction.getContext(), activityClass);
-            intent.putExtras(routeAction.getBundle());
-            return intent;
-        }else{
-            throw new IllegalArgumentException(routeAction.getPath()+" is not registered");
+    public void register(Class clazz) {
+        if (clazz.isAnnotationPresent(Route.class)) {
+            final Route route = (Route) clazz.getAnnotation(Route.class);
+            register(route.path(), clazz);
+        } else {
+            throw new IllegalStateException(clazz + " is not Annotation Route");
         }
     }
 
-    public Fragment navigationFragment(RouteAction routeAction) {
-        if(mFragmentMap.containsKey(routeAction.getPath())){
-            Class<Fragment> fragmentClass = mFragmentMap.get(routeAction.getPath());
-            Bundle bundle = routeAction.getBundle();
-            return Fragment.instantiate(routeAction.getContext(), fragmentClass.getName(), bundle);
-        }else{
-            throw new IllegalArgumentException(routeAction.getPath()+" is not registered");
+    @Override
+    public void register(String path, Class clazz) {
+        if (!mRouteMap.containsKey(path)) {
+            if(mDebug)Log.i(TAG, "registerRoute " + path + "--->" + clazz.getName());
+            mRouteMap.put(path, clazz);
+        } else {
+            Log.i(TAG, path + " is registered");
         }
+    }
+
+    @Override
+    public void unregister(String path) {
+        if (mRouteMap.containsKey(path)) {
+            if(mDebug) Log.i(TAG, "unregisterRoute " + path);
+            mRouteMap.remove(path);
+        } else {
+            Log.i(TAG, path + " is not registered");
+        }
+    }
+
+    @Override
+    public RouteBuilder build(String path) {
+        return new RouteBuilder(this, path);
+    }
+
+    @Override
+    public void registerNavigation(OnNavigation onNavigation) {
+        this.mOnNavigation = onNavigation;
+    }
+
+    Class getClassByPath(String path) {
+        return mRouteMap.get(path);
+    }
+
+    void handleNavigation(Class clazz, Bundle bundle, Context context, boolean standalone) {
+        if (clazz.getSuperclass() == Activity.class) {
+            this.mOnNavigation.toActivity(navigationActivity(clazz, bundle, context), standalone);
+        } else if (clazz.getSuperclass() == Fragment.class) {
+            this.mOnNavigation.toFragment(navigationFragment(clazz, bundle, context), standalone);
+        } else {
+            Log.i(TAG, " not navigation");
+        }
+    }
+
+    Intent navigationActivity(Class clazz, Bundle bundle, Context context) {
+        final Intent intent = new Intent(context, clazz);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
+    Fragment navigationFragment(Class clazz, Bundle bundle, Context context) {
+        return Fragment.instantiate(context, clazz.getName(), bundle);
     }
 
 }

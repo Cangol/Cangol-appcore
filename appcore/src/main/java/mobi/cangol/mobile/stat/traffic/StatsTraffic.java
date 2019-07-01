@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.stat.traffic;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -53,17 +54,17 @@ public class StatsTraffic {
             Log.v("getAction=" + intent.getAction());
             if (BOOT_ACTION.equals(intent.getAction())) {
                 // 开机启动
-                resetAppTraffic(TimeUtils.getCurrentDate());
+                resetAppTraffic();
             } else if (NETWORK_ACTION.equals(intent.getAction())) {
                 NetworkInfo.State wifiState = null;
                 NetworkInfo.State mobileState = null;
-                ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-                NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                @SuppressLint("MissingPermission") final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                 if (networkInfoWifi != null) {
                     wifiState = networkInfoWifi.getState();
                 }
-                NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                @SuppressLint("MissingPermission") final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
                 if (networkInfo != null) {
                     mobileState = networkInfo.getState();
                 }
@@ -97,13 +98,13 @@ public class StatsTraffic {
     };
 
     private StatsTraffic(Context context) {
-        this.context = context.getApplicationContext();
+        this.context = context;
         this.onCreated();
     }
 
     public static StatsTraffic getInstance(Context context) {
         if (instance == null) {
-            instance = new StatsTraffic(context);
+            instance = new StatsTraffic(context.getApplicationContext());
         }
         return instance;
     }
@@ -112,7 +113,7 @@ public class StatsTraffic {
         trafficDbService = new TrafficDbService(context);
         registerAlarmForDateTraffic();
 
-        IntentFilter intentFileter = new IntentFilter(BOOT_ACTION);
+        final IntentFilter intentFileter = new IntentFilter(BOOT_ACTION);
         intentFileter.addAction(DATE_ACTION);
         intentFileter.addAction(NETWORK_ACTION);
         context.registerReceiver(statsTrafficReceiver, intentFileter);
@@ -127,7 +128,7 @@ public class StatsTraffic {
     }
 
     private void addAppTrafficStats(int uid, String packageName) {
-        AppTraffic appTraffic = new AppTraffic();
+        final AppTraffic appTraffic = new AppTraffic();
         appTraffic.uid = uid;
         appTraffic.packageName = packageName;
         appTraffic.totalRx = TrafficStats.getUidRxBytes(uid);
@@ -153,10 +154,10 @@ public class StatsTraffic {
             dateTraffic.wifiTx = 0;
             dateTraffic.status = 0;
         }
-        long rx = TrafficStats.getUidRxBytes(appTraffic.uid);
-        long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
-        long rxDelta = rx - appTraffic.totalRx;
-        long txDelta = tx - appTraffic.totalTx;
+        final long rx = TrafficStats.getUidRxBytes(appTraffic.uid);
+        final long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
+        final long rxDelta = rx - appTraffic.totalRx;
+        final long txDelta = tx - appTraffic.totalTx;
         dateTraffic.totalRx = dateTraffic.totalRx + rxDelta;
         dateTraffic.totalTx = dateTraffic.totalTx + txDelta;
         if (!wifi) {
@@ -170,15 +171,15 @@ public class StatsTraffic {
     }
 
     public void calcAppTraffic(String date, boolean wifi) {
-        List<AppTraffic> list = trafficDbService.getAppTrafficList();
+        final List<AppTraffic> list = trafficDbService.getAppTrafficList();
         AppTraffic appTraffic = null;
         for (int i = 0; i < list.size(); i++) {
             appTraffic = list.get(i);
             calcDateTraffic(appTraffic, date, wifi);
-            long rx = TrafficStats.getUidRxBytes(appTraffic.uid);
-            long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
-            long rxDelta = rx - appTraffic.totalRx;
-            long txDelta = tx - appTraffic.totalTx;
+            final long rx = TrafficStats.getUidRxBytes(appTraffic.uid);
+            final long tx = TrafficStats.getUidTxBytes(appTraffic.uid);
+            final long rxDelta = rx - appTraffic.totalRx;
+            final long txDelta = tx - appTraffic.totalTx;
             appTraffic.totalRx = rx;
             appTraffic.totalTx = tx;
             if (!wifi) {
@@ -192,8 +193,8 @@ public class StatsTraffic {
         }
     }
 
-    public void resetAppTraffic(String date) {
-        List<AppTraffic> list = trafficDbService.getAppTrafficList();
+    public void resetAppTraffic() {
+        final  List<AppTraffic> list = trafficDbService.getAppTrafficList();
         AppTraffic appTraffic = null;
         for (int i = 0; i < list.size(); i++) {
             appTraffic = list.get(i);
@@ -204,13 +205,13 @@ public class StatsTraffic {
     }
 
     public List<Map> getUnPostDateTraffic(int uid, String date) {
-        List<DateTraffic> list = trafficDbService.getDateTrafficByStatus(uid, date, 0);
+        final List<DateTraffic> list = trafficDbService.getDateTrafficByStatus(uid, date, 0);
         Map<String, String> map = null;
         DateTraffic dateTraffic = null;
-        List<Map> maps = new ArrayList<Map>();
+        final List<Map> maps = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             dateTraffic = list.get(i);
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
             map.put("date", dateTraffic.date);
             map.put("totalRx", String.valueOf(dateTraffic.totalRx));
             map.put("totalTx", String.valueOf(dateTraffic.totalTx));
@@ -224,9 +225,9 @@ public class StatsTraffic {
     }
 
     public void saveUnPostDateTraffic(int uid, String currentDate) {
-        List<DateTraffic> list = trafficDbService.getDateTrafficByStatus(uid, currentDate, 0);
+        final List<DateTraffic> list = trafficDbService.getDateTrafficByStatus(uid, currentDate, 0);
         for (int i = 0; i < list.size(); i++) {
-            DateTraffic traffic = list.get(i);
+            final DateTraffic traffic = list.get(i);
             traffic.status = 1;
             trafficDbService.saveDateTraffic(traffic);
         }
@@ -235,16 +236,19 @@ public class StatsTraffic {
 
     //day end|| app exit
     private void endCalcAppTraffic() {
-        String date = TimeUtils.getCurrentDate();
+        final String date = TimeUtils.getCurrentDate();
         NetworkInfo.State wifiState = null;
         NetworkInfo.State mobileState = null;
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        @SuppressLint("MissingPermission") final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if (networkInfoWifi != null) {
             wifiState = networkInfoWifi.getState();
         }
-        NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        @SuppressLint("MissingPermission") final NetworkInfo networkInfoMobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (networkInfoMobile != null) {
+            mobileState = networkInfoMobile.getState();
+        }
         if (wifiState != null && NetworkInfo.State.CONNECTED == wifiState) {
             // 无线网络连接
             calcAppTraffic(date, true);
@@ -255,15 +259,15 @@ public class StatsTraffic {
     }
 
     public void registerAlarmForDateTraffic() {
-        int DAY = 24 * 60 * 60 * 1000;
-        Intent intent = new Intent(DATE_ACTION);
-        PendingIntent sender = PendingIntent.getBroadcast(this.context, 1, intent, 0);
+        final  int day = 24 * 60 * 60 * 1000;
+        final Intent intent = new Intent(DATE_ACTION);
+        final PendingIntent sender = PendingIntent.getBroadcast(this.context, 1, intent, 0);
 
         // 开机之后到现在的运行时间(包括睡眠时间)
         long firstTime = SystemClock.elapsedRealtime();
-        long systemTime = System.currentTimeMillis();
+        final long systemTime = System.currentTimeMillis();
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         // 这里时区需要设置一下，不然会有8个小时的时间差
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
@@ -279,11 +283,11 @@ public class StatsTraffic {
             selectTime = calendar.getTimeInMillis();
         }
         // 计算现在时间到设定时间的时间差
-        long time = selectTime - systemTime;
+        final long time = selectTime - systemTime;
         firstTime += time;
         // 进行闹铃注册
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, DAY, sender);
+        final  AlarmManager manager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, day, sender);
 
     }
 }

@@ -39,14 +39,14 @@ public class UtilsFragment extends Fragment {
     }
 
     private void initViews() {
-        textView1 = (TextView) this.getView().findViewById(R.id.textView1);
-        button1 = (Button) this.getView().findViewById(R.id.button1);
+        textView1 = this.getView().findViewById(R.id.textView1);
+        button1 = this.getView().findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
                 textView1.setText("\n--------------Utils---------------\n");
-                StringBuffer sb=new StringBuffer();
+                StringBuilder sb=new StringBuilder();
 
                 sb.append("\nCharset="+DeviceInfo.getCharset());
                 sb.append("\nCountry="+DeviceInfo.getCountry());
@@ -83,7 +83,6 @@ public class UtilsFragment extends Fragment {
                 sb.append("\nMacAddress="+DeviceInfo.getMacAddress(getContext()));
 
                 sb.append("\nNetworkOperatorName="+DeviceInfo.getNetworkOperatorName(getContext()));
-                sb.append("\nNetworkTypeName="+DeviceInfo.getNetworkTypeName(getContext()));
                 sb.append("\nNetworkClassName="+DeviceInfo.getNetworkClassName(getContext()));
                 sb.append("\nWifiRssiString="+DeviceInfo.getWifiRssiString(getContext()));
                 sb.append("\nWifiRssi="+DeviceInfo.getWifiRssi(getContext()));

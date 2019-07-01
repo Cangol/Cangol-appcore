@@ -102,9 +102,8 @@ public interface ConfigService extends AppService {
     /**
      * 自定义设置AppDir
      *
-     * @return 是否设置成功
      */
-    boolean setCustomAppDir(String path);
+    void setCustomAppDir(String path);
 
     /**
      * 返回是否使用自定义AppDir

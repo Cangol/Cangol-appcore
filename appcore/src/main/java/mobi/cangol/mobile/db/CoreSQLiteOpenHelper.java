@@ -78,11 +78,11 @@ public abstract class CoreSQLiteOpenHelper {
     public SQLiteDatabase getWritableDatabase() {
         if (mDbHelper != null) {
             StrictMode.ThreadPolicy oldPolicy = null;
-            if (android.os.Build.VERSION.SDK_INT >= 9) {
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
                 oldPolicy = StrictMode.allowThreadDiskWrites();
             }
-            SQLiteDatabase database = mDbHelper.getWritableDatabase();
-            if (android.os.Build.VERSION.SDK_INT >= 9) {
+            final SQLiteDatabase database = mDbHelper.getWritableDatabase();
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
                 StrictMode.setThreadPolicy(oldPolicy);
             }
             return database;
@@ -99,11 +99,11 @@ public abstract class CoreSQLiteOpenHelper {
     public SQLiteDatabase getReadableDatabase() {
         if (mDbHelper != null) {
             StrictMode.ThreadPolicy oldPolicy = null;
-            if (android.os.Build.VERSION.SDK_INT >= 9) {
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
                 oldPolicy = StrictMode.allowThreadDiskReads();
             }
-            SQLiteDatabase database = mDbHelper.getReadableDatabase();
-            if (android.os.Build.VERSION.SDK_INT >= 9) {
+            final SQLiteDatabase database = mDbHelper.getReadableDatabase();
+            if (android.os.Build.VERSION.SDK_INT >= 14) {
                 StrictMode.setThreadPolicy(oldPolicy);
             }
             return database;
@@ -118,8 +118,8 @@ public abstract class CoreSQLiteOpenHelper {
      * @param clazz
      * @return
      */
-    public <T, ID> Dao<T, ID> getDao(Class<T> clazz) {
-        return new DaoImpl<T, ID>(this, clazz);
+    public <T, I> Dao<T, I> getDao(Class<T> clazz) {
+        return new DaoImpl<>(this, clazz);
     }
 
     /**

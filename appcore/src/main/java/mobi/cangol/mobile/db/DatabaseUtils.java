@@ -35,35 +35,36 @@ import mobi.cangol.mobile.logging.Log;
 public class DatabaseUtils {
     private DatabaseUtils() {
     }
+
     /**
      * 创建表索引
      *
      * @param db
      * @param clazz
      */
-    public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName,String... fieldNames) {
+    public static void createIndex(SQLiteDatabase db, Class<?> clazz, String indexName, String... fieldNames) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
-            StringBuilder sql = new StringBuilder("CREATE INDEX ");
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final StringBuilder sql = new StringBuilder("CREATE INDEX ");
             sql.append(indexName).append(" on ").append(tableName).append('(');
-            Field field =null;
-            String columnName=null;
-            for (int i = 0; i <fieldNames.length ; i++) {
+            Field field = null;
+            String columnName = null;
+            for (int i = 0; i < fieldNames.length; i++) {
                 try {
-                    field=clazz.getDeclaredField(fieldNames[i]);
+                    field = clazz.getDeclaredField(fieldNames[i]);
                     field.setAccessible(true);
                     if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                         continue;
-                    }else  if (field.isAnnotationPresent(DatabaseField.class)) {
-                        DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                    } else if (field.isAnnotationPresent(DatabaseField.class)) {
+                        final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                         columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                         sql.append(columnName);
-                        if(i <fieldNames.length-1)
+                        if (i < fieldNames.length - 1)
                             sql.append(',');
                     }
                 } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
+                    Log.e(e.getMessage());
                 }
             }
             sql.append(')');
@@ -72,6 +73,7 @@ public class DatabaseUtils {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
+
     /**
      * 创建表
      *
@@ -80,14 +82,14 @@ public class DatabaseUtils {
      */
     public static void createTable(SQLiteDatabase db, Class<?> clazz) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
-            StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final StringBuilder sql = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName).append('(');
-            Field[] fields = clazz.getDeclaredFields();
+            final Field[] fields = clazz.getDeclaredFields();
             String filedName = null;
             boolean isFirst = true;
-            for (Field field : fields) {
+            for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                     continue;
@@ -100,7 +102,7 @@ public class DatabaseUtils {
                         isFirst = false;
                     }
 
-                    DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                    final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                     filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     sql.append(filedName);
                     sql.append(' ').append(getDbType(field.getType()));
@@ -154,15 +156,16 @@ public class DatabaseUtils {
      */
     public static void dropTable(SQLiteDatabase db, Class<?> clazz) {
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
-            StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName);
             db.execSQL(sql.toString());
         } else {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
+
     /**
      * 删除表
      *
@@ -170,8 +173,8 @@ public class DatabaseUtils {
      * @param table
      */
     public static void dropTable(SQLiteDatabase db, String table) {
-        if (table!=null&&!"".equals(table.trim())) {
-            StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
+        if (table != null && !"".equals(table.trim())) {
+            final StringBuilder sql = new StringBuilder("DROP TABLE IF EXISTS ");
             sql.append(table);
             db.execSQL(sql.toString());
         } else {
@@ -185,58 +188,61 @@ public class DatabaseUtils {
      * @param db
      * @param clazz
      */
-    public static void addColumn(SQLiteDatabase db, Class<?> clazz,String... columns) {
+    public static void addColumn(SQLiteDatabase db, Class<?> clazz, String... columns) {
         Log.d("addColumn ");
         if (clazz.isAnnotationPresent(DatabaseTable.class)) {
-            DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
-            String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
+            final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
+            final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
 
-            Map<String,Field> map=getColumnNames(clazz);
-            for (int i = 0; i <columns.length ; i++) {
-                if(!TextUtils.isEmpty(columns[i])&&map.containsKey(columns[i])){
-                    StringBuilder sql = new StringBuilder("ALTER TABLE ").append(tableName).append(" ADD COLUMN ");
-                    sql.append(columns[i]);
-                    sql.append("　");
-                    sql.append(getDbType(map.get(columns[i]).getType()));
-                    sql.append(";");
+            final   Map<String, Field> map = getColumnNames(clazz);
+            for (int i = 0; i < columns.length; i++) {
+                if (!TextUtils.isEmpty(columns[i]) && map.containsKey(columns[i])) {
+                    final StringBuilder sql = new StringBuilder("ALTER TABLE ")
+                            .append(tableName)
+                            .append(" ADD COLUMN ")
+                            .append(columns[i])
+                            .append("　")
+                            .append(getDbType(map.get(columns[i]).getType()))
+                            .append(";");
                     db.execSQL(sql.toString());
-                    Log.d(""+sql.toString());
-                }else{
-                    throw new IllegalStateException("column "+columns[i] + " is exist!");
+                    Log.d("" + sql.toString());
+                } else {
+                    throw new IllegalStateException("column " + columns[i] + " is exist!");
                 }
             }
         } else {
             throw new IllegalStateException(clazz + " not DatabaseTable Annotation");
         }
     }
+
     /**
      * 获取所有要数据库化的列名
      *
      * @param clazz
      * @return
      */
-    public static Map<String,Field> getColumnNames(Class<?> clazz) {
-        Map<String,Field> map=new HashMap<>();
-        for (Field field : clazz.getDeclaredFields()) {
+    public static Map<String, Field> getColumnNames(Class<?> clazz) {
+        final Map<String, Field> map = new HashMap<>();
+        for (final Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                map.put("".equals(dbField.value()) ? field.getName() : dbField.value(),field);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                map.put("".equals(dbField.value()) ? field.getName() : dbField.value(), field);
             }
         }
         return map;
     }
 
-    public static <T> String getIdColumnName(Class<?> clazz) {
+    public static String getIdColumnName(Class<?> clazz) {
         String columnName = null;
-        for (Field field : clazz.getDeclaredFields()) {
+        for (final Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (dbField.primaryKey() == true) {
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                if (dbField.primaryKey()) {
                     columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     break;
                 }
@@ -251,19 +257,18 @@ public class DatabaseUtils {
      * @param obj
      * @return
      * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
-    public static Object getIdValue(Object obj) throws IllegalAccessException, IllegalArgumentException {
+    public static Object getIdValue(Object obj) throws IllegalAccessException {
         Object value = null;
-        for (Field field : obj.getClass().getDeclaredFields()) {
+        for (final Field field : obj.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
 
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (dbField.primaryKey() == true) {
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                if (dbField.primaryKey()) {
                     value = field.get(obj);
                     break;
                 }
@@ -278,15 +283,14 @@ public class DatabaseUtils {
      * @param object
      * @return
      * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
-    public static ContentValues getContentValues(Object object) throws IllegalAccessException, IllegalArgumentException {
-        ContentValues v = new ContentValues();
-        String filedName =null;
-        for (Field field : object.getClass().getDeclaredFields()) {
+    public static ContentValues getContentValues(Object object) throws IllegalAccessException {
+        final ContentValues v = new ContentValues();
+        String filedName = null;
+        for (final Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 if (!dbField.primaryKey()) {
                     filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     v.put(filedName, String.valueOf(field.get(object)));
@@ -298,28 +302,30 @@ public class DatabaseUtils {
 
     /**
      * 获取键值对象
+     *
      * @param object
      * @param columns
      * @return
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
-    public static ContentValues getContentValues(Object object, String[] columns)throws IllegalAccessException, IllegalArgumentException {
-        ContentValues v = new ContentValues();
-        String filedName =null;
-        Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
-        for (Field field : object.getClass().getDeclaredFields()) {
+    public static ContentValues getContentValues(Object object, String[] columns) throws IllegalAccessException {
+        final ContentValues v = new ContentValues();
+        String filedName = null;
+        final Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
+        for (final Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                 final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if (!dbField.primaryKey()&&(set.isEmpty()||set.contains(filedName))) {
+                if (!dbField.primaryKey() && (set.isEmpty() || set.contains(filedName))) {
                     v.put(filedName, String.valueOf(field.get(object)));
                 }
             }
         }
         return v;
     }
+
     /**
      * 查询记录的值，赋值给obj
      *
@@ -327,27 +333,26 @@ public class DatabaseUtils {
      * @param cursor
      * @param <T>
      * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
-    public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) throws InstantiationException, IllegalAccessException {
-        Field[] fields = obj.getClass().getDeclaredFields();
-        Set<String> set = (columns==null)? new HashSet<String>():new HashSet<>(Arrays.asList(columns));
+    public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) {
+        final Field[] fields = obj.getClass().getDeclaredFields();
+        final Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
         String columnName = null;
-        for (Field field : fields) {
+        for (final Field field : fields) {
             field.setAccessible(true);
             if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
             if (field.isAnnotationPresent(DatabaseField.class)) {
-                DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                 columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if(set.isEmpty()||set.contains(columnName))
+                if (set.isEmpty() || set.contains(columnName))
                     setFieldValue(obj, field, columnName, cursor);
             }
         }
         return obj;
     }
+
     /**
      * 查询记录的值，赋值给clazz的实例obj
      *
@@ -361,10 +366,10 @@ public class DatabaseUtils {
      * @throws InvocationTargetException
      */
     public static <T> T cursorToClassObject(Class<T> clazz, Cursor cursor, String[] columns) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        Constructor constructor = clazz.getDeclaredConstructor();
+        final Constructor constructor = clazz.getDeclaredConstructor();
         constructor.setAccessible(true);
-        T obj = (T) constructor.newInstance();
-        return cursorToObject(obj, cursor,columns);
+        final T obj = (T) constructor.newInstance();
+        return cursorToObject(obj, cursor, columns);
     }
 
     /**
@@ -387,13 +392,11 @@ public class DatabaseUtils {
             } else if (field.getType() == Double.class || field.getType() == double.class) {
                 field.set(t, cursor.getDouble(cursor.getColumnIndex(columnName)));
             } else if (field.getType() == Boolean.class || field.getType() == boolean.class) {
-                field.set(t, cursor.getInt(cursor.getColumnIndex(columnName)) == 1 ? true : false);
+                field.set(t, cursor.getInt(cursor.getColumnIndex(columnName)) == 1);
             } else if (field.getType() == Float.class || field.getType() == float.class) {
                 field.set(t, cursor.getFloat(cursor.getColumnIndex(columnName)));
             }
-        } catch (IllegalArgumentException e) {
-            Log.e(e.getMessage());
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             Log.e(e.getMessage());
         }
     }

@@ -27,7 +27,7 @@ public class ModuleManager {
     private final List<ModuleApplication> mModuleApplications = new ArrayList<>();
 
     public ModuleManager(CoreApplication coreApplication) {
-        this.mCoreApplication=coreApplication;
+        this.mCoreApplication = coreApplication;
     }
 
     protected final void setCoreApplication(CoreApplication coreApplication) {
@@ -39,31 +39,31 @@ public class ModuleManager {
     }
 
     public void onCreate() {
-        for (ModuleApplication moduleApplication : mModuleApplications) {
+        for (final ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.onCreate();
         }
     }
 
     public void onTerminate() {
-        for (ModuleApplication moduleApplication : mModuleApplications) {
+        for (final ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.onTerminate();
         }
     }
 
     public void onLowMemory() {
-        for (ModuleApplication moduleApplication : mModuleApplications) {
+        for (final ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.onLowMemory();
         }
     }
 
     public void onTrimMemory(int level) {
-        for (ModuleApplication moduleApplication : mModuleApplications) {
+        for (final ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.onTrimMemory(level);
         }
     }
 
     public void init() {
-        for (ModuleApplication moduleApplication : mModuleApplications) {
+        for (final ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.init();
         }
     }
@@ -84,7 +84,7 @@ public class ModuleManager {
     }
 
     public void onExit() {
-        for (ModuleApplication moduleApplication : mModuleApplications) {
+        for (final ModuleApplication moduleApplication : mModuleApplications) {
             moduleApplication.onExit();
         }
     }

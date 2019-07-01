@@ -27,7 +27,7 @@ import java.util.Map;
 public class UrlUtilsTest extends InstrumentationTestCase {
 
     
-    public void testIsUrl() throws Exception {
+    public void testIsUrl() {
         assertEquals(false,UrlUtils.isUrl(null));
         assertEquals(false,UrlUtils.isUrl(""));
         assertEquals(false,UrlUtils.isUrl("123g"));
@@ -37,13 +37,13 @@ public class UrlUtilsTest extends InstrumentationTestCase {
         assertEquals(true,UrlUtils.isUrl("http://cangol.mobi"));
     }
 
-    public void testGetHost() throws Exception {
+    public void testGetHost() {
         String host=UrlUtils.getHost("http://cangol.mobi:8080/action?key=123%flag=1");
         assertNotNull("host="+host,host);
         assertEquals("cangol.mobi",host);
     }
 
-    public void testGetParams() throws Exception {
+    public void testGetParams() {
         Map<String,String> map=UrlUtils.getParams("http://cangol.mobi:8080/action?key=123&flag=1");
         assertEquals("123",map.get("key"));
         assertEquals("1",map.get("flag"));

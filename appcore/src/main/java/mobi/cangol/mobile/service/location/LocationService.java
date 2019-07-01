@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service.location;
 
+import android.app.Activity;
 import android.location.Location;
 
 import mobi.cangol.mobile.service.AppService;
@@ -48,7 +49,7 @@ public interface LocationService extends AppService {
     /**
      * 请求位置更新
      */
-    void requestLocationUpdates();
+    void requestLocationUpdates(Activity activity);
 
     /**
      * 停止位置更新

@@ -22,12 +22,15 @@ import java.lang.reflect.Modifier;
  * @author Cangol
  */
 public class Log {
+    private Log() {
+    }
+
     private static int level = android.util.Log.VERBOSE;
 
     private static boolean format = false;
 
     public static String makeLogTag(Class<?> cls) {
-        String tag = cls.getSimpleName();
+        final String tag = cls.getSimpleName();
         return (tag.length() > 50) ? tag.substring(0, 50) : tag;
     }
 
@@ -43,8 +46,7 @@ public class Log {
     private static Field findField(Class clazz, String name) {
         if (clazz != Object.class) {
             try {
-                Field field = clazz.getDeclaredField(name);
-                return field;
+                return clazz.getDeclaredField(name);
             } catch (NoSuchFieldException e) {
                 return findField(clazz.getSuperclass(), name);
             }
@@ -164,14 +166,14 @@ public class Log {
         if (level > logLevel) {
             return;
         }
-        StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
-        String classname = stackTrace.getClassName();
-        String filename = stackTrace.getFileName();
-        String methodname = stackTrace.getMethodName();
-        int linenumber = stackTrace.getLineNumber();
+        final StackTraceElement stackTrace = new Throwable().getStackTrace()[2];
+        final String classname = stackTrace.getClassName();
+        final String filename = stackTrace.getFileName();
+        final String methodName = stackTrace.getMethodName();
+        final int linenumber = stackTrace.getLineNumber();
         String output = null;
         if (format) {
-            output = String.format("%s.%s(%s:%d)-->%s", classname, methodname, filename, linenumber, msg);
+            output = String.format("%s.%s(%s:%d)-->%s", classname, methodName, filename, linenumber, msg);
         } else {
             output = msg;
         }

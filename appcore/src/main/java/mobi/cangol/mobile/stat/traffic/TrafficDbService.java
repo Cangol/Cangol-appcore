@@ -33,8 +33,8 @@ class TrafficDbService {
 
     public TrafficDbService(Context context) {
         try {
-            StatDatabaseHelper dbHelper = StatDatabaseHelper
-                    .createDataBaseHelper(context);
+            final StatDatabaseHelper dbHelper = StatDatabaseHelper
+                    .createDataBaseHelper(context.getApplicationContext());
             dateTrafficDao = dbHelper.getDao(DateTraffic.class);
             appTrafficDao = dbHelper.getDao(AppTraffic.class);
         } catch (SQLException e) {
@@ -45,10 +45,10 @@ class TrafficDbService {
     public int saveAppTraffic(AppTraffic obj) {
         int result = -1;
         try {
-            if (obj._id > 0 && obj._id != -1) {
+            if (obj.id > 0 && obj.id != -1) {
                 result = appTrafficDao.update(obj);
                 if (result > 0) {
-                    result = obj._id;
+                    result = obj.id;
                 }
             } else {
                 result = appTrafficDao.create(obj);
@@ -62,10 +62,10 @@ class TrafficDbService {
     public int saveDateTraffic(DateTraffic obj) {
         int result = -1;
         try {
-            if (obj._id > 0 && obj._id != -1) {
+            if (obj.id > 0 && obj.id != -1) {
                 result = dateTrafficDao.update(obj);
                 if (result > 0) {
-                    result = obj._id;
+                    result = obj.id;
                 }
             } else {
                 result = dateTrafficDao.create(obj);
@@ -77,11 +77,11 @@ class TrafficDbService {
     }
 
     public DateTraffic getDateTrafficByDate(int uid, String date) {
-        QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
+        final QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "=");
-        List<DateTraffic> list = dateTrafficDao.query(queryBuilder);
-        if (list.size() > 0) {
+        final List<DateTraffic> list = dateTrafficDao.query(queryBuilder);
+        if (!list.isEmpty()) {
             return list.get(0);
         } else {
             return null;
@@ -90,10 +90,10 @@ class TrafficDbService {
     }
 
     public AppTraffic getAppTraffic(int uid) {
-        QueryBuilder queryBuilder = new QueryBuilder(AppTraffic.class);
+        final QueryBuilder queryBuilder = new QueryBuilder(AppTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
-        List<AppTraffic> list = appTrafficDao.query(queryBuilder);
-        if (list.size() > 0) {
+        final List<AppTraffic> list = appTrafficDao.query(queryBuilder);
+        if (!list.isEmpty()) {
             return list.get(0);
         } else {
             return null;
@@ -106,7 +106,7 @@ class TrafficDbService {
     }
 
     public List<DateTraffic> getDateTrafficByStatus(int uid, String date, int status) {
-        QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
+        final QueryBuilder queryBuilder = new QueryBuilder(DateTraffic.class);
         queryBuilder.addQuery("uid", uid, "=");
         queryBuilder.addQuery("date", date, "<");
         queryBuilder.addQuery("status", status, "=");

@@ -40,9 +40,9 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 @Service("StatusService")
 @SuppressLint("MissingPermission")
 class StatusServiceImpl implements StatusService {
-    private final static String TAG = "StatusService";
-    protected ArrayList<StatusListener> listeners = new ArrayList<StatusListener>();
-    private boolean debug = false;
+    private static final String TAG = "StatusService";
+    protected ArrayList<StatusListener> mListeners = new ArrayList<>();
+    private boolean mDebug = false;
     private Application mContext = null;
     private TelephonyManager mTelephonyManager;
     private boolean mCallingState = true;
@@ -53,13 +53,13 @@ class StatusServiceImpl implements StatusService {
         public void onReceive(Context context, Intent intent) {
             State wifiState = null;
             State mobileState = null;
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            final ConnectivityManager cm = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo networkInfoWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             if (networkInfoWifi != null) {
                 wifiState = networkInfoWifi.getState();
             }
 
-            NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            final NetworkInfo networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if (networkInfo != null) {
                 mobileState = networkInfo.getState();
             }
@@ -67,21 +67,21 @@ class StatusServiceImpl implements StatusService {
             if (wifiState != null && mobileState != null && State.CONNECTED != wifiState
                     && State.CONNECTED == mobileState) {
                 // 手机网络连接成功
-                Log.d(TAG, "手机网络连接成功 ");
-                if (listeners.size() > 0) {
+                if (mDebug) Log.d(TAG, "手机网络连接成功 ");
+                if (!mListeners.isEmpty()) {
                     notifyNetworkTo3G(context);
                 }
             } else if (wifiState != null && mobileState != null && State.CONNECTED != wifiState
                     && State.CONNECTED != mobileState) {
                 // 手机没有任何的网络
-                Log.d(TAG, "手机没有任何的网络,网络中断 ");
-                if (listeners.size() > 0) {
+                if (mDebug) Log.d(TAG, "手机没有任何的网络,网络中断 ");
+                if (!mListeners.isEmpty()) {
                     notifyNetworkDisconnect(context);
                 }
             } else if (wifiState != null && State.CONNECTED == wifiState) {
                 // 无线网络连接成功
-                Log.d(TAG, " 无线网络连接成功");
-                if (listeners.size() > 0) {
+                if (mDebug) Log.d(TAG, " 无线网络连接成功");
+                if (!mListeners.isEmpty()) {
                     notifyNetworkConnect(context);
                 }
             }
@@ -101,21 +101,15 @@ class StatusServiceImpl implements StatusService {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() == Intent.ACTION_MEDIA_EJECT) {
-
+                //do nothings
             } else if (intent.getAction() == Intent.ACTION_MEDIA_SHARED) {
-
+                //do nothings
             } else if (intent.getAction() == Intent.ACTION_MEDIA_BAD_REMOVAL) {
-
+                //do nothings
             } else if (intent.getAction() == Intent.ACTION_MEDIA_REMOVED) {
-                if (listeners.size() > 0) {
-                    notifyStorageRemove(context);
-                }
+                notifyStorageRemove(context);
             } else if (intent.getAction() == Intent.ACTION_MEDIA_MOUNTED) {
-                if (listeners.size() > 0) {
-                    notifyStorageMount(context);
-                } else {
-                    //
-                }
+                notifyStorageMount(context);
             }
 
         }
@@ -128,27 +122,23 @@ class StatusServiceImpl implements StatusService {
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE:
                     // 闲置 挂起
-                    Log.d(TAG, "CALL_STATE_IDLE");
+                    if (mDebug) Log.d(TAG, "CALL_STATE_IDLE");
                     mCallingState = false;
-                    if (listeners.size() > 0) {
-                        notifyCallStateIdle();
-                    }
+                    notifyCallStateIdle();
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     // 摘机
-                    Log.d(TAG, "CALL_STATE_OFFHOOK");
+                    if (mDebug) Log.d(TAG, "CALL_STATE_OFFHOOK");
                     mCallingState = true;
-                    if (listeners.size() > 0) {
-                        notifyCallStateOffhook();
-                    }
+                    notifyCallStateOffhook();
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
                     // 响铃
-                    Log.d(TAG, "CALL_STATE_RINGING");
+                    if (mDebug) Log.d(TAG, "CALL_STATE_RINGING");
                     mCallingState = true;
-                    if (listeners.size() > 0) {
-                        notifyCallStateRinging();
-                    }
+                    notifyCallStateRinging();
+                    break;
+                default:
                     break;
             }
         }
@@ -159,14 +149,14 @@ class StatusServiceImpl implements StatusService {
     public void onCreate(Application context) {
         mContext = context;
 
-        IntentFilter intentFileter1 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        final IntentFilter intentFileter1 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         mContext.registerReceiver(networkStatusReceiver, intentFileter1);
 
-        IntentFilter intentFileter2 = new IntentFilter("android.intent.action.ACTION_MEDIA_MOUNTED");
+        final IntentFilter intentFileter2 = new IntentFilter("android.intent.action.ACTION_MEDIA_MOUNTED");
         intentFileter2.addAction("android.intent.action.ACTION_MEDIA_REMOVED");
         mContext.registerReceiver(storageStatusReceiver, intentFileter2);
 
-        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
@@ -177,8 +167,7 @@ class StatusServiceImpl implements StatusService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
-        return sp;
+        return new ServiceProperty(TAG);
     }
 
     @Override
@@ -194,8 +183,8 @@ class StatusServiceImpl implements StatusService {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -228,11 +217,11 @@ class StatusServiceImpl implements StatusService {
         if (statusListener == null) {
             throw new IllegalArgumentException("The StatusListener is null.");
         }
-        synchronized (listeners) {
-            if (listeners.contains(statusListener)) {
+        synchronized (mListeners) {
+            if (mListeners.contains(statusListener)) {
                 throw new IllegalStateException("StatusListener " + statusListener + " is already registered.");
             }
-            listeners.add(statusListener);
+            mListeners.add(statusListener);
 
         }
     }
@@ -242,9 +231,9 @@ class StatusServiceImpl implements StatusService {
         if (statusListener == null) {
             throw new IllegalArgumentException("The StatusListener is null.");
         }
-        synchronized (listeners) {
-            if (listeners.contains(statusListener)) {
-                listeners.remove(statusListener);
+        synchronized (mListeners) {
+            if (mListeners.contains(statusListener)) {
+                mListeners.remove(statusListener);
             } else {
                 throw new IllegalStateException("StatusListener " + statusListener + " is not exist.");
             }
@@ -252,7 +241,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyNetworkConnect(Context context) {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.networkConnect(context);
             }
@@ -260,7 +249,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyNetworkDisconnect(Context context) {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.networkDisconnect(context);
             } else {
@@ -270,7 +259,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyNetworkTo3G(Context context) {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.networkTo3G(context);
             }
@@ -278,7 +267,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyStorageRemove(Context context) {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.storageRemove(context);
             }
@@ -286,7 +275,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyStorageMount(Context context) {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.storageMount(context);
             }
@@ -294,7 +283,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyCallStateIdle() {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.callStateIdle();
             }
@@ -302,7 +291,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyCallStateOffhook() {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.callStateOffhook();
             }
@@ -310,7 +299,7 @@ class StatusServiceImpl implements StatusService {
     }
 
     private void notifyCallStateRinging() {
-        for (StatusListener listener : listeners) {
+        for (final StatusListener listener : mListeners) {
             if (listener != null) {
                 listener.callStateRinging();
             }

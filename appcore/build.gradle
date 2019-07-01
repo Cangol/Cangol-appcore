@@ -8,22 +8,19 @@ apply from: '../config/quality.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    implementation 'com.android.support:support-v4:26.0.2'
+    implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.squareup.okhttp3:okhttp:3.6.0'
     implementation 'com.squareup.okio:okio:1.11.0'
-    //api 'com.android.support:multidex:1.0.1'
-    testImplementation  'junit:junit:4.12'
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 14
         versionCode Integer.decode("${POM_VERSION_CODE}")
         versionName "${POM_VERSION}"
-        multiDexEnabled true
     }
     lintOptions {
         abortOnError false
@@ -48,7 +45,7 @@ android {
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
-        return; // Skip debug builds.
+        return // Skip debug builds.
     }
     def task = project.tasks.create "jar${name.capitalize()}", Jar
     task.dependsOn variant.javaCompile
@@ -61,7 +58,7 @@ android.libraryVariants.all { variant ->
                 "Implementation-Version": version
         )
     }
-    artifacts.add('archives', task);
+    artifacts.add('archives', task)
 }
 
 // build a jar with source files

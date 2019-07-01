@@ -46,11 +46,11 @@ public class CoreApplication extends Application {
     private AppServiceManager mAppServiceManager;
     private PoolManager.Pool mSharePool;
     private ModuleManager mModuleManager;
-    public final  List<WeakReference<Activity>> mActivityManager = new ArrayList<>();
+    public final List<WeakReference<Activity>> mActivityManager = new ArrayList<>();
 
     public CoreApplication() {
         super();
-        mModuleManager=new ModuleManager(this);
+        mModuleManager = new ModuleManager(this);
     }
 
     public ModuleManager getModuleManager() {
@@ -61,7 +61,7 @@ public class CoreApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if (DeviceInfo.isAppProcess(this)) {
-            if (mStrictMode && Build.VERSION.SDK_INT >= 9) {
+            if (mStrictMode && Build.VERSION.SDK_INT >= 14) {
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
             }
@@ -72,6 +72,7 @@ public class CoreApplication extends Application {
             }
             mSharePool = PoolManager.buildPool("share", 2);
             initAppServiceManager();
+            mModuleManager.onCreate();
             if (mAsyncInit) {
                 post(new Runnable() {
                     @Override
@@ -85,6 +86,7 @@ public class CoreApplication extends Application {
                 mModuleManager.init();
             }
         } else {
+            mModuleManager.onCreate();
             Log.i("cur process is not app' process");
         }
     }
@@ -129,7 +131,7 @@ public class CoreApplication extends Application {
      * 初始化方法，当setAsyncInit为true 此处执行异步init
      */
     protected void init() {
-
+        //do nothings
     }
 
     /**
@@ -137,7 +139,7 @@ public class CoreApplication extends Application {
      *
      * @return
      */
-    protected final boolean isDevMode() {
+    public final boolean isDevMode() {
         return mDevMode;
     }
 
@@ -211,7 +213,7 @@ public class CoreApplication extends Application {
      *
      * @param runnable
      */
-    public final Future<?> post(Runnable runnable) {
+    public final Future post(Runnable runnable) {
         return getSharePool().submit(runnable);
     }
 
@@ -238,7 +240,7 @@ public class CoreApplication extends Application {
      *
      * @param task
      */
-    public final Future<?> post(Task task) {
+    public final Future post(Task task) {
         return getSharePool().submit(task);
     }
 
@@ -302,7 +304,7 @@ public class CoreApplication extends Application {
     /**
      * 退出应用
      */
-    public final void exit() {
+    public void exit() {
         mModuleManager.onExit();
         getSession().saveString(Constants.KEY_EXIT_CODE, "0");
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this));

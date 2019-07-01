@@ -15,11 +15,8 @@
  */
 package mobi.cangol.mobile.utils;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
-import android.os.StatFs;
 
 import java.io.File;
 
@@ -51,31 +48,21 @@ public class StorageUtils {
         return new File(cachePath + File.separator + uniqueName);
     }
 
-    @TargetApi(9)
     public static boolean isExternalStorageRemovable() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            return Environment.isExternalStorageRemovable();
-        }
-        return true;
+        return Environment.isExternalStorageRemovable();
     }
 
-    @TargetApi(8)
     public static File getExternalFileDir(Context context, String uniqueName) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO
-                && context.getExternalFilesDir(uniqueName) != null) {
+        if (context.getExternalFilesDir(uniqueName) != null) {
             return context.getExternalFilesDir(uniqueName);
         }
         // Before Froyo we need to construct the external cache dir ourselves
-        final String cacheDir = "/Android/data/" + context.getPackageName()
-                + "/" + uniqueName + "/";
         return new File(Environment.getExternalStorageDirectory().getPath()
                 + uniqueName);
     }
 
-    @TargetApi(8)
     public static File getExternalCacheDir(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO
-                && context.getExternalCacheDir() != null) {
+        if (context.getExternalCacheDir() != null) {
             return context.getExternalCacheDir();
         }
         // Before Froyo we need to construct the external cache dir ourselves
@@ -85,12 +72,7 @@ public class StorageUtils {
                 + cacheDir);
     }
 
-    @TargetApi(9)
     public static long getUsableSpace(File path) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            return path.getUsableSpace();
-        }
-        final StatFs stats = new StatFs(path.getPath());
-        return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+      return path.getUsableSpace();
     }
 }

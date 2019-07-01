@@ -22,6 +22,7 @@ import android.util.Log;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -41,7 +42,7 @@ public class HanziToPinyin {
      * <p>
      * Each unihans is the first one within same pinyin when collator is zh_CN.
      */
-    public static final char[] UNIHANS = {
+    private static final char[] UNIHANS = {
             '\u963f', '\u54ce', '\u5b89', '\u80ae', '\u51f9', '\u516b',
             '\u6300', '\u6273', '\u90a6', '\u52f9', '\u9642', '\u5954',
             '\u4f3b', '\u5c44', '\u8fb9', '\u706c', '\u618b', '\u6c43',
@@ -119,7 +120,7 @@ public class HanziToPinyin {
      * Each pinyin is corresponding to unihans of same
      * offset in the unihans array.
      */
-    public static final byte[][] PINYINS = {
+    private static final byte[][] PINYINS = {
             {65, 0, 0, 0, 0, 0}, {65, 73, 0, 0, 0, 0},
             {65, 78, 0, 0, 0, 0}, {65, 78, 71, 0, 0, 0},
             {65, 79, 0, 0, 0, 0}, {66, 65, 0, 0, 0, 0},
@@ -356,7 +357,7 @@ public class HanziToPinyin {
                 return sInstance;
             }
             // Check if zh_CN collation data is available
-            final Locale locale[] = Collator.getAvailableLocales();
+            final Locale[] locale = Collator.getAvailableLocales();
             for (int i = 0; i < locale.length; i++) {
                 if (locale[i].equals(Locale.CHINA)) {
                     // Do self validation just once.
@@ -379,14 +380,14 @@ public class HanziToPinyin {
      * @return true when the table looks correct.
      */
     private static boolean doSelfValidation() {
-        char lastChar = UNIHANS[0];
+        final char lastChar = UNIHANS[0];
         String lastString = Character.toString(lastChar);
-        for (char c : UNIHANS) {
+        for (final char c : UNIHANS) {
             if (lastChar == c) {
                 continue;
             }
             final String curString = Character.toString(c);
-            int cmp = COLLATOR.compare(lastString, curString);
+            final int cmp = COLLATOR.compare(lastString, curString);
             if (cmp >= 0) {
                 Log.e(TAG, "Internal error in Unihan table. " + "The last string \"" + lastString
                         + "\" is greater than current string \"" + curString + "\".");
@@ -402,12 +403,12 @@ public class HanziToPinyin {
                 Locale.CHINA)) {
             return source;
         }
-        ArrayList<Token> tokens = HanziToPinyin.getInstance().get(source);
-        if (tokens == null || tokens.size() == 0) {
+        final List<Token> tokens = HanziToPinyin.getInstance().get(source);
+        if (tokens == null || tokens.isEmpty()) {
             return source;
         }
-        StringBuffer result = new StringBuffer();
-        for (Token token : tokens) {
+       final StringBuilder result = new StringBuilder();
+        for (final Token token : tokens) {
             if (token.type == Token.PINYIN) {
                 result.append(token.target);
             } else {
@@ -422,13 +423,13 @@ public class HanziToPinyin {
                 Locale.CHINA)) {
             return source;
         }
-        ArrayList<Token> tokens = HanziToPinyin.getInstance().get(source);
-        if (tokens == null || tokens.size() == 0) {
+        final List<Token> tokens = HanziToPinyin.getInstance().get(source);
+        if (tokens == null || tokens.isEmpty()) {
             return source;
         }
 
-        StringBuffer result = new StringBuffer();
-        for (Token token : tokens) {
+        final StringBuilder result = new StringBuilder();
+        for (final Token token : tokens) {
             if (token.type == Token.PINYIN) {
                 result.append(token.target.charAt(0));
             } else {
@@ -439,7 +440,7 @@ public class HanziToPinyin {
     }
 
     private Token getToken(char character) {
-        Token token = new Token();
+        final Token token = new Token();
         final String letter = Character.toString(character);
         token.source = letter;
         int offset = -1;
@@ -490,7 +491,7 @@ public class HanziToPinyin {
         if (cmp < 0) {
             offset--;
         }
-        StringBuilder pinyin = new StringBuilder();
+        final StringBuilder pinyin = new StringBuilder();
         for (int j = 0; j < PINYINS[offset].length && PINYINS[offset][j] != 0; j++) {
             pinyin.append((char) PINYINS[offset][j]);
         }
@@ -507,8 +508,8 @@ public class HanziToPinyin {
      * space will be put into a Token, One Hanzi character which has pinyin will be treated as a
      * Token. If these is no China collator, the empty token array is returned.
      */
-    public ArrayList<Token> get(final String input) {
-        ArrayList<Token> tokens = new ArrayList<Token>();
+    public List<Token> get(final String input) {
+        final List<Token> tokens = new ArrayList<>();
         if (!mHasChinaCollator || TextUtils.isEmpty(input)) {
             // return empty tokens.
             return tokens;
@@ -533,7 +534,7 @@ public class HanziToPinyin {
                 tokenType = Token.LATIN;
                 sb.append(character);
             } else {
-                Token t = getToken(character);
+                final Token t = getToken(character);
                 if (t.type == Token.PINYIN) {
                     if (sb.length() > 0) {
                         addToken(sb, tokens, tokenType);
@@ -555,9 +556,8 @@ public class HanziToPinyin {
         return tokens;
     }
 
-    private void addToken(
-            final StringBuilder sb, final ArrayList<Token> tokens, final int tokenType) {
-        String str = sb.toString();
+    private void addToken(final StringBuilder sb, final List<Token> tokens, final int tokenType) {
+        final String str = sb.toString();
         tokens.add(new Token(tokenType, str, str));
         sb.setLength(0);
     }
@@ -574,16 +574,16 @@ public class HanziToPinyin {
         /**
          * Type of this token, ASCII, PINYIN or UNKNOWN.
          */
-        public int type;
+        private int type;
         /**
          * Original string before translation.
          */
-        public String source;
+        private String source;
         /**
          * Translated string of source. For Han, target is corresponding Pinyin. Otherwise target is
          * original string in source.
          */
-        public String target;
+        private String target;
 
         public Token() {
         }

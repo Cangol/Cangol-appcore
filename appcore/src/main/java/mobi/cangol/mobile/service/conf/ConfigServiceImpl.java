@@ -23,6 +23,7 @@ import android.os.StrictMode;
 
 import java.io.File;
 
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.utils.StorageUtils;
@@ -32,7 +33,7 @@ import mobi.cangol.mobile.utils.StorageUtils;
  * @author Cangol
  */
 class ConfigServiceImpl implements ConfigService {
-    private final static String TAG = "ConfigService";
+    private static final String TAG = "ConfigService";
     private Application mContext = null;
     private ServiceProperty mServiceProperty = null;
     private boolean mDebug = false;
@@ -47,8 +48,8 @@ class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        mDebug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -63,7 +64,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(IMAGE_DIR, "image");
         sp.putString(DOWNLOAD_DIR, "download");
         sp.putString(TEMP_DIR, "temp");
@@ -80,7 +81,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void onDestroy() {
-
+        //do nothings
     }
 
     @Override
@@ -102,21 +103,20 @@ class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
-    public boolean setCustomAppDir(String path) {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
-        File file = new File(path);
+    public void setCustomAppDir(String path) {
+        if(mDebug) Log.d(TAG,"setCustomAppDir "+path);
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final File file = new File(path);
         if (file.exists()) {
             StrictMode.setThreadPolicy(oldPolicy);
             mAppDir = file;
             mIsCustomAppDir = true;
-            return true;
         } else {
-            boolean mkdirs = file.mkdirs();
+            final boolean mkdirs = file.mkdirs();
             StrictMode.setThreadPolicy(oldPolicy);
             if (mkdirs) {
                 mAppDir = file;
                 mIsCustomAppDir = true;
-                return true;
             } else {
                 throw new IllegalArgumentException("mkdirs fail. path=" + path);
             }
@@ -136,7 +136,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private File initAppDir() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
         if (mUseInternalStorage) {
             file = mContext.getFilesDir().getParentFile();
@@ -153,7 +153,7 @@ class ConfigServiceImpl implements ConfigService {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public File getFileDir(String name) {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
         if (mIsCustomAppDir) {
             file = new File(mAppDir, name);
@@ -179,7 +179,7 @@ class ConfigServiceImpl implements ConfigService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public File getCacheDir() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
+        final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
         if (mIsCustomAppDir) {
             file = new File(mAppDir, "cache");

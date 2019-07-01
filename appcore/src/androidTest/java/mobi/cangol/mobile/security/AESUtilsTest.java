@@ -7,7 +7,7 @@ import android.test.InstrumentationTestCase;
  */
 public class AESUtilsTest extends InstrumentationTestCase {
 
-    public void testEncrypt() throws Exception {
+    public void testEncrypt() {
         String source="test";
         String seed="12345678";
         //String dst=AESUtils.encrypt(seed, source);
@@ -15,7 +15,7 @@ public class AESUtilsTest extends InstrumentationTestCase {
         //assertEquals("73C58BAFE578C59366D8C995CD0B9D6D",dst);
     }
 
-    public void testDecrypt() throws Exception {
+    public void testDecrypt() {
         String source="73C58BAFE578C59366D8C995CD0B9D6D";
         String seed="12345678";
         //String dst=AESUtils.decrypt(seed, source);

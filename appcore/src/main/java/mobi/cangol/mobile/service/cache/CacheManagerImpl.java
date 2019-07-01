@@ -49,7 +49,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 class CacheManagerImpl implements CacheManager {
     private static final String TAG = "CacheManager";
     private static final int DISK_CACHE_INDEX = 0;
-    private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 20MB
+    private static final long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20L; // 20MB
     private final Object mDiskCacheLock = new Object();
     private boolean mDebug;
     private DiskLruCache mDiskLruCache;
@@ -63,18 +63,18 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void onCreate(Application context) {
         this.mApplication = (CoreApplication) context;
-        if(mDebug)Log.d(TAG, "onCreate");
+        if (mDebug) Log.d(TAG, "onCreate");
     }
 
     @Override
     public void init(ServiceProperty serviceProperty) {
-        if(mDebug)Log.d(TAG, "init "+serviceProperty);
+        if (mDebug) Log.d(TAG, "init " + serviceProperty);
         this.mServiceProperty = serviceProperty;
-        String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
-        long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
-        ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
-        String cacheDir=configService.getCacheDir().getAbsolutePath()+File.separator+ (!TextUtils.isEmpty(dir)?dir:"contentCache");
-        setDiskCache(new File(cacheDir),size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
+        final String dir = mServiceProperty.getString(CacheManager.CACHE_DIR);
+        final long size = mServiceProperty.getLong(CacheManager.CACHE_SIZE);
+        final ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
+        final String cacheDir = configService.getCacheDir().getAbsolutePath() + File.separator + (!TextUtils.isEmpty(dir) ? dir : "contentCache");
+        setDiskCache(new File(cacheDir), size > 0 ? size : DEFAULT_DISK_CACHE_SIZE);
     }
 
     /**
@@ -84,7 +84,7 @@ class CacheManagerImpl implements CacheManager {
      * @param cacheSize
      */
     private void setDiskCache(File cacheDir, long cacheSize) {
-        if(mDebug)Log.d(TAG, "setDiskCache dir="+cacheDir+",size="+cacheSize);
+        if (mDebug) Log.d(TAG, "setDiskCache dir=" + cacheDir + ",size=" + cacheSize);
         this.mDiskCacheDir = cacheDir;
         this.mDiskCacheSize = cacheSize;
         this.mDiskCacheStarting = true;
@@ -98,7 +98,7 @@ class CacheManagerImpl implements CacheManager {
      * @param diskCacheSize
      */
     private void initDiskCache(File diskCacheDir, long diskCacheSize) {
-        if(mDebug)Log.d(TAG, "initDiskCache dir="+diskCacheDir+",size="+diskCacheSize);
+        if (mDebug) Log.d(TAG, "initDiskCache dir=" + diskCacheDir + ",size=" + diskCacheSize);
         // Set up disk cache
         synchronized (mDiskCacheLock) {
             if (mDiskLruCache == null || mDiskLruCache.isClosed()) {
@@ -127,7 +127,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public Serializable getContent(String context, String id) {
-        if(mDebug)Log.d(TAG, "getContent context="+context+",id="+id);
+        if (mDebug) Log.d(TAG, "getContent context=" + context + ",id=" + id);
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
@@ -140,59 +140,61 @@ class CacheManagerImpl implements CacheManager {
                 contextMap.put(id, cacheObject);
             }
         }
-        if(cacheObject!=null){
-            if(cacheObject.isExpired()){
+        if (cacheObject != null) {
+            if (cacheObject.isExpired()) {
                 Log.e(TAG, "is expired & remove ");
-                removeContent(context,id);
+                removeContent(context, id);
                 return null;
-            }else{
+            } else {
                 return cacheObject.getObject();
             }
-        }else{
+        } else {
             return null;
         }
     }
 
     @Override
     public void getContent(final String context, final String id, final CacheLoader cacheLoader) {
-        if(mDebug)Log.d(TAG, "getContent context="+context+",id="+id+",cacheLoader="+cacheLoader);
-        if (cacheLoader != null)cacheLoader.loading();
+        if (mDebug)
+            Log.d(TAG, "getContent context=" + context + ",id=" + id + ",cacheLoader=" + cacheLoader);
+        if (cacheLoader != null) cacheLoader.loading();
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject cacheObject =contextMap.get(id);
+        final CacheObject cacheObject = contextMap.get(id);
         if (cacheObject == null) {
             mApplication.post(new Task<CacheObject>() {
 
                 @Override
-                public CacheObject call(){
+                public CacheObject call() {
                     return getContentFromDiskCache(id);
                 }
 
                 @Override
                 public void result(CacheObject cacheObject) {
                     if (cacheObject != null) {
-                        if(cacheObject.isExpired()){
+                        if (cacheObject.isExpired()) {
                             Log.e(TAG, "is expired & remove ");
-                            removeContent(context,id);
+                            removeContent(context, id);
                             if (cacheLoader != null) cacheLoader.returnContent(null);
-                        }else{
-                            addContentToMem(context, id, cacheObject.getObject(),cacheObject.getPeriod());
-                            if (cacheLoader != null) cacheLoader.returnContent(cacheObject.getObject());
+                        } else {
+                            addContentToMem(context, id, cacheObject.getObject(), cacheObject.getPeriod());
+                            if (cacheLoader != null)
+                                cacheLoader.returnContent(cacheObject.getObject());
                         }
-                    }else{
+                    } else {
                         if (cacheLoader != null) cacheLoader.returnContent(null);
                     }
                 }
             });
-        }else{
-            if(cacheObject.isExpired()){
+        } else {
+            if (cacheObject.isExpired()) {
                 Log.e(TAG, "is expired & remove ");
-                removeContent(context,id);
+                removeContent(context, id);
                 if (cacheLoader != null) cacheLoader.returnContent(null);
-            }else{
+            } else {
                 if (cacheLoader != null) cacheLoader.returnContent(cacheObject.getObject());
             }
         }
@@ -200,21 +202,21 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public boolean hasContent(String context, String id) {
-        if(mDebug)Log.d(TAG, "hasContent context="+context+",id="+id);
+        if (mDebug) Log.d(TAG, "hasContent context=" + context + ",id=" + id);
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
             mContextMaps.put(context, contextMap);
         }
-        CacheObject cacheObject = contextMap.get(id);
+        final CacheObject cacheObject = contextMap.get(id);
         if (cacheObject == null) {
             return hasContentFromDiskCache(id);
         } else {
-            if(cacheObject.isExpired()){
+            if (cacheObject.isExpired()) {
                 Log.e(TAG, "is expired & remove ");
-                removeContent(context,id);
+                removeContent(context, id);
                 return false;
-            }else{
+            } else {
                 return true;
             }
         }
@@ -227,7 +229,7 @@ class CacheManagerImpl implements CacheManager {
      * @return
      */
     private boolean hasContentFromDiskCache(String id) {
-        if(mDebug)Log.d(TAG, "hasContentFromDiskCache id="+id);
+        if (mDebug) Log.d(TAG, "hasContentFromDiskCache id=" + id);
         final String key = hashKeyForDisk(id);
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -244,12 +246,12 @@ class CacheManagerImpl implements CacheManager {
                     if (snapshot != null) {
                         inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
                         if (inputStream != null) {
-                            CacheObject obj=(CacheObject) Object2FileUtils.readObject(inputStream);
-                            if(obj.isExpired()){
+                            final CacheObject obj = (CacheObject) Object2FileUtils.readObject(inputStream);
+                            if (obj.isExpired()) {
                                 Log.e(TAG, "is expired & remove ");
-                                 mDiskLruCache.remove(hashKeyForDisk(id));
+                                mDiskLruCache.remove(hashKeyForDisk(id));
                                 return false;
-                            }else{
+                            } else {
                                 return true;
                             }
                         }
@@ -277,7 +279,7 @@ class CacheManagerImpl implements CacheManager {
      * @return
      */
     private CacheObject getContentFromDiskCache(String id) {
-        if(mDebug)Log.d(TAG, "getContentFromDiskCache id="+id);
+        if (mDebug) Log.d(TAG, "getContentFromDiskCache id=" + id);
         final String key = hashKeyForDisk(id);
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -326,65 +328,44 @@ class CacheManagerImpl implements CacheManager {
         if (null == contextMap) {
             contextMap = new HashMap<>();
         }
-        contextMap.put(id, new CacheObject(context,id,data));
+        contextMap.put(id, new CacheObject(context, id, data));
         mContextMaps.put(context, contextMap);
     }
 
     /**
      * 添加到内存缓存
+     *
      * @param context
      * @param id
      * @param data
      * @param period
      */
-    private void addContentToMem(String context, String id, Serializable data,long period) {
+    private void addContentToMem(String context, String id, Serializable data, long period) {
         HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap) {
             contextMap = new HashMap<>();
         }
-        contextMap.put(id, new CacheObject(context,id,data,period));
+        contextMap.put(id, new CacheObject(context, id, data, period));
         mContextMaps.put(context, contextMap);
     }
+
     /**
      * 添加到磁盘缓存（也添加到内存缓存）
      */
     @Override
     public void addContent(String context, String id, Serializable data) {
-        if(mDebug)Log.d(TAG, "addContent:" + id + "," + data);
+        if (mDebug) Log.d(TAG, "addContent:" + id + "," + data);
         removeContent(context, id);
         addContentToMem(context, id, data);
-        // addContentToDiskCache(id,new CacheObject(context,id,data));
-        asyncAddContentToDiskCache(id, new CacheObject(context,id,data));
+        asyncAddContentToDiskCache(id, new CacheObject(context, id, data));
     }
 
     @Override
     public void addContent(String context, String id, Serializable data, long period) {
-        if(mDebug) Log.d(TAG, "addContent:" + id + "," + data+","+period);
+        if (mDebug) Log.d(TAG, "addContent:" + id + "," + data + "," + period);
         removeContent(context, id);
-        addContentToMem(context, id, data,period);
-        // addContentToDiskCache(id,new CacheObject(context,id,data,period));
-        asyncAddContentToDiskCache(id, new CacheObject(context,id,data,period));
-    }
-
-    /**
-     * context暂停或退出时，持久化context关联的缓存（持久化到磁盘）
-     *
-     * @param context
-     */
-    private void moveContentToDiskCache(String context) {
-        HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
-        if (null == contextMap || contextMap.isEmpty()) {
-            return;
-        }
-        Iterator<String> iterator = contextMap.keySet().iterator();
-        String id = null;
-        while (iterator.hasNext()) {
-            id = iterator.next();
-            // addContentToDiskCache(key,contextMap.get(key));
-            asyncAddContentToDiskCache(id, contextMap.get(id));
-        }
-        contextMap.clear();
-        mContextMaps.remove(context);
+        addContentToMem(context, id, data, period);
+        asyncAddContentToDiskCache(id, new CacheObject(context, id, data, period));
     }
 
     /**
@@ -416,7 +397,7 @@ class CacheManagerImpl implements CacheManager {
                 final String key = hashKeyForDisk(id);
                 OutputStream out = null;
                 try {
-                    DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
+                    final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
                     if (snapshot == null) {
                         final DiskLruCache.Editor editor = mDiskLruCache.edit(key);
                         if (editor != null) {
@@ -430,8 +411,6 @@ class CacheManagerImpl implements CacheManager {
                     } else {
                         snapshot.getInputStream(DISK_CACHE_INDEX).close();
                     }
-                } catch (final IOException e) {
-                    Log.e(TAG, "addContentToCache - " + e);
                 } catch (Exception e) {
                     Log.e(TAG, "addContentToCache - " + e);
                 } finally {
@@ -449,15 +428,15 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public void removeContext(String context) {
-        HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
+        final HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
-        Iterator<String> iterator = contextMap.keySet().iterator();
+        final Iterator<String> iterator = contextMap.keySet().iterator();
         String id = null;
         while (iterator.hasNext()) {
             id = iterator.next();
-            String key = hashKeyForDisk(id);
+            final String key = hashKeyForDisk(id);
             try {
                 if (mDiskLruCache != null) {
                     mDiskLruCache.remove(key);
@@ -474,12 +453,12 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public void removeContent(String context, String id) {
-        HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
+        final HashMap<String, CacheObject> contextMap = mContextMaps.get(context);
         if (null == contextMap || contextMap.isEmpty()) {
             return;
         }
         contextMap.remove(id);
-        String key = hashKeyForDisk(id);
+        final String key = hashKeyForDisk(id);
         try {
             if (mDiskLruCache != null) {
                 mDiskLruCache.remove(key);
@@ -579,9 +558,9 @@ class CacheManagerImpl implements CacheManager {
 
     private String bytesToHexString(byte[] bytes) {
         // http://stackoverflow.com/questions/332079
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
+            final String hex = Integer.toHexString(0xFF & bytes[i]);
             if (hex.length() == 1) {
                 sb.append('0');
             }
@@ -590,13 +569,8 @@ class CacheManagerImpl implements CacheManager {
         return sb.toString();
     }
 
-    @TargetApi(9)
     private long getUsableSpace(File path) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            return path.getUsableSpace();
-        }
-        final StatFs stats = new StatFs(path.getPath());
-        return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+        return path.getUsableSpace();
     }
 
     @Override
@@ -610,8 +584,8 @@ class CacheManagerImpl implements CacheManager {
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        this.mDebug = debug;
+    public void setDebug(boolean mDebug) {
+        this.mDebug = mDebug;
     }
 
     @Override
@@ -621,7 +595,7 @@ class CacheManagerImpl implements CacheManager {
 
     @Override
     public ServiceProperty defaultServiceProperty() {
-        ServiceProperty sp = new ServiceProperty(TAG);
+        final ServiceProperty sp = new ServiceProperty(TAG);
         sp.putString(CACHE_DIR, "contentCache");
         sp.putInt(CACHE_SIZE, 20971520);
         return sp;

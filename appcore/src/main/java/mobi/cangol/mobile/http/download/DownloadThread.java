@@ -26,7 +26,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DownloadThread implements Runnable {
-    public final static String TAG = "DownloadThread";
+    public static final  String TAG = "DownloadThread";
     private final DownloadResponseHandler responseHandler;
     private DownloadHttpClient context;
     private OkHttpClient client;
@@ -58,10 +58,10 @@ public class DownloadThread implements Runnable {
         }
     }
 
-    private void makeRequest() throws IOException, InterruptedException {
+    private void makeRequest() throws IOException {
         if (!Thread.currentThread().isInterrupted()) {
 
-            Response response = client.newCall(request).execute();
+            final Response response = client.newCall(request).execute();
             if (!Thread.currentThread().isInterrupted()) {
                 if (responseHandler != null) {
                     responseHandler.sendResponseMessage(response, saveFile);
@@ -89,15 +89,12 @@ public class DownloadThread implements Runnable {
     private void makeRequestWithRetries() throws Exception {
         boolean retry = true;
         Exception cause = null;
-        DownloadRetryHandler retryHandler = this.context.getDownloadRetryHandler();
+        final DownloadRetryHandler retryHandler = this.context.getDownloadRetryHandler();
         while (retry) {
             try {
                 makeRequest();
                 return;
             } catch (InterruptedIOException e) {
-                responseHandler.sendStopMessage(from);
-                return;
-            } catch (InterruptedException e) {
                 responseHandler.sendStopMessage(from);
                 return;
             } catch (IOException e) {
@@ -109,8 +106,6 @@ public class DownloadThread implements Runnable {
             }
         }
 
-        Exception ex = new Exception();
-        ex.initCause(cause);
-        throw ex;
+        throw new Exception(cause);
     }
 }

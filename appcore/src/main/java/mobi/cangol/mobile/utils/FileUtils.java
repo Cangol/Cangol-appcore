@@ -26,7 +26,6 @@ import android.webkit.MimeTypeMap;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +34,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StreamCorruptedException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +42,7 @@ import mobi.cangol.mobile.logging.Log;
 
 public class FileUtils {
     public static final String TAG = "FileUtils";
+    public static final String UTF_8 = "UTF-8";
 
     private FileUtils() {
     }
@@ -55,7 +54,7 @@ public class FileUtils {
      * @return 文件删除成功返回true, 否则返回false
      */
     public static boolean delete(String fileName) {
-        File file = new File(fileName);
+        final File file = new File(fileName);
         if (!file.exists()) {
             Log.d(TAG, "delete File fail! " + fileName + " not exist");
             return false;
@@ -75,13 +74,13 @@ public class FileUtils {
      * @return 单个文件删除成功返回true, 否则返回false
      */
     public static boolean deleteFile(String fileName) {
-        File file = new File(fileName);
+        final File file = new File(fileName);
         if (file.isFile() && file.exists()) {
-            file.delete();
-            Log.d(TAG, "delete single file" + fileName + " success!");
+            if (file.delete())
+                Log.d(TAG, "delete single file  success!" + fileName);
             return true;
         } else {
-            Log.d(TAG, "delete single file" + fileName + " fail!");
+            Log.d(TAG, "delete single file fail!" + fileName);
             return false;
         }
     }
@@ -97,7 +96,7 @@ public class FileUtils {
         if (!dir.endsWith(File.separator)) {
             dir = dir + File.separator;
         }
-        File dirFile = new File(dir);
+        final File dirFile = new File(dir);
         // 如果dir对应的文件不存在，或者不是一个目录，则退出
         if (!dirFile.exists() || !dirFile.isDirectory()) {
             Log.d(TAG, "delete directory fail " + dir + " not exist");
@@ -105,7 +104,7 @@ public class FileUtils {
         }
         boolean flag = true;
         // 删除文件夹下的所有文件(包括子目录)
-        File[] files = dirFile.listFiles();
+        final File[] files = dirFile.listFiles();
         for (int i = 0; i < files.length; i++) {
             // 删除子文件
             if (files[i].isFile()) {
@@ -128,7 +127,7 @@ public class FileUtils {
             return false;
         }
 
-        // 删除当前目录
+        // 删除当前目录dirFile.delete()
         if (dirFile.delete()) {
             Log.d(TAG, "delete directory " + dir + " success!");
             return true;
@@ -145,22 +144,33 @@ public class FileUtils {
      * @param newPath
      */
     public static void copyFile(String oldPath, String newPath) {
+        InputStream is = null;
+        FileOutputStream fos = null;
         try {
-            int bytesum = 0;
-            int byteread = 0;
-            File oldfile = new File(oldPath);
-            if (oldfile.exists()) { // 文件存在时
-                InputStream inStream = new FileInputStream(oldPath); // 读入原文件
-                FileOutputStream fs = new FileOutputStream(newPath);
-                byte[] buffer = new byte[4094];
-                while ((byteread = inStream.read(buffer)) != -1) {
-                    bytesum += byteread; // 字节数 文件大小
-                    fs.write(buffer, 0, byteread);
-                }
-                inStream.close();
+            int byteRead = 0;
+            is = new FileInputStream(oldPath); // 读入原文件
+            fos = new FileOutputStream(newPath);
+            final byte[] buffer = new byte[4094];
+            while ((byteRead = is.read(buffer)) != -1) {
+                fos.write(buffer, 0, byteRead);
             }
         } catch (Exception e) {
             Log.d("copy file error!" + e.getMessage());
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    Log.e(e.getMessage());
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    Log.e(e.getMessage());
+                }
+            }
         }
     }
 
@@ -171,7 +181,7 @@ public class FileUtils {
      */
     public static void newFolder(String folderPath) {
         try {
-            File myFilePath = new File(folderPath);
+            final  File myFilePath = new File(folderPath);
             if (!myFilePath.exists()) {
                 myFilePath.mkdirs();
             }
@@ -187,19 +197,30 @@ public class FileUtils {
      * @param fileContent String 文件内容
      */
     public static void newFile(String filePath, String fileContent) {
-
+        OutputStreamWriter outWrite = null;
+        PrintWriter myFile = null;
         try {
-            File myFilePath = new File(filePath);
-            if (!myFilePath.exists()) {
-                myFilePath.createNewFile();
+            final File myFilePath = new File(filePath);
+            if (!myFilePath.exists()&&!myFilePath.createNewFile()) {
+                Log.d(TAG, "newFile createNewFile fail" + filePath);
             }
-            OutputStreamWriter outWrite = new OutputStreamWriter(new FileOutputStream(myFilePath), "UTF-8");
-            PrintWriter myFile = new PrintWriter(outWrite);
+            outWrite = new OutputStreamWriter(new FileOutputStream(myFilePath), UTF_8);
+            myFile = new PrintWriter(outWrite);
             myFile.println(fileContent);
-            outWrite.close();
 
         } catch (Exception e) {
             Log.d(e.getMessage());
+        } finally {
+            if (outWrite != null) {
+                try {
+                    outWrite.close();
+                } catch (IOException e) {
+                    Log.e(e.getMessage());
+                }
+            }
+            if (myFile != null) {
+                myFile.close();
+            }
         }
 
     }
@@ -211,9 +232,10 @@ public class FileUtils {
      */
     public static void delFile(String filePath) {
         try {
-            File myDelFile = new File(filePath);
-            myDelFile.delete();
-
+            final File file = new File(filePath);
+            if (file.delete()) {
+                Log.d(TAG, "delete file" + filePath + " success!");
+            }
         } catch (Exception e) {
             Log.d(e.getMessage());
         }
@@ -228,9 +250,8 @@ public class FileUtils {
     public static void delFolder(String folderPath) {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
-            File myFilePath = new File(folderPath);
-            myFilePath.delete(); // 删除空文件夹
-
+            final File file = new File(folderPath);
+            file.delete();
         } catch (Exception e) {
             Log.d(e.getMessage());
         }
@@ -243,14 +264,14 @@ public class FileUtils {
      * @param path String 文件夹路径 如 c:/fqf
      */
     public static void delAllFile(String path) {
-        File file = new File(path);
+        final File file = new File(path);
         if (!file.exists()) {
             return;
         }
         if (!file.isDirectory()) {
             return;
         }
-        String[] tempList = file.list();
+        final String[] tempList = file.list();
         File temp = null;
         for (int i = 0; i < tempList.length; i++) {
             if (path.endsWith(File.separator)) {
@@ -258,8 +279,8 @@ public class FileUtils {
             } else {
                 temp = new File(path + File.separator + tempList[i]);
             }
-            if (temp.isFile()) {
-                temp.delete();
+            if (temp.isFile()&&!temp.delete()) {
+                    //do nothings
             }
             if (temp.isDirectory()) {
                 delAllFile(path + "/ " + tempList[i]);// 先删除文件夹里面的文件
@@ -275,11 +296,12 @@ public class FileUtils {
      * @param newPath String 复制后路径 如：f:/fqf/ff
      */
     public static void copyFolder(String oldPath, String newPath) {
-
+        FileInputStream input = null;
+        FileOutputStream output = null;
         try {
             (new File(newPath)).mkdirs(); // 如果文件夹不存在 则建立新文件夹
-            File a = new File(oldPath);
-            String[] file = a.list();
+            final File a = new File(oldPath);
+            final String[] file = a.list();
             File temp = null;
             for (int i = 0; i < file.length; i++) {
                 if (oldPath.endsWith(File.separator)) {
@@ -289,17 +311,14 @@ public class FileUtils {
                 }
 
                 if (temp.isFile()) {
-                    FileInputStream input = new FileInputStream(temp);
-                    FileOutputStream output = new FileOutputStream(newPath
-                            + "/ " + (temp.getName()).toString());
-                    byte[] b = new byte[1024 * 5];
+                    input = new FileInputStream(temp);
+                    output = new FileOutputStream(newPath + "/ " + (temp.getName()));
+                    final  byte[] b = new byte[1024 * 5];
                     int len;
                     while ((len = input.read(b)) != -1) {
                         output.write(b, 0, len);
                     }
                     output.flush();
-                    output.close();
-                    input.close();
                 }
                 if (temp.isDirectory()) {// 如果是子文件夹
                     copyFolder(oldPath + "/ " + file[i], newPath + "/ "
@@ -308,6 +327,21 @@ public class FileUtils {
             }
         } catch (Exception e) {
             Log.d(e.getMessage());
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    Log.e(e.getMessage());
+                }
+            }
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    Log.e(e.getMessage());
+                }
+            }
         }
 
     }
@@ -346,10 +380,10 @@ public class FileUtils {
     public static List<File> searchBySuffix(File f, List<File> fileList,
                                             String... suffix) {
         if (null == fileList) {
-            fileList = new ArrayList<File>();
+            fileList = new ArrayList<>();
         }
         if (f.isDirectory()) {
-            File[] childs = f.listFiles();
+            final File[] childs = f.listFiles();
             if (childs != null) {
                 for (int i = 0; i < childs.length; i++) {
                     if (childs[i].isDirectory()) {
@@ -377,12 +411,9 @@ public class FileUtils {
     public static void writeString(File file, String content) {
         FileOutputStream os = null;
         try {
-            byte[] buffer = content.getBytes("UTF-8");
             os = new FileOutputStream(file);
-            os.write(buffer);
+            os.write(content.getBytes(UTF_8));
             os.flush();
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
         } catch (IOException e) {
             Log.d(e.getMessage());
         } finally {
@@ -390,9 +421,8 @@ public class FileUtils {
                 try {
                     os.close();
                 } catch (IOException e) {
-                    Log.d(e.getMessage());
+                    Log.e(e.getMessage());
                 }
-                os = null;
             }
         }
     }
@@ -404,29 +434,27 @@ public class FileUtils {
      * @param objPath
      */
     public static void writeObject(Object obj, String objPath) {
-
-        File file = new File(objPath);
-        // if (file.exists())file.delete();
-        FileOutputStream os = null;
+        FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            os = new FileOutputStream(file);
-            oos = new ObjectOutputStream(os);
+            fos = new FileOutputStream(new File(objPath));
+            oos = new ObjectOutputStream(fos);
             oos.writeObject(obj);
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             try {
                 if (oos != null) {
                     oos.close();
                 }
+            } catch (IOException e) {
+                Log.d(e.getMessage());
+            }
 
-                if (os != null) {
-                    os.close();
+            try {
+                if (fos != null) {
+                    fos.close();
                 }
-
             } catch (IOException e) {
                 Log.d(e.getMessage());
             }
@@ -444,30 +472,26 @@ public class FileUtils {
             return null;
         }
         Object object = null;
-        InputStream is = null;
+        FileInputStream fos = null;
         ObjectInputStream ois = null;
         try {
-            is = new FileInputStream(file);
-            ois = new ObjectInputStream(is);
+            fos = new FileInputStream(file);
+            ois = new ObjectInputStream(fos);
             object = ois.readObject();
-        } catch (FileNotFoundException e) {
-            Log.d(e.getMessage());
-        } catch (StreamCorruptedException e) {
-            Log.d(e.getMessage());
-        } catch (IOException e) {
-            Log.d(e.getMessage());
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             Log.d(e.getMessage());
         } finally {
             try {
                 if (ois != null) {
                     ois.close();
                 }
-
-                if (is != null) {
-                    is.close();
+            } catch (IOException e) {
+                Log.d(e.getMessage());
+            }
+            try {
+                if (fos != null) {
+                    fos.close();
                 }
-
             } catch (IOException e) {
                 Log.d(e.getMessage());
             }
@@ -482,10 +506,10 @@ public class FileUtils {
      * @return
      */
     public static String convertString(InputStream is) {
-        StringBuilder sb = new StringBuilder();
+        final  StringBuilder sb = new StringBuilder();
         String readline = "";
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            final BufferedReader br = new BufferedReader(new InputStreamReader(is, UTF_8));
             while (br.ready()) {
                 readline = br.readLine();
                 sb.append(readline);
@@ -504,33 +528,31 @@ public class FileUtils {
      * @return
      */
     public static String formatSize(long length) {
-        float SIZE_BT = 1024L;
-        float SIZE_KB = SIZE_BT * 1024.0f;
-        float SIZE_MB = SIZE_KB * 1024.0f;
-        float SIZE_GB = SIZE_MB * 1024.0f;
-        float SIZE_TB = SIZE_GB * 1024.0f;
-        int SACLE = 2;
-        if (length >= 0 && length < SIZE_BT) {
-            return (double) (Math.round(length * 10) / 10.0) + "B";
-        } else if (length >= SIZE_BT && length < SIZE_KB) {
-            return (double) (Math.round((length / SIZE_BT) * 10) / 10.0) + "KB";// length/SIZE_BT+"KB";
-        } else if (length >= SIZE_KB && length < SIZE_MB) {
-            return (double) (Math.round((length / SIZE_KB) * 10) / 10.0) + "MB";// length/SIZE_KB+"MB";
-        } else if (length >= SIZE_MB && length < SIZE_GB) {
-            BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
+        final float sizeBt = 1024L;
+        final float sizeKb = sizeBt * 1024.0f;
+        final float sizeMb = sizeKb * 1024.0f;
+        final float sizeGb = sizeMb * 1024.0f;
+        final int scale = 2;
+        if (length >= 0 && length < sizeBt) {
+            return Math.round(length * 10.0f) / 10.0 + "B";
+        } else if (length >= sizeBt && length < sizeKb) {
+            return Math.round((length / sizeBt) * 10.0f) / 10.0f + "KB";
+        } else if (length >= sizeKb && length < sizeMb) {
+            return Math.round((length / sizeKb) * 10.0f) / 10.0f + "MB";
+        } else if (length >= sizeMb && length < sizeGb) {
+            final BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
                     .toString());
-            BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_MB + "")
+            final BigDecimal sizeMB = new BigDecimal(Double.valueOf(sizeMb + "")
                     .toString());
-            String result = longs.divide(sizeMB, SACLE,
+            final String result = longs.divide(sizeMB, scale,
                     BigDecimal.ROUND_HALF_UP).toString();
-            // double result=this.length/(double)SIZE_MB;
             return result + "GB";
         } else {
-            BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
+            final BigDecimal longs = new BigDecimal(Double.valueOf(length + "")
                     .toString());
-            BigDecimal sizeMB = new BigDecimal(Double.valueOf(SIZE_GB + "")
+            final  BigDecimal sizeMB = new BigDecimal(Double.valueOf(sizeMb + "")
                     .toString());
-            String result = longs.divide(sizeMB, SACLE,
+            final String result = longs.divide(sizeMB, scale,
                     BigDecimal.ROUND_HALF_UP).toString();
             return result + "TB";
         }
@@ -544,39 +566,41 @@ public class FileUtils {
      */
     public static long formatSize(String sizeStr) {
         if (sizeStr != null && !"".equals(sizeStr.trim())) {
-            String unit = sizeStr
+            final String unit = sizeStr
                     .replaceAll("([1-9]+[0-9]*|0)(\\.[\\d]+)?", "");
-            String size = sizeStr.substring(0, sizeStr.indexOf(unit));
+            final String size = sizeStr.substring(0, sizeStr.indexOf(unit));
             if (TextUtils.isEmpty(size)) {
                 return -1;
             }
 
-            float s = Float.parseFloat(size);
-            if ("B".equals(unit.toLowerCase())) {
+            final float s = Float.parseFloat(size);
+            if ("B".equalsIgnoreCase(unit)) {
                 return (long) s;
-            } else if ("KB".equals(unit.toLowerCase())
-                    || "K".equals(unit.toLowerCase())) {
+            } else if ("KB".equalsIgnoreCase(unit)
+                    || "K".equalsIgnoreCase(unit)) {
                 return (long) (s * 1024);
-            } else if ("MB".equals(unit.toLowerCase())
-                    || "M".equals(unit.toLowerCase())) {
+            } else if ("MB".equalsIgnoreCase(unit)
+                    || "M".equalsIgnoreCase(unit)) {
                 return (long) (s * 1024 * 1024);
-            } else if ("GB".equals(unit.toLowerCase())
-                    || "G".equals(unit.toLowerCase())) {
+            } else if ("GB".equalsIgnoreCase(unit)
+                    || "G".equalsIgnoreCase(unit)) {
                 return (long) (s * 1024 * 1024 * 1024);
-            } else if ("TB".equals(unit.toLowerCase())
-                    || "T".equals(unit.toLowerCase())) {
+            } else if ("TB".equalsIgnoreCase(unit)
+                    || "T".equalsIgnoreCase(unit)) {
                 return (long) (s * 1024 * 1024 * 1024 * 1024);
             }
         }
         return -1;
     }
+
     /**
      * 获取文件类型或后缀
+     *
      * @param filePath
      * @return
      */
     public static String getFileSuffix(String filePath) {
-        String[] arrays = filePath.split("\\.");
+        final  String[] arrays = filePath.split("\\.");
         if (arrays.length >= 2) {
             return arrays[arrays.length - 1];
         } else {
@@ -586,39 +610,41 @@ public class FileUtils {
 
     /**
      * 获取mimeType
+     *
      * @param file
      * @return
      */
     public static String getMIMEType(File file) {
-        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1, file.getName().length()).toLowerCase();
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
-        return mimeType;
+        final String suffix = file.getName().substring(file.getName().lastIndexOf('.') + 1, file.getName().length()).toLowerCase();
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
     }
 
     /**
      * 获取文件名
+     *
      * @param filePath
      * @return
      */
     public static String getFileName(String filePath) {
-        String fileName = new File(filePath).getName();
-        String[] arrays = filePath.split("\\_");
+        final String fileName = new File(filePath).getName();
+        final  String[] arrays = filePath.split("\\_");
         if (arrays.length >= 2) {
             return arrays[arrays.length - 1];
         } else {
             return fileName;
         }
     }
+
     /**
      * 获取文件夹中总文件大小
      *
      * @param file
      * @return 文件大小 单位字节
      */
-    public static long getFolderSize(File file) throws Exception {
+    public static long getFolderSize(File file) {
         long size = 0;
         try {
-            File[] fileList = file.listFiles();
+            final File[] fileList = file.listFiles();
             for (int i = 0; i < fileList.length; i++) {
                 if (fileList[i].isDirectory()) {
                     size = size + getFolderSize(fileList[i]);

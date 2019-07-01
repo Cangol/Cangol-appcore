@@ -26,7 +26,6 @@ import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,15 +41,14 @@ import mobi.cangol.mobile.service.PoolManager;
  */
 public class SoapClient {
     private static final String TAG = "SoapRequest";
-    private final static int TIMEOUT = 20 * 1000;
+    private static final int TIMEOUT = 20 * 1000;
     private final Map<Context, List<WeakReference<Future<?>>>> requestMap;
     private SoapSerializationEnvelope envelope;
-    private HttpTransportSE ht;
     private PoolManager.Pool threadPool;
 
     public SoapClient() {
         threadPool = PoolManager.buildPool(TAG, 3);
-        requestMap = new WeakHashMap<Context, List<WeakReference<Future<?>>>>();
+        requestMap = new WeakHashMap<>();
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
         envelope.dotNet = true;
     }
@@ -62,7 +60,7 @@ public class SoapClient {
      * @param authheader
      * @param headers
      */
-    public void addHeader(String namespace, String authheader, HashMap<String, String> headers) {
+    public void addHeader(String namespace, String authheader, Map<String, String> headers) {
         if (authheader != null && headers != null) {
             envelope.headerOut = new Element[1];
             envelope.headerOut[0] = buildAuthHeader(namespace, authheader, headers);
@@ -79,17 +77,17 @@ public class SoapClient {
      * @param params
      * @param responseHandler
      */
-    public void send(Context context, String url, String namespace, String action, HashMap<String, String> params, SoapResponseHandler responseHandler) {
+    public void send(Context context, String url, String namespace, String action, Map<String, String> params, SoapResponseHandler responseHandler) {
 
         if (params != null) {
-            StringBuilder paramsStr = new StringBuilder(url);
+            final StringBuilder paramsStr = new StringBuilder(url);
             paramsStr.append('/')
                     .append(action);
             if (params.size() > 0) {
                 paramsStr.append('?');
             }
-            SoapObject rpc = new SoapObject(namespace, action);
-            for (Map.Entry<String, String> entry : params.entrySet()) {
+            final SoapObject rpc = new SoapObject(namespace, action);
+            for (final Map.Entry<String, String> entry : params.entrySet()) {
                 rpc.addProperty(entry.getKey(), entry.getValue());
                 paramsStr.append(entry.getKey())
                         .append('=')
@@ -99,8 +97,7 @@ public class SoapClient {
             Log.d(TAG, "sendRequest " + paramsStr.toString());
             envelope.bodyOut = rpc;
         }
-        ht = new HttpTransportSE(url, TIMEOUT);
-        sendRequest(ht, envelope, namespace, responseHandler, context);
+        sendRequest(new HttpTransportSE(url, TIMEOUT), envelope, namespace, responseHandler, context);
     }
 
     /**
@@ -111,10 +108,10 @@ public class SoapClient {
      * @param params
      * @return
      */
-    private Element buildAuthHeader(String namespace, String authheader, HashMap<String, String> params) {
-        Element header = new Element().createElement(namespace, authheader);
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            Element element = new Element().createElement(namespace, entry.getKey());
+    private Element buildAuthHeader(String namespace, String authheader, Map<String, String> params) {
+        final Element header = new Element().createElement(namespace, authheader);
+        for (final Map.Entry<String, String> entry : params.entrySet()) {
+            final Element element = new Element().createElement(namespace, entry.getKey());
             element.addChild(Node.TEXT, entry.getValue());
             header.addChild(Node.ELEMENT, element);
         }
@@ -128,10 +125,10 @@ public class SoapClient {
      * @param mayInterruptIfRunning
      */
     public void cancelRequests(Context context, boolean mayInterruptIfRunning) {
-        List<WeakReference<Future<?>>> requestList = requestMap.get(context);
+        final List<WeakReference<Future<?>>> requestList = requestMap.get(context);
         if (requestList != null) {
-            for (WeakReference<Future<?>> requestRef : requestList) {
-                Future<?> request = requestRef.get();
+            for (final WeakReference<Future<?>> requestRef : requestList) {
+                final Future<?> request = requestRef.get();
                 if (request != null) {
                     request.cancel(mayInterruptIfRunning);
                 }
@@ -152,13 +149,13 @@ public class SoapClient {
     protected void sendRequest(HttpTransportSE ht, SoapSerializationEnvelope envelope,
                                String namespace, SoapResponseHandler responseHandler, Context context) {
 
-        Future<?> request = threadPool.submit(new SoapRequest(ht, envelope, namespace, responseHandler));
+        final Future<?> request = threadPool.submit(new SoapRequest(ht, envelope, namespace, responseHandler));
 
         if (context != null) {
             // Add request to request map
             List<WeakReference<Future<?>>> requestList = requestMap.get(context);
             if (requestList == null) {
-                requestList = new LinkedList<WeakReference<Future<?>>>();
+                requestList = new LinkedList<>();
                 requestMap.put(context, requestList);
             }
             requestList.add(new WeakReference<Future<?>>(request));
