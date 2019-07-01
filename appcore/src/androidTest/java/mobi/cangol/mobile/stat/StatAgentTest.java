@@ -37,10 +37,6 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
         StatAgent.getInstance().sendLaunch();
     }
 
-    public void testSendDevice() {
-        StatAgent.getInstance().sendDevice();
-    }
-
     public void testSendTraffic() {
         StatAgent.getInstance().sendTraffic();
     }
