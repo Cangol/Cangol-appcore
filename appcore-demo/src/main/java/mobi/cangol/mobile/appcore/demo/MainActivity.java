@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
 public class MainActivity extends FragmentActivity {

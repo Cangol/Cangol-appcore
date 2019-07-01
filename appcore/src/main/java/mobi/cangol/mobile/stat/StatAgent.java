@@ -41,21 +41,18 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String SDK_VERSION = BuildConfig.VERSION_NAME;
-    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/cmweb/";
-    private final static String STAT_ACTION_EXCEPTION = "api/countly/crash.do";
-    private final static String STAT_ACTION_EVENT = "api/countly/event.do";
-    private final static String STAT_ACTION_TIMING = "api/countly/qos.do";
-    private final static String STAT_ACTION_LAUNCH = "api/countly/launch.do";
-    private final static String STAT_ACTION_DEVICE = "api/countly/device.do";
-    private final static String STAT_ACTION_SESSION = "api/countly/session.do";
-    private final static String STAT_ACTION_TRAFFIC = "api/countly/traffic.do";
+    private final static String STAT_SERVER_URL = "http://192.168.1.4:8082/";
+    private final static String STAT_ACTION_EXCEPTION = "api/countly/crash";
+    private final static String STAT_ACTION_EVENT = "api/countly/event";
+    private final static String STAT_ACTION_TIMING = "api/countly/qos";
+    private final static String STAT_ACTION_LAUNCH = "api/countly/launch";
+    private final static String STAT_ACTION_SESSION = "api/countly/session";
+    private final static String STAT_ACTION_TRAFFIC = "api/countly/traffic";
     private final static String STAT_TRACKING_ID = "stat";
     private final static String TIMESTAMP = "timestamp";
     private static StatAgent instance;
     private CoreApplication context;
     private ITracker itracker;
-    private HashMap<String, String> commonParams;
     private AnalyticsService analyticsService;
     private SessionService sessionService;
     private CrashService crashService;
@@ -67,8 +64,6 @@ public class StatAgent {
         analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
         crashService = (CrashService) coreApplication.getAppService(AppService.CRASH_SERVICE);
         itracker = analyticsService.getTracker(STAT_TRACKING_ID);
-
-        commonParams = this.getCommonParams();
     }
     public static StatAgent getInstance() {
         if(instance==null){
@@ -94,7 +89,6 @@ public class StatAgent {
         }
     }
     private void init() {
-        sendDevice();
         sendLaunch();
         StatsSession.getInstance(context).setOnSessionListener(new StatsSession.OnSessionListener() {
             @Override
@@ -103,7 +97,7 @@ public class StatAgent {
             }
         });
         StatsTraffic.getInstance(context).onCreated();
-        crashService.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, getCommonParams());
+       crashService.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, null);
     }
 
     public void destroy() {
@@ -112,124 +106,14 @@ public class StatAgent {
         StatsTraffic.getInstance(context).onDestroy();
     }
 
-    /**
-     * 公共参数
-     * osVersion 操作系统版本号 4.2.2
-     * deviceId 设备唯一ID Android|IOS均为open-uuid
-     * platform 平台 平台控制使用IOS|Android
-     * channelId 渠道 渠道控制使用(Google|baidu|91|appstore…)
-     * appId AppID
-     * appVersion App版本号 1.1.0
-     * sdkVersion 统计SDK版本号
-     *
-     * @return
-     */
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private HashMap<String, String> getCommonParams() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("osVersion", DeviceInfo.getOSVersion());
-        params.put("deviceId", getDeviceId(context));
-        params.put("platform", DeviceInfo.getOS());
-        params.put("channelId", getChannelID(context));
-        params.put("appId", getAppID(context));
-        params.put("appVersion", DeviceInfo.getAppVersion(context));
-        params.put("sdkVersion", SDK_VERSION);
-        params.put(TIMESTAMP, TimeUtils.getCurrentTime());
-        StrictMode.setThreadPolicy(oldPolicy);
-        return params;
-    }
-
-    /**
-     * 设备参数
-     * os API版本号 版本控制使用
-     * osVersion 操作系统版本号 4.2.2
-     * model 设备类型 Note2
-     * brand 设备制造商 Samsung
-     * carrier 设备制造商
-     * screenSize 屏幕物理尺寸
-     * density density
-     * densityDpi DPI
-     * resolution 设备分辨率 800*480
-     * locale locale
-     * language 设备语言 Zh
-     * country 设备国家 Cn
-     * charset 设备字符集 (utf-8|gbk...)
-     * ip 设备网络地址 (8.8.8.8)
-     * mac mac地址
-     * cpuInfo cpuInfo
-     * cpuAbi  cpuAbi
-     * mem 内存大小
-     *
-     * @return
-     */
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private HashMap<String, String> getDeviceParams() {
-        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("os", DeviceInfo.getOS());
-        params.put("osVersion", DeviceInfo.getOSVersion());
-        params.put("model", DeviceInfo.getDeviceModel());
-        params.put("brand", DeviceInfo.getDeviceBrand());
-        params.put("carrier", DeviceInfo.getNetworkOperatorName(context));
-        params.put("screenSize", DeviceInfo.getScreenSize(context));
-        params.put("density", "" + DeviceInfo.getDensity(context));
-        params.put("densityDpi", DeviceInfo.getDensityDpiStr(context));
-        params.put("resolution", DeviceInfo.getResolution(context));
-        params.put("locale", DeviceInfo.getLocale());
-        params.put("country", DeviceInfo.getCountry());
-        params.put("language", DeviceInfo.getLanguage());
-        params.put("charset", DeviceInfo.getCharset());
-        params.put("ip", DeviceInfo.getIpStr(context));
-        params.put("mac", DeviceInfo.getMacAddress(context));
-        params.put("cpuInfo", DeviceInfo.getCPUInfo());
-        params.put("memInfo", DeviceInfo.getMemInfo());
-        StrictMode.setThreadPolicy(oldPolicy);
-        return params;
-    }
-
-    private String getDeviceId(Context context) {
-        String deviceId = DeviceInfo.getOpenUDID(context);
-        if (TextUtils.isEmpty(deviceId)) {
-            deviceId = DeviceInfo.getDeviceId(context);
-        }
-        return deviceId;
-    }
-
-    private String getChannelID(Context context) {
-        String channel_id = sessionService.getString("CHANNEL_ID", null);
-        if (TextUtils.isEmpty(channel_id)) {
-            channel_id = DeviceInfo.getAppStringMetaData(context, "CHANNEL_ID");
-            if (TextUtils.isEmpty(channel_id)) {
-                channel_id = "UNKNOWN";
-            } else {
-                sessionService.saveString("CHANNEL_ID", channel_id);
-            }
-        }
-        return channel_id;
-    }
-
-    private String getAppID(Context context) {
-        String app_id = DeviceInfo.getAppStringMetaData(context, "APP_ID");
-        if (TextUtils.isEmpty(app_id)) {
-            app_id = context.getPackageName();
-        }
-        return app_id;
-    }
-
     public void setDebug(boolean debug) {
         analyticsService.setDebug(debug);
     }
 
     public void send(Builder eventBuilder) {
         IMapBuilder builder = IMapBuilder.build();
-        builder.setAll(commonParams);
         builder.setAll(eventBuilder.build());
         switch (eventBuilder.type) {
-            case Device:
-                builder.setAll(getDeviceParams());
-                builder.setUrl(getStatHostUrl() + STAT_ACTION_DEVICE);
-                break;
             case Event:
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_EVENT);
                 break;
@@ -243,9 +127,6 @@ public class StatAgent {
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_LAUNCH);
                 break;
             case Session:
-                if ("1".equals(eventBuilder.get("beginSession"))) {
-                    builder.setAll(getDeviceParams());
-                }
                 builder.setUrl(getStatHostUrl() + STAT_ACTION_SESSION);
                 break;
             case Traffic:
@@ -271,10 +152,6 @@ public class StatAgent {
             exitVersion = sessionService.getString(Constants.KEY_EXIT_VERSION, null);
         }
         send(Builder.createLaunch(exitCode, exitVersion, isnew, TimeUtils.getCurrentTime()));
-    }
-
-    public void sendDevice() {
-        send(Builder.createDevice());
     }
 
     public void sendTraffic() {
@@ -303,14 +180,8 @@ public class StatAgent {
     }
 
     public static class Builder {
-        Type type;
-        private Map<String, String> map = new HashMap<String, String>();
-
-        protected static Builder createDevice() {
-            Builder builder = new Builder();
-            builder.type = Type.Device;
-            return builder;
-        }
+        protected Type type;
+        private Map<String, String> map = new HashMap<>();
 
         public static Builder createAppView(String view) {
             Builder builder = new Builder();
@@ -452,7 +323,7 @@ public class StatAgent {
             return type;
         }
 
-        public Builder set(String paramName, String paramValue) {
+        private Builder set(String paramName, String paramValue) {
             if (paramName != null) {
                 this.map.put(paramName, paramValue);
             } else {
@@ -461,24 +332,11 @@ public class StatAgent {
             return this;
         }
 
-        public Builder setAll(Map<String, String> params) {
-            if (params == null) {
-                return this;
-            }
-            this.map.putAll(new HashMap<String, String>(params));
-            return this;
-        }
-
-        public String get(String paramName) {
-            return (String) this.map.get(paramName);
-        }
-
         public Map<String, String> build() {
-            return new HashMap<String, String>(this.map);
+            return new HashMap<>(this.map);
         }
 
         enum Type {
-            Device,
             Event,
             Timing,
             Exception,

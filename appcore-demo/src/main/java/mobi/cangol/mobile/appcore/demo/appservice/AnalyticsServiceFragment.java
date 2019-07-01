@@ -20,6 +20,7 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.analytics.AnalyticsService;
 import mobi.cangol.mobile.service.analytics.IMapBuilder;
 import mobi.cangol.mobile.service.analytics.ITracker;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
@@ -86,7 +87,8 @@ public class AnalyticsServiceFragment extends Fragment{
                     showToast("Please getTracker");
                 }else{
                     IMapBuilder builder=IMapBuilder.build();
-                    builder.setUrl("http://www.cangol.mobi/cmweb/api/countly/event.do");
+                    builder.setUrl("http://192.168.1.4:8082/api/countly/event");
+                    //builder.setAll(StatAgent.getInstance().getDeviceParams());
                     builder.set("id","1")
                             .set("name","Jick")
                             .set("age","24")

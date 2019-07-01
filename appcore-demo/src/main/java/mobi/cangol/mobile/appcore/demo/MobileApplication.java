@@ -24,8 +24,9 @@ public class MobileApplication extends CoreApplication {
     @Override
     public void init() {
         initLeakCanary();
-        if(DeviceInfo.isAppProcess(this))
+        if(DeviceInfo.isAppProcess(this)){
             StatAgent.initInstance(this);
+        }
     }
     private void initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {

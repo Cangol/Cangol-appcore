@@ -15,11 +15,17 @@
  */
 package mobi.cangol.mobile.service.analytics;
 
+import android.annotation.TargetApi;
 import android.app.Application;
+import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
+import android.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import mobi.cangol.mobile.core.BuildConfig;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
@@ -27,6 +33,8 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
+import mobi.cangol.mobile.utils.DeviceInfo;
+import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
  * @author Cangol
@@ -34,12 +42,13 @@ import mobi.cangol.mobile.service.ServiceProperty;
 @Service("AnalyticsService")
 class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     private final static String TAG = "AnalyticsService";
-    private boolean mDebug = false;
+    private boolean mDebug = true;
     private Application mContext = null;
     private AsyncHttpClient mAsyncHttpClient = null;
     private ServiceProperty mServiceProperty = null;
     private Map<String, ITracker> mTrackers = new HashMap<String, ITracker>();
-
+    private HashMap<String, String> commonParams;
+    private HashMap<String, String> deviceParams;
     @Override
     public void onCreate(Application context) {
         mContext = context;
@@ -50,6 +59,12 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         this.mServiceProperty = serviceProperty;
         PoolManager.buildPool(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME), mServiceProperty.getInt(ANALYTICSSERVICE_THREAD_MAX));
         mAsyncHttpClient = AsyncHttpClient.build(mServiceProperty.getString(ANALYTICSSERVICE_THREADPOOL_NAME));
+        try {
+            commonParams = initCommonParams();
+            deviceParams = initDeviceParams();
+        }catch (Exception e){
+            Log.w(TAG, ":" + e.getMessage());
+        }
     }
 
     @Override
@@ -76,11 +91,15 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     }
 
     @Override
-    public void send(final ITracker iTracker, String url, Map<String, String> paramsMap) {
-        RequestParams params = new RequestParams(paramsMap);
-        if (mDebug) Log.v(TAG, "send " + url+"?"+params.toString());
-        if (mDebug) Log.v(TAG, "params: \n" + params.toDebugString());
-        mAsyncHttpClient.get(mContext, url, params, new AsyncHttpResponseHandler() {
+    public void send(final ITracker iTracker, String url,Map<String, String> params) {
+        RequestParams requestParams = new RequestParams(params);
+        if (mDebug) Log.v(TAG, "send " + url+"?"+requestParams.toString());
+        if (mDebug) Log.v(TAG, "params: \n" + requestParams.toDebugString());
+
+        HashMap<String, String> headers=new HashMap<>();
+        headers.putAll(commonParams);
+        headers.putAll(deviceParams);
+        mAsyncHttpClient.get(mContext, url, headers, (HashMap<String, String>) params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -125,5 +144,112 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
             mTrackers.remove(trackingId);
             tracker.setClosed(true);
         }
+    }
+
+    /**
+     * 公共参数
+     * osVersion 操作系统版本号 4.2.2
+     * deviceId 设备唯一ID Android|IOS均为open-uuid
+     * platform 平台 平台控制使用IOS|Android
+     * channelId 渠道 渠道控制使用(Google|baidu|91|appstore…)
+     * appId AppID
+     * appVersion App版本号 1.1.0
+     * sdkVersion 统计SDK版本号
+     *
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    protected HashMap<String, String> initCommonParams() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("osVersion", DeviceInfo.getOSVersion());
+        params.put("deviceId", getDeviceId(mContext));
+        params.put("platform", DeviceInfo.getOS());
+        params.put("channelId", getChannelID(mContext));
+        params.put("appId", getAppID(mContext));
+        params.put("appVersion", DeviceInfo.getAppVersion(mContext));
+        params.put("sdkVersion", BuildConfig.VERSION_NAME);
+        params.put("timestamp", TimeUtils.getCurrentTime());
+        StrictMode.setThreadPolicy(oldPolicy);
+        return params;
+    }
+    @Override
+    public HashMap<String, String> getCommonParams() {
+        return commonParams;
+    }
+    /**
+     * 设备参数
+     * os API版本号 版本控制使用
+     * osVersion 操作系统版本号 4.2.2
+     * model 设备类型 Note2
+     * brand 设备制造商 Samsung
+     * carrier 设备制造商
+     * screenSize 屏幕物理尺寸
+     * density density
+     * densityDpi DPI
+     * resolution 设备分辨率 800*480
+     * locale locale
+     * language 设备语言 Zh
+     * country 设备国家 Cn
+     * charset 设备字符集 (utf-8|gbk...)
+     * ip 设备网络地址 (8.8.8.8)
+     * mac mac地址
+     * cpuInfo cpuInfo
+     * cpuAbi  cpuAbi
+     * mem 内存大小
+     *
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public HashMap<String, String> initDeviceParams() {
+        StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("os", DeviceInfo.getOS());
+        params.put("osVersion", DeviceInfo.getOSVersion());
+        params.put("model", DeviceInfo.getDeviceModel());
+        params.put("brand", DeviceInfo.getDeviceBrand());
+        params.put("carrier", DeviceInfo.getNetworkOperatorName(mContext));
+        params.put("screenSize", DeviceInfo.getScreenSize(mContext));
+        params.put("density", "" + DeviceInfo.getDensity(mContext));
+        params.put("densityDpi", DeviceInfo.getDensityDpiStr(mContext));
+        params.put("resolution", DeviceInfo.getResolution(mContext));
+        params.put("locale", DeviceInfo.getLocale());
+        params.put("country", DeviceInfo.getCountry());
+        params.put("language", DeviceInfo.getLanguage());
+        params.put("charset", DeviceInfo.getCharset());
+        params.put("ip", DeviceInfo.getIpStr(mContext));
+        params.put("mac", DeviceInfo.getMacAddress(mContext));
+        params.put("cpuInfo", DeviceInfo.getCPUInfo());
+        //params.put("memInfo", DeviceInfo.getMemInfo());
+        StrictMode.setThreadPolicy(oldPolicy);
+        return params;
+    }
+
+    @Override
+    public HashMap<String, String> getDeviceParams() {
+        return deviceParams;
+    }
+    private String getDeviceId(Context context) {
+        String deviceId = DeviceInfo.getOpenUDID(context);
+        if (TextUtils.isEmpty(deviceId)) {
+            deviceId = DeviceInfo.getDeviceId(context);
+        }
+        return deviceId;
+    }
+
+    private String getChannelID(Context context) {
+        String channel_id = DeviceInfo.getAppStringMetaData(context, "CHANNEL_ID");
+        if (TextUtils.isEmpty(channel_id)) {
+            channel_id = "UNKNOWN";
+        }
+        return channel_id;
+    }
+
+    private String getAppID(Context context) {
+        String app_id = DeviceInfo.getAppStringMetaData(context, "APP_ID");
+        if (TextUtils.isEmpty(app_id)) {
+            app_id = context.getPackageName();
+        }
+        return app_id;
     }
 }
