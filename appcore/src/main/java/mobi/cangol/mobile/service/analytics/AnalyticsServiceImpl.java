@@ -22,6 +22,8 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.text.TextUtils;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +32,7 @@ import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -96,9 +99,10 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         if (mDebug) Log.v(TAG, "send " + url+"?"+requestParams.toString());
         if (mDebug) Log.v(TAG, "params: \n" + requestParams.toDebugString());
 
+        HashMap<String, String> maps=new HashMap<>();
+        maps.putAll(commonParams);
         HashMap<String, String> headers=new HashMap<>();
-        headers.putAll(commonParams);
-        headers.putAll(deviceParams);
+        headers.put("device",new JSONObject(maps).toString());
         mAsyncHttpClient.get(mContext, url, headers, params, new AsyncHttpResponseHandler() {
 
             @Override
