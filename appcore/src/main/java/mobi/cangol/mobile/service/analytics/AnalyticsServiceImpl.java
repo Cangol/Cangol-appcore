@@ -94,18 +94,18 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     }
 
     @Override
-    public void send(final ITracker iTracker, final String url, Map<String, String> params) {
-        final RequestParams requestParams = new RequestParams(params);
+    public void send(final ITracker iTracker, final String url,final Map<String, String> params) {
         final HashMap<String, String> headers=new HashMap<>();
         headers.put("device",new JSONObject(deviceParams).toString());
         headers.putAll(commonParams);
 
-        mAsyncHttpClient.get(mContext, url, headers, params, new AsyncHttpResponseHandler() {
+        mAsyncHttpClient.post(mContext, url, headers, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
                 super.onStart();
                 if (mDebug) {
+                    final RequestParams requestParams = new RequestParams(params);
                     final StringBuilder result = new StringBuilder();
                     for(final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
                         result.append('\t').append(entry.getKey()).append('=').append(entry.getValue()).append('\n');

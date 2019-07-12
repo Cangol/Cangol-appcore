@@ -242,7 +242,7 @@ public class StatAgent {
             builder.set("content", content);
             builder.set(TIMESTAMP, timestamp);
             builder.set("fatal", fatal);
-            builder.type = Type.EVENT;
+            builder.type = Type.EXCEPTION;
             return builder;
 
         }

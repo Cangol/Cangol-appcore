@@ -32,6 +32,7 @@ public class StatFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatAgent.getInstance().setDebug(true);
+        //StatAgent.getInstance().setStatServerURL("http://192.168.57.171/");
     }
 
     @Override

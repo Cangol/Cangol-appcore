@@ -302,7 +302,7 @@ public class AsyncHttpClient {
         final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
         if (params != null) {
             for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
-                requestBodyBuilder.add(entry.getKey(), entry.getValue());
+                if(entry.getValue()!=null)requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
         }
         Request request = null;
