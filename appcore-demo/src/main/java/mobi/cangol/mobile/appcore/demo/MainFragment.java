@@ -48,6 +48,7 @@ public class MainFragment extends ListFragment {
         fragments.add(SecurityFragment.class);
         fragments.add(SoapFragment.class);
         fragments.add(UtilsFragment.class);
+        fragments.add(StatFragment.class);
         //fragments.add(LibTestFragment.class);
     }
     @Override

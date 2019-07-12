@@ -19,6 +19,7 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.cache.CacheLoader;
 import mobi.cangol.mobile.service.cache.CacheManager;
 import mobi.cangol.mobile.service.cache.CacheObject;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -44,6 +45,17 @@ public class CacheManagerFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initViews();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
     }
     private void initViews(){
         textView1 = this.getView().findViewById(R.id.textView1);

@@ -34,6 +34,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.event.ObserverManager;
 import mobi.cangol.mobile.service.event.Subscribe;
+import mobi.cangol.mobile.stat.StatAgent;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -96,7 +97,17 @@ public class OberserverManagerFragment extends Fragment{
         textView1.append("\n"+message);
         Log.d(message);
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

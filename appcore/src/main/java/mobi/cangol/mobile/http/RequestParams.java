@@ -82,8 +82,8 @@ public class RequestParams {
     public String toDebugString() {
         final StringBuilder result = new StringBuilder();
         for (final ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-
-            result.append(entry.getKey())
+            result.append('\t')
+                    .append(entry.getKey())
                     .append('=')
                     .append(entry.getValue())
                     .append('\n');

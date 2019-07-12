@@ -24,6 +24,7 @@ import mobi.cangol.mobile.service.download.DownloadManager;
 import mobi.cangol.mobile.service.download.DownloadNotification;
 import mobi.cangol.mobile.service.download.DownloadResource;
 import mobi.cangol.mobile.service.download.DownloadStatusListener;
+import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.FileUtils;
 import mobi.cangol.mobile.utils.StringUtils;
 
@@ -61,7 +62,17 @@ public class DownloadManagerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initViews();
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        StatAgent.getInstance().onFragmentPause(TAG);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        StatAgent.getInstance().onFragmentResume(TAG);
+    }
     private void initViews() {
         textView1 = this.getView().findViewById(R.id.textView1);
         button11 = this.getView().findViewById(R.id.button11);

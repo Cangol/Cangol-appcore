@@ -26,13 +26,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import mobi.cangol.mobile.core.BuildConfig;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
@@ -94,20 +94,26 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     }
 
     @Override
-    public void send(final ITracker iTracker, String url,Map<String, String> params) {
-        RequestParams requestParams = new RequestParams(params);
-        if (mDebug) Log.v(TAG, "send " + url+"?"+requestParams.toString());
-        if (mDebug) Log.v(TAG, "params: \n" + requestParams.toDebugString());
+    public void send(final ITracker iTracker, final String url, Map<String, String> params) {
+        final RequestParams requestParams = new RequestParams(params);
+        final HashMap<String, String> headers=new HashMap<>();
+        headers.put("device",new JSONObject(deviceParams).toString());
+        headers.putAll(commonParams);
 
-        HashMap<String, String> maps=new HashMap<>();
-        maps.putAll(commonParams);
-        HashMap<String, String> headers=new HashMap<>();
-        headers.put("device",new JSONObject(maps).toString());
         mAsyncHttpClient.get(mContext, url, headers, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
                 super.onStart();
+                if (mDebug) {
+                    final StringBuilder result = new StringBuilder();
+                    for(final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+                        result.append('\t').append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
+                    }
+                    Log.v(TAG, "url: " + url + "?" + requestParams.toString()
+                            + "\nheader: \n" + result.toString()
+                            + "params: \n" + requestParams.toDebugString());
+                }
             }
 
             @Override

@@ -87,11 +87,10 @@ public class AnalyticsServiceFragment extends Fragment{
                     showToast("Please getTracker");
                 }else{
                     IMapBuilder builder=IMapBuilder.build();
-                    builder.setUrl("http://192.168.1.4:8082/api/countly/event");
+                    builder.setUrl("https://www.cangol.mobi/api/countly/event");
                     //builder.setAll(StatAgent.getInstance().getDeviceParams());
-                    builder.set("id","1")
-                            .set("name","Jick")
-                            .set("age","24")
+                    builder.set("action","test")
+                            .set("view","AnalyticsServiceFragment")
                             .set("timestamp", TimeUtils.getCurrentTime());
                     boolean result=tracker.send(builder);
                     updateViews("\n"+tracker.getTrackingId()+" send "+result);

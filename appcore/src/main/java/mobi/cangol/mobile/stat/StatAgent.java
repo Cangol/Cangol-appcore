@@ -36,7 +36,7 @@ import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String STAT_SERVER_URL = "http:/192.168.1.4:8082/";
+    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/";
     private final static String STAT_ACTION_EXCEPTION = "api/countly/crash";
     private final static String STAT_ACTION_EVENT = "api/countly/event";
     private final static String STAT_ACTION_TIMING = "api/countly/qos";
@@ -221,6 +221,7 @@ public class StatAgent {
             Builder builder = new Builder();
             builder.set("view", view);
             builder.set("idleTime", idletime == null ? null : Long.toString(idletime.longValue()));
+            builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
             builder.type = Type.TIMING;
             return builder;
         }
