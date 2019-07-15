@@ -181,7 +181,7 @@ public class StatAgent {
         public static Builder createAppView(String view) {
             Builder builder = new Builder();
             builder.set("view", view);
-            builder.set("action", "Vistor");
+            builder.set("action", "visit");
             builder.set(TIMESTAMP, TimeUtils.getCurrentTime());
             builder.type = Type.EVENT;
             return builder;
