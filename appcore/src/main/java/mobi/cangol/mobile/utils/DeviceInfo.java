@@ -377,7 +377,17 @@ public final class DeviceInfo {
         }
         return provider;
     }
-
+    public static String getNetworkOperator(Context context) {
+        String provider = "";
+        try {
+            final TelephonyManager manager = (TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            provider = manager.getNetworkOperator();
+        } catch (Exception e) {
+            Log.e("getNetworkOperatorName", "" + e.getMessage(), e);
+        }
+        return provider;
+    }
     public static final int NETWORK_TYPE_UNAVAILABLE = -1;
     public static final int NETWORK_TYPE_WIFI = -101;
 

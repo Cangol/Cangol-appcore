@@ -218,7 +218,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("model", DeviceInfo.getDeviceModel());
         params.put("brand", DeviceInfo.getDeviceBrand());
-        params.put("carrier", DeviceInfo.getNetworkOperatorName(mContext));
+        params.put("carrier", DeviceInfo.getNetworkOperator(mContext));
         params.put("screenSize", DeviceInfo.getScreenSize(mContext));
         params.put("density", "" + DeviceInfo.getDensity(mContext));
         params.put("densityDpi", DeviceInfo.getDensityDpiStr(mContext));
@@ -229,8 +229,9 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         params.put("charset", DeviceInfo.getCharset());
         params.put("ip", DeviceInfo.getIpStr(mContext));
         params.put("mac", DeviceInfo.getMacAddress(mContext));
+        params.put("cpuABI", DeviceInfo.getCPUABI());
         params.put("cpuInfo", DeviceInfo.getCPUInfo());
-        //params.put("memInfo", DeviceInfo.getMemInfo());
+        params.put("memSize", ""+DeviceInfo.getMemTotalSize());
         StrictMode.setThreadPolicy(oldPolicy);
         return params;
     }
