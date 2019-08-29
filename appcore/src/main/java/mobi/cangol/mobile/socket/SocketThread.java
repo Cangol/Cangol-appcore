@@ -74,8 +74,6 @@ public class SocketThread extends Thread {
             socket.setTrafficClass(0x04);//低成本0x02;高可靠性0x04;最高吞吐量;0x08;小延迟0x10
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(isLong ? CONNECT_TIME_OUT * 3 : timeout);
-            socket.setReceiveBufferSize(BUFFER_SIZE * 2);
-            socket.setSendBufferSize(BUFFER_SIZE);
             socket.setKeepAlive(isLong);
             socket.setPerformancePreferences(3, 2, 1);//相对重要性 (connectionTime:表示用最少时间建立连接;latency:表示最小延迟;bandwidth:表示最高带宽)
             socket.setReuseAddress(false);
