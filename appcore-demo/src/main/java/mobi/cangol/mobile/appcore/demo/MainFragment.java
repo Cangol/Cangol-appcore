@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
+import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
 
 /**
@@ -49,7 +53,7 @@ public class MainFragment extends ListFragment {
         fragments.add(SoapFragment.class);
         fragments.add(UtilsFragment.class);
         fragments.add(StatFragment.class);
-        //fragments.add(LibTestFragment.class);
+        fragments.add(LibTestFragment.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,8 +79,10 @@ public class MainFragment extends ListFragment {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }else{
-            //RouteService mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
-            //mRouteService.build("lib").putString("key","hello "+new Random().nextInt(100)).navigation(this.getContext());
+            RouteService mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
+            mRouteService.build("lib")
+                    .putString("key","hello "+new Random().nextInt(100))
+                    .navigation(this.getContext());
 
             Intent intent=new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("app://main/lib"));

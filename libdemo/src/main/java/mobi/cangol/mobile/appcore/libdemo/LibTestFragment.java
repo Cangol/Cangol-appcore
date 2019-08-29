@@ -14,7 +14,7 @@ import mobi.cangol.mobile.service.route.Route;
 /**
  * Created by weixuewu on 16/4/30.
  */
-//@Route(path = "lib",standalone = true)
+@Route(path = "lib",standalone = true)
 public class LibTestFragment extends Fragment {
     private static final String TAG = "LibTestFragment";
     private TextView textView1;

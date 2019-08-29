@@ -106,11 +106,11 @@ class RouteServiceImpl implements RouteService {
         return mRouteMap.get(path);
     }
 
-    void handleNavigation(Class clazz, Bundle bundle, Context context, boolean standalone) {
+    void handleNavigation(Class clazz, Bundle bundle, Context context) {
         if (clazz.getSuperclass() == Activity.class) {
-            this.mOnNavigation.toActivity(navigationActivity(clazz, bundle, context), standalone);
+            this.mOnNavigation.toActivity(navigationActivity(clazz, bundle, context));
         } else if (clazz.getSuperclass() == Fragment.class) {
-            this.mOnNavigation.toFragment(navigationFragment(clazz, bundle, context), standalone);
+            this.mOnNavigation.toFragment(navigationFragment(clazz, bundle, context));
         } else {
             Log.i(TAG, " not navigation");
         }

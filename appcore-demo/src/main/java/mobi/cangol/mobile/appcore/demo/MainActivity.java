@@ -82,11 +82,14 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
         ((CoreApplication)getApplication()).exit();
     }
 
-    public void toActivity(Intent intent,boolean standalone) {
+    @Override
+    public void toActivity(Intent intent) {
         Log.i("activity ");
+        startActivity(intent);
     }
 
-    public void toFragment(Fragment fragment,boolean standalone) {
+    @Override
+    public void toFragment(Fragment fragment) {
         Log.i("fragment ");
         FragmentManager fm = this.getSupportFragmentManager();
         fm.beginTransaction()

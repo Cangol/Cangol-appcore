@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
  */
 public interface OnNavigation {
 
-    void toActivity(Intent intent, boolean standalone);
+    void toActivity(Intent intent);
 
-    void toFragment(Fragment fragment, boolean standalone);
+    void toFragment(Fragment fragment);
 }

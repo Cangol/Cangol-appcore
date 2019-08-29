@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class RouteBuilder {
     private String path = null;
     private Bundle bundle = null;
-    private boolean standalone = false;
     private Context context = null;
     private RouteServiceImpl routeService;
 
@@ -40,12 +39,7 @@ public class RouteBuilder {
         this.context = context;
         final Class clazz = routeService.getClassByPath(getPath());
         if (clazz != null) {
-            if (clazz.isAnnotationPresent(Route.class)) {
-                final Route route = (Route) clazz.getAnnotation(Route.class);
-                routeService.handleNavigation(clazz, getBundle(), getContext(), route.standalone());
-            } else {
-                routeService.handleNavigation(clazz, getBundle(), getContext(), this.standalone);
-            }
+            routeService.handleNavigation(clazz, getBundle(), getContext());
         }
     }
 

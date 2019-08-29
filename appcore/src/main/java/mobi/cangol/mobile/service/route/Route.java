@@ -33,6 +33,4 @@ public @interface Route {
     String value() default "";
 
     String path();
-
-    boolean standalone() default false;
 }
