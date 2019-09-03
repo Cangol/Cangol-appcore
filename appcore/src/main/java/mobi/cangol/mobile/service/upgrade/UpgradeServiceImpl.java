@@ -130,7 +130,12 @@ class UpgradeServiceImpl implements UpgradeService {
                 Log.e(e.getMessage());
             }
         }
-        final DownloadNotification downloadNotification = new DownloadNotification(mContext, filename, savePath, createFinishIntent(savePath, upgradeType));
+        Intent intent=createFinishIntent(savePath, upgradeType);
+        if(intent==null){
+            Log.e(TAG,"createFinishIntent fail!");
+            return;
+        }
+        final DownloadNotification downloadNotification = new DownloadNotification(mContext, filename, savePath,intent );
         if (notification) {
             mIds.add(downloadNotification.getId());
         }
@@ -232,37 +237,36 @@ class UpgradeServiceImpl implements UpgradeService {
     private Intent createFinishIntent(String savePath, UpgradeType upgradeType) {
         Intent intent = null;
         final File file = new File(savePath);
-        switch (upgradeType) {
-            case APK:
-                intent = new Intent(Intent.ACTION_VIEW);
-                //判断是否是AndroidN以及更高的版本
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    final String authority = mContext.getPackageName() + ".fileprovider";
-                    if (debug) Log.e("authority=" + authority);
-                    final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
-                    if (debug) Log.e("uri=" + contentUri);
-                    intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
-                } else {
-                    intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                }
-                break;
-            case RES:
-
-                break;
-            case DEX:
-
-                break;
-            case SO:
-
-                break;
-            case OTHER:
-                new Intent();
-                break;
-            default:
-                new Intent();
-                break;
+        if(file.exists()){
+            switch (upgradeType) {
+                case APK:
+                    intent = new Intent(Intent.ACTION_VIEW);
+                    //判断是否是AndroidN以及更高的版本
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        final String authority = mContext.getPackageName() + ".fileprovider";
+                        if (debug) Log.e("authority=" + authority);
+                        final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
+                        if (debug) Log.e("uri=" + contentUri);
+                        intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                    } else {
+                        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+                    break;
+                case RES:
+                    break;
+                case DEX:
+                    break;
+                case SO:
+                    break;
+                case OTHER:
+                    break;
+                default:
+                    break;
+            }
+        }else{
+            Log.e(TAG,"not found :"+file.getAbsolutePath());
         }
         return intent;
     }
