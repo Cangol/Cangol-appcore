@@ -89,7 +89,7 @@ public class JsonUtils extends Converter {
         try {
             for (final Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) {
                     continue;
                 }
                 final String filedName = getFieldName(field, useAnnotation);
@@ -225,7 +225,7 @@ public class JsonUtils extends Converter {
             String filedName = null;
             for (final Field field : fields) {
                 field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) ) {
                     continue;
                 }
                 filedName = getFieldName(field, useAnnotation);
