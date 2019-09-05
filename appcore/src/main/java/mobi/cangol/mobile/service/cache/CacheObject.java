@@ -23,6 +23,7 @@ import java.io.Serializable;
  * Created by xuewu.wei on 2016/3/14.
  */
 public class CacheObject implements Serializable {
+    private static final long serialVersionUID = 0L;
     public static final int TIME_SEC = 1000;
     public static final int TIME_MIN = 60 * 1000;
     public static final int TIME_HOUR = 60 * 60 * 1000;
@@ -99,7 +100,12 @@ public class CacheObject implements Serializable {
             return false;
         } else return timestamp + period <= System.currentTimeMillis();
     }
-
+    public long getExpired() {
+        if (period == -1)
+            return -1;
+        else
+            return timestamp + period;
+    }
     @Override
     public String toString() {
         return "CacheObject{" +

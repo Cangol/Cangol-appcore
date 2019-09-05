@@ -15,15 +15,16 @@
  */
 package mobi.cangol.mobile.service.cache;
 
-import android.annotation.TargetApi;
 import android.app.Application;
-import android.os.Build;
-import android.os.StatFs;
 import android.text.TextUtils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -39,7 +40,6 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.conf.ConfigService;
-import mobi.cangol.mobile.utils.Object2FileUtils;
 
 /**
  * @author Cangol
@@ -142,7 +142,7 @@ class CacheManagerImpl implements CacheManager {
         }
         if (cacheObject != null) {
             if (cacheObject.isExpired()) {
-                Log.e(TAG, "is expired & remove ");
+                Log.e(TAG, "expired:"+cacheObject.getExpired()+",it's expired & removed ");
                 removeContent(context, id);
                 return null;
             } else {
@@ -176,7 +176,7 @@ class CacheManagerImpl implements CacheManager {
                 public void result(CacheObject cacheObject) {
                     if (cacheObject != null) {
                         if (cacheObject.isExpired()) {
-                            Log.e(TAG, "is expired & remove ");
+                            Log.e(TAG, "expired:"+cacheObject.getExpired()+",it's expired & removed ");
                             removeContent(context, id);
                             if (cacheLoader != null) cacheLoader.returnContent(null);
                         } else {
@@ -191,7 +191,7 @@ class CacheManagerImpl implements CacheManager {
             });
         } else {
             if (cacheObject.isExpired()) {
-                Log.e(TAG, "is expired & remove ");
+                Log.e(TAG, "expired:"+cacheObject.getExpired()+",it's expired & removed ");
                 removeContent(context, id);
                 if (cacheLoader != null) cacheLoader.returnContent(null);
             } else {
@@ -213,7 +213,7 @@ class CacheManagerImpl implements CacheManager {
             return hasContentFromDiskCache(id);
         } else {
             if (cacheObject.isExpired()) {
-                Log.e(TAG, "is expired & remove ");
+                Log.e(TAG, "expired:"+cacheObject.getExpired()+",it's expired & removed ");
                 removeContent(context, id);
                 return false;
             } else {
@@ -246,9 +246,9 @@ class CacheManagerImpl implements CacheManager {
                     if (snapshot != null) {
                         inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
                         if (inputStream != null) {
-                            final CacheObject obj = (CacheObject) Object2FileUtils.readObject(inputStream);
-                            if (obj.isExpired()) {
-                                Log.e(TAG, "is expired & remove ");
+                            final CacheObject cacheObject = (CacheObject) readObject(inputStream);
+                            if (cacheObject.isExpired()) {
+                                Log.e(TAG, "expired:"+cacheObject.getExpired()+",it's expired & removed ");
                                 mDiskLruCache.remove(hashKeyForDisk(id));
                                 return false;
                             } else {
@@ -296,7 +296,7 @@ class CacheManagerImpl implements CacheManager {
                     if (snapshot != null) {
                         inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
                         if (inputStream != null) {
-                            return (CacheObject) Object2FileUtils.readObject(inputStream);
+                            return (CacheObject) readObject(inputStream);
                         }
                     }
                 } catch (final IOException e) {
@@ -403,7 +403,7 @@ class CacheManagerImpl implements CacheManager {
                         if (editor != null) {
                             out = editor.newOutputStream(DISK_CACHE_INDEX);
                             // 写入out流
-                            Object2FileUtils.writeObject(cacheObject, out);
+                            writeObject(cacheObject, out);
                             editor.commit();
                             out.close();
                             flush();
@@ -555,7 +555,42 @@ class CacheManagerImpl implements CacheManager {
         }
         return cacheKey;
     }
+    private Serializable readObject(InputStream is) {
+        Object object = null;
+        try {
+            object = new ObjectInputStream(new BufferedInputStream(is)).readObject();
+        } catch (Exception e) {
+            Log.e(TAG,"readObject",e);
+        }
+        return (Serializable) object;
+    }
+    private void writeObject(Serializable obj, OutputStream out) {
+        BufferedOutputStream bos = null;
+        ObjectOutputStream oos = null;
+        try {
+            bos = new BufferedOutputStream(out);
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+        } catch (Exception e) {
+            Log.e(TAG,"writeObject",e);
+        } finally {
+            try {
+                if (oos != null) {
+                    oos.close();
+                }
+            } catch (IOException e) {
+                Log.e(TAG,"writeObject close",e);
+            }
 
+            try {
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (IOException e) {
+                Log.e(TAG,"writeObject close",e);
+            }
+        }
+    }
     private String bytesToHexString(byte[] bytes) {
         // http://stackoverflow.com/questions/332079
         final StringBuilder sb = new StringBuilder();
