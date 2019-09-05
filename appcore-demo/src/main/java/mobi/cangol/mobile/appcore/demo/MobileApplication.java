@@ -14,20 +14,22 @@ import mobi.cangol.mobile.utils.DeviceInfo;
  */
 @DebugLog
 public class MobileApplication extends CoreApplication {
+
     public void onCreate() {
         this.setDevMode(true);
         this.setAsyncInit(false);
-        //this.getModuleManager().add(new LibApplication());
+        this.getModuleManager().addModule(new LibApplication());
         super.onCreate();
     }
 
     @Override
     public void init() {
         initLeakCanary();
-        if(DeviceInfo.isAppProcess(this)){
+        if (DeviceInfo.isAppProcess(this)) {
             StatAgent.initInstance(this);
         }
     }
+
     private void initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -35,9 +37,5 @@ public class MobileApplication extends CoreApplication {
             return;
         }
         LeakCanary.install(this);
-    }
-
-    public boolean isModule() {
-        return false;
     }
 }

@@ -15,49 +15,104 @@
  */
 package mobi.cangol.mobile;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+
 import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.route.RouteService;
+import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.session.SessionService;
 
 /**
  * @author Cangol
  */
 
-public abstract class ModuleApplication {
+public class ModuleApplication {
     private CoreApplication mCoreApplication;
-    private RouteService mRouteService;
 
-    protected final void setCoreApplication(CoreApplication coreApplication) {
-        this.mCoreApplication = coreApplication;
+    protected void setCoreApplication(CoreApplication application) {
+        this.mCoreApplication = application;
     }
 
-    public final CoreApplication getApplication() {
+    protected final CoreApplication getApplication() {
         return mCoreApplication;
     }
 
-    public void onCreate() {
-        mRouteService = (RouteService) getApplication().getAppService(AppService.ROUTE_SERVICE);
+    protected void onCreate() {
+
     }
 
-    public void init() {
+    public final AppService getAppService(String name) {
+        return getApplication().getAppService(name);
     }
 
-    public void onTerminate() {
+    /**
+     * 获取Session
+     *
+     * @return
+     */
+    public final SessionService getSession() {
+        return ((SessionService) getAppService(AppService.SESSION_SERVICE));
     }
 
-    public void onLowMemory() {
+    /**
+     * 获取共享线程池
+     *
+     * @return
+     */
+    public final PoolManager.Pool getSharePool() {
+        return getApplication().getSharePool();
     }
 
-    public void onTrimMemory(int level) {
+    /**
+     * 提交一个后台线程任务
+     *
+     * @param runnable
+     */
+    public final Future post(Runnable runnable) {
+        return getSharePool().submit(runnable);
     }
 
-    public void onExit() {
+    /**
+     * 提交一个后台线程任务
+     *
+     * @param runnable
+     */
+    public final <T> Future<T> post(Runnable runnable, T result) {
+        return getSharePool().submit(runnable, result);
     }
 
-    protected void registerRoute(String path, Class clazz) {
-        mRouteService.register(path, clazz);
+    /**
+     * 提交一个后台回调任务
+     *
+     * @param callable
+     */
+    public final <T> Future<T> post(Callable<T> callable) {
+        return getSharePool().submit(callable);
     }
 
-    protected void registerRoute(Class clazz) {
-        mRouteService.register(clazz);
+    /**
+     * 提交一个后台回调任务
+     *
+     * @param task
+     */
+    public final Future post(Task task) {
+        return getSharePool().submit(task);
     }
+
+    protected void init() {
+    }
+
+    protected void onTerminate() {
+    }
+
+    protected void onLowMemory() {
+    }
+
+    protected void onTrimMemory(int level) {
+    }
+
+    protected void onExit() {
+
+    }
+
 }
