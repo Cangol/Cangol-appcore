@@ -57,8 +57,6 @@ public class SoapRequest implements Runnable {
                     if (!Thread.currentThread().isInterrupted()) {
                         if (responseHandler != null) {
                             responseHandler.sendResponseMessage(response);
-                        } else {
-
                         }
                     }
                 } else {

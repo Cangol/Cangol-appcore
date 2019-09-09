@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +71,7 @@ public class RouteHttpClient {
         Request request = null;
         if (params != null) {
             final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
-            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            for (final Map.Entry<String, String> entry : params.entrySet()) {
                 requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
             request = new Request.Builder()

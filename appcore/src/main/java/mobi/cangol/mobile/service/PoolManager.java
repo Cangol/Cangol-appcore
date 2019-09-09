@@ -15,6 +15,7 @@
  */
 package mobi.cangol.mobile.service;
 
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -39,29 +40,6 @@ public class PoolManager {
     private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
     private static final int KEEP_ALIVE = 1;
     private static ConcurrentHashMap<String, Pool> poolMap = null;
-
-    private static ExecutorService generateExecutorService(final String name, int core) {
-
-        return new ThreadPoolExecutor(core, core * 2 + 1, KEEP_ALIVE,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
-            private final AtomicInteger mCount = new AtomicInteger(1);
-
-            public Thread newThread(final Runnable r) {
-                return new Thread(r, name + "$WorkThread #" + mCount.getAndIncrement());
-            }
-        });
-    }
-
-    private static ExecutorService generateExecutorService(final String name) {
-        return new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-                TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
-            private final AtomicInteger mCount = new AtomicInteger(1);
-
-            public Thread newThread(final Runnable r) {
-                return new Thread(r, name + "$WorkThread #" + mCount.getAndIncrement());
-            }
-        });
-    }
 
     /**
      * 获取一个线程池
@@ -113,12 +91,9 @@ public class PoolManager {
      */
     public static void closeAll() {
         if (null != poolMap) {
-            Pool pool = null;
-            for (final String name : poolMap.keySet()) {
-                pool = poolMap.get(name);
-                if (pool != null)
-                    pool.close(false);
-
+            for (Map.Entry<String,Pool> entry: poolMap.entrySet()) {
+                if (entry.getValue() != null)
+                    entry.getValue().close(false);
             }
             poolMap.clear();
         }
@@ -138,13 +113,13 @@ public class PoolManager {
 
         Pool(String name, int core) {
             this.name = name;
-            this.executorService = PoolManager.generateExecutorService(name, core);
+            this.executorService = generateExecutorService(name, core);
             this.threadPoolClose = false;
         }
 
         Pool(String name) {
             this.name = name;
-            this.executorService = PoolManager.generateExecutorService(name);
+            this.executorService = generateExecutorService(name);
             this.threadPoolClose = false;
         }
 
@@ -157,7 +132,28 @@ public class PoolManager {
             this.threadPoolClose = true;
             this.executorService = null;
         }
+        private ExecutorService generateExecutorService(final String name, int core) {
 
+            return new ThreadPoolExecutor(core, core * 2 + 1, KEEP_ALIVE,
+                    TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
+                private final AtomicInteger mCount = new AtomicInteger(1);
+
+                public Thread newThread(final Runnable r) {
+                    return new Thread(r, name + "$WorkThread #" + mCount.getAndIncrement());
+                }
+            });
+        }
+
+        private  ExecutorService generateExecutorService(final String name) {
+            return new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+                    TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
+                private final AtomicInteger mCount = new AtomicInteger(1);
+
+                public Thread newThread(final Runnable r) {
+                    return new Thread(r, name + "$WorkThread #" + mCount.getAndIncrement());
+                }
+            });
+        }
         public Future submit(Runnable task) {
             return this.executorService.submit(task);
         }

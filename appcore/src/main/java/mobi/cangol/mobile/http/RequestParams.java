@@ -81,7 +81,7 @@ public class RequestParams {
 
     public String toDebugString() {
         final StringBuilder result = new StringBuilder();
-        for (final ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+        for (final Map.Entry<String, String> entry : urlParams.entrySet()) {
             result.append('\t')
                     .append(entry.getKey())
                     .append('=')
@@ -89,7 +89,7 @@ public class RequestParams {
                     .append('\n');
         }
 
-        for (final ConcurrentHashMap.Entry<String, File> entry : fileParams.entrySet()) {
+        for (final Map.Entry<String, File> entry : fileParams.entrySet()) {
             result.append(entry.getKey())
                     .append("=FILE\n");
         }
@@ -100,7 +100,7 @@ public class RequestParams {
     @Override
     public String toString() {
         final StringBuilder result = new StringBuilder();
-        for (final ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
+        for (final Map.Entry<String, String> entry : urlParams.entrySet()) {
             if (result.length() > 0) {
                 result.append('&');
             }
@@ -110,7 +110,7 @@ public class RequestParams {
                     .append(entry.getValue());
         }
 
-        for (final ConcurrentHashMap.Entry<String, File> entry : fileParams.entrySet()) {
+        for (final Map.Entry<String, File> entry : fileParams.entrySet()) {
             if (result.length() > 0) {
                 result.append('&');
             }

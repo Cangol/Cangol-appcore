@@ -25,7 +25,6 @@ import mobi.cangol.mobile.http.download.DownloadResponseHandler;
 import mobi.cangol.mobile.service.PoolManager.Pool;
 
 public class DownloadTask {
-    private Pool pool;
     private DownloadResource downloadResource;
     private DownloadHttpClient downloadHttpClient;
     private Future<?> future;
@@ -104,7 +103,6 @@ public class DownloadTask {
 
     public DownloadTask(DownloadResource downloadResource, Pool pool, Handler handler, boolean safe) {
         this.downloadResource = downloadResource;
-        this.pool = pool;
         this.handler = handler;
         downloadHttpClient = DownloadHttpClient.build(pool.getName(), safe);
         DownloadHttpClient.setThreadPool(pool);

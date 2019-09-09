@@ -190,10 +190,8 @@ public class AppServiceManagerImpl extends AppServiceManager {
     @Override
     public void destroyAllService() {
         Log.d(TAG, "destroyAllService");
-        AppService appService = null;
-        for (final String name : mRunServiceMap.keySet()) {
-            appService = mRunServiceMap.get(name);
-            appService.onDestroy();
+        for (Map.Entry<String,AppService> entry: mRunServiceMap.entrySet()) {
+            entry.getValue().onDestroy();
         }
         mRunServiceMap.clear();
 

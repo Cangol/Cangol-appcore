@@ -26,7 +26,7 @@ public class XMLParserException extends ParserException {
      */
     private static final long serialVersionUID = 1L;
 
-    private Node mNode;
+    private transient  Node mNode;
 
     public XMLParserException(Throwable throwable) {
         super(throwable);

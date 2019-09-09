@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import mobi.cangol.mobile.service.PoolManager;
@@ -130,7 +129,7 @@ public class AsyncHttpClient {
 
         final StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (params != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            for (final Map.Entry<String, String> entry : params.entrySet()) {
                 sb.append(entry.getKey())
                         .append('&')
                         .append(entry.getValue());
@@ -150,7 +149,7 @@ public class AsyncHttpClient {
     public void get(Object context, String url, RequestParams requestParams, AsyncHttpResponseHandler responseHandler) {
         final StringBuilder sb = new StringBuilder(url.contains("?") ? "" : "?");
         if (requestParams.urlParams != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : requestParams.urlParams.entrySet()) {
+            for (final Map.Entry<String, String> entry : requestParams.urlParams.entrySet()) {
                 sb.append(entry.getKey())
                         .append('&')
                         .append(entry.getValue());
@@ -294,14 +293,14 @@ public class AsyncHttpClient {
     public void execMethod(String method, Object context, String url, Map<String, String> headers, Map<String, String> params, AsyncHttpResponseHandler responseHandler) {
         final Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+            for (final Map.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
 
         final FormBody.Builder requestBodyBuilder = new FormBody.Builder();
         if (params != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : params.entrySet()) {
+            for (final Map.Entry<String, String> entry : params.entrySet()) {
                 if(entry.getValue()!=null)requestBodyBuilder.add(entry.getKey(), entry.getValue());
             }
         }
@@ -337,21 +336,21 @@ public class AsyncHttpClient {
     public void execMethod(String method, Object context, String url, Map<String, String> headers, RequestParams params, AsyncHttpResponseHandler responseHandler) {
        final Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+            for (final Map.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }
         final MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         if (params.fileParams != null) {
-            for (final ConcurrentHashMap.Entry<String, File> entry : params.fileParams.entrySet()) {
+            for (final Map.Entry<String, File> entry : params.fileParams.entrySet()) {
                 final RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), entry.getValue());
                 requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue().getName(), fileBody);
             }
         }
 
         if (params.urlParams != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : params.urlParams.entrySet()) {
+            for (final Map.Entry<String, String> entry : params.urlParams.entrySet()) {
                 requestBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
             }
         }
@@ -386,7 +385,7 @@ public class AsyncHttpClient {
     public void execMethod(String method, Object context, String url, Map<String, String> headers, RequestBody requestBody, AsyncHttpResponseHandler responseHandler) {
         final Headers.Builder headerBuilder = new Headers.Builder();
         if (headers != null) {
-            for (final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+            for (final Map.Entry<String, String> entry : headers.entrySet()) {
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
         }

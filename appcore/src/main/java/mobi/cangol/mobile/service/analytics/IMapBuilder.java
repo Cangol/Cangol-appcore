@@ -68,8 +68,8 @@ final public class IMapBuilder {
         builder.append("url=")
                 .append(mUrl)
                 .append('\n');
-        for (final String key : mParams.keySet()) {
-            builder.append(key).append('=').append(mParams.get(key));
+        for (final Map.Entry<String,String> entry : mParams.entrySet()) {
+            builder.append(entry.getKey()).append('=').append(entry.getValue());
         }
         return builder.toString();
     }

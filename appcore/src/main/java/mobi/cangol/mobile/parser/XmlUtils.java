@@ -15,6 +15,8 @@
  */
 package mobi.cangol.mobile.parser;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.util.Xml;
 
@@ -26,11 +28,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,14 +122,9 @@ public class XmlUtils extends Converter {
      * @return
      * @throws XMLParserException
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static <T> T parserToObject(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
-        InputStream inputSteam = null;
-        try {
-            inputSteam = new ByteArrayInputStream(str.getBytes(UTF_8));
-        } catch (UnsupportedEncodingException e) {
-            Log.d(TAG, e.getMessage());
-        }
-        return parserToObject(c, inputSteam, useAnnotation);
+        return parserToObject(c, new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)), useAnnotation);
     }
 
     /**
@@ -156,14 +153,9 @@ public class XmlUtils extends Converter {
      * @return
      * @throws XMLParserException
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static <T> List<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws XMLParserException {
-        InputStream inputSteam = null;
-        try {
-            inputSteam = new ByteArrayInputStream(str.getBytes(UTF_8));
-        } catch (UnsupportedEncodingException e) {
-            Log.d(TAG, e.getMessage());
-        }
-        return parserToList(c, inputSteam, useAnnotation);
+        return parserToList(c, new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)), useAnnotation);
     }
 
     /**

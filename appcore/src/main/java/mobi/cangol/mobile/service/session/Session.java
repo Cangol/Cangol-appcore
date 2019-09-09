@@ -203,28 +203,28 @@ public class Session {
     }
 
     public void saveAll(Map<String, ?> map) {
-        for (final String key : map.keySet()) {
-            if (map.get(key) instanceof Float) {
-                saveFloat(key, (Float) map.get(key));
-            } else if (map.get(key) instanceof Boolean) {
-                saveBoolean(key, (Boolean) map.get(key));
-            } else if (map.get(key) instanceof String) {
-                saveString(key, (String) map.get(key));
-            } else if (map.get(key) instanceof Integer) {
-                saveInt(key, (Integer) map.get(key));
-            } else if (map.get(key) instanceof Long) {
-                saveLong(key, (Long) map.get(key));
-            } else if (map.get(key) instanceof Set) {
-                saveStringSet(key, (Set<String>) map.get(key));
-            } else if (map.get(key) instanceof JSONObject) {
-                saveJSONObject(key, (JSONObject) map.get(key));
-            } else if (map.get(key) instanceof JSONArray) {
-                saveJSONArray(key, (JSONArray) map.get(key));
-            } else if (Serializable.class.isAssignableFrom(map.get(key).getClass())) {
-                saveSerializable(key, (Serializable) map.get(key));
+        for (Map.Entry<String,?> entry: map.entrySet()) {
+            if (entry.getValue() instanceof Float) {
+                saveFloat(entry.getKey(), (Float) entry.getValue());
+            } else if (entry.getValue() instanceof Boolean) {
+                saveBoolean(entry.getKey(), (Boolean)entry.getValue());
+            } else if (entry.getValue() instanceof String) {
+                saveString(entry.getKey(), (String) entry.getValue());
+            } else if (entry.getValue() instanceof Integer) {
+                saveInt(entry.getKey(), (Integer) entry.getValue());
+            } else if (entry.getValue() instanceof Long) {
+                saveLong(entry.getKey(), (Long) entry.getValue());
+            } else if (entry.getValue() instanceof Set) {
+                saveStringSet(entry.getKey(), (Set<String>) entry.getValue());
+            } else if (entry.getValue() instanceof JSONObject) {
+                saveJSONObject(entry.getKey(), (JSONObject) entry.getValue());
+            } else if (entry.getValue() instanceof JSONArray) {
+                saveJSONArray(entry.getKey(), (JSONArray) entry.getValue());
+            } else if (Serializable.class.isAssignableFrom(entry.getValue().getClass())) {
+                saveSerializable(entry.getKey(), (Serializable)entry.getValue());
             } else {
                 //其他缓存方案
-                throw new IllegalArgumentException(map.get(key).getClass() + " is not cache type");
+                throw new IllegalArgumentException(entry.getValue().getClass() + " is not cache type");
             }
         }
     }

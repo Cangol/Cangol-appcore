@@ -37,7 +37,6 @@ import mobi.cangol.mobile.logging.Log;
  */
 public class SocketThread extends Thread {
     private static final String TAG = "SocketThread";
-    private static final int BUFFER_SIZE = 8192;
     private static final int WRITE_DELAY_TIME = 1;
     private static final int LINGER_TIME = 5;//阻塞时间 单位秒
     private static final int CONNECT_TIME_OUT = 20 * 1000;

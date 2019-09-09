@@ -36,15 +36,15 @@ import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 public class StatAgent {
-    private final static String STAT_SERVER_URL = "https://www.cangol.mobi/";
-    private final static String STAT_ACTION_EXCEPTION = "api/countly/crash";
-    private final static String STAT_ACTION_EVENT = "api/countly/event";
-    private final static String STAT_ACTION_TIMING = "api/countly/qos";
-    private final static String STAT_ACTION_LAUNCH = "api/countly/launch";
-    private final static String STAT_ACTION_SESSION = "api/countly/session";
-    private final static String STAT_ACTION_TRAFFIC = "api/countly/traffic";
-    private final static String STAT_TRACKING_ID = "stat";
-    private final static String TIMESTAMP = "timestamp";
+    private static final  String STAT_SERVER_URL = "https://www.cangol.mobi/";
+    private static final  String STAT_ACTION_EXCEPTION = "api/countly/crash";
+    private static final  String STAT_ACTION_EVENT = "api/countly/event";
+    private static final  String STAT_ACTION_TIMING = "api/countly/qos";
+    private static final  String STAT_ACTION_LAUNCH = "api/countly/launch";
+    private static final  String STAT_ACTION_SESSION = "api/countly/session";
+    private static final  String STAT_ACTION_TRAFFIC = "api/countly/traffic";
+    private static final  String STAT_TRACKING_ID = "stat";
+    private static final  String TIMESTAMP = "timestamp";
     private static StatAgent instance;
     private CoreApplication context;
     private ITracker itracker;

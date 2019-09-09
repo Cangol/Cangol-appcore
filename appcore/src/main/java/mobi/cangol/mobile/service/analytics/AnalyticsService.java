@@ -15,7 +15,7 @@
  */
 package mobi.cangol.mobile.service.analytics;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import mobi.cangol.mobile.service.AppService;
 
@@ -42,7 +42,7 @@ public interface AnalyticsService extends AppService {
      */
     void closeTracker(String trackingId);
 
-    HashMap<String, String> getCommonParams();
+    Map<String, String> getCommonParams();
 
-    HashMap<String, String> getDeviceParams();
+    Map<String, String> getDeviceParams();
 }

@@ -102,16 +102,16 @@ public class ModuleApplication {
     protected void init() {
     }
 
-    protected void onTerminate() {
+    public void onTerminate() {
     }
 
-    protected void onLowMemory() {
+    public void onLowMemory() {
     }
 
-    protected void onTrimMemory(int level) {
+    public void onTrimMemory(int level) {
     }
 
-    protected void onExit() {
+    public void onExit() {
 
     }
 

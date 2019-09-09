@@ -19,7 +19,10 @@ package mobi.cangol.mobile.utils;
  * @author Cangol
  */
 
-import java.io.UnsupportedEncodingException;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import mobi.cangol.mobile.logging.Log;
@@ -36,14 +39,9 @@ public class StringUtils {
      * @param value
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String byte2String(byte[] value) {
-        String result = null;
-        try {
-            result = (value == null) ? "" : new String(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Log.d(e.getMessage());
-        }
-        return result;
+        return (value == null) ? "" : new String(value, StandardCharsets.UTF_8);
     }
 
     /**
@@ -171,11 +169,12 @@ public class StringUtils {
      * @param s
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String md5(String s) {
         final char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
-            final byte[] strTemp = s.getBytes("UTF-8");
+            final byte[] strTemp = s.getBytes(StandardCharsets.UTF_8);
             //MessageDigest md5
             final MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(strTemp);

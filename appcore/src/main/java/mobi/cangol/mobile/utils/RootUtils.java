@@ -1,9 +1,13 @@
 package mobi.cangol.mobile.utils;
 
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +59,7 @@ public class RootUtils {
      */
     private static class ExecShell {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         public List<String> executeCommand(SHELL_CMD shellCmd) {
             String line = null;
             final List<String> fullResponse = new ArrayList<>();
@@ -67,7 +72,7 @@ public class RootUtils {
             BufferedReader in;
             try {
                 in = new BufferedReader(new InputStreamReader(
-                        localProcess.getInputStream(), "UTF-8"));
+                        localProcess.getInputStream(), StandardCharsets.UTF_8));
                 while ((line = in.readLine()) != null) {
                     Log.d(getClass().getName(), "--> Line received: " + line);
                     fullResponse.add(line);

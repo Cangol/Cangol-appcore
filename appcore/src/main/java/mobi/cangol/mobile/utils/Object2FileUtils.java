@@ -15,6 +15,8 @@
  */
 package mobi.cangol.mobile.utils;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -32,6 +34,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -158,13 +161,14 @@ public class Object2FileUtils {
      * @param is
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static JSONObject readJSONObject(InputStream is) {
         String content = null;
         JSONObject jsonObject = null;
         try {
             final byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
-                content = new String(buffer, CHARSET);
+                content = new String(buffer, StandardCharsets.UTF_8);
                 if (!TextUtils.isEmpty(content)) {
                     jsonObject = new JSONObject(content);
                 }
@@ -190,13 +194,14 @@ public class Object2FileUtils {
      * @param is
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static JSONArray readJSONArray(InputStream is) {
         String content = null;
         JSONArray jsonArray = null;
         try {
             final byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
-                content = new String(buffer, CHARSET);
+                content = new String(buffer, StandardCharsets.UTF_8);
                 if (!TextUtils.isEmpty(content)) {
                     jsonArray = new JSONArray(content);
                 }

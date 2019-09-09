@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import mobi.cangol.mobile.core.BuildConfig;
 import mobi.cangol.mobile.http.AsyncHttpClient;
@@ -44,14 +43,14 @@ import mobi.cangol.mobile.utils.TimeUtils;
  */
 @Service("AnalyticsService")
 class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
-    private final static String TAG = "AnalyticsService";
+    private static final String TAG = "AnalyticsService";
     private boolean mDebug = false;
     private Application mContext = null;
     private AsyncHttpClient mAsyncHttpClient = null;
     private ServiceProperty mServiceProperty = null;
-    private Map<String, ITracker> mTrackers = new HashMap<String, ITracker>();
-    private HashMap<String, String> commonParams;
-    private HashMap<String, String> deviceParams;
+    private Map<String, ITracker> mTrackers = new HashMap<>();
+    private Map<String, String> commonParams;
+    private Map<String, String> deviceParams;
     @Override
     public void onCreate(Application context) {
         mContext = context;
@@ -107,7 +106,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
                 if (mDebug) {
                     final RequestParams requestParams = new RequestParams(params);
                     final StringBuilder result = new StringBuilder();
-                    for(final ConcurrentHashMap.Entry<String, String> entry : headers.entrySet()) {
+                    for(final Map.Entry<String, String> entry : headers.entrySet()) {
                         result.append('\t').append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
                     }
                     Log.v(TAG, "url: " + url + "?" + requestParams.toString()
@@ -169,9 +168,9 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
      * @return
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    protected HashMap<String, String> initCommonParams() {
+    protected Map<String, String> initCommonParams() {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("deviceId", getDeviceId(mContext));
         params.put("platform", DeviceInfo.getOS());
@@ -184,7 +183,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         return params;
     }
     @Override
-    public HashMap<String, String> getCommonParams() {
+    public Map<String, String> getCommonParams() {
         return commonParams;
     }
     /**
@@ -211,9 +210,9 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
      * @return
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    public HashMap<String, String> initDeviceParams() {
+    public Map<String, String> initDeviceParams() {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
-        HashMap<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("os", DeviceInfo.getOS());
         params.put("osVersion", DeviceInfo.getOSVersion());
         params.put("model", DeviceInfo.getDeviceModel());
@@ -237,7 +236,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     }
 
     @Override
-    public HashMap<String, String> getDeviceParams() {
+    public Map<String, String> getDeviceParams() {
         return deviceParams;
     }
     private String getDeviceId(Context context) {
@@ -249,18 +248,18 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
     }
 
     private String getChannelID(Context context) {
-        String channel_id = DeviceInfo.getAppStringMetaData(context, "CHANNEL_ID");
-        if (TextUtils.isEmpty(channel_id)) {
-            channel_id = "UNKNOWN";
+        String channelId = DeviceInfo.getAppStringMetaData(context, "CHANNEL_ID");
+        if (TextUtils.isEmpty(channelId)) {
+            channelId = "UNKNOWN";
         }
-        return channel_id;
+        return channelId;
     }
 
     private String getAppID(Context context) {
-        String app_id = DeviceInfo.getAppStringMetaData(context, "APP_ID");
-        if (TextUtils.isEmpty(app_id)) {
-            app_id = context.getPackageName();
+        String appId = DeviceInfo.getAppStringMetaData(context, "APP_ID");
+        if (TextUtils.isEmpty(appId)) {
+            appId = context.getPackageName();
         }
-        return app_id;
+        return appId;
     }
 }

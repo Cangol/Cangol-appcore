@@ -180,7 +180,7 @@ public class TimeUtils {
             day = Integer.parseInt(currentDate.substring(8, 10));
 
             gc = new GregorianCalendar(year, month, day);
-            gc.add(GregorianCalendar.DATE, addDay);
+            gc.add(Calendar.DATE, addDay);
 
             return new SimpleDateFormat(YYYY_MM_DD).format(gc.getTime());
         } catch (Exception e) {
@@ -245,9 +245,7 @@ public class TimeUtils {
      */
     public static String convertStandard(String str) {
         String timeStr = null;
-        if (str == null || str.equals("")) {
-            timeStr = null;
-        } else {
+        if (str != null && !str.equals("")) {
             try {
                 final Date date = new SimpleDateFormat(YYYYMMDD).parse(str);
                 timeStr = new SimpleDateFormat(YYYY_MM_DD).format(date);
@@ -266,9 +264,7 @@ public class TimeUtils {
      */
     public static String convert8Bit(String str) {
         String timeStr = null;
-        if (str == null || str.equals("")) {
-            timeStr = null;
-        } else {
+        if (str!= null && !str.equals("")) {
             try {
                 final Date date = new SimpleDateFormat(YYYY_MM_DD).parse(str);
                 timeStr = new SimpleDateFormat(YYYYMMDD).format(date);

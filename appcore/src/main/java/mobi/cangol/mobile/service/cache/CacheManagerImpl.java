@@ -16,6 +16,8 @@
 package mobi.cangol.mobile.service.cache;
 
 import android.app.Application;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
@@ -28,6 +30,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -228,6 +231,7 @@ class CacheManagerImpl implements CacheManager {
      * @param id
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private boolean hasContentFromDiskCache(String id) {
         if (mDebug) Log.d(TAG, "hasContentFromDiskCache id=" + id);
         final String key = hashKeyForDisk(id);
@@ -247,7 +251,7 @@ class CacheManagerImpl implements CacheManager {
                         inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
                         if (inputStream != null) {
                             final CacheObject cacheObject = (CacheObject) readObject(inputStream);
-                            if (cacheObject.isExpired()) {
+                            if (cacheObject!=null&&cacheObject.isExpired()) {
                                 Log.e(TAG, "expired:"+cacheObject.getExpired()+",it's expired & removed ");
                                 mDiskLruCache.remove(hashKeyForDisk(id));
                                 return false;
@@ -278,6 +282,7 @@ class CacheManagerImpl implements CacheManager {
      * @param id
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private CacheObject getContentFromDiskCache(String id) {
         if (mDebug) Log.d(TAG, "getContentFromDiskCache id=" + id);
         final String key = hashKeyForDisk(id);
@@ -542,16 +547,15 @@ class CacheManagerImpl implements CacheManager {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private String hashKeyForDisk(String key) {
         String cacheKey = null;
         try {
             final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(key.getBytes("UTF-8"));
+            mDigest.update(key.getBytes(StandardCharsets.UTF_8));
             cacheKey = bytesToHexString(mDigest.digest());
         } catch (NoSuchAlgorithmException e) {
             cacheKey = String.valueOf(key.hashCode());
-        } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, e.getMessage());
         }
         return cacheKey;
     }
