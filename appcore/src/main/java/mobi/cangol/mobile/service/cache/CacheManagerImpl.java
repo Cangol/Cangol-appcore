@@ -242,7 +242,7 @@ class CacheManagerImpl implements CacheManager {
                     Log.d(e.getMessage());
                 }
             }
-            if (mDiskLruCache != null) {
+            if (mDiskLruCache != null&& !mDiskLruCache.isClosed()) {
                 InputStream inputStream = null;
                 try {
                     final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
@@ -292,7 +292,7 @@ class CacheManagerImpl implements CacheManager {
                     Log.d(e.getMessage());
                 }
             }
-            if (mDiskLruCache != null) {
+            if (mDiskLruCache != null&& !mDiskLruCache.isClosed()) {
                 InputStream inputStream = null;
                 try {
                     final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
@@ -396,7 +396,7 @@ class CacheManagerImpl implements CacheManager {
 
         synchronized (mDiskCacheLock) {
             // Add to disk cache
-            if (mDiskLruCache != null) {
+            if (mDiskLruCache != null&& !mDiskLruCache.isClosed()) {
                 final String key = hashKeyForDisk(id);
                 OutputStream out = null;
                 try {
@@ -441,7 +441,7 @@ class CacheManagerImpl implements CacheManager {
             id = iterator.next();
             final String key = hashKeyForDisk(id);
             try {
-                if (mDiskLruCache != null) {
+                if (mDiskLruCache != null&& !mDiskLruCache.isClosed()) {
                     mDiskLruCache.remove(key);
                 }
             } catch (IOException e) {
@@ -463,7 +463,7 @@ class CacheManagerImpl implements CacheManager {
         contextMap.remove(id);
         final String key = hashKeyForDisk(id);
         try {
-            if (mDiskLruCache != null) {
+            if (mDiskLruCache != null&& !mDiskLruCache.isClosed()) {
                 mDiskLruCache.remove(key);
             }
         } catch (IOException e) {
@@ -513,7 +513,7 @@ class CacheManagerImpl implements CacheManager {
     @Override
     public void flush() {
         synchronized (mDiskCacheLock) {
-            if (mDiskLruCache != null) {
+            if (mDiskLruCache != null&& !mDiskLruCache.isClosed()) {
                 try {
                     mDiskLruCache.flush();
                     if (mDebug) {
