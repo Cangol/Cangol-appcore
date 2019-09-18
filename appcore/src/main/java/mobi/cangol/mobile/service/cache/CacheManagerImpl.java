@@ -231,7 +231,6 @@ class CacheManagerImpl implements CacheManager {
      * @param id
      * @return
      */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private boolean hasContentFromDiskCache(String id) {
         if (mDebug) Log.d(TAG, "hasContentFromDiskCache id=" + id);
         final String key = hashKeyForDisk(id);
@@ -282,7 +281,6 @@ class CacheManagerImpl implements CacheManager {
      * @param id
      * @return
      */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private CacheObject getContentFromDiskCache(String id) {
         if (mDebug) Log.d(TAG, "getContentFromDiskCache id=" + id);
         final String key = hashKeyForDisk(id);
@@ -547,14 +545,15 @@ class CacheManagerImpl implements CacheManager {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private String hashKeyForDisk(String key) {
         String cacheKey = null;
         try {
             final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(key.getBytes(StandardCharsets.UTF_8));
+            mDigest.update(key.getBytes("UTF-8"));
             cacheKey = bytesToHexString(mDigest.digest());
         } catch (NoSuchAlgorithmException e) {
+            cacheKey = String.valueOf(key.hashCode());
+        } catch (UnsupportedEncodingException e) {
             cacheKey = String.valueOf(key.hashCode());
         }
         return cacheKey;
