@@ -2,10 +2,14 @@ package mobi.cangol.mobile.appcore.demo;
 
 
 import android.content.Intent;
+import android.net.ParseException;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+
+import java.text.SimpleDateFormat;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
@@ -34,8 +38,21 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
         mRouteService= (RouteService) ((CoreApplication)getApplication()).getAppService(AppService.ROUTE_SERVICE);
         mRouteService.registerNavigation(this);
         mRouteService.register("lib",LibTestFragment.class);
+        test();
     }
-
+    public void test(){
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Log.e(TAG,Build.VERSION.SDK_INT+" test "+  new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").parse("2019-09-19T04:00:40+00:00").toString());
+            }else{
+                Log.e(TAG,Build.VERSION.SDK_INT+ " test"+ new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2019-09-19T04:00:40+00:00").toString());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public boolean onNavigateUp() {
         FragmentManager fm = this.getSupportFragmentManager();

@@ -33,8 +33,8 @@ import mobi.cangol.mobile.utils.StringUtils;
  */
 public class DownloadManagerFragment extends Fragment {
     private static final String TAG = "DownloadManagerFragment";
-    private String url1="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
-    private String url2="http://ddmyapp.kw.tc.qq.com/16891/1AF80D6B4F5B3365D1A4B755BBC92FD2.apk?mkey=577cc4c4c20a8141&f=5401&c=0&fsname=com.tencent.mm_6.3.22_821.apk&p=.apk";
+    private String url2="https://imtt.dd.qq.com/16891/apk/EE04C0EFC70C2E44C7A888DB6A6D4F95.apk?fsname=com.tencent.mm_7.0.7_1500.apk&csr=1bbd";
+    private String url1="https://imtt.dd.qq.com/16891/apk/ADE42BB02016AD9B4E9CCAD6C2DF030A.apk?fsname=com.tencent.mobileqq_8.1.5_1258.apk&csr=1bbd";
     private ConfigService configService;
     private DownloadManager downloadManager;
     private AppDownloadExecutor downloadExecutor;

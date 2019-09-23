@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dalvik.system.DexClassLoader;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.http.download.DownloadHttpClient;
 import mobi.cangol.mobile.http.download.DownloadResponseHandler;
@@ -130,22 +129,31 @@ class UpgradeServiceImpl implements UpgradeService {
                 Log.e(e.getMessage());
             }
         }
-        Intent intent=createFinishIntent(savePath, upgradeType);
-        if(intent==null){
-            Log.e(TAG,"createFinishIntent fail!");
-            return;
-        }
-        final DownloadNotification downloadNotification = new DownloadNotification(mContext, filename, savePath,intent );
+        DownloadNotification downloadNotification =null;
         if (notification) {
+            Intent intent=null;
+            try {
+                intent=createFinishIntent(savePath, upgradeType);
+            }catch (Exception e){
+                Log.e(TAG,"createFinishIntent fail!");
+                return;
+            }
+            if(intent==null){
+                Log.e(TAG,"createFinishIntent fail!");
+                return;
+            }
+            downloadNotification = new DownloadNotification(mContext, filename, savePath,intent );
             mIds.add(downloadNotification.getId());
         }
         mDownloadHttpClient = DownloadHttpClient.build(TAG, safe);
+
+        final DownloadNotification finalDownloadNotification = downloadNotification;
         mDownloadHttpClient.send(filename, url, new DownloadResponseHandler() {
             @Override
             public void onWait() {
                 super.onWait();
                 if (notification) {
-                    downloadNotification.createNotification();
+                    finalDownloadNotification.createNotification();
                 }
             }
 
@@ -158,8 +166,8 @@ class UpgradeServiceImpl implements UpgradeService {
             public void onStop(long end) {
                 super.onStop(end);
                 if (notification) {
-                    downloadNotification.cancelNotification();
-                    mIds.remove(Integer.valueOf(downloadNotification.getId()));
+                    finalDownloadNotification.cancelNotification();
+                    mIds.remove(Integer.valueOf(finalDownloadNotification.getId()));
                 }
                 notifyUpgradeFailure(filename, "stop");
             }
@@ -168,7 +176,7 @@ class UpgradeServiceImpl implements UpgradeService {
             public void onFinish(long end) {
                 super.onFinish(end);
                 if (notification) {
-                    downloadNotification.finishNotification();
+                    finalDownloadNotification.finishNotification();
                 }
                 if (install) {
                     makeLoad(savePath, upgradeType);
@@ -181,7 +189,7 @@ class UpgradeServiceImpl implements UpgradeService {
             public void onProgressUpdate(long end, int progress, int speed) {
                 super.onProgressUpdate(end, progress, speed);
                 if (notification) {
-                    downloadNotification.updateNotification(progress, speed);
+                    finalDownloadNotification.updateNotification(progress, speed);
                 }
 
                 notifyUpgradeProgress(filename, speed, progress);
@@ -191,7 +199,7 @@ class UpgradeServiceImpl implements UpgradeService {
             public void onFailure(Throwable error, String content) {
                 super.onFailure(error, content);
                 if (notification) {
-                    downloadNotification.failureNotification();
+                    finalDownloadNotification.failureNotification();
                 }
                 notifyUpgradeFailure(filename, content);
             }
@@ -237,36 +245,32 @@ class UpgradeServiceImpl implements UpgradeService {
     private Intent createFinishIntent(String savePath, UpgradeType upgradeType) {
         Intent intent = null;
         final File file = new File(savePath);
-        if(file.exists()){
-            switch (upgradeType) {
-                case APK:
-                    intent = new Intent(Intent.ACTION_VIEW);
-                    //判断是否是AndroidN以及更高的版本
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        final String authority = mContext.getPackageName() + ".fileprovider";
-                        if (debug) Log.e("authority=" + authority);
-                        final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
-                        if (debug) Log.e("uri=" + contentUri);
-                        intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
-                    } else {
-                        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    }
-                    break;
-                case RES:
-                    break;
-                case DEX:
-                    break;
-                case SO:
-                    break;
-                case OTHER:
-                    break;
-                default:
-                    break;
-            }
-        }else{
-            Log.e(TAG,"not found :"+file.getAbsolutePath());
+        switch (upgradeType) {
+            case APK:
+                intent = new Intent(Intent.ACTION_VIEW);
+                //判断是否是AndroidN以及更高的版本
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    final String authority = mContext.getPackageName() + ".fileprovider";
+                    if (debug) Log.e("authority=" + authority);
+                    final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
+                    if (debug) Log.e("uri=" + contentUri);
+                    intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                } else {
+                    intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                break;
+            case RES:
+                break;
+            case DEX:
+                break;
+            case SO:
+                break;
+            case OTHER:
+                break;
+            default:
+                break;
         }
         return intent;
     }
