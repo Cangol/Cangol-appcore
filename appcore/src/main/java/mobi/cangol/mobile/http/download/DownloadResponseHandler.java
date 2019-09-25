@@ -146,7 +146,7 @@ public class DownloadResponseHandler {
                     threadfile.write(block, 0, readCount);
                     oldLength += readCount;
                     startLength += readCount;
-                    if ((System.currentTimeMillis() - starTime) > 500L) {
+                    if ((System.currentTimeMillis() - starTime) > 1000L) {
                         final int progress = (int) (oldLength * 1.0f / length * 100);
                         final int speed = (int) (startLength * 1000.0f / (System.currentTimeMillis() - starTime));
                         sendProgressMessage(oldLength, progress, speed);

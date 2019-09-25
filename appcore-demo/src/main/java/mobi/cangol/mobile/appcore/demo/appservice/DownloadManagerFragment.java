@@ -33,8 +33,9 @@ import mobi.cangol.mobile.utils.StringUtils;
  */
 public class DownloadManagerFragment extends Fragment {
     private static final String TAG = "DownloadManagerFragment";
-    private String url2="https://imtt.dd.qq.com/16891/apk/EE04C0EFC70C2E44C7A888DB6A6D4F95.apk?fsname=com.tencent.mm_7.0.7_1500.apk&csr=1bbd";
-    private String url1="https://imtt.dd.qq.com/16891/apk/ADE42BB02016AD9B4E9CCAD6C2DF030A.apk?fsname=com.tencent.mobileqq_8.1.5_1258.apk&csr=1bbd";
+    private String url="https://fileoss.fdzq.com//Array/1533541437-FR_4.4.0_build44_r7b13373d_20180803_alpha.apk";
+    private String url2="http://music-hotpot.oss-cn-hongkong.aliyuncs.com/songs/803263126016617416171574.mp3";
+    private String url1="http://music-hotpot.oss-cn-hongkong.aliyuncs.com/songs/626841935812471620885564.mp3";
     private ConfigService configService;
     private DownloadManager downloadManager;
     private AppDownloadExecutor downloadExecutor;
