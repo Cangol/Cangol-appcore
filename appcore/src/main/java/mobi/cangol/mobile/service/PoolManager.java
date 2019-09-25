@@ -26,6 +26,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import mobi.cangol.mobile.logging.Log;
+
 /**
  * TheadPool manager by name
  *
@@ -38,7 +40,7 @@ public class PoolManager {
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
     private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
-    private static final int KEEP_ALIVE = 1;
+    private static final int KEEP_ALIVE = 60;
     private static ConcurrentHashMap<String, Pool> poolMap = null;
 
     /**
@@ -155,14 +157,17 @@ public class PoolManager {
             });
         }
         public Future submit(Runnable task) {
+            Log.d(name,"submit Runnable");
             return this.executorService.submit(task);
         }
 
         public <T> Future<T> submit(Callable<T> task) {
+            Log.d(name,"submit Callable");
             return this.executorService.submit(task);
         }
 
         public <T> Future<T> submit(Runnable task, T result) {
+            Log.d(name,"submit Runnable result");
             return this.executorService.submit(task, result);
         }
 

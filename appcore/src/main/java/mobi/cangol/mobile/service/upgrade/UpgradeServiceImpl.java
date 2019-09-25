@@ -256,6 +256,7 @@ class UpgradeServiceImpl implements UpgradeService {
                     final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
                     if (debug) Log.e("uri=" + contentUri);
                     intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 } else {
                     intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -276,6 +276,11 @@ public abstract class DownloadExecutor<T> {
             synchronized (mDownloadRes) {
                 mDownloadRes.add(resource);
             }
+        }else if(resource.getStatus()!=Download.STATUS_FINISH){
+            final  DownloadTask downloadTask = new DownloadTask(resource, mPool, mHandler, mHttpSafe);
+            resource.setDownloadTask(downloadTask);
+            downloadTask.setDownloadNotification(notification(mContext, resource));
+            downloadTask.start();
         }
     }
 
@@ -405,7 +410,7 @@ public abstract class DownloadExecutor<T> {
                 if (null != mDownloadEvent) {
                     mDownloadEvent.onFinish(resource);
                 }
-                writeResource(resource);
+                writeResource(rename(resource));
                 break;
             case Download.ACTION_DOWNLOAD_FAILED:
                 if (null != mDownloadEvent) {
@@ -418,7 +423,14 @@ public abstract class DownloadExecutor<T> {
         }
         notifyUpdateStatus(resource, msg.what);
     }
-
+    private DownloadResource rename(DownloadResource resource){
+        if(resource.getStatus()==Download.STATUS_FINISH){
+            File file=new File(resource.getSourceFile());
+            boolean result=file.renameTo(new File(resource.getSourceFile().replace(Download.SUFFIX_SOURCE, "")));
+            if(result)resource.setSourceFile(resource.getSourceFile().replace(Download.SUFFIX_SOURCE, ""));
+        }
+        return resource;
+    }
     static final class ExecutorHandler extends Handler {
         private final SoftReference<DownloadExecutor> mDownloadExecutor;
 

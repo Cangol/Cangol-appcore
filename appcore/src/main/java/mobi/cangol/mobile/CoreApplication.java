@@ -70,7 +70,7 @@ public class CoreApplication extends Application {
             } else {
                 Log.setLogLevelFormat(android.util.Log.WARN, true);
             }
-            mSharePool = PoolManager.buildPool("share", 2);
+            mSharePool = PoolManager.getPool("share");
             initAppServiceManager();
             mModuleManager.onCreate();
             if (mAsyncInit) {

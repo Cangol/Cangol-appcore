@@ -37,6 +37,7 @@ public class DownloadResponseHandler {
     protected static final int FAILURE_MESSAGE = 4;
     protected static final int FINISH_MESSAGE = 5;
     private static final int BUFF_SIZE = 8192;
+    private static final boolean DEBUG=false;
     private Handler handler;
 
     public DownloadResponseHandler() {
@@ -53,7 +54,7 @@ public class DownloadResponseHandler {
      * 等候状态
      */
     public void onWait() {
-        Log.d(TAG,"onWait");
+        if(DEBUG)Log.d(TAG,"onWait");
         //do nothings
     }
 
@@ -64,7 +65,7 @@ public class DownloadResponseHandler {
      * @param length
      */
     public void onStart(long start, long length) {
-        Log.d(TAG,"onStart start="+start+",length="+length);
+        if(DEBUG)Log.d(TAG,"onStart start="+start+",length="+length);
         //do nothings
     }
 
@@ -74,7 +75,7 @@ public class DownloadResponseHandler {
      * @param end
      */
     public void onStop(long end) {
-        Log.d(TAG,"onStop end="+end);
+        if(DEBUG)Log.d(TAG,"onStop end="+end);
         //do nothings
     }
 
@@ -84,7 +85,7 @@ public class DownloadResponseHandler {
      * @param end
      */
     public void onFinish(long end) {
-        Log.d(TAG,"onFinish end="+end);
+        if(DEBUG)Log.d(TAG,"onFinish end="+end);
         //do nothings
     }
 
@@ -96,7 +97,7 @@ public class DownloadResponseHandler {
      * @param speed
      */
     public void onProgressUpdate(long end, int progress, int speed) {
-        Log.d(TAG,"onProgressUpdate end="+end+",progress="+progress+",speed="+speed);
+        if(DEBUG)Log.d(TAG,"onProgressUpdate end="+end+",progress="+progress+",speed="+speed);
         //do nothings
     }
 
@@ -107,7 +108,7 @@ public class DownloadResponseHandler {
      * @param content
      */
     public void onFailure(Throwable error, String content) {
-        Log.d(TAG,"onFailure content="+content);
+        if(DEBUG)Log.d(TAG,"onFailure content="+content);
         //do nothings
     }
 
