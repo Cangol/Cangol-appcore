@@ -15,17 +15,17 @@
  */
 package mobi.cangol.mobile.service.download;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 
 public class BaseViewHolder {
-    public WeakReference<DownloadResource> tag;
+    public SoftReference<DownloadResource> tag;
 
     public DownloadResource getTag() {
         return tag.get();
     }
 
     public void setTag(DownloadResource resouce) {
-        this.tag = new WeakReference<>(resouce);
+        this.tag = new SoftReference<>(resouce);
     }
 
     public void updateView(DownloadResource resouce) {}

@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 
 public class DownloadResource implements Serializable {
+    private static final long serialVersionUID = 0L;
     //下载的URL
     protected String url;
     //下载的文件名

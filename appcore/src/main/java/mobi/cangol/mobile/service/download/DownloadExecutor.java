@@ -22,11 +22,11 @@ import android.os.Message;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.parser.JSONParserException;
 import mobi.cangol.mobile.parser.JsonUtils;
 import mobi.cangol.mobile.service.PoolManager.Pool;
 import mobi.cangol.mobile.utils.FileUtils;
@@ -35,7 +35,7 @@ import mobi.cangol.mobile.utils.Object2FileUtils;
 public abstract class DownloadExecutor<T> {
     protected ArrayList<DownloadResource> mDownloadRes = new ArrayList<>();
     private String mTag = "DownloadExecutor";
-    private ArrayList<WeakReference<DownloadStatusListener>> listeners = new ArrayList<>();
+    private ArrayList<SoftReference<DownloadStatusListener>> listeners = new ArrayList<>();
     private Pool mPool;
     private Context mContext;
     private File mDownloadDir;
@@ -133,24 +133,31 @@ public abstract class DownloadExecutor<T> {
         //使用json格式存储
         DownloadResource downloadResource = null;
         try {
+            //downloadResource= (DownloadResource) Object2FileUtils.readObject(new File(filePath));
             final JSONObject jsonObject = Object2FileUtils.readFile2JSONObject(new File(filePath));
             downloadResource = JsonUtils.parserToObject(DownloadResource.class, jsonObject, false);
-        } catch (JSONParserException e) {
+        } catch (Exception e) {
             Log.d(mTag, e.getMessage());
         }
         return downloadResource;
     }
-
     /**
      * 存除下载资源到本地
      *
      * @param resource
      */
-    protected void writeResource(DownloadResource resource) {
+    protected void writeResource(final DownloadResource resource) {
         Log.d(mTag, "write DownloadResource >" + resource.getConfFile());
-        //使用json格式存储
-        final  JSONObject jsonObject = JsonUtils.toJSONObject(resource, false);
-        Object2FileUtils.writeJSONObject2File(jsonObject, resource.getConfFile());
+
+        //Object2FileUtils.writeObject(resource, resource.getConfFile());
+        if(mContext!=null)((CoreApplication)mContext.getApplicationContext()).post(new Runnable() {
+            @Override
+            public void run() {
+                //使用json格式存储
+                final  JSONObject jsonObject = JsonUtils.toJSONObject(resource, false);
+                Object2FileUtils.writeJSONObject2File(jsonObject, resource.getConfFile());
+            }
+        });
     }
 
     /**
@@ -348,14 +355,14 @@ public abstract class DownloadExecutor<T> {
             throw new IllegalArgumentException("downloadStatusListener is null!");
         }
         boolean isExist = false;
-        for (final WeakReference<DownloadStatusListener> listener : listeners) {
+        for (final SoftReference<DownloadStatusListener> listener : listeners) {
             if (downloadStatusListener.equals(listener.get())) {
                 isExist = true;
                 break;
             }
         }
         if (!isExist) {
-            listeners.add(new WeakReference<DownloadStatusListener>(downloadStatusListener));
+            listeners.add(new SoftReference<DownloadStatusListener>(downloadStatusListener));
         }
     }
 
@@ -366,7 +373,7 @@ public abstract class DownloadExecutor<T> {
         if (null == downloadStatusListener) {
             throw new IllegalArgumentException("downloadStatusListener is null!");
         }
-        for (final WeakReference<DownloadStatusListener> listener : listeners) {
+        for (final SoftReference<DownloadStatusListener> listener : listeners) {
             if (downloadStatusListener.equals(listener.get())) {
                 listeners.remove(listener);
                 break;
@@ -374,10 +381,10 @@ public abstract class DownloadExecutor<T> {
         }
     }
 
-    private void notifyUpdateStatus(DownloadResource resource, int type) {
-        for (final WeakReference<DownloadStatusListener> listener : listeners) {
+    private void notifyUpdateStatus(DownloadResource resource, int action) {
+        for (final SoftReference<DownloadStatusListener> listener : listeners) {
             if (null != listener.get()) {
-                listener.get().onStatusChange(resource, type);
+                listener.get().onStatusChange(resource, action);
             }
         }
     }
@@ -413,10 +420,10 @@ public abstract class DownloadExecutor<T> {
     }
 
     static final class ExecutorHandler extends Handler {
-        private final WeakReference<DownloadExecutor> mDownloadExecutor;
+        private final SoftReference<DownloadExecutor> mDownloadExecutor;
 
         public ExecutorHandler(DownloadExecutor downloadExecutor) {
-            mDownloadExecutor = new WeakReference<>(downloadExecutor);
+            mDownloadExecutor = new SoftReference<>(downloadExecutor);
         }
 
         public void handleMessage(Message msg) {
