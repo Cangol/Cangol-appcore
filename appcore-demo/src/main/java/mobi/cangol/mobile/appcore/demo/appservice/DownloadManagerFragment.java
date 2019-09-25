@@ -33,7 +33,6 @@ import mobi.cangol.mobile.utils.StringUtils;
  */
 public class DownloadManagerFragment extends Fragment {
     private static final String TAG = "DownloadManagerFragment";
-    private String url="https://fileoss.fdzq.com//Array/1533541437-FR_4.4.0_build44_r7b13373d_20180803_alpha.apk";
     private String url2="http://music-hotpot.oss-cn-hongkong.aliyuncs.com/songs/803263126016617416171574.mp3";
     private String url1="http://music-hotpot.oss-cn-hongkong.aliyuncs.com/songs/626841935812471620885564.mp3";
     private ConfigService configService;
