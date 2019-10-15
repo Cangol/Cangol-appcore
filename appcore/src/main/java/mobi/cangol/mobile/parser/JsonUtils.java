@@ -77,6 +77,9 @@ public class JsonUtils extends Converter {
      * @return
      */
     public static <T> JSONObject toJSONObject(T obj, boolean useAnnotation) {
+        return toJSONObject(obj,useAnnotation,false);
+    }
+    public static <T> JSONObject toJSONObject(T obj, boolean useAnnotation,boolean excludeTransient) {
         if (obj == null) {
             return null;
         }
@@ -92,6 +95,10 @@ public class JsonUtils extends Converter {
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers())) {
                     continue;
                 }
+                if(excludeTransient&&Modifier.isTransient(field.getModifiers())){
+                    continue;
+                }
+
                 final String filedName = getFieldName(field, useAnnotation);
                 if (!List.class.isAssignableFrom(field.getType())) {
                     //非集合类型
@@ -138,6 +145,9 @@ public class JsonUtils extends Converter {
      * @throws JSONParserException
      */
     public static <T> T parserToObject(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+        return parserToObject(c,str,useAnnotation,false);
+    }
+    public static <T> T parserToObject(Class<T> c, String str, boolean useAnnotation,boolean excludeTransient) throws JSONParserException {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
@@ -148,7 +158,7 @@ public class JsonUtils extends Converter {
         } catch (JSONException e) {
             throw new JSONParserException(e.getMessage(), e);
         }
-        return parserToObject(c, jsonObject, useAnnotation);
+        return parserToObject(c, jsonObject, useAnnotation,excludeTransient);
     }
 
     /**
@@ -162,6 +172,9 @@ public class JsonUtils extends Converter {
      * @throws JSONParserException
      */
     public static <T> List<T> parserToList(Class<T> c, String str, boolean useAnnotation) throws JSONParserException {
+        return parserToList(c,str,useAnnotation,false);
+    }
+    public static <T> List<T> parserToList(Class<T> c, String str, boolean useAnnotation,boolean excludeTransient) throws JSONParserException {
         if (null == str || "".equals(str)) {
             throw new IllegalArgumentException("str=null");
         }
@@ -172,7 +185,7 @@ public class JsonUtils extends Converter {
         } catch (JSONException e) {
             throw new JSONParserException(e.getMessage(), e);
         }
-        return parserToList(c, jsonArray, useAnnotation);
+        return parserToList(c, jsonArray, useAnnotation,excludeTransient);
     }
 
     /**
@@ -210,8 +223,10 @@ public class JsonUtils extends Converter {
         }
         return new String(outStream.toByteArray(), UTF_8);
     }
-
     public static <T> T parserToObject(Class<T> c, JSONObject jsonObject, boolean useAnnotation) throws JSONParserException {
+        return parserToObject(c,jsonObject,useAnnotation,false);
+    }
+    public static <T> T parserToObject(Class<T> c, JSONObject jsonObject, boolean useAnnotation,boolean excludeTransient) throws JSONParserException {
         if (jsonObject == null) {
             return null;
         }
@@ -226,6 +241,9 @@ public class JsonUtils extends Converter {
             for (final Field field : fields) {
                 field.setAccessible(true);
                 if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) ) {
+                    continue;
+                }
+                if(excludeTransient&&Modifier.isTransient(field.getModifiers())){
                     continue;
                 }
                 filedName = getFieldName(field, useAnnotation);
@@ -256,9 +274,11 @@ public class JsonUtils extends Converter {
         }
         return t;
     }
-
-    @SuppressWarnings("unchecked")
     public static <T> List<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation) throws JSONParserException {
+        return parserToList(c,jsonArray,useAnnotation,false);
+    }
+        @SuppressWarnings("unchecked")
+    public static <T> List<T> parserToList(Class<T> c, JSONArray jsonArray, boolean useAnnotation,boolean excludeTransient) throws JSONParserException {
         if (jsonArray == null) {
             return new ArrayList<>();
         }
@@ -267,7 +287,7 @@ public class JsonUtils extends Converter {
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 if (jsonArray.get(i) instanceof JSONObject) {
-                    t = parserToObject(c, jsonArray.getJSONObject(i), useAnnotation);
+                    t = parserToObject(c, jsonArray.getJSONObject(i), useAnnotation,excludeTransient);
                 } else if (jsonArray.get(i) != null) {
                     t = (T) jsonArray.get(i);
                 } else {
