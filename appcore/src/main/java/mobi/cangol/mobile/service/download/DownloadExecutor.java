@@ -149,15 +149,12 @@ public abstract class DownloadExecutor<T> {
      */
     protected void writeResource(final DownloadResource resource) {
         Log.d(mTag, "write DownloadResource >" + resource.getConfFile());
-
-        //Object2FileUtils.writeObject(resource, resource.getConfFile());
         if(mContext!=null)((CoreApplication)mContext.getApplicationContext()).post(new Runnable() {
             @Override
             public void run() {
                 //使用json格式存储
                 final  JSONObject jsonObject = JsonUtils.toJSONObject(resource, false,true);
                 Object2FileUtils.writeJSONObject2File(jsonObject, resource.getConfFile());
-                Log.d(mTag, "write DownloadResource exist=" + new File(resource.getConfFile()).exists());
             }
         });
     }
