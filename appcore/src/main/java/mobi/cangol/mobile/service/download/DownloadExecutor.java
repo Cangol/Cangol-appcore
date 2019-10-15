@@ -135,7 +135,8 @@ public abstract class DownloadExecutor<T> {
         try {
             //downloadResource= (DownloadResource) Object2FileUtils.readObject(new File(filePath));
             final JSONObject jsonObject = Object2FileUtils.readFile2JSONObject(new File(filePath));
-            downloadResource = JsonUtils.parserToObject(DownloadResource.class, jsonObject, false);
+            downloadResource = JsonUtils.parserToObject(DownloadResource.class, jsonObject, false,true);
+
         } catch (Exception e) {
             Log.d(mTag, e.getMessage());
         }
@@ -154,8 +155,9 @@ public abstract class DownloadExecutor<T> {
             @Override
             public void run() {
                 //使用json格式存储
-                final  JSONObject jsonObject = JsonUtils.toJSONObject(resource, false);
+                final  JSONObject jsonObject = JsonUtils.toJSONObject(resource, false,true);
                 Object2FileUtils.writeJSONObject2File(jsonObject, resource.getConfFile());
+                Log.d(mTag, "write DownloadResource exist=" + new File(resource.getConfFile()).exists());
             }
         });
     }
