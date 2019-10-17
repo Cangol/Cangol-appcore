@@ -15,10 +15,6 @@
  */
 package mobi.cangol.mobile.utils;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,7 +30,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 
 import mobi.cangol.mobile.logging.Log;
 
@@ -55,7 +50,7 @@ public class Object2FileUtils {
      */
     public static void writeJSONObject2File(JSONObject jsonObject, String objPath) {
         try {
-            writeJSONObject(jsonObject, new FileOutputStream(new File(objPath)));
+            writeString2File(jsonObject.toString(), new FileOutputStream(new File(objPath)));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
         }
@@ -69,7 +64,7 @@ public class Object2FileUtils {
      */
     public static void writeJSONArray2File(JSONArray jsonArray, String objPath) {
         try {
-            writeJSONArray(jsonArray, new FileOutputStream(new File(objPath)));
+            writeString2File(jsonArray.toString(), new FileOutputStream(new File(objPath)));
         } catch (FileNotFoundException e) {
             Log.d(e.getMessage());
         }
@@ -84,8 +79,8 @@ public class Object2FileUtils {
     public static JSONArray readFile2JSONArray(File jsonFile) {
         JSONArray jsonArray = null;
         try {
-            jsonArray = readJSONArray(new FileInputStream(jsonFile));
-        } catch (FileNotFoundException e) {
+            jsonArray = new JSONArray(readString(new FileInputStream(jsonFile)));
+        } catch (Exception e) {
             Log.d(e.getMessage());
         }
         return jsonArray;
@@ -100,22 +95,22 @@ public class Object2FileUtils {
     public static JSONObject readFile2JSONObject(File jsonFile) {
         JSONObject jsonObject = null;
         try {
-            jsonObject = readJSONObject(new FileInputStream(jsonFile));
-        } catch (FileNotFoundException e) {
+            jsonObject = new JSONObject(readString(new FileInputStream(jsonFile)));
+        } catch (Exception e) {
             Log.d(e.getMessage());
         }
         return jsonObject;
     }
 
     /**
-     * 写入json对象到输出流
+     * 写入String到输出流
      *
-     * @param jsonArray
+     * @param str
      * @param os
      */
-    public static void writeJSONArray(JSONArray jsonArray, OutputStream os) {
+    public static void writeString2File(String str, OutputStream os) {
         try {
-            final byte[] buffer = jsonArray.toString().getBytes(CHARSET);
+            final byte[] buffer = str.getBytes(CHARSET);
             os.write(buffer);
             os.flush();
         } catch (IOException e) {
@@ -132,47 +127,16 @@ public class Object2FileUtils {
     }
 
     /**
-     * 写入json对象到输出流
-     *
-     * @param jsonObject
-     * @param os
-     */
-    public static void writeJSONObject(JSONObject jsonObject, OutputStream os) {
-        try {
-            final byte[] buffer = jsonObject.toString().getBytes(CHARSET);
-            os.write(buffer);
-            os.flush();
-        } catch (Exception e) {
-            Log.d(e.getMessage());
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    Log.d(e.getMessage());
-                }
-            }
-        }
-    }
-
-    /**
-     * 从输入流读取json对象
-     *
+     * 读取输入流到String
      * @param is
      * @return
      */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static JSONObject readJSONObject(InputStream is) {
+    public static String readString(InputStream is) {
         String content = null;
-        JSONObject jsonObject = null;
         try {
             final byte[] buffer = new byte[is.available()];
             if (is.read(buffer) != -1) {
-                content = new String(buffer, StandardCharsets.UTF_8);
-                if (!TextUtils.isEmpty(content)) {
-                    jsonObject = new JSONObject(content);
-                }
-
+                content = new String(buffer, CHARSET);
             }
         } catch (Exception e) {
             Log.d(e.getMessage());
@@ -185,42 +149,8 @@ public class Object2FileUtils {
                 }
             }
         }
-        return jsonObject;
+        return content;
     }
-
-    /**
-     * 从输入流读取json对象
-     *
-     * @param is
-     * @return
-     */
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static JSONArray readJSONArray(InputStream is) {
-        String content = null;
-        JSONArray jsonArray = null;
-        try {
-            final byte[] buffer = new byte[is.available()];
-            if (is.read(buffer) != -1) {
-                content = new String(buffer, StandardCharsets.UTF_8);
-                if (!TextUtils.isEmpty(content)) {
-                    jsonArray = new JSONArray(content);
-                }
-
-            }
-        } catch (Exception e) {
-            Log.d(e.getMessage());
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    Log.d(e.getMessage());
-                }
-            }
-        }
-        return jsonArray;
-    }
-
     /**
      * 将object对象写入输出流
      *

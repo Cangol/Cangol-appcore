@@ -54,7 +54,7 @@ public class DownloadManagerFragment extends Fragment {
         configService = (ConfigService) application.getAppService(AppService.CONFIG_SERVICE);
         downloadManager = (DownloadManager) application.getAppService(AppService.DOWNLOAD_MANAGER);
         downloadManager.setDebug(true);
-        downloadManager.registerExecutor("app", AppDownloadExecutor.class, 2);
+        downloadManager.registerExecutor("app", AppDownloadExecutor.class, 1);
     }
 
     @Override
