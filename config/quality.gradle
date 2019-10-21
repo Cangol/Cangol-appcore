@@ -1,7 +1,6 @@
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
-apply plugin: 'jdepend'
 /*
  *
  *  Copyright (c) 2013 Cangol
@@ -62,13 +61,6 @@ task pmd(type: Pmd) {
     reports {
         xml.enabled = false
         html.enabled = true
-    }
-}
-//
-task jdepend(type: JDepend, dependsOn: 'compileDebugSources') {
-    reports {
-        xml.enabled = false
-        text.enabled = true
     }
 }
 android {
