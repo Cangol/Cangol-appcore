@@ -80,7 +80,7 @@ public final class BitmapUtils {
         p.setTextSize(size);
         p.setAlpha(alpha * 255 / 100);
         canvas.drawText(content, left, top, p);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
         return dst;
     }
@@ -105,7 +105,7 @@ public final class BitmapUtils {
         canvas.drawBitmap(src, 0, 0, p);
         p.setAlpha(alpha * 255 / 100);
         canvas.drawBitmap(img, left, top, p);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
         return dst;
     }
@@ -125,7 +125,7 @@ public final class BitmapUtils {
         final Canvas canvas = new Canvas(dst);
         canvas.drawBitmap(src, 0, 0, null);
         canvas.drawBitmap(pro, 0, pro.getHeight() * (100 - progress) / 100.0f, null);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
         return dst;
     }

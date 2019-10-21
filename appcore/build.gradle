@@ -8,17 +8,17 @@ apply from: '../config/quality.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
-    implementation 'com.squareup.okio:okio:1.11.0'
+    implementation "com.android.support:support-v4:$support_version"
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okio:okio:1.15.0'
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion Integer.decode("$sdk_version")
+    buildToolsVersion "$build_version"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion Integer.decode("$min_version")
         versionCode Integer.decode("${POM_VERSION_CODE}")
         versionName "${POM_VERSION}"
     }

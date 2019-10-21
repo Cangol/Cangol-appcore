@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion Integer.decode("$sdk_version")
+    buildToolsVersion "$build_version"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion Integer.decode("$min_version")
         versionCode 1
         versionName "1.0"
     }
@@ -26,5 +26,5 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':appcore')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "com.android.support:appcompat-v7:$support_version"
 }
