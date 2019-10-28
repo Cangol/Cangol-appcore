@@ -23,6 +23,7 @@ public class LibTestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments()!=null)
         key=getArguments().getString("key");
     }
 
