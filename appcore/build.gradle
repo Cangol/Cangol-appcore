@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.kt3k.coveralls'
@@ -9,6 +12,7 @@ apply from: '../config/quality.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     implementation "com.android.support:support-v4:$support_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.okio:okio:2.2.2'
 }
@@ -26,8 +30,8 @@ android {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     dexOptions {
         javaMaxHeapSize "4g"
