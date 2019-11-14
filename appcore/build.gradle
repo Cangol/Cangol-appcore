@@ -14,6 +14,10 @@ dependencies {
 }
 
 android {
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+    
     compileSdkVersion Integer.decode("$sdk_version")
     buildToolsVersion "$build_version"
 
