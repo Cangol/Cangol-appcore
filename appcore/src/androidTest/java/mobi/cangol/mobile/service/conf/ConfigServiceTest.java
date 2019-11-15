@@ -22,7 +22,7 @@ public class ConfigServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        configService = (ConfigService) coreApplication.getAppService(AppService.CONFIG_SERVICE);
+        configService = (ConfigService) coreApplication.getAppService(AppService.Companion.getCONFIG_SERVICE());
     }
     public void testGetCacheDir() {
         configService.getCacheDir();

@@ -24,7 +24,7 @@ public class CrashServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        crashService = (CrashService) coreApplication.getAppService(AppService.CRASH_SERVICE);
+        crashService = (CrashService) coreApplication.getAppService(AppService.Companion.getCRASH_SERVICE());
     }
 
     public void testSetReport() {

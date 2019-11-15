@@ -23,7 +23,7 @@ public class StatusServiceTest  extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        statusService = (StatusService) coreApplication.getAppService(AppService.STATUS_SERVICE);
+        statusService = (StatusService) coreApplication.getAppService(AppService.Companion.getSTATUS_SERVICE());
         statusListener=new StatusListener() {
             @Override
             public void networkConnect(Context context) {

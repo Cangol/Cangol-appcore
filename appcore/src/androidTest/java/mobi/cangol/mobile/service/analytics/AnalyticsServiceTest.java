@@ -22,7 +22,7 @@ public class AnalyticsServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
+        analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.Companion.getANALYTICS_SERVICE());
     }
 
     public void testGetTracker() {
@@ -31,7 +31,7 @@ public class AnalyticsServiceTest extends ApplicationTestCase<CoreApplication> {
 
     public void testSends() {
         ITracker tracker = analyticsService.getTracker(TAG);
-        IMapBuilder builder = IMapBuilder.build();
+        IMapBuilder builder = IMapBuilder.Companion.build();
         builder.setUrl("http://www.cangol.mobi/cmweb/api/countly/event.do");
         builder.set("id", "1")
                 .set("name", "Jick")

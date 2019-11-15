@@ -22,7 +22,7 @@ public class CacheManagerTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication=getApplication();
-        cacheManager= (CacheManager) coreApplication.getAppService(AppService.CACHE_MANAGER);
+        cacheManager= (CacheManager) coreApplication.getAppService(AppService.Companion.getCACHE_MANAGER());
     }
     public void testGetContent() {
         cacheManager.getContent(TAG,"user");

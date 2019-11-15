@@ -3,6 +3,8 @@ package mobi.cangol.mobile.service.location;
 import android.location.Location;
 import android.test.ApplicationTestCase;
 
+import org.jetbrains.annotations.NotNull;
+
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.service.AppService;
 
@@ -22,7 +24,7 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        locationService = (LocationService) coreApplication.getAppService(AppService.LOCATION_SERVICE);
+        locationService = (LocationService) coreApplication.getAppService(AppService.Companion.getLOCATION_SERVICE());
     }
 
     public void testRequestLocationUpdates() {
@@ -44,7 +46,7 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
     public void testSetBetterLocationListener() {
         locationService.setBetterLocationListener(new BetterLocationListener() {
             @Override
-            public void needPermission(String[] permissions) {
+            public void needPermission(@NotNull String[] permissions) {
 
             }
 

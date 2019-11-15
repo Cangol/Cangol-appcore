@@ -22,7 +22,7 @@ public class UpgradeServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        upgradeService = (UpgradeService) coreApplication.getAppService(AppService.UPGRADE_SERVICE);
+        upgradeService = (UpgradeService) coreApplication.getAppService(AppService.Companion.getUPGRADE_SERVICE());
     }
 
     public void testUpgrade() {

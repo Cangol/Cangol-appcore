@@ -30,7 +30,7 @@ public class JsonUtilsTest extends InstrumentationTestCase {
 
     public void testToJSONObject() throws Exception {
         ParserObject obj=new ParserObject(1,"Nick",1.75d,true);
-        JSONObject jsonObject=JsonUtils.toJSONObject(obj,false);
+        JSONObject jsonObject= JsonUtils.toJSONObject(obj,false);
         assertNotNull(jsonObject);
         assertEquals(jsonObject.getInt("id"),obj.getId());
         assertEquals(jsonObject.getString("name"),obj.getName());
@@ -39,8 +39,8 @@ public class JsonUtilsTest extends InstrumentationTestCase {
     }
 
     public void testParserToObject() throws Exception {
-        JSONObject jsonObject=JsonUtils.formatJSONObject(jsonStr);
-        ParserObject obj=JsonUtils.parserToObject(ParserObject.class,jsonStr,false);
+        JSONObject jsonObject= JsonUtils.formatJSONObject(jsonStr);
+        ParserObject obj= JsonUtils.parserToObject(ParserObject.class,jsonStr,false);
         assertNotNull(obj);
         assertEquals(jsonObject.getInt("id"),obj.getId());
         assertEquals(jsonObject.getString("name"),obj.getName());

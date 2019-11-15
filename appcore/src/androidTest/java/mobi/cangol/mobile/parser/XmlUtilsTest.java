@@ -31,12 +31,12 @@ public class XmlUtilsTest extends InstrumentationTestCase {
 
     public void testToXml() {
         ParserObject obj=new ParserObject(1,"Nick",1.75d,true);
-        String xml=XmlUtils.toXml(obj,false);
+        String xml= XmlUtils.toXml(obj,false);
         assertNotNull(xml);
     }
 
     public void testParserToObject() throws Exception {
-        ParserObject obj=XmlUtils.parserToObject(ParserObject.class,xmlStr,false);
+        ParserObject obj= XmlUtils.parserToObject(ParserObject.class,xmlStr,false);
         assertNotNull(obj);
         assertEquals(1,obj.getId());
         assertEquals("Nick",obj.getName());

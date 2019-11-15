@@ -18,6 +18,10 @@ dependencies {
 }
 
 android {
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+
     compileSdkVersion Integer.decode("$sdk_version")
     buildToolsVersion "$build_version"
 
@@ -80,7 +84,7 @@ task javadoc(type: Javadoc) {
     //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
     options {
         encoding "UTF-8"
-        links "http://docs.oracle.com/javase/7/docs/api/"
+        links "http://docs.oracle.com/javase/8/docs/api/"
         linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
     }
     exclude '**/BuildConfig.java'

@@ -28,7 +28,7 @@ public class DownloadManagerTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        downloadManager = (DownloadManager) coreApplication.getAppService(AppService.DOWNLOAD_MANAGER);
+        downloadManager = (DownloadManager) coreApplication.getAppService(AppService.Companion.getDOWNLOAD_MANAGER());
     }
 
     public void testGetDownloadExecutor() {

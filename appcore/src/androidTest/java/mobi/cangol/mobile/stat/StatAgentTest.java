@@ -27,10 +27,10 @@ public class StatAgentTest extends ApplicationTestCase<CoreApplication> {
 
     }
     public void testSend() {
-        StatAgent.getInstance().send(StatAgent.Builder.createAppView(TAG));
-        StatAgent.getInstance().send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
-        StatAgent.getInstance().send(StatAgent.Builder.createEvent("test", TAG, "test", null, null));
-        StatAgent.getInstance().send(StatAgent.Builder.createTiming(TAG, 1000L));
+        StatAgent.getInstance().send(StatAgent.Builder.Companion.createAppView(TAG));
+        StatAgent.getInstance().send(StatAgent.Builder.Companion.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
+        StatAgent.getInstance().send(StatAgent.Builder.Companion.createEvent("test", TAG, "test", null, null));
+        StatAgent.getInstance().send(StatAgent.Builder.Companion.createTiming(TAG, 1000L));
     }
 
     public void testSendLaunch() {
