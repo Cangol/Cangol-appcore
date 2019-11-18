@@ -206,14 +206,11 @@ internal class UpgradeServiceImpl : UpgradeService {
             } else {
                 AppUtils.install(mContext!!, savePath)
             }
-            UpgradeType.RES -> {
-            }
-            UpgradeType.DEX -> {
-            }
+            UpgradeType.RES -> {}
+            UpgradeType.DEX -> {}
             UpgradeType.SO -> System.load(savePath)
             UpgradeType.OTHER -> Intent()
-            else -> {
-            }
+            else -> {}
         }
         /**
          * DexClassLoader dexClassLoader = new DexClassLoader(savePath, mConfigService.getTempDir().getAbsolutePath(), null, mContext.getClassLoader());
@@ -244,16 +241,11 @@ internal class UpgradeServiceImpl : UpgradeService {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
-            UpgradeType.RES -> {
-            }
-            UpgradeType.DEX -> {
-            }
-            UpgradeType.SO -> {
-            }
-            UpgradeType.OTHER -> {
-            }
-            else -> {
-            }
+            UpgradeType.RES -> {}
+            UpgradeType.DEX -> {}
+            UpgradeType.SO -> {}
+            UpgradeType.OTHER -> {}
+            else -> {}
         }
         return intent
     }

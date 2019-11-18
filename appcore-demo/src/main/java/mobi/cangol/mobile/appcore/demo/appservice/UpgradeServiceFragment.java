@@ -54,7 +54,7 @@ public class UpgradeServiceFragment extends Fragment{
         upgradeService.setOnUpgradeListener("QQ.apk",new OnUpgradeListener(){
 
             @Override
-            public void upgrade(boolean focue) {
+            public void upgrade(boolean force) {
 
             }
 
