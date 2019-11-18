@@ -79,6 +79,7 @@ object StatAgent {
     }
 
     private fun init(context: CoreApplication) {
+        this.context=context
         sessionService = context.getAppService(AppService.SESSION_SERVICE) as SessionService
         analyticsService = context.getAppService(AppService.ANALYTICS_SERVICE) as AnalyticsService
         crashService = context.getAppService(AppService.CRASH_SERVICE) as CrashService
@@ -91,7 +92,7 @@ object StatAgent {
             }
         })
         StatsTraffic.getInstance(context).onCreated(context!!)
-        crashService?.setReport(statHostUrl + STAT_ACTION_EXCEPTION, null)
+        crashService?.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, null)
     }
 
     fun destroy() {
@@ -108,12 +109,12 @@ object StatAgent {
         val builder = IMapBuilder.build()
         builder.setAll(eventBuilder.build())
         when (eventBuilder.type) {
-            Builder.Type.EVENT -> builder.setUrl(statHostUrl + STAT_ACTION_EVENT)
-            Builder.Type.TIMING -> builder.setUrl(statHostUrl + STAT_ACTION_TIMING)
-            Builder.Type.EXCEPTION -> builder.setUrl(statHostUrl + STAT_ACTION_EXCEPTION)
-            Builder.Type.LAUNCHER -> builder.setUrl( statHostUrl + STAT_ACTION_LAUNCH)
-            Builder.Type.SESSION -> builder.setUrl(statHostUrl + STAT_ACTION_SESSION)
-            Builder.Type.TRAFFIC -> builder.setUrl( statHostUrl + STAT_ACTION_TRAFFIC)
+            Builder.Type.EVENT -> builder.setUrl(getStatHostUrl() + STAT_ACTION_EVENT)
+            Builder.Type.TIMING -> builder.setUrl(getStatHostUrl() + STAT_ACTION_TIMING)
+            Builder.Type.EXCEPTION -> builder.setUrl(getStatHostUrl() + STAT_ACTION_EXCEPTION)
+            Builder.Type.LAUNCHER -> builder.setUrl(getStatHostUrl() + STAT_ACTION_LAUNCH)
+            Builder.Type.SESSION -> builder.setUrl(getStatHostUrl() + STAT_ACTION_SESSION)
+            Builder.Type.TRAFFIC -> builder.setUrl(getStatHostUrl() + STAT_ACTION_TRAFFIC)
         }
         itracker?.send(builder)
     }
@@ -161,11 +162,11 @@ object StatAgent {
         StatsSession.getInstance().onStop(pageName)
     }
 
-    open class Builder {
-        var type: Type? = null
+    object Builder {
+        internal var type: Type? = null
         private val map = HashMap<String, String>()
 
-        private operator fun set(paramName: String?, paramValue: String?): Builder {
+        operator fun set(paramName: String?, paramValue: String?): Builder {
             if (paramName != null) {
                 this.map[paramName] = paramValue!!
             } else {
@@ -174,11 +175,11 @@ object StatAgent {
             return this
         }
 
-        operator fun get(paramName: String): String? {
+        operator  fun get(paramName: String): String? {
             return this.map[paramName]
         }
 
-        fun build(): Map<String, String> {
+        @JvmStatic fun build(): Map<String, String> {
             return HashMap(this.map)
         }
 
@@ -191,140 +192,138 @@ object StatAgent {
             TRAFFIC
         }
 
-        companion object {
 
-            fun createAppView(view: String): Builder {
-                val builder = Builder()
-                builder["view"] = view
-                builder["action"] = "visit"
-                builder[TIMESTAMP] = TimeUtils.getCurrentTime()
-                builder.type = Type.EVENT
-                return builder
-            }
+        @JvmStatic fun createAppView(view: String): Builder {
+            val builder = Builder
+            builder["view"] = view
+            builder["action"] = "visit"
+            builder[TIMESTAMP] = TimeUtils.getCurrentTime()
+            builder.type = Type.EVENT
+            return builder
+        }
 
-            /**
-             * 事件统计
-             *
-             * @param user   用户
-             * @param action 动作
-             * @param view   页面
-             * @param target 目标
-             * @param result 结果
-             * @return
-             */
-            fun createEvent(user: String?, view: String?, action: String?, target: String?, result: Long?): Builder {
+        /**
+         * 事件统计
+         *
+         * @param user   用户
+         * @param action 动作
+         * @param view   页面
+         * @param target 目标
+         * @param result 结果
+         * @return
+         */
+        @JvmStatic fun createEvent(user: String?, view: String?, action: String?, target: String?, result: Long?): Builder {
 
-                val builder = Builder()
-                builder["userId"] = user
-                builder["view"] = view
-                builder["action"] = action
-                builder["target"] = target
-                builder["result"] = result?.toString()
-                builder[TIMESTAMP] = TimeUtils.getCurrentTime()
-                builder.type = Type.EVENT
-                return builder
-            }
+            val builder = Builder
+            builder["userId"] = user?:""
+            builder["view"] = view?:""
+            builder["action"] = action?:""
+            builder["target"] = target?:""
+            builder["result"] = result?.toString()?:""
+            builder[TIMESTAMP] = TimeUtils.getCurrentTime()
+            builder.type = Type.EVENT
+            return builder
+        }
 
-            /**
-             * 时间统计
-             *
-             * @param view
-             * @param idletime
-             * @return
-             */
-            fun createTiming(view: String?, idleTime: Long?): Builder {
-                val builder = Builder()
-                builder["view"] = view
-                builder["idleTime"] = idleTime?.toString()
-                builder[TIMESTAMP] = TimeUtils.getCurrentTime()
-                builder.type = Type.TIMING
-                return builder
-            }
+        /**
+         * 时间统计
+         *
+         * @param view
+         * @param idleTime
+         * @return
+         */
+        @JvmStatic fun createTiming(view: String?, idleTime: Long?): Builder {
+            val builder = Builder
+            builder["view"] = view?:""
+            builder["idleTime"] = idleTime?.toString()?:""
+            builder[TIMESTAMP] = TimeUtils.getCurrentTime()
+            builder.type = Type.TIMING
+            return builder
+        }
 
-            /**
-             * 异常统计
-             *
-             * @param error    异常类型
-             * @param position 位置
-             * @param content  详细log
-             * @param fatal    是否奔溃
-             * @return
-             */
-            fun createException(error: String?, position: String?, content: String?, timestamp: String?, fatal: String?): Builder {
-                val builder = Builder()
-                builder["error"] = error
-                builder["position"] = position
-                builder["content"] = content
-                builder[TIMESTAMP] = timestamp
-                builder["fatal"] = fatal
-                builder.type = Type.EXCEPTION
-                return builder
+        /**
+         * 异常统计
+         *
+         * @param error    异常类型
+         * @param position 位置
+         * @param content  详细log
+         * @param fatal    是否奔溃
+         * @return
+         */
+        @JvmStatic fun createException(error: String?, position: String?, content: String?, timestamp: String?, fatal: String?): Builder {
+            val builder = Builder
+            builder["error"] = error?:""
+            builder["position"] = position?:""
+            builder["content"] = content?:""
+            builder[TIMESTAMP] = timestamp?:""
+            builder["fatal"] = fatal?:""
+            builder.type = Type.EXCEPTION
+            return builder
 
-            }
+        }
 
-            /**
-             * 启动
-             *
-             * @param exitCode    上次退出编码
-             * @param exitVersion 上次退出版本
-             * @param isNew       是否新用户
-             * @return
-             */
-            fun createLaunch(exitCode: String?, exitVersion: String?, isNew: Boolean?, launchTime: String?): Builder {
-                val builder = Builder()
-                builder["exitCode"] = exitCode
-                builder["exitVersion"] = exitVersion
-                builder["launchTime"] = launchTime
-                builder[TIMESTAMP] = TimeUtils.getCurrentTime()
-                builder["isNew"] = if (isNew!!) "1" else "0"
-                builder.type = Type.LAUNCHER
-                return builder
+        /**
+         * 启动
+         *
+         * @param exitCode    上次退出编码
+         * @param exitVersion 上次退出版本
+         * @param isNew       是否新用户
+         * @return
+         */
+        @JvmStatic fun createLaunch(exitCode: String?, exitVersion: String?, isNew: Boolean?, launchTime: String?): Builder {
+            val builder = Builder
+            builder["exitCode"] = exitCode?:""
+            builder["exitVersion"] = exitVersion?:""
+            builder["launchTime"] = launchTime?:""
+            builder[TIMESTAMP] = TimeUtils.getCurrentTime()
+            builder["isNew"] = if (isNew!!) "1" else "0"
+            builder.type = Type.LAUNCHER
+            return builder
 
-            }
+        }
 
-            /**
-             * 会话统计
-             *
-             * @param sessionId
-             * @param beginSession
-             * @param sessionDuration
-             * @param endSession
-             * @param activityId
-             * @return
-             */
-            fun createSession(sessionId: String?, beginSession: String?, sessionDuration: String?, endSession: String?, activityId: String?): Builder {
-                val builder = Builder()
-                builder["sessionId"] = sessionId
-                builder["beginSession"] = beginSession
-                builder["sessionDuration"] = sessionDuration
-                builder["endSession"] = endSession
-                builder["activityId"] = activityId
-                builder[TIMESTAMP] = TimeUtils.getCurrentTime()
-                builder.type = Type.SESSION
-                return builder
+        /**
+         * 会话统计
+         *
+         * @param sessionId
+         * @param beginSession
+         * @param sessionDuration
+         * @param endSession
+         * @param activityId
+         * @return
+         */
+        @JvmStatic fun createSession(sessionId: String?, beginSession: String?, sessionDuration: String?, endSession: String?, activityId: String?): Builder {
+            val builder = Builder
+            builder["sessionId"] = sessionId?:""
+            builder["beginSession"] = beginSession?:""
+            builder["sessionDuration"] = sessionDuration?:""
+            builder["endSession"] = endSession?:""
+            builder["activityId"] = activityId?:""
+            builder[TIMESTAMP] = TimeUtils.getCurrentTime()
+            builder.type = Type.SESSION
+            return builder
 
-            }
+        }
 
-            /**
-             * 流量统计
-             *
-             * @param map
-             * @return
-             */
-            fun createTraffic(map: Map<String, String>): Builder {
-                val builder = Builder()
-                builder["date"] = map["date"]
-                builder["totalRx"] = map["totalRx"]
-                builder["totalTx"] = map["totalTx"]
-                builder["mobileRx"] = map["mobileRx"]
-                builder["mobileTx"] = map["mobileTx"]
-                builder["wifiRx"] = map["wifiRx"]
-                builder["wifiTx"] = map["wifiTx"]
-                builder[TIMESTAMP] = TimeUtils.getCurrentTime()
-                builder.type = Type.TRAFFIC
-                return builder
+        /**
+         * 流量统计
+         *
+         * @param map
+         * @return
+         */
+        @JvmStatic fun createTraffic(map: Map<String, String>): Builder {
+            val builder = Builder
+            builder["date"] = map["date"]
+            builder["totalRx"] = map["totalRx"]
+            builder["totalTx"] = map["totalTx"]
+            builder["mobileRx"] = map["mobileRx"]
+            builder["mobileTx"] = map["mobileTx"]
+            builder["wifiRx"] = map["wifiRx"]
+            builder["wifiTx"] = map["wifiTx"]
+            builder[TIMESTAMP] = TimeUtils.getCurrentTime()
+            builder.type = Type.TRAFFIC
+            return builder
 
-            }
         }
     }
 }

@@ -74,7 +74,7 @@ object Base64 {
         val sourceBytes = ByteArray(4)
         for (group in 0 until numGroups) {
             for (i in sourceBytes.indices) {
-                sourceBytes[i] = Math.max(0, ENCODING_CHAR.indexOf(source[4 * group + i],0,true)).toByte()
+                sourceBytes[i] = Math.max(0, ENCODING_CHAR.indexOf(source[4 * group + i])).toByte()
             }
             convert4To3(sourceBytes, targetBytes, group * 3)
         }

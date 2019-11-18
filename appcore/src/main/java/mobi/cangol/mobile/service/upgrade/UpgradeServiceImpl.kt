@@ -141,27 +141,31 @@ internal class UpgradeServiceImpl : UpgradeService {
         mDownloadHttpClient!!.send(filename, url, object : DownloadResponseHandler() {
             override fun onWait() {
                 super.onWait()
+                Log.d(UpgradeServiceImpl.TAG,"onWait ")
                 if (notification) {
-                    finalDownloadNotification!!.createNotification()
+                    finalDownloadNotification?.createNotification()
                 }
             }
 
             override fun onStart(start: Long, length: Long) {
+                Log.d(UpgradeServiceImpl.TAG, "onStart  start=$start,length=$length")
             }
 
             override fun onStop(end: Long) {
                 super.onStop(end)
+                Log.d(UpgradeServiceImpl.TAG, "onStop  end=$end")
                 if (notification) {
-                    finalDownloadNotification!!.cancelNotification()
-                    mIds.remove(Integer.valueOf(finalDownloadNotification.id))
+                    finalDownloadNotification?.cancelNotification()
+                    mIds.remove(Integer.valueOf(finalDownloadNotification?.id!!))
                 }
                 notifyUpgradeFailure(filename, "stop")
             }
 
             override fun onFinish(end: Long) {
                 super.onFinish(end)
+                Log.d(UpgradeServiceImpl.TAG, "onFinish  end=$end")
                 if (notification) {
-                    finalDownloadNotification!!.finishNotification()
+                    finalDownloadNotification?.finishNotification()
                 }
                 if (install) {
                     makeLoad(savePath, upgradeType)
@@ -172,8 +176,9 @@ internal class UpgradeServiceImpl : UpgradeService {
 
             override fun onProgressUpdate(end: Long, progress: Int, speed: Int) {
                 super.onProgressUpdate(end, progress, speed)
+                Log.d(UpgradeServiceImpl.TAG, "onProgressUpdate  end=$end progress=$progress speed=$speed")
                 if (notification) {
-                    finalDownloadNotification!!.updateNotification(progress, speed)
+                    finalDownloadNotification?.updateNotification(progress, speed)
                 }
 
                 notifyUpgradeProgress(filename, speed, progress)
@@ -181,8 +186,9 @@ internal class UpgradeServiceImpl : UpgradeService {
 
             override fun onFailure(error: Throwable, content: String) {
                 super.onFailure(error, content)
+                Log.e(UpgradeServiceImpl.TAG, "onFailure error=${error.cause}")
                 if (notification) {
-                    finalDownloadNotification!!.failureNotification()
+                    finalDownloadNotification?.failureNotification()
                 }
                 notifyUpgradeFailure(filename, content)
             }
@@ -282,6 +288,6 @@ internal class UpgradeServiceImpl : UpgradeService {
     }
 
     companion object {
-        private const val TAG = "UpgradeService"
+         const val TAG = "UpgradeService"
     }
 }

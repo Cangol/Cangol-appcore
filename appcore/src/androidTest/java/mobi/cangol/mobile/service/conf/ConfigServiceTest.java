@@ -22,33 +22,35 @@ public class ConfigServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        configService = (ConfigService) coreApplication.getAppService(AppService.Companion.getCONFIG_SERVICE());
+        configService = (ConfigService) coreApplication.getAppService(AppService.CONFIG_SERVICE);
     }
+
     public void testGetCacheDir() {
-        configService.getCacheDir();
+        assertNotNull(configService.getCacheDir());
     }
+
     public void testGetImageDir() {
-        configService.getImageDir();
+        assertNotNull(configService.getImageDir());
     }
 
     public void testGetTempDir() {
-        configService.getTempDir();
+        assertNotNull(configService.getTempDir());
     }
 
     public void testGetDownloadDir() {
-        configService.getDownloadDir();
+        assertNotNull(configService.getDownloadDir());
     }
 
     public void testGetUpgradeDir() {
-        configService.getUpgradeDir();
+        assertNotNull(configService.getUpgradeDir());
     }
 
     public void testGetDatabaseName() {
-        configService.getDatabaseName();
+        assertNotNull(configService.getDatabaseName());
     }
 
     public void testGetSharedName() {
-        configService.getSharedName();
+        assertNotNull(configService.getSharedName());
     }
 
     public void testSetUseInternalStorage() {
@@ -61,11 +63,11 @@ public class ConfigServiceTest extends ApplicationTestCase<CoreApplication> {
     }
 
     public void testGetAppDir() {
-        configService.getAppDir();
+        assertNotNull(configService.getAppDir());
     }
 
     public void testSetCustomAppDir() {
-        String path="/sdcard/appcore";
+        String path = "/sdcard/appcore";
         //configService.setCustomAppDir(path);
     }
 

@@ -444,7 +444,7 @@ class AsyncHttpClient {
          * @param group
          * @return
          */
-        fun build(group: String): AsyncHttpClient {
+        @JvmStatic fun build(group: String): AsyncHttpClient {
             return AsyncHttpClient(group)
         }
 
@@ -455,7 +455,7 @@ class AsyncHttpClient {
          * @param client
          * @return
          */
-        fun build(group: String, client: OkHttpClient): AsyncHttpClient {
+        @JvmStatic fun build(group: String, client: OkHttpClient): AsyncHttpClient {
             return AsyncHttpClient(group, client)
         }
     }

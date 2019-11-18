@@ -48,4 +48,10 @@ public class UrlUtilsTest extends InstrumentationTestCase {
         assertEquals("123",map.get("key"));
         assertEquals("1",map.get("flag"));
     }
+    public void testGetPath() {
+        assertEquals("cangol.mobi:8080/action",UrlUtils.getPath("http://cangol.mobi:8080/action?key=123&flag=1"));
+    }
+    public void testGetScheme() {
+        assertEquals("http",UrlUtils.getScheme("http://cangol.mobi:8080/action?key=123&flag=1"));
+    }
 }

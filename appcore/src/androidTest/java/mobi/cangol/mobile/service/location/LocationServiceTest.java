@@ -24,7 +24,7 @@ public class LocationServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        locationService = (LocationService) coreApplication.getAppService(AppService.Companion.getLOCATION_SERVICE());
+        locationService = (LocationService) coreApplication.getAppService(AppService.LOCATION_SERVICE);
     }
 
     public void testRequestLocationUpdates() {

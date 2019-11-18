@@ -94,7 +94,7 @@ internal class ObserverManagerImpl : ObserverManager {
         }
     }
 
-    override fun post(event: String, data: Any) {
+    override fun post(event: String, data: Any?) {
         if (mDebug) Log.d(TAG, "post event=$event,data=$data")
         val subscriptions: CopyOnWriteArrayList<Subscription>?
         synchronized(this) {
@@ -109,7 +109,7 @@ internal class ObserverManagerImpl : ObserverManager {
         }
     }
 
-    private fun invokeSubscriber(subscription: Subscription, data: Any, curIsMainThread: Boolean) {
+    private fun invokeSubscriber(subscription: Subscription, data: Any?, curIsMainThread: Boolean) {
         val subscriber = subscription.subscriber
         val method = subscription.subscriberMethod.method
         try {

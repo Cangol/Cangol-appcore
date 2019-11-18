@@ -112,15 +112,15 @@ public class DeviceInfoTest extends AndroidTestCase {
     }
 
     public void testGetAppVersion() {
-        DeviceInfo.getAppVersion(getContext());
+        assertNotNull(DeviceInfo.getAppVersion(getContext()));
     }
 
     public void testGetAppVersionCode() {
-        assertNotNull(DeviceInfo.getAppVersionCode(getContext()));
+       DeviceInfo.getAppVersionCode(getContext());
     }
 
     public void testGetAppMetaData() {
-        //DeviceInfo.getAppMetaData(getContext(),"test");
+        assertNull(DeviceInfo.getAppMetaData(getContext(),"test"));
     }
 
     public void testGetAppStringMetaData() {

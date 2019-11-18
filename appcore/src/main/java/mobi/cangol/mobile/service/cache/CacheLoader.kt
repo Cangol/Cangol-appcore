@@ -10,5 +10,5 @@ interface CacheLoader {
     /**
      * 获取缓存数据
      */
-    fun returnContent(content: Any)
+    fun returnContent(content: Any?)
 }

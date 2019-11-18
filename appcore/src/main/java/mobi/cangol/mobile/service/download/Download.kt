@@ -21,38 +21,38 @@ package mobi.cangol.mobile.service.download
 object Download {
 
     //下载文件后缀
-    val SUFFIX_SOURCE = ".tmp"
+    const val SUFFIX_SOURCE = ".tmp"
     //配置文件后缀
-    val SUFFIX_CONFIG = ".conf"
+    const val SUFFIX_CONFIG = ".conf"
     //正在等待
-    val STATUS_WAIT = 0
+    const val STATUS_WAIT = 0
     //正在下载
-    val STATUS_START = 1
+    const val STATUS_START = 1
     //暂停
-    val STATUS_STOP = 2
+    const val STATUS_STOP = 2
     //重新下载
-    val STATUS_RERUN = 3
+    const val STATUS_RERUN = 3
     //下载完成
-    val STATUS_FINISH = 4
+    const val STATUS_FINISH = 4
     //出错
-    val STATUS_FAILURE = 5
+    const val STATUS_FAILURE = 5
 
 
-    val ACTION_DOWNLOAD_START = 0
+    const val ACTION_DOWNLOAD_START = 0
 
-    val ACTION_DOWNLOAD_FINISH = 1
+    const val ACTION_DOWNLOAD_FINISH = 1
 
-    val ACTION_DOWNLOAD_FAILED = 2
+    const val ACTION_DOWNLOAD_FAILED = 2
 
-    val ACTION_DOWNLOAD_UPDATE = 3
+    const val ACTION_DOWNLOAD_UPDATE = 3
 
-    val ACTION_DOWNLOAD_DELETE = 5
+    const val ACTION_DOWNLOAD_DELETE = 5
 
     /**public static final int ACTION_DOWNLOAD_UPDATEFILE = 6; */
-    val ACTION_DOWNLOAD_STOP = 7
+    const val ACTION_DOWNLOAD_STOP = 7
 
     /**public static final int ACTION_DOWNLOAD_INSTALL = 8; */
 
-    val ACTION_DOWNLOAD_CONTINUE = 9
+    const val ACTION_DOWNLOAD_CONTINUE = 9
 
 }

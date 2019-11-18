@@ -167,7 +167,7 @@ internal class CacheManagerImpl : CacheManager {
                             cacheLoader?.returnContent(cacheObject.getObject()!!)
                         }
                     } else {
-                        cacheLoader?.returnContent(null!!)
+                        cacheLoader?.returnContent(null)
                     }
                 }
             })

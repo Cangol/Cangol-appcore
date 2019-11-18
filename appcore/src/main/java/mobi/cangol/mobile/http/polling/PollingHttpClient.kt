@@ -209,7 +209,7 @@ class PollingHttpClient
         private const val DEFAULT_WRITE_TIMEOUT = 30 * 1000
         private const val DEFAULT_MAX = 3
 
-        fun build(group: String): PollingHttpClient {
+        @JvmStatic fun build(group: String): PollingHttpClient {
             return PollingHttpClient(group)
         }
     }

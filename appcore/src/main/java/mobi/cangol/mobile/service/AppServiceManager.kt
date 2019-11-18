@@ -28,7 +28,7 @@ abstract class AppServiceManager {
      * @param name
      * @return
      */
-    abstract fun getAppService(name: String): AppService
+    abstract fun getAppService(name: String): AppService?
 
     /**
      * 销毁一个应用服务

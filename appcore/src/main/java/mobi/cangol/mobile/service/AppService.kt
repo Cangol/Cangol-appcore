@@ -72,47 +72,47 @@ interface AppService {
         /**
          * 状态监听服务
          */
-        val STATUS_SERVICE = "StatusService"
+        const val STATUS_SERVICE = "StatusService"
         /**
          * 更新服务
          */
-        val UPGRADE_SERVICE = "UpgradeService"
+        const val UPGRADE_SERVICE = "UpgradeService"
         /**
          * 统计服务
          */
-        val ANALYTICS_SERVICE = "AnalyticsService"
+        const val ANALYTICS_SERVICE = "AnalyticsService"
         /**
          * 位置服务
          */
-        val LOCATION_SERVICE = "LocationService"
+        const val LOCATION_SERVICE = "LocationService"
         /**
          * 缓存服务
          */
-        val CACHE_MANAGER = "CacheManager"
+        const val CACHE_MANAGER = "CacheManager"
         /**
          * 应用配置服务
          */
-        val CONFIG_SERVICE = "ConfigService"
+        const val CONFIG_SERVICE = "ConfigService"
         /**
          * 异常监听服务
          */
-        val CRASH_SERVICE = "CrashService"
+        const val CRASH_SERVICE = "CrashService"
         /**
          * 下载服务
          */
-        val DOWNLOAD_MANAGER = "DownloadManager"
+        const val DOWNLOAD_MANAGER = "DownloadManager"
         /**
          * Session服务
          */
-        val SESSION_SERVICE = "SessionService"
+        const val SESSION_SERVICE = "SessionService"
         /**
          * ObserverManager
          */
-        val OBSERVER_MANAGER = "ObserverManager"
+        const val OBSERVER_MANAGER = "ObserverManager"
         /**
          *
          */
-        val ROUTE_SERVICE = "RouteService"
+        const val ROUTE_SERVICE = "RouteService"
     }
 
 }

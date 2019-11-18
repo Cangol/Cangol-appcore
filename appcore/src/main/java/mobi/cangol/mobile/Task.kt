@@ -16,8 +16,7 @@ abstract class Task<R> : Runnable {
     }
 
     override fun run() {
-        val r = call()
-        Message.obtain(handler, 1, r).sendToTarget()
+        Message.obtain(handler, 1, call()).sendToTarget()
     }
 
     abstract fun call(): R
@@ -29,8 +28,9 @@ abstract class Task<R> : Runnable {
 
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            if (msg.what == 1 && taskReference.get() != null) {
-                taskReference.get()!!.result(msg.obj as R)
+            if (msg.what == 1) {
+                var task= taskReference.get()
+                task?.result(msg.obj as R)
                 taskReference.clear()
             }
         }

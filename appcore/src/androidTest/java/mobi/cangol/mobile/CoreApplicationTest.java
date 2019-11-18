@@ -23,7 +23,7 @@ public class CoreApplicationTest extends ApplicationTestCase<CoreApplication> {
     }
 
     public void testGetAppService() {
-        ConfigService configService= (ConfigService) coreApplication.getAppService(AppService.Companion.getCONFIG_SERVICE());
+        ConfigService configService= (ConfigService) coreApplication.getAppService(AppService.CONFIG_SERVICE);
         assertNotNull(configService.getAppDir());
     }
 }

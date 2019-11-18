@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-@file:JvmName("ValidatorUtils")
 package mobi.cangol.mobile.utils
 
 import android.util.Patterns
@@ -51,7 +50,7 @@ object ValidatorUtils {
         return if (str == null || "" == str) {
             false
         } else
-            str.length >= 5 && str.length <= 140
+            str.length in 5..140
     }
 
     /**
@@ -70,18 +69,17 @@ object ValidatorUtils {
         val rx2 = "[\u4e00-\u9fa5]"
         var num = 0
         var flag = false
-        for (i in 0 until str.length) {
-            val c = str[i]
-            if (Pattern.compile(rx).matcher(c + "").matches()) {
-                num += 1
-            } else if (Pattern.compile(rx2).matcher(c + "").matches()) {
-                num += 2
+        for (element in str) {
+            num += if (Pattern.compile(rx).matcher(element + "").matches()) {
+                1
+            } else if (Pattern.compile(rx2).matcher(element + "").matches()) {
+                2
             } else {
                 break
             }
         }
 
-        if (num <= 20 && num > 5) {
+        if (num in 6..20) {
             flag = true
         }
 
@@ -95,7 +93,7 @@ object ValidatorUtils {
      * @return
      */
     @JvmStatic
-    fun validateAccount(str: String): Boolean {
+    fun validateAccount(str: String?): Boolean {
         return validateMobile(str) || validateEmail(str)
     }
 

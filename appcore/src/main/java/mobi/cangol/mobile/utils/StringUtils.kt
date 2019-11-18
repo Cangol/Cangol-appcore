@@ -263,7 +263,7 @@ object StringUtils {
      * @return
      */
     @JvmStatic
-    fun isNotEmpty(str: String): Boolean {
+    fun isNotEmpty(str: String?): Boolean {
         return !StringUtils.isEmpty(str)
     }
 
@@ -274,7 +274,7 @@ object StringUtils {
      * @return
      */
     @JvmStatic
-    fun isNotBlank(str: String): Boolean {
+    fun isNotBlank(str: String?): Boolean {
         return !StringUtils.isBlank(str)
     }
 
@@ -379,7 +379,7 @@ object StringUtils {
         } else if (stripChars.isEmpty()) {
             return str
         } else {
-            while (start != str.length && stripChars.indexOf(str[start], 0, true) != -1) {
+            while (start != str.length && stripChars.indexOf(str[start]) != -1) {
                 start++
             }
         }
@@ -404,7 +404,7 @@ object StringUtils {
         } else if (stripChars.isEmpty()) {
             return str
         } else {
-            while (end != 0 && stripChars.indexOf(str[end - 1], 0, true) != -1) {
+            while (end != 0 && stripChars.indexOf(str[end - 1]) != -1) {
                 end--
             }
         }

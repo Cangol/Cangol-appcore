@@ -37,7 +37,7 @@ public class HttpFragment extends Fragment {
     private AsyncHttpClient mAsyncHttpClient;
     private String url="https://www.cangol.mobi/cmweb/api/station/sync.do";
     private String pollUrl="https://hq.sinajs.cn/list=rt_hkHSI";
-    private String download="http://ddmyapp.kw.tc.qq.com/16891/1AF80D6B4F5B3365D1A4B755BBC92FD2.apk?mkey=577cc4c4c20a8141&f=5401&c=0&fsname=com.tencent.mm_6.3.22_821.apk&p=.apk";
+    private String download="https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
     private TextView textView1;
     private Button button1,button2,button3,button4,button5;
     private ConfigService configService;

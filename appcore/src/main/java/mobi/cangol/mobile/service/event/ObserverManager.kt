@@ -43,6 +43,6 @@ interface ObserverManager : AppService {
      * @param event 事件名称
      * @param data  事件数据
      */
-    fun post(event: String, data: Any)
+    fun post(event: String, data: Any?)
 
 }

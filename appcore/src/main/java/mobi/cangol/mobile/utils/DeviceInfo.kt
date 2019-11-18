@@ -191,10 +191,16 @@ object DeviceInfo {
         try {
             val process = ProcessBuilder("/system/bin/cat", "/proc/meminfo").start()
             val bufferedReader = BufferedReader(InputStreamReader(process.inputStream, CHARSET))
-            var data: String? = null
             val sb = StringBuilder()
-            while (({ data = bufferedReader.readLine();data }) != null) {
-                sb.append("\n" + data)
+            var end=false
+            while (!end) {
+                var data = bufferedReader.readLine()
+                end = if(data!=null){
+                    sb.append("\n" + data)
+                    false
+                }else{
+                    true
+                }
             }
             bufferedReader.close()
             result = sb.toString()
@@ -235,14 +241,14 @@ object DeviceInfo {
         return Build.CPU_ABI
     }
 
-    val NETWORK_TYPE_UNAVAILABLE = -1
-    val NETWORK_TYPE_WIFI = -101
-    val NETWORK_CLASS_WIFI = -101
-    val NETWORK_CLASS_UNAVAILABLE = -1
-    val NETWORK_CLASS_2G = 1
-    val NETWORK_CLASS_3G = 2
-    val NETWORK_CLASS_4G = 3
-    val NETWORK_CLASS_UNKNOWN = 0
+    private const val NETWORK_TYPE_UNAVAILABLE = -1
+    private const val NETWORK_TYPE_WIFI = -101
+    private const val NETWORK_CLASS_WIFI = -101
+    private const val NETWORK_CLASS_UNAVAILABLE = -1
+    private const val NETWORK_CLASS_2G = 1
+    private const val NETWORK_CLASS_3G = 2
+    private const val NETWORK_CLASS_4G = 3
+    private const val NETWORK_CLASS_UNKNOWN = 0
 
     /**
      * 获取设备Locale信息
@@ -464,13 +470,10 @@ object DeviceInfo {
 
     @JvmStatic
     fun getNetworkClass(context: Context): Int {
-        val networkType = getNetworkType(context)
-        return if (networkType == NETWORK_TYPE_WIFI) {
-            NETWORK_CLASS_WIFI
-        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
-            NETWORK_CLASS_UNAVAILABLE
-        } else {
-            when (networkType) {
+        return when (val networkType = getNetworkType(context)) {
+            NETWORK_TYPE_WIFI -> NETWORK_CLASS_WIFI
+            NETWORK_TYPE_UNAVAILABLE -> NETWORK_CLASS_UNAVAILABLE
+            else -> when (networkType) {
                 TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_CDMA, TelephonyManager.NETWORK_TYPE_1xRTT, TelephonyManager.NETWORK_TYPE_IDEN -> NETWORK_CLASS_2G
                 TelephonyManager.NETWORK_TYPE_UMTS, TelephonyManager.NETWORK_TYPE_EVDO_0, TelephonyManager.NETWORK_TYPE_EVDO_A, TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_EVDO_B, TelephonyManager.NETWORK_TYPE_EHRPD, TelephonyManager.NETWORK_TYPE_HSPAP -> NETWORK_CLASS_3G
                 TelephonyManager.NETWORK_TYPE_LTE -> NETWORK_CLASS_4G
@@ -481,13 +484,10 @@ object DeviceInfo {
 
     @JvmStatic
     fun getNetworkClassName(context: Context): String {
-        val networkType = getNetworkType(context)
-        return if (networkType == NETWORK_TYPE_WIFI) {
-            "WIFI"
-        } else if (networkType == NETWORK_TYPE_UNAVAILABLE) {
-            "UNAVAILABLE"
-        } else {
-            when (networkType) {
+        return when (val networkType = getNetworkType(context)) {
+            NETWORK_TYPE_WIFI -> "WIFI"
+            NETWORK_TYPE_UNAVAILABLE -> "UNAVAILABLE"
+            else -> when (networkType) {
                 TelephonyManager.NETWORK_TYPE_GPRS, TelephonyManager.NETWORK_TYPE_EDGE, TelephonyManager.NETWORK_TYPE_CDMA, TelephonyManager.NETWORK_TYPE_1xRTT, TelephonyManager.NETWORK_TYPE_IDEN -> "2G"
                 TelephonyManager.NETWORK_TYPE_UMTS, TelephonyManager.NETWORK_TYPE_EVDO_0, TelephonyManager.NETWORK_TYPE_EVDO_A, TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_EVDO_B, TelephonyManager.NETWORK_TYPE_EHRPD, TelephonyManager.NETWORK_TYPE_HSPAP -> "3G"
                 TelephonyManager.NETWORK_TYPE_LTE -> "4G"
@@ -534,15 +534,13 @@ object DeviceInfo {
      */
     @JvmStatic
     fun getAppVersion(context: Context): String {
-        var result = UNKNOWN
+        var result:String?=null
         try {
-            result = context.packageManager.getPackageInfo(
-                    context.packageName, 0).versionName
+            result = context.packageManager.getPackageInfo(context.packageName, 0).versionName
         } catch (e: NameNotFoundException) {
             Log.e(e.message)
         }
-
-        return result
+        return result?: UNKNOWN
     }
 
     /**
@@ -578,7 +576,8 @@ object DeviceInfo {
         try {
             appInfo = context.packageManager.getApplicationInfo(
                     context.packageName, PackageManager.GET_META_DATA)
-            data = appInfo.metaData.get(key)
+            if(appInfo?.metaData != null)
+                data = appInfo.metaData.get(key)
         } catch (e: NameNotFoundException) {
             Log.e(e.message)
         }

@@ -85,7 +85,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
         this.mDebug = debug
     }
 
-    override fun getAppService(name: String): AppService {
+    override fun getAppService(name: String): AppService? {
         var appService: AppService? = null
         if (mRunServiceMap.containsKey(name)) {
             appService = mRunServiceMap[name]
@@ -106,7 +106,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
                 Log.d(e.message)
             }
         }
-        return appService!!
+        return appService
     }
 
     override fun registerService(clazz: Class<out AppService>) {
@@ -114,7 +114,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
             if (mUseAnnotation) {
                 if (clazz.isAnnotationPresent(Service::class.java)) {
                     val service = clazz.getAnnotation(Service::class.java)
-                    this.mRunServiceMap[service!!.value] = service as AppService
+                    this.mServiceMap[service!!.value] = clazz
                 } else {
                     Log.d(TAG, "$clazz no Service Annotation")
                 }
@@ -125,7 +125,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
                 this.mServiceMap[name] = clazz
             }
         } catch (e: Exception) {
-            Log.d(e.message)
+            Log.d(TAG,"registerService "+e.message)
         }
 
     }

@@ -46,12 +46,11 @@ open class CoreApplication : Application() {
     private var mAsyncInit = false
     private var mAppServiceManager: AppServiceManager? = null
     private val mSharePool=PoolManager.getPool("share")
-    private var mModuleManager: ModuleManager? = null
+    private var mModuleManager: ModuleManager = ModuleManager()
     private val mActivityManager: MutableList<WeakReference<Activity>> = ArrayList()
-
     override fun onCreate() {
-        mModuleManager = ModuleManager(this);
         super.onCreate()
+        mModuleManager.setApplication(this)
         if (DeviceInfo.isAppProcess(this)) {
             if (mStrictMode && Build.VERSION.SDK_INT >= 14) {
                 StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())

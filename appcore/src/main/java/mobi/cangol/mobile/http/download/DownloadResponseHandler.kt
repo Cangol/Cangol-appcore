@@ -142,21 +142,21 @@ open class DownloadResponseHandler {
                 var starTime = System.currentTimeMillis()
                 var startLength: Long = 0
                 var readCount = 0
-                var end:Boolean=false
+                var end=false
                 while (!Thread.currentThread().isInterrupted &&!end) {
                     readCount = inputStream.read(block, 0, BUFF_SIZE)
-
-                    end = readCount == -1
-
-                    threadfile.write(block, 0, readCount)
-                    oldLength += readCount.toLong()
-                    startLength += readCount.toLong()
-                    if (System.currentTimeMillis() - starTime > 1000L) {
-                        val progress = (oldLength * 1.0f / length * 100).toInt()
-                        val speed = (startLength * 1000.0f / (System.currentTimeMillis() - starTime)).toInt()
-                        sendProgressMessage(oldLength, progress, speed)
-                        starTime = System.currentTimeMillis()
-                        startLength = 0
+                    end = readCount ==-1
+                    if(!end){
+                        threadfile.write(block, 0, readCount)
+                        oldLength += readCount.toLong()
+                        startLength += readCount.toLong()
+                        if (System.currentTimeMillis() - starTime > 1000L) {
+                            val progress = (oldLength * 1.0f / length * 100).toInt()
+                            val speed = (startLength * 1000.0f / (System.currentTimeMillis() - starTime)).toInt()
+                            sendProgressMessage(oldLength, progress, speed)
+                            starTime = System.currentTimeMillis()
+                            startLength = 0
+                        }
                     }
                 }
                 threadfile?.close()

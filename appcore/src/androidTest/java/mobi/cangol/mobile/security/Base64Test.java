@@ -9,10 +9,10 @@ import android.test.InstrumentationTestCase;
 public class Base64Test extends InstrumentationTestCase{
 
     public void testEncode() {
-        assertNotNull(Base64.encode("123456789"));
+        assertEquals("MTIzNDU2Nzg5",Base64.encode("123456789"));
     }
 
     public void testDecode() {
-        assertEquals(Base64.decode(Base64.encode("123456789")),"123456789");
+        assertEquals("123456789",Base64.decode("MTIzNDU2Nzg5"));
     }
 }

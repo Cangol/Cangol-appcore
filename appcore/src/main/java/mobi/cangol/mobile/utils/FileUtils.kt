@@ -149,14 +149,14 @@ object FileUtils {
             ins = FileInputStream(oldPath) // 读入原文件
             fos = FileOutputStream(newPath)
             val buffer = ByteArray(4094)
-            var end:Boolean?=false
-            while (end!!) {
+            var end=false
+            while (!end) {
                 val len = ins.read(buffer)
                 end = if(len>0){
                     fos.write(buffer, 0, len)
-                    true
-                }else{
                     false
+                }else{
+                    true
                 }
             }
         } catch (e: Exception) {
@@ -321,14 +321,14 @@ object FileUtils {
                     input = FileInputStream(temp)
                     output = FileOutputStream(newPath + "/ " + temp.name)
                     val buffer = ByteArray(1024 * 5)
-                    var end:Boolean?=false
-                    while (end!!) {
+                    var end=false
+                    while (!end) {
                         val len = input.read(buffer)
                         end = if(len>0){
                             output.write(buffer, 0, len)
-                            true
-                        }else{
                             false
+                        }else{
+                            true
                         }
                     }
                     output.flush()

@@ -72,7 +72,7 @@ class IMapBuilder private constructor() {
 
     companion object {
 
-        fun build(): IMapBuilder {
+        @JvmStatic fun build(): IMapBuilder {
             return IMapBuilder()
         }
     }

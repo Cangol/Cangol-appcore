@@ -22,7 +22,7 @@ public class AnalyticsServiceTest extends ApplicationTestCase<CoreApplication> {
         super.setUp();
         createApplication();
         coreApplication = getApplication();
-        analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.Companion.getANALYTICS_SERVICE());
+        analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
     }
 
     public void testGetTracker() {

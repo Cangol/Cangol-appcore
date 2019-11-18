@@ -102,15 +102,15 @@ open class AsyncHttpResponseHandler {
 
     // Methods which emulate android's Handler and Message methods
     protected open fun handleMessage(msg: Message) {
-        val response: Array<Any>
+        val response: Array<Any?>
         when (msg.what) {
             SUCCESS_MESSAGE -> {
-                response = msg.obj as Array<Any>
-                handleSuccessMessage((response[0] as Int).toInt(), response[1] as String)
+                response = msg.obj as Array<Any?>
+                handleSuccessMessage((response[0] as Int).toInt(), response[1].toString())
             }
             FAILURE_MESSAGE -> {
-                response = msg.obj as Array<Any>
-                handleFailureMessage(response[0] as Throwable, response[1] as String)
+                response = msg.obj as Array<Any?>
+                handleFailureMessage(response[0] as Throwable, response[1].toString())
             }
             START_MESSAGE -> onStart()
             FINISH_MESSAGE -> onFinish()

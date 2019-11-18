@@ -24,20 +24,34 @@ import java.util.ArrayList
  * @author Cangol
  */
 
-class ModuleManager(coreApplication: CoreApplication) {
-    private var mCoreApplication: CoreApplication
+class ModuleManager {
+    private var mCoreApplication: CoreApplication?=null
     private val mModuleApplications = ArrayList<ModuleApplication>()
 
-    init {
+    fun setApplication(coreApplication: CoreApplication) {
         this.mCoreApplication = coreApplication
     }
 
-    fun setCoreApplication(coreApplication: CoreApplication) {
-        this.mCoreApplication = coreApplication
+    fun addModule(moduleApplication: ModuleApplication) {
+        if (!mModuleApplications.contains(moduleApplication)) {
+            mModuleApplications.add(moduleApplication)
+        }
+    }
+
+    fun removeModule(moduleApplication: ModuleApplication) {
+        if (mModuleApplications.contains(moduleApplication)) {
+            mModuleApplications.remove(moduleApplication)
+        }
+    }
+    fun init() {
+        for (moduleApplication in mModuleApplications) {
+            moduleApplication.init()
+        }
     }
 
     fun onCreate() {
         for (moduleApplication in mModuleApplications) {
+            moduleApplication.setCoreApplication(mCoreApplication!!)
             moduleApplication.onCreate()
         }
     }
@@ -57,25 +71,6 @@ class ModuleManager(coreApplication: CoreApplication) {
     fun onTrimMemory(level: Int) {
         for (moduleApplication in mModuleApplications) {
             moduleApplication.onTrimMemory(level)
-        }
-    }
-
-    fun init() {
-        for (moduleApplication in mModuleApplications) {
-            moduleApplication.init()
-        }
-    }
-
-    fun addModule(moduleApplication: ModuleApplication) {
-        if (!mModuleApplications.contains(moduleApplication)) {
-            mModuleApplications.add(moduleApplication)
-            moduleApplication.setCoreApplication(mCoreApplication)
-        }
-    }
-
-    fun removeModule(moduleApplication: ModuleApplication) {
-        if (mModuleApplications.contains(moduleApplication)) {
-            mModuleApplications.remove(moduleApplication)
         }
     }
 
