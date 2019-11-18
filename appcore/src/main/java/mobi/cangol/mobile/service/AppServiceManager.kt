@@ -62,9 +62,9 @@ abstract class AppServiceManager {
     /**
      * 设置初始化源
      *
-     * @param is
+     * @param inputStream
      */
-    abstract fun initSource(`is`: InputStream)
+    abstract fun initSource(inputStream: InputStream)
 
     /**
      * 设置debug

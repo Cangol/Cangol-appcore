@@ -42,7 +42,7 @@ public class UpgradeServiceFragment extends Fragment{
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upgradeService.upgrade("QQ.apk",url,true,false);
+                upgradeService.upgrade("QQ.apk",url,true,true);
             }
         });
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
