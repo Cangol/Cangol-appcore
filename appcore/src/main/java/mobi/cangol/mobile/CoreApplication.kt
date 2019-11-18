@@ -34,6 +34,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Future
+import kotlin.system.exitProcess
 
 
 /**
@@ -62,39 +63,39 @@ open class CoreApplication : Application() {
                 Log.setLogLevelFormat(android.util.Log.WARN, true)
             }
             initAppServiceManager()
-            mModuleManager!!.onCreate()
+            mModuleManager.onCreate()
             if (mAsyncInit) {
                 post(Runnable {
                     init()
-                    mModuleManager!!.init()
+                    mModuleManager.init()
                 })
             } else {
                 init()
-                mModuleManager!!.init()
+                mModuleManager.init()
             }
         } else {
-            mModuleManager!!.onCreate()
+            mModuleManager.onCreate()
             Log.i("cur process is not app' process")
         }
     }
 
     fun getModuleManager(): ModuleManager {
-        return mModuleManager!!
+        return mModuleManager
     }
 
     override fun onTerminate() {
         super.onTerminate()
-        mModuleManager!!.onTerminate()
+        mModuleManager.onTerminate()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mModuleManager!!.onLowMemory()
+        mModuleManager.onLowMemory()
     }
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        mModuleManager!!.onTrimMemory(level)
+        mModuleManager.onTrimMemory(level)
     }
 
     /**
@@ -183,7 +184,7 @@ open class CoreApplication : Application() {
      * @return
      */
     fun getSharePool(): PoolManager.Pool {
-        return mSharePool!!
+        return mSharePool
     }
     /**
      * 提交一个后台线程任务
@@ -191,7 +192,7 @@ open class CoreApplication : Application() {
      * @param runnable
      */
     fun post(runnable: Runnable): Future<*> {
-        return mSharePool!!.submit(runnable)
+        return mSharePool.submit(runnable)
     }
 
     /**
@@ -200,7 +201,7 @@ open class CoreApplication : Application() {
      * @param runnable
      */
     fun <T> post(runnable: Runnable, result: T): Future<T> {
-        return mSharePool!!.submit(runnable, result)
+        return mSharePool.submit(runnable, result)
     }
 
     /**
@@ -209,7 +210,7 @@ open class CoreApplication : Application() {
      * @param callable
      */
     fun <T> post(callable: Callable<T>): Future<T> {
-        return mSharePool!!.submit(callable)
+        return mSharePool.submit(callable)
     }
 
     /**
@@ -218,7 +219,7 @@ open class CoreApplication : Application() {
      * @param task
      */
     fun post(task: Task<*>): Future<*> {
-        return mSharePool!!.submit(task)
+        return mSharePool.submit(task)
     }
 
 
@@ -229,7 +230,7 @@ open class CoreApplication : Application() {
      */
     fun addActivityToManager(activity: Activity) {
         for (activityReference in mActivityManager) {
-            if (activityReference != null && activity != activityReference.get()) {
+            if (activity != activityReference.get()) {
                 mActivityManager.add(WeakReference(activity))
             }
         }
@@ -240,7 +241,7 @@ open class CoreApplication : Application() {
      */
     fun closeAllActivities() {
         for (activityReference in mActivityManager) {
-            if (activityReference != null && activityReference.get() != null) {
+            if (activityReference.get() != null) {
                 activityReference.get()!!.finish()
             }
         }
@@ -253,8 +254,8 @@ open class CoreApplication : Application() {
      */
     fun delActivityFromManager(activity: Activity) {
         for (activityReference in mActivityManager) {
-            if (activityReference != null && activity == activityReference.get()) {
-                mActivityManager!!.remove(activityReference)
+            if (activity == activityReference.get()) {
+                mActivityManager.remove(activityReference)
             }
         }
     }
@@ -282,7 +283,8 @@ open class CoreApplication : Application() {
      * 退出应用
      */
     fun exit() {
-        mModuleManager!!.onExit()
+        mModuleManager.onExit()
+        mModuleManager.clear()
         getSession().saveString(Constants.KEY_EXIT_CODE, "0")
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this))
         if (mAppServiceManager != null) {
@@ -290,7 +292,7 @@ open class CoreApplication : Application() {
         }
         PoolManager.closeAll()
         // 0 正常推退出
-        System.exit(0)
+        exitProcess(0)
     }
 
 

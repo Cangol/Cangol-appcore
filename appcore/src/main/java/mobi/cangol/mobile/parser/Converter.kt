@@ -27,22 +27,26 @@ import java.lang.reflect.Modifier
 object Converter {
 
     @Throws(XMLParserException::class)
-    @JvmStatic fun <T> parserXml(c: Class<T>, str: String?, useAnnotation: Boolean): T? {
+    @JvmStatic
+    fun <T> parserXml(c: Class<T>, str: String?, useAnnotation: Boolean): T? {
         return XmlUtils.parserToObject(c, str, useAnnotation)
     }
 
     @Throws(XMLParserException::class)
-    @JvmStatic fun <T> parserXmlList(c: Class<T>, str: String, useAnnotation: Boolean): List<T>? {
+    @JvmStatic
+    fun <T> parserXmlList(c: Class<T>, str: String, useAnnotation: Boolean): List<T>? {
         return XmlUtils.parserToList(c, str, useAnnotation)
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserJson(c: Class<T>, str: String?, useAnnotation: Boolean): T ?{
+    @JvmStatic
+    fun <T> parserJson(c: Class<T>, str: String?, useAnnotation: Boolean): T? {
         return JsonUtils.parserToObject(c, str, useAnnotation)
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserJsonList(c: Class<T>, str: String?, useAnnotation: Boolean): List<T> {
+    @JvmStatic
+    fun <T> parserJsonList(c: Class<T>, str: String?, useAnnotation: Boolean): List<T> {
         return JsonUtils.parserToList(c, str, useAnnotation)
     }
 
@@ -53,7 +57,8 @@ object Converter {
      * @param defaultValue
      * @return
      */
-    @JvmStatic fun parseInt(str: String?, defaultValue: Int): Int {
+    @JvmStatic
+    fun parseInt(str: String?, defaultValue: Int): Int {
         return try {
             Integer.parseInt(str)
         } catch (e: Exception) {
@@ -69,7 +74,8 @@ object Converter {
      * @param defaultValue
      * @return
      */
-    @JvmStatic fun parseDouble(str: String?, defaultValue: Double): Double {
+    @JvmStatic
+    fun parseDouble(str: String?, defaultValue: Double): Double {
         return try {
             java.lang.Double.parseDouble(str)
         } catch (e: Exception) {
@@ -85,7 +91,8 @@ object Converter {
      * @param defaultValue
      * @return
      */
-    @JvmStatic fun parseBoolean(str: String?, defaultValue: Boolean): Boolean {
+    @JvmStatic
+    fun parseBoolean(str: String?, defaultValue: Boolean): Boolean {
         return try {
             java.lang.Boolean.parseBoolean(str)
         } catch (e: Exception) {
@@ -101,7 +108,8 @@ object Converter {
      * @param defaultValue
      * @return
      */
-    @JvmStatic fun parseLong(str: String?, defaultValue: Long): Long {
+    @JvmStatic
+    fun parseLong(str: String?, defaultValue: Long): Long {
         return try {
             java.lang.Long.parseLong(str)
         } catch (e: Exception) {
@@ -117,7 +125,8 @@ object Converter {
      * @param defaultValue
      * @return
      */
-    @JvmStatic fun parseFloat(str: String?, defaultValue: Float): Float {
+    @JvmStatic
+    fun parseFloat(str: String?, defaultValue: Float): Float {
         return try {
             java.lang.Float.parseFloat(str)
         } catch (e: Exception) {
@@ -126,7 +135,8 @@ object Converter {
 
     }
 
-     @JvmStatic fun isTransient(clz: Class<*>): Boolean {
+    @JvmStatic
+    fun isTransient(clz: Class<*>): Boolean {
         return Modifier.isTransient(clz.modifiers)
     }
 
@@ -136,7 +146,8 @@ object Converter {
      * @param clz
      * @return
      */
-     @JvmStatic fun isBaseClass(clz: Class<*>): Boolean {
+    @JvmStatic
+    fun isBaseClass(clz: Class<*>): Boolean {
         return isWrapClass(clz) || clz.isPrimitive || clz == String::class.java
     }
 
@@ -146,7 +157,8 @@ object Converter {
      * @param clz
      * @return
      */
-     @JvmStatic fun isWrapClass(clz: Class<*>): Boolean {
+    @JvmStatic
+    fun isWrapClass(clz: Class<*>): Boolean {
         return try {
             (clz.getField("TYPE").get(null) as Class<*>).isPrimitive
         } catch (e: Exception) {
@@ -162,7 +174,8 @@ object Converter {
      * @param useAnnotation
      * @return
      */
-     @JvmStatic fun getFieldName(field: Field, useAnnotation: Boolean): String {
+    @JvmStatic
+    fun getFieldName(field: Field, useAnnotation: Boolean): String {
         var filedName: String? = null
         if (useAnnotation) {
             filedName = if (field.isAnnotationPresent(Attribute::class.java)) {

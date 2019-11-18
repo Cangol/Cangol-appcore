@@ -22,4 +22,4 @@ import java.lang.reflect.Method
 /**
  * Created by xuewu.wei on 2016/8/3.
  */
-class SubscriberMethod(var method: Method, var threadType: ThreadType,  var priority: Int = 0,  var event: String)
+class SubscriberMethod(var method: Method, var threadType: ThreadType, var priority: Int = 0, var event: String)

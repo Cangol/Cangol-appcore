@@ -61,6 +61,7 @@ interface AppService {
      * @return
      */
     fun defaultServiceProperty(): ServiceProperty
+
     /**
      * 获取应用服务属性
      *

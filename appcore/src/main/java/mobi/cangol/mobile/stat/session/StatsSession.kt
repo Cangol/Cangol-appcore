@@ -18,13 +18,12 @@
  */
 package mobi.cangol.mobile.stat.session
 
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
 object StatsSession {
     private var instance: StatsSession? = null
-    private var mTimer: Timer?= null
-    private var mQueue: ConnectionQueue?= null
+    private var mTimer: Timer? = null
+    private var mQueue: ConnectionQueue? = null
     private var mLastTime: Long = 0
     private var unSentSessionLength: Long = 0
     private var onSessionListener: OnSessionListener? = null
@@ -76,7 +75,8 @@ object StatsSession {
         fun onTick(sessionId: String?, beginSession: String?, sessionDuration: String?, endSession: String?, activityId: String?)
     }
 
-    @JvmStatic fun getInstance(): StatsSession {
+    @JvmStatic
+    fun getInstance(): StatsSession {
         if (instance == null) {
             instance = StatsSession
             instance?.init()

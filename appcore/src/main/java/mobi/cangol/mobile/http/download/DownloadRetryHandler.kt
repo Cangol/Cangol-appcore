@@ -18,13 +18,11 @@ package mobi.cangol.mobile.http.download
 
 import android.os.SystemClock
 import android.util.Log
-
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.SocketException
 import java.net.UnknownHostException
-import java.util.HashSet
-
+import java.util.*
 import javax.net.ssl.SSLHandshakeException
 
 class DownloadRetryHandler(private val maxRetries: Int) {

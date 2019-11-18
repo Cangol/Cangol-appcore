@@ -18,14 +18,14 @@
  */
 package mobi.cangol.mobile
 
-import java.util.ArrayList
+import java.util.*
 
 /**
  * @author Cangol
  */
 
 class ModuleManager {
-    private var mCoreApplication: CoreApplication?=null
+    private var mCoreApplication: CoreApplication? = null
     private val mModuleApplications = ArrayList<ModuleApplication>()
 
     fun setApplication(coreApplication: CoreApplication) {
@@ -43,6 +43,11 @@ class ModuleManager {
             mModuleApplications.remove(moduleApplication)
         }
     }
+
+    fun clear() {
+        mModuleApplications.clear()
+    }
+
     fun init() {
         for (moduleApplication in mModuleApplications) {
             moduleApplication.init()

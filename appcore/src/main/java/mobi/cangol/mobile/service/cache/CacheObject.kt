@@ -17,7 +17,6 @@
 
 package mobi.cangol.mobile.service.cache
 
-import okhttp3.internal.cache.DiskLruCache
 import java.io.Serializable
 
 /**
@@ -46,7 +45,7 @@ class CacheObject : Serializable {
     constructor(group: String, id: String, obj: Serializable) {
         this.group = group
         this.id = id
-        this.obj =obj
+        this.obj = obj
         this.timestamp = System.currentTimeMillis()
         this.period = -1
         DiskLruCache
@@ -69,13 +68,15 @@ class CacheObject : Serializable {
                 ", obj=" + obj +
                 '}'.toString()
     }
-    fun getObject():Serializable?{
+
+    fun getObject(): Serializable? {
         return obj
     }
+
     companion object {
         private const val serialVersionUID = 0L
         const val TIME_SEC = 1000
-        const  val TIME_MIN = 60 * 1000
+        const val TIME_MIN = 60 * 1000
         const val TIME_HOUR = 60 * 60 * 1000
         const val TIME_DAY = 24 * 60 * 60 * 1000
         const val TIME_WEEK = 7 * 24 * 60 * 60 * 1000

@@ -22,7 +22,7 @@ import android.content.ContentValues
 
 
 class UpdateBuilder(clazz: Class<*>) {
-    private var table: String=clazz.getAnnotation(DatabaseTable::class.java).value
+    private var table: String = clazz.getAnnotation(DatabaseTable::class.java).value
     private var paraKey = mutableListOf<String>()
     private var paraValue = mutableListOf<Any>()
     private var condList = mutableListOf<String>()

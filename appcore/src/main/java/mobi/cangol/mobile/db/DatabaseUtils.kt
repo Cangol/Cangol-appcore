@@ -36,7 +36,8 @@ object DatabaseUtils {
      * @param db
      * @param clazz
      */
-    @JvmStatic fun createIndex(db: SQLiteDatabase, clazz: Class<*>, indexName: String, vararg fieldNames: String) {
+    @JvmStatic
+    fun createIndex(db: SQLiteDatabase, clazz: Class<*>, indexName: String, vararg fieldNames: String) {
         if (clazz.isAnnotationPresent(DatabaseTable::class.java)) {
             val table = clazz.getAnnotation(DatabaseTable::class.java)
             val tableName = if ("" == table!!.value) clazz.simpleName else table.value
@@ -75,7 +76,8 @@ object DatabaseUtils {
      * @param db
      * @param clazz
      */
-    @JvmStatic fun createTable(db: SQLiteDatabase, clazz: Class<*>) {
+    @JvmStatic
+    fun createTable(db: SQLiteDatabase, clazz: Class<*>) {
         if (clazz.isAnnotationPresent(DatabaseTable::class.java)) {
             val sql = StringBuilder("CREATE TABLE IF NOT EXISTS ")
             val table = clazz.getAnnotation(DatabaseTable::class.java)
@@ -125,7 +127,8 @@ object DatabaseUtils {
      * @param clazz
      * @return
      */
-    @JvmStatic fun getDbType(clazz: Class<*>): String {
+    @JvmStatic
+    fun getDbType(clazz: Class<*>): String {
         return if (clazz == String::class.java
                 || clazz == Char::class.java || clazz == Char::class.javaPrimitiveType
                 || clazz == Boolean::class.java || clazz == Boolean::class.javaPrimitiveType) {
@@ -149,7 +152,8 @@ object DatabaseUtils {
      * @param db
      * @param clazz
      */
-    @JvmStatic fun dropTable(db: SQLiteDatabase, clazz: Class<*>) {
+    @JvmStatic
+    fun dropTable(db: SQLiteDatabase, clazz: Class<*>) {
         if (clazz.isAnnotationPresent(DatabaseTable::class.java)) {
             val sql = StringBuilder("DROP TABLE IF EXISTS ")
             val table = clazz.getAnnotation(DatabaseTable::class.java)
@@ -167,7 +171,8 @@ object DatabaseUtils {
      * @param db
      * @param table
      */
-    @JvmStatic fun dropTable(db: SQLiteDatabase, table: String?) {
+    @JvmStatic
+    fun dropTable(db: SQLiteDatabase, table: String?) {
         if (table != null && "" != table.trim { it <= ' ' }) {
             val sql = StringBuilder("DROP TABLE IF EXISTS ")
             sql.append(table)
@@ -183,7 +188,8 @@ object DatabaseUtils {
      * @param db
      * @param clazz
      */
-    @JvmStatic fun addColumn(db: SQLiteDatabase, clazz: Class<*>, vararg columns: String) {
+    @JvmStatic
+    fun addColumn(db: SQLiteDatabase, clazz: Class<*>, vararg columns: String) {
         Log.d("addColumn ")
         if (clazz.isAnnotationPresent(DatabaseTable::class.java)) {
             val table = clazz.getAnnotation(DatabaseTable::class.java)
@@ -216,7 +222,8 @@ object DatabaseUtils {
      * @param clazz
      * @return
      */
-    @JvmStatic fun getColumnNames(clazz: Class<*>): Map<String, Field> {
+    @JvmStatic
+    fun getColumnNames(clazz: Class<*>): Map<String, Field> {
         val map = HashMap<String, Field>()
         for (field in clazz.declaredFields) {
             field.isAccessible = true
@@ -228,7 +235,8 @@ object DatabaseUtils {
         return map
     }
 
-    @JvmStatic fun getIdColumnName(clazz: Class<*>): String? {
+    @JvmStatic
+    fun getIdColumnName(clazz: Class<*>): String? {
         var columnName: String? = null
         for (field in clazz.declaredFields) {
             field.isAccessible = true
@@ -254,7 +262,8 @@ object DatabaseUtils {
      * @throws IllegalAccessException
      */
     @Throws(IllegalAccessException::class)
-    @JvmStatic fun getIdValue(obj: Any): Any? {
+    @JvmStatic
+    fun getIdValue(obj: Any): Any? {
         var value: Any? = null
         for (field in obj.javaClass.declaredFields) {
             field.isAccessible = true
@@ -281,7 +290,8 @@ object DatabaseUtils {
      * @throws IllegalAccessException
      */
     @Throws(IllegalAccessException::class)
-    @JvmStatic fun getContentValues(obj: Any): ContentValues {
+    @JvmStatic
+    fun getContentValues(obj: Any): ContentValues {
         val v = ContentValues()
         var filedName: String? = null
         for (field in obj.javaClass.declaredFields) {
@@ -307,7 +317,8 @@ object DatabaseUtils {
      * @throws IllegalArgumentException
      */
     @Throws(IllegalAccessException::class)
-    @JvmStatic fun getContentValues(obj: Any, columns: Array<out String>?): ContentValues {
+    @JvmStatic
+    fun getContentValues(obj: Any, columns: Array<out String>?): ContentValues {
         val v = ContentValues()
         var filedName: String? = null
         val set = if (columns == null) HashSet() else HashSet(listOf(*columns))
@@ -332,7 +343,8 @@ object DatabaseUtils {
      * @param <T>
      * @return
     </T> */
-    @JvmStatic fun <T> cursorToObject(obj: T, cursor: Cursor, columns: Array<out String>?): T {
+    @JvmStatic
+    fun <T> cursorToObject(obj: T, cursor: Cursor, columns: Array<out String>?): T {
         val fields = (obj as Any).javaClass.declaredFields
         val set = if (columns == null) HashSet() else HashSet(listOf(*columns))
         var columnName: String? = null
@@ -364,7 +376,8 @@ object DatabaseUtils {
      * @throws InvocationTargetException
     </T> */
     @Throws(InstantiationException::class, IllegalAccessException::class, NoSuchMethodException::class, InvocationTargetException::class)
-    @JvmStatic fun <T> cursorToClassObject(clazz: Class<T>, cursor: Cursor, columns: Array<out String>?): T {
+    @JvmStatic
+    fun <T> cursorToClassObject(clazz: Class<T>, cursor: Cursor, columns: Array<out String>?): T {
         val constructor = clazz.getDeclaredConstructor()
         constructor.isAccessible = true
         val obj = constructor.newInstance() as T
@@ -380,7 +393,8 @@ object DatabaseUtils {
      * @param cursor
      * @param <T>
     </T> */
-    @JvmStatic fun <T> setFieldValue(t: T, field: Field, columnName: String?, cursor: Cursor) {
+    @JvmStatic
+    fun <T> setFieldValue(t: T, field: Field, columnName: String?, cursor: Cursor) {
         try {
             if (field.type == String::class.java) {
                 field.set(t, cursor.getString(cursor.getColumnIndex(columnName)))

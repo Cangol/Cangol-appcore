@@ -40,9 +40,7 @@ open class ModuleApplication {
         this.mCoreApplication = application
     }
 
-    open fun onCreate() {
-
-    }
+    open fun onCreate() {}
 
     fun getAppService(name: String): AppService? {
         return getApplication().getAppService(name)
@@ -110,8 +108,6 @@ open class ModuleApplication {
 
     fun onTrimMemory(level: Int) {}
 
-    fun onExit() {
-
-    }
+    fun onExit() {}
 
 }

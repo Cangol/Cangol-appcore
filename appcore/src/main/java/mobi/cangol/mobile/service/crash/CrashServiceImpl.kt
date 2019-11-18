@@ -23,14 +23,6 @@ import android.app.Application
 import android.os.Build
 import android.os.StrictMode
 import android.text.TextUtils
-
-import java.io.File
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.io.Writer
-import java.lang.Thread.UncaughtExceptionHandler
-import java.util.ArrayList
-
 import mobi.cangol.mobile.CoreApplication
 import mobi.cangol.mobile.Task
 import mobi.cangol.mobile.http.AsyncHttpClient
@@ -42,12 +34,16 @@ import mobi.cangol.mobile.service.PoolManager
 import mobi.cangol.mobile.service.Service
 import mobi.cangol.mobile.service.ServiceProperty
 import mobi.cangol.mobile.service.conf.ConfigService
-import mobi.cangol.mobile.service.route.RouteServiceImpl
 import mobi.cangol.mobile.service.session.SessionService
 import mobi.cangol.mobile.utils.DeviceInfo
 import mobi.cangol.mobile.utils.FileUtils
 import mobi.cangol.mobile.utils.Object2FileUtils
 import mobi.cangol.mobile.utils.TimeUtils
+import java.io.File
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.lang.Thread.UncaughtExceptionHandler
+import java.util.*
 
 /**
  * @author Cangol
@@ -58,7 +54,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
     private var mDefaultExceptionHandler: Thread.UncaughtExceptionHandler? = null
     private var mApplication: CoreApplication? = null
     private var mSessionService: SessionService? = null
-    private var mServiceProperty=ServiceProperty(TAG)
+    private var mServiceProperty = ServiceProperty(TAG)
     private var asyncHttpClient: AsyncHttpClient? = null
     private var mUrl: String? = null
     private var mParams: Map<String, String>? = null

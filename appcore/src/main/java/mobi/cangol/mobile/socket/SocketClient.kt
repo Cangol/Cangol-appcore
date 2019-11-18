@@ -18,7 +18,6 @@
 package mobi.cangol.mobile.socket
 
 import mobi.cangol.mobile.service.PoolManager
-import mobi.cangol.mobile.service.analytics.IMapBuilder
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Future
@@ -27,9 +26,9 @@ import java.util.concurrent.Future
  * Created by weixuewu on 15/11/11.
  */
 class SocketClient {
-    private val requestMap=WeakHashMap<String, MutableList<WeakReference<Future<*>>>>()
-    private val handlerMap=WeakHashMap<String, WeakReference<SocketHandler>>()
-    private val pool=PoolManager.buildPool("SocketClient", 3)
+    private val requestMap = WeakHashMap<String, MutableList<WeakReference<Future<*>>>>()
+    private val handlerMap = WeakHashMap<String, WeakReference<SocketHandler>>()
+    private val pool = PoolManager.buildPool("SocketClient", 3)
     private var port: Int = 0
     private var host: String? = null
     private var isLong: Boolean = false

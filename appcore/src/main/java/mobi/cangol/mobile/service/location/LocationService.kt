@@ -57,7 +57,7 @@ interface LocationService : AppService {
      */
     fun setBetterLocationListener(locationListener: BetterLocationListener)
 
-     companion object {
+    companion object {
         /**
          * 最佳定位时间间隔,单位豪秒
          */

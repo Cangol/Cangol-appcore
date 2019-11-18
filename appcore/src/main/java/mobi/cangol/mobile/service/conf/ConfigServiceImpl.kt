@@ -32,7 +32,7 @@ import java.io.File
 @Service("ConfigService")
 internal class ConfigServiceImpl : ConfigService {
     private var mContext: Application? = null
-    private var mServiceProperty= ServiceProperty(TAG)
+    private var mServiceProperty = ServiceProperty(TAG)
     private var mDebug = false
     private var mUseInternalStorage = false
     private var mIsCustomAppDir = false

@@ -18,17 +18,9 @@
  */
 package mobi.cangol.mobile.service
 
-import java.util.concurrent.Callable
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Future
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadFactory
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
-
 import mobi.cangol.mobile.logging.Log
+import java.util.concurrent.*
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * TheadPool manager by name
@@ -41,7 +33,7 @@ object PoolManager {
     private val CORE_POOL_SIZE = CPU_COUNT + 1
     private val MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1
     private const val KEEP_ALIVE = 60
-    private var poolMap: ConcurrentHashMap<String, Pool>? = null
+    private var poolMap: ConcurrentHashMap<String, Pool> = ConcurrentHashMap()
 
     /**
      * 获取一个线程池
@@ -49,31 +41,25 @@ object PoolManager {
      * @param name
      * @return
      */
-    fun getPool(name: String): Pool? {
-        if (null == poolMap) {
-            poolMap = ConcurrentHashMap()
+    fun getPool(name: String): Pool {
+        if (!poolMap.containsKey(name)) {
+            poolMap[name] = Pool(name, MAXIMUM_POOL_SIZE)
         }
-        if (!poolMap!!.containsKey(name)) {
-            poolMap!![name] = Pool(name, MAXIMUM_POOL_SIZE)
-        }
-        return poolMap!![name]
+        return poolMap[name]!!
     }
 
     /**
      * 创建一个线程池
      */
     fun buildPool(name: String, core: Int): Pool {
-        if (null == poolMap) {
-            poolMap = ConcurrentHashMap()
+        if (!poolMap.containsKey(name)) {
+            poolMap[name] = Pool(name, core)
         }
-        if (!poolMap!!.containsKey(name)) {
-            poolMap!![name] = Pool(name, core)
-        }
-        var pool = poolMap!![name]
+        var pool = poolMap[name]
 
         if (pool!!.isShutdown || pool.isTerminated || pool.isThreadPoolClose) {
             pool = Pool(name, core)
-            poolMap!![name] = pool
+            poolMap[name] = pool
         }
         return pool
     }
@@ -82,29 +68,21 @@ object PoolManager {
      * 清除线程池
      */
     fun clear() {
-        if (null != poolMap) {
-            poolMap!!.clear()
-        }
-        poolMap = null
+        poolMap.clear()
     }
 
     /**
      * 停止所有线程池
      */
     fun closeAll() {
-        if (null != poolMap) {
-            for ((_, value) in poolMap!!) {
-                value?.close(false)
-            }
-            poolMap!!.clear()
+        for ((_, value) in poolMap) {
+            value?.close(false)
         }
-        poolMap = null
+        poolMap.clear()
     }
 
     fun clear(name: String) {
-        if (null != poolMap) {
-            poolMap!!.remove(name)
-        }
+        poolMap.remove(name)
     }
 
     class Pool {

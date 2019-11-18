@@ -20,13 +20,10 @@ import mobi.cangol.mobile.service.cache.DiskLruCache.Editor
 import java.io.*
 import java.lang.reflect.Array
 import java.nio.charset.Charset
-import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashMap
 
 /**
  * *****************************************************************************
@@ -132,7 +129,7 @@ class DiskLruCache private constructor(
         /**
          * Returns the directory where this cache stores its data.
          */
-        val directory: File,  val appVersion: Int,  val valueCount: Int,
+        val directory: File, val appVersion: Int, val valueCount: Int,
         /**
          * Returns the maximum number of bytes that this cache should use to store
          * its data.
@@ -542,7 +539,7 @@ class DiskLruCache private constructor(
     /**
      * A snapshot of the values for an entry.
      */
-    inner class Snapshot( val key: String,  val sequenceNumber: Long,  val ins: kotlin.Array<InputStream?>) : Closeable {
+    inner class Snapshot(val key: String, val sequenceNumber: Long, val ins: kotlin.Array<InputStream?>) : Closeable {
 
         /**
          * Returns an editor for this snapshot's entry, or null if either the
@@ -579,7 +576,7 @@ class DiskLruCache private constructor(
     /**
      * Edits the values for an entry.
      */
-     inner class Editor constructor(val entry: Entry) {
+    inner class Editor constructor(val entry: Entry) {
         private var hasErrors: Boolean = false
 
         /**
@@ -698,7 +695,7 @@ class DiskLruCache private constructor(
         }
     }
 
-     inner class Entry(val key: String) {
+    inner class Entry(val key: String) {
 
         /**
          * Lengths of this entry's files.
@@ -766,15 +763,15 @@ class DiskLruCache private constructor(
     }
 
     companion object {
-         const val JOURNAL_FILE = "journal"
-         const  val JOURNAL_FILE_TMP = "journal.tmp"
-         const  val MAGIC = "libcore.io.DiskLruCache"
-         const  val VERSION_1 = "1"
-         const  val ANY_SEQUENCE_NUMBER: Long = -1
-         const  val ACTION_CLEAN = "CLEAN"
-         const  val ACTION_DIRTY = "DIRTY"
-         const  val ACTION_REMOVE = "REMOVE"
-         const  val ACTION_READ = "READ"
+        const val JOURNAL_FILE = "journal"
+        const val JOURNAL_FILE_TMP = "journal.tmp"
+        const val MAGIC = "libcore.io.DiskLruCache"
+        const val VERSION_1 = "1"
+        const val ANY_SEQUENCE_NUMBER: Long = -1
+        const val ACTION_CLEAN = "CLEAN"
+        const val ACTION_DIRTY = "DIRTY"
+        const val ACTION_REMOVE = "REMOVE"
+        const val ACTION_READ = "READ"
 
         private val UTF_8 = Charset.forName("UTF-8")
         const val IO_BUFFER_SIZE = 8 * 1024
@@ -802,10 +799,10 @@ class DiskLruCache private constructor(
             try {
                 val writer = StringWriter()
                 val buffer = CharArray(1024)
-                var end=true
+                var end = true
                 while (end) {
                     var count = reader.read(buffer)
-                    end = count>0
+                    end = count > 0
                     writer.write(buffer, 0, count)
                 }
                 return writer.toString()

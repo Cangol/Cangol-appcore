@@ -31,7 +31,8 @@ import java.io.UnsupportedEncodingException
 object Base64 {
     private const val ENCODING_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
-    @JvmStatic fun encode(source: String): String {
+    @JvmStatic
+    fun encode(source: String): String {
         val sourceBytes = getPaddedBytes(source)
         val numGroups = (sourceBytes.size + 2) / 3
         val targetBytes = CharArray(4)
@@ -64,7 +65,8 @@ object Base64 {
         target[3] = (source[sourceIndex + 2].toInt() and 0x3f).toChar()
     }
 
-    @JvmStatic fun decode(source: String): String? {
+    @JvmStatic
+    fun decode(source: String): String? {
         if (source.length % 4 != 0) {
             throw RuntimeException("valid Base64 codes have a multiple of 4 characters")
         }

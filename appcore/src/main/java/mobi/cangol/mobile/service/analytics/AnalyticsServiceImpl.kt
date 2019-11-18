@@ -45,10 +45,10 @@ internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
     private var mDebug = false
     private var mContext: Application? = null
     private var mAsyncHttpClient: AsyncHttpClient? = null
-    private var mServiceProperty= ServiceProperty(TAG)
+    private var mServiceProperty = ServiceProperty(TAG)
     private val mTrackers = HashMap<String, ITracker>()
-    private var commonParams= HashMap<String, String>()
-    private var deviceParams= HashMap<String, String>()
+    private var commonParams = HashMap<String, String>()
+    private var deviceParams = HashMap<String, String>()
     override fun onCreate(context: Application) {
         mContext = context
     }

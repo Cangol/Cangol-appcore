@@ -18,9 +18,8 @@
  */
 package mobi.cangol.mobile.service.conf
 
-import java.io.File
-
 import mobi.cangol.mobile.service.AppService
+import java.io.File
 
 interface ConfigService : AppService {
 

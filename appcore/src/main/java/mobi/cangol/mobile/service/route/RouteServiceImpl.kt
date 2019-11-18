@@ -6,19 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-
-import java.util.HashMap
-
 import mobi.cangol.mobile.logging.Log
 import mobi.cangol.mobile.service.Service
 import mobi.cangol.mobile.service.ServiceProperty
+import java.util.*
 
 /**
  * Created by xuewu.wei on 2018/10/15.
  */
 @Service("RouteService")
 class RouteServiceImpl : RouteService {
-    private var mServiceProperty= ServiceProperty(TAG)
+    private var mServiceProperty = ServiceProperty(TAG)
     private var mRouteMap: MutableMap<String, Class<*>>? = null
     private var mOnNavigation: OnNavigation? = null
     private var mDebug = false

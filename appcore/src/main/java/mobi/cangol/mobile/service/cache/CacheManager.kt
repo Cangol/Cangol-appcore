@@ -1,8 +1,7 @@
 package mobi.cangol.mobile.service.cache
 
-import java.io.Serializable
-
 import mobi.cangol.mobile.service.AppService
+import java.io.Serializable
 
 interface CacheManager : AppService {
 

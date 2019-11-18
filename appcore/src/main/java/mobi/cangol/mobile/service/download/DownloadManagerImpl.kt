@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Service("DownloadManager")
 internal open class DownloadManagerImpl : DownloadManager {
     private var debug = false
-    private var executorMap=ConcurrentHashMap<String, DownloadExecutor<*>>()
+    private var executorMap = ConcurrentHashMap<String, DownloadExecutor<*>>()
     private var mContext: Application? = null
     private var mServiceProperty = ServiceProperty(TAG)
     private var mConfigService: ConfigService? = null

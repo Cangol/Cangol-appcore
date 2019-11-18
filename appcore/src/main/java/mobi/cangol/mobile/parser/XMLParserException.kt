@@ -25,9 +25,11 @@ import java.lang.reflect.Field
 class XMLParserException : ParserException {
     @Transient
     private var mNode: Node? = null
+
     constructor(throwable: Throwable) : super(throwable) {
         mNode = null
     }
+
     constructor(message: String, throwable: Throwable) : super(message, throwable) {}
 
     constructor(clazz: Class<*>, message: String, throwable: Throwable) : super(clazz, message, throwable) {}

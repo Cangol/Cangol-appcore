@@ -19,15 +19,13 @@ package mobi.cangol.mobile.socket
 
 
 import android.os.Process
-
+import mobi.cangol.mobile.logging.Log
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.ExecutorService
-
-import mobi.cangol.mobile.logging.Log
 
 /**
  * Created by weixuewu on 15/11/11.
@@ -161,7 +159,7 @@ class SocketThread(private val host: String, private val port: Int, private val 
         } catch (e: Exception) {
             isConnecting = false
             Log.d(TAG, "" + e.cause)
-            val result = arrayOf<Any>("",""+e.cause)
+            val result = arrayOf<Any>("", "" + e.cause)
             socketHandler!!.sendFailMessage(result)
             disconnect()
         }

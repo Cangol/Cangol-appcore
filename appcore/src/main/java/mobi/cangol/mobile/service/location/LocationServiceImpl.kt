@@ -32,12 +32,10 @@ import android.os.Looper
 import android.os.Message
 import android.support.v4.content.PermissionChecker
 import android.util.Log
-
-import java.util.ArrayList
-
 import mobi.cangol.mobile.service.Service
 import mobi.cangol.mobile.service.ServiceProperty
 import mobi.cangol.mobile.utils.TimeUtils
+import java.util.*
 
 /**
  * @author Cangol
@@ -47,7 +45,7 @@ internal class LocationServiceImpl : LocationService {
     private var mDebug = false
     private var mBetterTime = 1000 * 60 * 2
     private var mTimeOut = 1000 * 60 * 5
-    private var mServiceProperty=ServiceProperty(TAG)
+    private var mServiceProperty = ServiceProperty(TAG)
     private var mLocationListener: LocationListener? = null
     private var mLocationManager: LocationManager? = null
     private var mLocation: Location? = null

@@ -19,11 +19,10 @@
 package mobi.cangol.mobile.stat.session
 
 
-import java.util.HashMap
-import java.util.concurrent.ConcurrentLinkedQueue
-
 import mobi.cangol.mobile.logging.Log
 import mobi.cangol.mobile.utils.StringUtils
+import java.util.*
+import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by weixuewu on 16/1/23.

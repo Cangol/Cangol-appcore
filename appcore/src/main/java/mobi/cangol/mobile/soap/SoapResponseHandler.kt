@@ -55,23 +55,23 @@ open class SoapResponseHandler {
         //do nothings
     }
 
-     fun sendStartMessage() {
+    fun sendStartMessage() {
         sendMessage(obtainMessage(START_MESSAGE, null))
     }
 
-     fun sendFinishMessage() {
+    fun sendFinishMessage() {
         sendMessage(obtainMessage(FINISH_MESSAGE, null))
     }
 
-     fun sendSuccessMessage(responseBody: String?) {
+    fun sendSuccessMessage(responseBody: String?) {
         sendMessage(obtainMessage(SUCCESS_MESSAGE, responseBody))
     }
 
-     fun sendFailureMessage(responseBody: String?) {
+    fun sendFailureMessage(responseBody: String?) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, responseBody))
     }
 
-     fun handleMessage(msg: Message) {
+    fun handleMessage(msg: Message) {
         val response: Any
         when (msg.what) {
             SUCCESS_MESSAGE -> {
@@ -89,7 +89,7 @@ open class SoapResponseHandler {
         }
     }
 
-     fun sendMessage(msg: Message?) {
+    fun sendMessage(msg: Message?) {
         if (handler != null) {
             handler!!.sendMessage(msg)
         } else {
@@ -97,7 +97,7 @@ open class SoapResponseHandler {
         }
     }
 
-     fun obtainMessage(responseMessage: Int, response: Any?): Message? {
+    fun obtainMessage(responseMessage: Int, response: Any?): Message? {
         var msg: Message? = null
         if (handler != null) {
             msg = this.handler!!.obtainMessage(responseMessage, response)

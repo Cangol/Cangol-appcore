@@ -435,9 +435,10 @@ object StringUtils {
      * @return
      */
     @JvmStatic
-    fun strip(str: String): String ?{
+    fun strip(str: String): String? {
         return strip(str, null)
     }
+
     /**
      * isNumeric
      *

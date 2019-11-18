@@ -81,7 +81,7 @@ open class AsyncHttpResponseHandler {
     }
 
     fun sendFailureMessage(e: Throwable, responseBody: String?) {
-        sendMessage(obtainMessage(FAILURE_MESSAGE,arrayOf(e, responseBody)))
+        sendMessage(obtainMessage(FAILURE_MESSAGE, arrayOf(e, responseBody)))
     }
 
     fun sendStartMessage() {

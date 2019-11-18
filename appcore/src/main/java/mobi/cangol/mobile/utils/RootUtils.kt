@@ -3,31 +3,33 @@ package mobi.cangol.mobile.utils
 
 import android.os.Build
 import android.support.annotation.RequiresApi
-
+import mobi.cangol.mobile.logging.Log
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
-import java.util.ArrayList
-
-import mobi.cangol.mobile.logging.Log
+import java.util.*
 
 /**
  * @author Kevin Kowalewski
  */
 object RootUtils {
 
-   private const val SYSTEM_APP_SUPERUSER_APK = "/system/app/Superuser.apk"
+    private const val SYSTEM_APP_SUPERUSER_APK = "/system/app/Superuser.apk"
 
-    @JvmStatic fun isDeviceRooted(): Boolean {
+    @JvmStatic
+    fun isDeviceRooted(): Boolean {
         return checkRootMethod1() || checkRootMethod2() || checkRootMethod3()
     }
-    @JvmStatic fun checkRootMethod1(): Boolean {
+
+    @JvmStatic
+    fun checkRootMethod1(): Boolean {
         val buildTags = Build.TAGS
         return buildTags != null && buildTags.contains("test-keys")
     }
 
-    @JvmStatic fun checkRootMethod2(): Boolean {
+    @JvmStatic
+    fun checkRootMethod2(): Boolean {
         return try {
             File(SYSTEM_APP_SUPERUSER_APK).exists()
         } catch (e: Exception) {
@@ -36,7 +38,8 @@ object RootUtils {
 
     }
 
-    @JvmStatic fun checkRootMethod3(): Boolean {
+    @JvmStatic
+    fun checkRootMethod3(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             ExecShell().executeCommand(SHELL_CMD.CHECK_SU_BINARY) != null
         } else {
@@ -69,10 +72,10 @@ object RootUtils {
                 var has: Boolean? = true
                 while (has!!) {
                     val line = reader.readLine()
-                    has = if(line!=null){
+                    has = if (line != null) {
                         fullResponse.add(line)
                         true
-                    }else{
+                    } else {
                         false
                     }
                 }

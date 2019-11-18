@@ -31,14 +31,15 @@ import java.io.IOException
 abstract class SocketHandler {
     private var handler: InternalHandler? = null
     private var isInterrupted = false
-    private var readLocker=Any()
-    private var writeLocker=Any()
+    private var readLocker = Any()
+    private var writeLocker = Any()
 
-    fun getReadLocker():Any {
-        return  readLocker
+    fun getReadLocker(): Any {
+        return readLocker
     }
-    fun getWriteLocker():Any {
-        return  writeLocker
+
+    fun getWriteLocker(): Any {
+        return writeLocker
     }
 
     init {
@@ -147,9 +148,11 @@ abstract class SocketHandler {
     protected fun handleDisconnectedMessage() {
         onDisconnected()
     }
+
     fun isInterrupted(): Boolean {
         return isInterrupted
     }
+
     fun interrupted() {
         isInterrupted = true
     }

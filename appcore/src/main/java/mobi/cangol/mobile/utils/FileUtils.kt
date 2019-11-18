@@ -26,22 +26,10 @@ package mobi.cangol.mobile.utils
 import android.annotation.SuppressLint
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
-
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
-import java.math.BigDecimal
-import java.util.ArrayList
-
 import mobi.cangol.mobile.logging.Log
+import java.io.*
+import java.math.BigDecimal
+import java.util.*
 
 object FileUtils {
     private const val TAG = "FileUtils"
@@ -53,13 +41,14 @@ object FileUtils {
      * @param fileName 待删除的文件名
      * @return 文件删除成功返回true, 否则返回false
      */
-    @JvmStatic fun delete(fileName: String): Boolean {
+    @JvmStatic
+    fun delete(fileName: String): Boolean {
         val file = File(fileName)
-        if (!file.exists()) {
+        return if (!file.exists()) {
             Log.d(TAG, "delete File fail! $fileName not exist")
-            return false
+            false
         } else {
-            return if (file.isFile) {
+            if (file.isFile) {
                 deleteFile(fileName)
             } else {
                 deleteDirectory(fileName)
@@ -73,15 +62,16 @@ object FileUtils {
      * @param fileName 被删除文件的文件名
      * @return 单个文件删除成功返回true, 否则返回false
      */
-    @JvmStatic fun deleteFile(fileName: String): Boolean {
+    @JvmStatic
+    fun deleteFile(fileName: String): Boolean {
         val file = File(fileName)
-        if (file.isFile && file.exists()) {
+        return if (file.isFile && file.exists()) {
             if (file.delete())
                 Log.d(TAG, "delete single file  success!$fileName")
-            return true
+            true
         } else {
             Log.d(TAG, "delete single file fail!$fileName")
-            return false
+            false
         }
     }
 
@@ -91,7 +81,8 @@ object FileUtils {
      * @param dir 被删除目录的文件路径
      * @return 目录删除成功返回true, 否则返回false
      */
-    @JvmStatic fun deleteDirectory(dir: String): Boolean {
+    @JvmStatic
+    fun deleteDirectory(dir: String): Boolean {
         var dir = dir
         // 如果dir不以文件分隔符结尾，自动添加文件分隔符
         if (!dir.endsWith(File.separator)) {
@@ -142,20 +133,21 @@ object FileUtils {
      * @param oldPath
      * @param newPath
      */
-    @JvmStatic fun copyFile(oldPath: String, newPath: String) {
+    @JvmStatic
+    fun copyFile(oldPath: String, newPath: String) {
         var ins: InputStream? = null
         var fos: FileOutputStream? = null
         try {
             ins = FileInputStream(oldPath) // 读入原文件
             fos = FileOutputStream(newPath)
             val buffer = ByteArray(4094)
-            var end=false
+            var end = false
             while (!end) {
                 val len = ins.read(buffer)
-                end = if(len>0){
+                end = if (len > 0) {
                     fos.write(buffer, 0, len)
                     false
-                }else{
+                } else {
                     true
                 }
             }
@@ -186,7 +178,8 @@ object FileUtils {
      *
      * @param folderPath String 如 c:/fqf
      */
-    @JvmStatic fun newFolder(folderPath: String) {
+    @JvmStatic
+    fun newFolder(folderPath: String) {
         try {
             val myFilePath = File(folderPath)
             if (!myFilePath.exists()) {
@@ -204,7 +197,8 @@ object FileUtils {
      * @param filePath    String 文件路径及名称
      * @param fileContent String 文件内容
      */
-    @JvmStatic fun newFile(filePath: String, fileContent: String) {
+    @JvmStatic
+    fun newFile(filePath: String, fileContent: String) {
         var outWrite: OutputStreamWriter? = null
         var myFile: PrintWriter? = null
         try {
@@ -237,7 +231,8 @@ object FileUtils {
      *
      * @param filePath String 文件路径及名称
      */
-    @JvmStatic fun delFile(filePath: String) {
+    @JvmStatic
+    fun delFile(filePath: String) {
         try {
             val file = File(filePath)
             if (file.delete()) {
@@ -254,7 +249,8 @@ object FileUtils {
      *
      * @param folderPath String 文件夹路径及名称 如c:/fqf
      */
-    @JvmStatic fun delFolder(folderPath: String) {
+    @JvmStatic
+    fun delFolder(folderPath: String) {
         try {
             delAllFile(folderPath) // 删除完里面所有内容
             val file = File(folderPath)
@@ -270,7 +266,8 @@ object FileUtils {
      *
      * @param path String 文件夹路径 如 c:/fqf
      */
-    @JvmStatic fun delAllFile(path: String) {
+    @JvmStatic
+    fun delAllFile(path: String) {
         val file = File(path)
         if (!file.exists()) {
             return
@@ -302,7 +299,8 @@ object FileUtils {
      * @param oldPath String 原文件路径 如：c:/fqf
      * @param newPath String 复制后路径 如：f:/fqf/ff
      */
-    @JvmStatic fun copyFolder(oldPath: String, newPath: String) {
+    @JvmStatic
+    fun copyFolder(oldPath: String, newPath: String) {
         var input: FileInputStream? = null
         var output: FileOutputStream? = null
         try {
@@ -321,13 +319,13 @@ object FileUtils {
                     input = FileInputStream(temp)
                     output = FileOutputStream(newPath + "/ " + temp.name)
                     val buffer = ByteArray(1024 * 5)
-                    var end=false
+                    var end = false
                     while (!end) {
                         val len = input.read(buffer)
-                        end = if(len>0){
+                        end = if (len > 0) {
                             output.write(buffer, 0, len)
                             false
-                        }else{
+                        } else {
                             true
                         }
                     }
@@ -336,7 +334,7 @@ object FileUtils {
 
                 if (temp.isDirectory) {
                     // 如果是子文件夹
-                    copyFolder(oldPath + "/ " + file[i], newPath + "/ "+ file[i])
+                    copyFolder(oldPath + "/ " + file[i], newPath + "/ " + file[i])
                 }
             }
         } catch (e: Exception) {
@@ -368,7 +366,8 @@ object FileUtils {
      * @param oldPath String 如：c:/fqf.txt
      * @param newPath String 如：d:/fqf.txt
      */
-    @JvmStatic fun moveFile(oldPath: String, newPath: String) {
+    @JvmStatic
+    fun moveFile(oldPath: String, newPath: String) {
         copyFile(oldPath, newPath)
         delFile(oldPath)
 
@@ -380,7 +379,8 @@ object FileUtils {
      * @param oldPath String 如：c:/fqf.txt
      * @param newPath String 如：d:/fqf.txt
      */
-    @JvmStatic fun moveFolder(oldPath: String, newPath: String) {
+    @JvmStatic
+    fun moveFolder(oldPath: String, newPath: String) {
         copyFolder(oldPath, newPath)
         delFolder(oldPath)
     }
@@ -393,7 +393,8 @@ object FileUtils {
      * @param suffix
      * @return
      */
-    @JvmStatic fun searchBySuffix(f: File, fileList: MutableList<File>?,
+    @JvmStatic
+    fun searchBySuffix(f: File, fileList: MutableList<File>?,
                        vararg suffix: String): List<File> {
         var fileList = fileList
         if (null == fileList) {
@@ -425,7 +426,8 @@ object FileUtils {
      * @param file
      * @param content
      */
-    @JvmStatic fun writeString(file: File, content: String) {
+    @JvmStatic
+    fun writeString(file: File, content: String) {
         var os: FileOutputStream? = null
         try {
             os = FileOutputStream(file)
@@ -451,7 +453,8 @@ object FileUtils {
      * @param obj
      * @param objPath
      */
-    @JvmStatic fun writeObject(obj: Any, objPath: String) {
+    @JvmStatic
+    fun writeObject(obj: Any, objPath: String) {
         var fos: FileOutputStream? = null
         var oos: ObjectOutputStream? = null
         try {
@@ -482,7 +485,8 @@ object FileUtils {
      * @param file
      * @return
      */
-    @JvmStatic fun readObject(file: File): Any? {
+    @JvmStatic
+    fun readObject(file: File): Any? {
         if (!file.exists() || file.length() == 0L) {
             return null
         }
@@ -518,7 +522,8 @@ object FileUtils {
      * @param is
      * @return
      */
-    @JvmStatic fun convertString(`is`: InputStream): String {
+    @JvmStatic
+    fun convertString(`is`: InputStream): String {
         val sb = StringBuilder()
         var readline = ""
         try {
@@ -541,7 +546,8 @@ object FileUtils {
      * @param length
      * @return
      */
-    @JvmStatic fun formatSize(length: Long): String {
+    @JvmStatic
+    fun formatSize(length: Long): String {
         val sizeBt = 1024f
         val sizeKb = sizeBt * 1024.0f
         val sizeMb = sizeKb * 1024.0f
@@ -573,12 +579,13 @@ object FileUtils {
     }
 
     @SuppressLint("DefaultLocale")
-            /**
-             * 将格式化的文件大小转换为long
-             * @param sizeStr
-             * @return
-             */
-    @JvmStatic fun formatSize(sizeStr: String?): Long {
+    /**
+     * 将格式化的文件大小转换为long
+     * @param sizeStr
+     * @return
+     */
+    @JvmStatic
+    fun formatSize(sizeStr: String?): Long {
         if (sizeStr != null && "" != sizeStr.trim { it <= ' ' }) {
             val unit = sizeStr
                     .replace("([1-9]+[0-9]*|0)(\\.[\\d]+)?".toRegex(), "")
@@ -609,7 +616,8 @@ object FileUtils {
      * @param filePath
      * @return
      */
-    @JvmStatic fun getFileSuffix(filePath: String): String {
+    @JvmStatic
+    fun getFileSuffix(filePath: String): String {
         val arrays = filePath.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         return if (arrays.size >= 2) {
             arrays[arrays.size - 1]
@@ -624,7 +632,8 @@ object FileUtils {
      * @param file
      * @return
      */
-    @JvmStatic fun getMIMEType(file: File): String? {
+    @JvmStatic
+    fun getMIMEType(file: File): String? {
         val suffix = file.name.substring(file.name.lastIndexOf('.') + 1, file.name.length).toLowerCase()
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix)
     }
@@ -635,7 +644,8 @@ object FileUtils {
      * @param filePath
      * @return
      */
-    @JvmStatic fun getFileName(filePath: String): String {
+    @JvmStatic
+    fun getFileName(filePath: String): String {
         val fileName = File(filePath).name
         val arrays = filePath.split("\\_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         return if (arrays.size >= 2) {
@@ -651,7 +661,8 @@ object FileUtils {
      * @param file
      * @return 文件大小 单位字节
      */
-    @JvmStatic fun getFolderSize(file: File): Long {
+    @JvmStatic
+    fun getFolderSize(file: File): Long {
         var size: Long = 0
         try {
             val fileList = file.listFiles()

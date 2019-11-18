@@ -25,7 +25,7 @@ import java.lang.reflect.Field
 
 class JSONParserException : ParserException {
 
-    private var mNode: JSONObject?=null
+    private var mNode: JSONObject? = null
 
     constructor(message: String, throwable: Throwable) : super(throwable) {}
 

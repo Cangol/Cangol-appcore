@@ -110,9 +110,11 @@ class RequestParams {
     fun isEmpty(): Boolean {
         return urlParams.isEmpty() && fileParams.isEmpty()
     }
+
     fun getUrlParams(): ConcurrentHashMap<String, String> {
         return urlParams
     }
+
     fun getFileParams(): ConcurrentHashMap<String, File> {
         return fileParams
     }

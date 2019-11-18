@@ -30,7 +30,7 @@ import mobi.cangol.mobile.logging.Log
  */
 class StatDatabaseHelper : CoreSQLiteOpenHelper() {
 
-     override fun getDataBaseName(): String {
+    override fun getDataBaseName(): String {
         return DATABASE_NAME
     }
 

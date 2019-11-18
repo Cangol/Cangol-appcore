@@ -20,20 +20,16 @@ package mobi.cangol.mobile.soap
 
 import android.content.Context
 import mobi.cangol.mobile.logging.Log
-
+import mobi.cangol.mobile.service.PoolManager
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapSerializationEnvelope
 import org.ksoap2.transport.HttpTransportSE
 import org.kxml2.kdom.Element
 import org.kxml2.kdom.Node
-
 import java.lang.ref.WeakReference
-import java.util.LinkedList
-import java.util.WeakHashMap
+import java.util.*
 import java.util.concurrent.Future
-
-import mobi.cangol.mobile.service.PoolManager
 
 /**
  * SoapClient.java 使用此类需要ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
@@ -95,7 +91,7 @@ open class SoapClient {
             Log.d("sendRequest $paramsStr")
             envelope.bodyOut = rpc
         }
-        sendRequest(HttpTransportSE(url,  20 * 1000), envelope, namespace, responseHandler, context)
+        sendRequest(HttpTransportSE(url, 20 * 1000), envelope, namespace, responseHandler, context)
     }
 
     /**

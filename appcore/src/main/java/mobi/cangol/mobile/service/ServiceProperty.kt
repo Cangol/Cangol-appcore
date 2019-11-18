@@ -22,7 +22,7 @@ package mobi.cangol.mobile.service
  * @author Cangol
  */
 class ServiceProperty(val name: String) {
-    private val mMap= HashMap<String, Any>()
+    private val mMap = HashMap<String, Any>()
 
     fun putString(key: String, value: String) {
         mMap[key] = value

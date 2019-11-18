@@ -47,7 +47,8 @@ object JsonUtils {
      * @param obj
      * @return
     </T> */
-    @JvmStatic fun <T> toJSONArray(obj: List<T>?, useAnnotation: Boolean): JSONArray {
+    @JvmStatic
+    fun <T> toJSONArray(obj: List<T>?, useAnnotation: Boolean): JSONArray {
         val jsonArray = JSONArray()
         if (obj != null) {
             for (i in obj.indices) {
@@ -68,11 +69,13 @@ object JsonUtils {
      * @param obj
      * @return
     </T> */
-    @JvmStatic fun <T> toJSONObject(obj: T, useAnnotation: Boolean): JSONObject? {
+    @JvmStatic
+    fun <T> toJSONObject(obj: T, useAnnotation: Boolean): JSONObject? {
         return toJSONObject(obj, useAnnotation, false)
     }
 
-    @JvmStatic  fun <T> toJSONObject(obj: T, useAnnotation: Boolean, excludeTransient: Boolean): JSONObject? {
+    @JvmStatic
+    fun <T> toJSONObject(obj: T, useAnnotation: Boolean, excludeTransient: Boolean): JSONObject? {
         if (obj == null) {
             return null
         }
@@ -82,7 +85,7 @@ object JsonUtils {
         }
 
         val json = JSONObject()
-        val fields =obj.javaClass.declaredFields
+        val fields = obj.javaClass.declaredFields
         try {
             for (field in fields) {
                 field.isAccessible = true
@@ -140,12 +143,14 @@ object JsonUtils {
      * @throws JSONParserException
     </T> */
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToObject(c: Class<T>, str: String?, useAnnotation: Boolean): T? {
+    @JvmStatic
+    fun <T> parserToObject(c: Class<T>, str: String?, useAnnotation: Boolean): T? {
         return parserToObject(c, str, useAnnotation, false)
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToObject(c: Class<T>, str: String?, useAnnotation: Boolean, excludeTransient: Boolean): T? {
+    @JvmStatic
+    fun <T> parserToObject(c: Class<T>, str: String?, useAnnotation: Boolean, excludeTransient: Boolean): T? {
         require(!(null == str || "" == str)) { "str=null" }
         val json = formatJson(str)
         var jsonObject: JSONObject? = null
@@ -169,12 +174,14 @@ object JsonUtils {
      * @throws JSONParserException
     </T> */
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToList(c: Class<T>, str: String?, useAnnotation: Boolean): List<T> {
+    @JvmStatic
+    fun <T> parserToList(c: Class<T>, str: String?, useAnnotation: Boolean): List<T> {
         return parserToList(c, str, useAnnotation, false)
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToList(c: Class<T>, str: String?, useAnnotation: Boolean, excludeTransient: Boolean): List<T> {
+    @JvmStatic
+    fun <T> parserToList(c: Class<T>, str: String?, useAnnotation: Boolean, excludeTransient: Boolean): List<T> {
         require(!(null == str || "" == str)) { "str=null" }
         val json = formatJson(str)
         var jsonArray: JSONArray? = null
@@ -195,7 +202,8 @@ object JsonUtils {
      * @throws JSONParserException
     </T> */
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToObjectByUrl(c: Class<T>, urlStr: String?): T? {
+    @JvmStatic
+    fun <T> parserToObjectByUrl(c: Class<T>, urlStr: String?): T? {
         require(!(null == urlStr || "" == urlStr)) { "urlStr=null" }
         var url: URL? = null
         var urlConnection: HttpURLConnection? = null
@@ -217,13 +225,13 @@ object JsonUtils {
     private fun inputStreamTOString(inputStream: InputStream): String {
         val outStream = ByteArrayOutputStream()
         val data = ByteArray(4096)
-        var end=true
+        var end = true
         while (end) {
-            var count=inputStream.read(data, 0, 4096)
-            end = if(count>0){
+            var count = inputStream.read(data, 0, 4096)
+            end = if (count > 0) {
                 outStream.write(data, 0, count)
                 true
-            }else{
+            } else {
                 false
             }
         }
@@ -231,12 +239,14 @@ object JsonUtils {
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToObject(c: Class<T>, jsonObject: JSONObject?, useAnnotation: Boolean): T? {
+    @JvmStatic
+    fun <T> parserToObject(c: Class<T>, jsonObject: JSONObject?, useAnnotation: Boolean): T? {
         return parserToObject(c, jsonObject, useAnnotation, false)
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToObject(c: Class<T>, jsonObject: JSONObject?, useAnnotation: Boolean, excludeTransient: Boolean): T? {
+    @JvmStatic
+    fun <T> parserToObject(c: Class<T>, jsonObject: JSONObject?, useAnnotation: Boolean, excludeTransient: Boolean): T? {
         if (jsonObject == null) {
             return null
         }
@@ -286,12 +296,14 @@ object JsonUtils {
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToList(c: Class<T>, jsonArray: JSONArray?, useAnnotation: Boolean): List<T> {
+    @JvmStatic
+    fun <T> parserToList(c: Class<T>, jsonArray: JSONArray?, useAnnotation: Boolean): List<T> {
         return parserToList(c, jsonArray, useAnnotation, false)
     }
 
     @Throws(JSONParserException::class)
-    @JvmStatic fun <T> parserToList(c: Class<T>, jsonArray: JSONArray?, useAnnotation: Boolean, excludeTransient: Boolean): List<T> {
+    @JvmStatic
+    fun <T> parserToList(c: Class<T>, jsonArray: JSONArray?, useAnnotation: Boolean, excludeTransient: Boolean): List<T> {
         if (jsonArray == null) {
             return ArrayList()
         }
@@ -342,7 +354,8 @@ object JsonUtils {
         }
     }
 
-    @JvmStatic fun getType(raw: Class<*>, vararg args: Type): ParameterizedType {
+    @JvmStatic
+    fun getType(raw: Class<*>, vararg args: Type): ParameterizedType {
         return object : ParameterizedType {
             override fun getRawType(): Type {
                 return raw
@@ -358,7 +371,8 @@ object JsonUtils {
         }
     }
 
-    @JvmStatic fun formatJson(json: String?): String? {
+    @JvmStatic
+    fun formatJson(json: String?): String? {
         var json = json
         if (null != json && json.startsWith("{\"\"")) {
             json = json.replaceFirst("\"\"".toRegex(), "\"")
@@ -367,7 +381,8 @@ object JsonUtils {
     }
 
     @Throws(JSONException::class)
-    @JvmStatic fun formatJSONObject(json: String?): JSONObject {
+    @JvmStatic
+    fun formatJSONObject(json: String?): JSONObject {
         var json = json
         if (null != json && json.startsWith("{\"\"")) {
             json = json.replaceFirst("\"\"".toRegex(), "\"")
@@ -375,7 +390,8 @@ object JsonUtils {
         return JSONObject(json)
     }
 
-    @JvmStatic fun getInt(obj: JSONObject, key: String?, defaultValue: Int): Int {
+    @JvmStatic
+    fun getInt(obj: JSONObject, key: String?, defaultValue: Int): Int {
         return try {
             if (obj.isNull(key)) {
                 defaultValue
@@ -388,7 +404,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getLong(obj: JSONObject, key: String?, defaultValue: Long): Long {
+    @JvmStatic
+    fun getLong(obj: JSONObject, key: String?, defaultValue: Long): Long {
         return try {
             if (obj.isNull(key)) {
                 defaultValue
@@ -401,7 +418,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getBoolean(obj: JSONObject, key: String?, defaultValue: Boolean): Boolean {
+    @JvmStatic
+    fun getBoolean(obj: JSONObject, key: String?, defaultValue: Boolean): Boolean {
         return try {
             if (obj.isNull(key)) {
                 defaultValue
@@ -414,7 +432,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getFloat(obj: JSONObject, key: String?, defaultValue: Float): Float {
+    @JvmStatic
+    fun getFloat(obj: JSONObject, key: String?, defaultValue: Float): Float {
         var floatStr: String? = null
         return try {
             floatStr = "" + obj.get(key)
@@ -425,7 +444,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getDouble(obj: JSONObject, key: String?, defaultValue: Double): Double {
+    @JvmStatic
+    fun getDouble(obj: JSONObject, key: String?, defaultValue: Double): Double {
         return try {
             if (obj.isNull(key)) {
                 defaultValue
@@ -438,7 +458,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getString(obj: JSONObject, key: String?): String? {
+    @JvmStatic
+    fun getString(obj: JSONObject, key: String?): String? {
         return try {
             if (obj.isNull(key)) {
                 null
@@ -451,7 +472,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getString(obj: JSONObject, key: String, defaultValue: String): String {
+    @JvmStatic
+    fun getString(obj: JSONObject, key: String, defaultValue: String): String {
         return try {
             if (obj.isNull(key)) {
                 defaultValue
@@ -464,7 +486,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getObject(obj: JSONObject, key: String): Any? {
+    @JvmStatic
+    fun getObject(obj: JSONObject, key: String): Any? {
         return try {
             if (obj.isNull(key)) {
                 null
@@ -477,7 +500,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getObject(json: String): JSONObject? {
+    @JvmStatic
+    fun getObject(json: String): JSONObject? {
         return try {
             JSONObject(formatJson(json))
         } catch (e: JSONException) {
@@ -486,7 +510,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getJSONObject(obj: JSONObject, key: String?): JSONObject? {
+    @JvmStatic
+    fun getJSONObject(obj: JSONObject, key: String?): JSONObject? {
         return try {
             if (obj.isNull(key)) {
                 null
@@ -499,7 +524,8 @@ object JsonUtils {
 
     }
 
-    @JvmStatic fun getJSONArray(obj: JSONObject, key: String?): JSONArray? {
+    @JvmStatic
+    fun getJSONArray(obj: JSONObject, key: String?): JSONArray? {
         return try {
             if (obj.isNull(key)) {
                 null

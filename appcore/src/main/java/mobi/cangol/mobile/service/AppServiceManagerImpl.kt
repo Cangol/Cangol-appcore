@@ -125,7 +125,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
                 this.mServiceMap[name] = clazz
             }
         } catch (e: Exception) {
-            Log.d(TAG,"registerService "+e.message)
+            Log.d(TAG, "registerService " + e.message)
         }
 
     }

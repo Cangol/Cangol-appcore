@@ -46,7 +46,8 @@ object StatsTraffic {
     private var context: Application? = null
     private var trafficDbService: TrafficDbService? = null
 
-    @JvmStatic fun getInstance(context: Context): StatsTraffic {
+    @JvmStatic
+    fun getInstance(context: Context): StatsTraffic {
         if (instance == null) {
             instance = StatsTraffic
             instance?.onCreated(context.applicationContext as Application)
@@ -105,7 +106,7 @@ object StatsTraffic {
 
 
     fun onCreated(context: Application) {
-        this.context=context
+        this.context = context
         trafficDbService = TrafficDbService(context)
         registerAlarmForDateTraffic()
 
@@ -200,7 +201,7 @@ object StatsTraffic {
         }
     }
 
-    fun getUnPostDateTraffic(uid: Int, date: String):List<Map<String, String>> {
+    fun getUnPostDateTraffic(uid: Int, date: String): List<Map<String, String>> {
         val list = trafficDbService!!.getDateTrafficByStatus(uid, date, 0)
         var map: Map<String, String>? = null
         var dateTraffic: DateTraffic? = null

@@ -21,7 +21,7 @@ abstract class Task<R> : Runnable {
 
     abstract fun call(): R
 
-    abstract fun result(r:R)
+    abstract fun result(r: R)
 
     class InnerHandler<R>(task: Task<R>) : Handler() {
         private val taskReference: SoftReference<Task<R>> = SoftReference(task)
@@ -29,7 +29,7 @@ abstract class Task<R> : Runnable {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             if (msg.what == 1) {
-                var task= taskReference.get()
+                var task = taskReference.get()
                 task?.result(msg.obj as R)
                 taskReference.clear()
             }

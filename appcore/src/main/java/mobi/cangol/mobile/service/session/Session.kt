@@ -5,15 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.StrictMode
-
-import org.json.JSONArray
-import org.json.JSONObject
-
-import java.io.File
-import java.io.Serializable
-import java.util.HashMap
-import java.util.concurrent.ConcurrentHashMap
-
 import mobi.cangol.mobile.CoreApplication
 import mobi.cangol.mobile.logging.Log
 import mobi.cangol.mobile.service.AppService
@@ -21,6 +12,11 @@ import mobi.cangol.mobile.service.conf.ConfigService
 import mobi.cangol.mobile.utils.FileUtils
 import mobi.cangol.mobile.utils.Object2FileUtils
 import mobi.cangol.mobile.utils.StringUtils
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
+import java.io.Serializable
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Created by xuewu.wei on 2018/5/2.
@@ -230,7 +226,7 @@ class Session(context: Context, val name: String) {
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     fun refresh() {
         val oldPolicy = StrictMode.allowThreadDiskReads()
-        val map = shared!!.all as MutableMap<String,Any>
+        val map = shared!!.all as MutableMap<String, Any>
         StrictMode.setThreadPolicy(oldPolicy)
         mMap.putAll(map)
         mCoreApplication.post(Runnable { mMap.putAll(loadDiskMap()) })

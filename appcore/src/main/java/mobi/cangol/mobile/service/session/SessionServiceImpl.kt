@@ -4,19 +4,16 @@ import android.annotation.TargetApi
 import android.app.Application
 import android.content.Context
 import android.os.Build
-
-import org.json.JSONArray
-import org.json.JSONObject
-
-import java.io.Serializable
-import java.util.concurrent.ConcurrentHashMap
-
 import mobi.cangol.mobile.CoreApplication
 import mobi.cangol.mobile.logging.Log
 import mobi.cangol.mobile.service.AppService
 import mobi.cangol.mobile.service.Service
 import mobi.cangol.mobile.service.ServiceProperty
 import mobi.cangol.mobile.service.conf.ConfigService
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.Serializable
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Created by weixuewu on 15/10/24.

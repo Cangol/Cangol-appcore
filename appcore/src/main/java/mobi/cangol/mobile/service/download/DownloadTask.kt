@@ -19,15 +19,12 @@
 package mobi.cangol.mobile.service.download
 
 import android.os.Handler
-import android.os.Message
-
-import java.util.concurrent.Future
-
 import mobi.cangol.mobile.http.download.DownloadHttpClient
 import mobi.cangol.mobile.http.download.DownloadResponseHandler
 import mobi.cangol.mobile.service.PoolManager.Pool
+import java.util.concurrent.Future
 
-class DownloadTask  constructor(private val downloadResource: DownloadResource, pool: Pool, private val handler: Handler, safe: Boolean = true) {
+class DownloadTask constructor(private val downloadResource: DownloadResource, pool: Pool, private val handler: Handler, safe: Boolean = true) {
     private val downloadHttpClient: DownloadHttpClient
     private var future: Future<*>? = null
     var isRunning: Boolean = false

@@ -2,10 +2,8 @@ package mobi.cangol.mobile.utils
 
 import android.content.Context
 import android.os.Environment
-
-import java.io.File
-
 import mobi.cangol.mobile.logging.Log
+import java.io.File
 
 /**
  * 本应用数据清除管理器
@@ -19,14 +17,14 @@ object DataCleanManager {
     /**
      * 清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * * @param context
      */
-    fun cleanInternalCache(context: Context) {
+    @JvmStatic fun cleanInternalCache(context: Context) {
         deleteFilesByDirectory(context.cacheDir)
     }
 
     /**
      * 清除本应用所有数据库(/data/data/com.xxx.xxx/databases) * * @param context
      */
-    fun cleanDatabases(context: Context) {
+    @JvmStatic fun cleanDatabases(context: Context) {
         deleteFilesByDirectory(File(DATA_DATA + context.packageName + DATABASES))
     }
 
@@ -34,21 +32,21 @@ object DataCleanManager {
      * * 清除本应用SharedPreference(/data/data/com.xxx.xxx/shared_prefs) * * @param
      * context
      */
-    fun cleanSharedPreference(context: Context) {
+    @JvmStatic fun cleanSharedPreference(context: Context) {
         deleteFilesByDirectory(File(DATA_DATA + context.packageName + SHARED_PREFS))
     }
 
     /**
      * 按名字清除本应用数据库 * * @param context * @param dbName
      */
-    fun cleanDatabaseByName(context: Context, dbName: String) {
+    @JvmStatic fun cleanDatabaseByName(context: Context, dbName: String) {
         context.deleteDatabase(dbName)
     }
 
     /**
      * 清除/data/data/com.xxx.xxx/files下的内容 * * @param context
      */
-    fun cleanFiles(context: Context) {
+    @JvmStatic fun cleanFiles(context: Context) {
         deleteFilesByDirectory(context.filesDir)
     }
 
@@ -56,7 +54,7 @@ object DataCleanManager {
      * * 清除外部cache下的内容(/mnt/sdcard/android/data/com.xxx.xxx/cache) * * @param
      * context
      */
-    fun cleanExternalCache(context: Context) {
+    @JvmStatic fun cleanExternalCache(context: Context) {
         if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
             deleteFilesByDirectory(context.externalCacheDir)
         }
@@ -65,14 +63,14 @@ object DataCleanManager {
     /**
      * 清除自定义路径下的文件，使用需小心，请不要误删。而且只支持目录下的文件删除 * * @param filePath
      */
-    fun cleanCustomCache(filePath: String) {
+    @JvmStatic fun cleanCustomCache(filePath: String) {
         deleteFilesByDirectory(File(filePath))
     }
 
     /**
      * 清除本应用所有的数据 * * @param context * @param filepath
      */
-    fun cleanApplicationData(context: Context, vararg filepath: String) {
+    @JvmStatic fun cleanApplicationData(context: Context, vararg filepath: String) {
         cleanInternalCache(context)
         cleanExternalCache(context)
         cleanDatabases(context)
@@ -100,7 +98,7 @@ object DataCleanManager {
         }
     }
 
-    fun getFolderSize(file: File): Long {
+    @JvmStatic fun getFolderSize(file: File): Long {
         var size: Long = 0
         for (item in file.listFiles()) {
             if (!item.isDirectory) {
@@ -112,7 +110,7 @@ object DataCleanManager {
         return size
     }
 
-    fun getAllCacheSize(context: Context, vararg filepath: String): Long {
+    @JvmStatic fun getAllCacheSize(context: Context, vararg filepath: String): Long {
         var size: Long = 0
         size = size + getFolderSize(context.cacheDir)
         size = size + getFolderSize(context.externalCacheDir!!)

@@ -18,11 +18,8 @@ package mobi.cangol.mobile.utils
 
 import android.text.TextUtils
 import android.util.Log
-
 import java.text.Collator
-import java.util.ArrayList
-import java.util.Arrays
-import java.util.Locale
+import java.util.*
 
 /**
  * An object to convert Chinese character to its corresponding pinyin string. For characters with
@@ -230,24 +227,25 @@ class HanziToPinyin protected constructor(private val mHasChinaCollator: Boolean
 
         // Check if zh_CN collation data is available
         // Do self validation just once.
-        @JvmStatic fun getInstance():HanziToPinyin{
-                if (sInstance != null) {
+        @JvmStatic
+        fun getInstance(): HanziToPinyin {
+            if (sInstance != null) {
+                return sInstance!!
+            }
+            val locale = Collator.getAvailableLocales()
+            for (i in locale.indices) {
+                if (locale[i] == Locale.CHINA) {
+                    if (DEBUG) {
+                        Log.d(TAG, "Self validation. Result: " + doSelfValidation())
+                    }
+                    sInstance = HanziToPinyin(true)
                     return sInstance!!
                 }
-                val locale = Collator.getAvailableLocales()
-                for (i in locale.indices) {
-                    if (locale[i] == Locale.CHINA) {
-                        if (DEBUG) {
-                            Log.d(TAG, "Self validation. Result: " + doSelfValidation())
-                        }
-                        sInstance = HanziToPinyin(true)
-                        return sInstance!!
-                    }
-                }
-                Log.w(TAG, "There is no Chinese collator, HanziToPinyin is disabled")
-                sInstance = HanziToPinyin(false)
-                return sInstance!!
-       }
+            }
+            Log.w(TAG, "There is no Chinese collator, HanziToPinyin is disabled")
+            sInstance = HanziToPinyin(false)
+            return sInstance!!
+        }
 
         /**
          * Validate if our internal table has some wrong value.
@@ -273,7 +271,8 @@ class HanziToPinyin protected constructor(private val mHasChinaCollator: Boolean
             return true
         }
 
-        @JvmStatic fun getFullPinYin(source: String): String {
+        @JvmStatic
+        fun getFullPinYin(source: String): String {
             if (!Arrays.asList(*Collator.getAvailableLocales()).contains(
                             Locale.CHINA)) {
                 return source
@@ -293,7 +292,8 @@ class HanziToPinyin protected constructor(private val mHasChinaCollator: Boolean
             return result.toString()
         }
 
-        @JvmStatic fun getFirstPinYin(source: String): String {
+        @JvmStatic
+        fun getFirstPinYin(source: String): String {
             if (!Arrays.asList(*Collator.getAvailableLocales()).contains(
                             Locale.CHINA)) {
                 return source

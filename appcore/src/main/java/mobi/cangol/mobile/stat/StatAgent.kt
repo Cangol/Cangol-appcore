@@ -79,7 +79,7 @@ object StatAgent {
     }
 
     private fun init(context: CoreApplication) {
-        this.context=context
+        this.context = context
         sessionService = context.getAppService(AppService.SESSION_SERVICE) as SessionService
         analyticsService = context.getAppService(AppService.ANALYTICS_SERVICE) as AnalyticsService
         crashService = context.getAppService(AppService.CRASH_SERVICE) as CrashService
@@ -175,11 +175,12 @@ object StatAgent {
             return this
         }
 
-        operator  fun get(paramName: String): String? {
+        operator fun get(paramName: String): String? {
             return this.map[paramName]
         }
 
-        @JvmStatic fun build(): Map<String, String> {
+        @JvmStatic
+        fun build(): Map<String, String> {
             return HashMap(this.map)
         }
 
@@ -193,7 +194,8 @@ object StatAgent {
         }
 
 
-        @JvmStatic fun createAppView(view: String): Builder {
+        @JvmStatic
+        fun createAppView(view: String): Builder {
             val builder = Builder
             builder["view"] = view
             builder["action"] = "visit"
@@ -212,14 +214,15 @@ object StatAgent {
          * @param result 结果
          * @return
          */
-        @JvmStatic fun createEvent(user: String?, view: String?, action: String?, target: String?, result: Long?): Builder {
+        @JvmStatic
+        fun createEvent(user: String?, view: String?, action: String?, target: String?, result: Long?): Builder {
 
             val builder = Builder
-            builder["userId"] = user?:""
-            builder["view"] = view?:""
-            builder["action"] = action?:""
-            builder["target"] = target?:""
-            builder["result"] = result?.toString()?:""
+            builder["userId"] = user ?: ""
+            builder["view"] = view ?: ""
+            builder["action"] = action ?: ""
+            builder["target"] = target ?: ""
+            builder["result"] = result?.toString() ?: ""
             builder[TIMESTAMP] = TimeUtils.getCurrentTime()
             builder.type = Type.EVENT
             return builder
@@ -232,10 +235,11 @@ object StatAgent {
          * @param idleTime
          * @return
          */
-        @JvmStatic fun createTiming(view: String?, idleTime: Long?): Builder {
+        @JvmStatic
+        fun createTiming(view: String?, idleTime: Long?): Builder {
             val builder = Builder
-            builder["view"] = view?:""
-            builder["idleTime"] = idleTime?.toString()?:""
+            builder["view"] = view ?: ""
+            builder["idleTime"] = idleTime?.toString() ?: ""
             builder[TIMESTAMP] = TimeUtils.getCurrentTime()
             builder.type = Type.TIMING
             return builder
@@ -250,13 +254,14 @@ object StatAgent {
          * @param fatal    是否奔溃
          * @return
          */
-        @JvmStatic fun createException(error: String?, position: String?, content: String?, timestamp: String?, fatal: String?): Builder {
+        @JvmStatic
+        fun createException(error: String?, position: String?, content: String?, timestamp: String?, fatal: String?): Builder {
             val builder = Builder
-            builder["error"] = error?:""
-            builder["position"] = position?:""
-            builder["content"] = content?:""
-            builder[TIMESTAMP] = timestamp?:""
-            builder["fatal"] = fatal?:""
+            builder["error"] = error ?: ""
+            builder["position"] = position ?: ""
+            builder["content"] = content ?: ""
+            builder[TIMESTAMP] = timestamp ?: ""
+            builder["fatal"] = fatal ?: ""
             builder.type = Type.EXCEPTION
             return builder
 
@@ -270,11 +275,12 @@ object StatAgent {
          * @param isNew       是否新用户
          * @return
          */
-        @JvmStatic fun createLaunch(exitCode: String?, exitVersion: String?, isNew: Boolean?, launchTime: String?): Builder {
+        @JvmStatic
+        fun createLaunch(exitCode: String?, exitVersion: String?, isNew: Boolean?, launchTime: String?): Builder {
             val builder = Builder
-            builder["exitCode"] = exitCode?:""
-            builder["exitVersion"] = exitVersion?:""
-            builder["launchTime"] = launchTime?:""
+            builder["exitCode"] = exitCode ?: ""
+            builder["exitVersion"] = exitVersion ?: ""
+            builder["launchTime"] = launchTime ?: ""
             builder[TIMESTAMP] = TimeUtils.getCurrentTime()
             builder["isNew"] = if (isNew!!) "1" else "0"
             builder.type = Type.LAUNCHER
@@ -292,13 +298,14 @@ object StatAgent {
          * @param activityId
          * @return
          */
-        @JvmStatic fun createSession(sessionId: String?, beginSession: String?, sessionDuration: String?, endSession: String?, activityId: String?): Builder {
+        @JvmStatic
+        fun createSession(sessionId: String?, beginSession: String?, sessionDuration: String?, endSession: String?, activityId: String?): Builder {
             val builder = Builder
-            builder["sessionId"] = sessionId?:""
-            builder["beginSession"] = beginSession?:""
-            builder["sessionDuration"] = sessionDuration?:""
-            builder["endSession"] = endSession?:""
-            builder["activityId"] = activityId?:""
+            builder["sessionId"] = sessionId ?: ""
+            builder["beginSession"] = beginSession ?: ""
+            builder["sessionDuration"] = sessionDuration ?: ""
+            builder["endSession"] = endSession ?: ""
+            builder["activityId"] = activityId ?: ""
             builder[TIMESTAMP] = TimeUtils.getCurrentTime()
             builder.type = Type.SESSION
             return builder
@@ -311,7 +318,8 @@ object StatAgent {
          * @param map
          * @return
          */
-        @JvmStatic fun createTraffic(map: Map<String, String>): Builder {
+        @JvmStatic
+        fun createTraffic(map: Map<String, String>): Builder {
             val builder = Builder
             builder["date"] = map["date"]
             builder["totalRx"] = map["totalRx"]

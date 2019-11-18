@@ -21,7 +21,7 @@ package mobi.cangol.mobile.service.download
 import java.lang.ref.SoftReference
 
 class BaseViewHolder {
-    var tag: SoftReference<DownloadResource> ?= null
+    var tag: SoftReference<DownloadResource>? = null
 
     fun getTag(): DownloadResource? {
         return tag?.get()

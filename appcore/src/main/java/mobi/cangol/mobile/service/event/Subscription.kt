@@ -20,4 +20,4 @@ package mobi.cangol.mobile.service.event
 /**
  * Created by xuewu.wei on 2016/8/3.
  */
-class Subscription(var subscriber: Any,  var subscriberMethod: SubscriberMethod, var priority: Int)
+class Subscription(var subscriber: Any, var subscriberMethod: SubscriberMethod, var priority: Int)

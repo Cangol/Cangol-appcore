@@ -84,6 +84,7 @@ object DeviceInfo {
     fun getOS(): String {
         return "Android"
     }
+
     /**
      * 获取操作系统版本号
      *
@@ -93,6 +94,7 @@ object DeviceInfo {
     fun getOSVersion(): String {
         return Build.VERSION.RELEASE
     }
+
     /**
      * 获取设备型号
      *
@@ -102,6 +104,7 @@ object DeviceInfo {
     fun getDeviceModel(): String {
         return Build.MODEL
     }
+
     /**
      * 获取设备品牌
      *
@@ -111,6 +114,7 @@ object DeviceInfo {
     fun getDeviceBrand(): String {
         return Build.BRAND
     }
+
     /**
      * 获取设备信息
      *
@@ -180,6 +184,7 @@ object DeviceInfo {
         }
         return result
     }
+
     /**
      * 获取设备mem信息
      *
@@ -192,13 +197,13 @@ object DeviceInfo {
             val process = ProcessBuilder("/system/bin/cat", "/proc/meminfo").start()
             val bufferedReader = BufferedReader(InputStreamReader(process.inputStream, CHARSET))
             val sb = StringBuilder()
-            var end=false
+            var end = false
             while (!end) {
                 var data = bufferedReader.readLine()
-                end = if(data!=null){
+                end = if (data != null) {
                     sb.append("\n" + data)
                     false
-                }else{
+                } else {
                     true
                 }
             }
@@ -210,6 +215,7 @@ object DeviceInfo {
 
         return result
     }
+
     /**
      * 获取设备cpu信息
      *
@@ -231,6 +237,7 @@ object DeviceInfo {
         }
         return result
     }
+
     /**
      * 获取CPU架构
      *
@@ -430,6 +437,7 @@ object DeviceInfo {
 
         return provider
     }
+
     @JvmStatic
     fun getNetworkOperator(context: Context): String {
         var provider = ""
@@ -534,13 +542,13 @@ object DeviceInfo {
      */
     @JvmStatic
     fun getAppVersion(context: Context): String {
-        var result:String?=null
+        var result: String? = null
         try {
             result = context.packageManager.getPackageInfo(context.packageName, 0).versionName
         } catch (e: NameNotFoundException) {
             Log.e(e.message)
         }
-        return result?: UNKNOWN
+        return result ?: UNKNOWN
     }
 
     /**
@@ -576,7 +584,7 @@ object DeviceInfo {
         try {
             appInfo = context.packageManager.getApplicationInfo(
                     context.packageName, PackageManager.GET_META_DATA)
-            if(appInfo?.metaData != null)
+            if (appInfo?.metaData != null)
                 data = appInfo.metaData.get(key)
         } catch (e: NameNotFoundException) {
             Log.e(e.message)

@@ -25,9 +25,9 @@ import java.util.*
 
 class DownloadResource : Serializable {
     //下载的URL
-    var url: String?=null
+    var url: String? = null
     //下载的文件名
-    var fileName: String?=null
+    var fileName: String? = null
     //文件长度
     var fileLength: Long = 0
     //已完成长度
@@ -39,20 +39,20 @@ class DownloadResource : Serializable {
     //开始,暂停,安装,运行
     var status: Int = 0
     //本地文件更目录
-    var localPath: String?=null
+    var localPath: String? = null
     //异常说明
-    var exception: String?=null
+    var exception: String? = null
     //源文件地址
-    var sourceFile: String?=null
+    var sourceFile: String? = null
     //配置地址
-    var confFile: String?=null
+    var confFile: String? = null
     //下载对象 json 字符串
-    var `object`: String?=null
+    var `object`: String? = null
     //唯一标示
-    var key: String?=null
+    var key: String? = null
 
     @Transient
-    var downloadTask: DownloadTask?=null
+    var downloadTask: DownloadTask? = null
 
     @Transient
     protected var viewHolders: HashMap<Any, BaseViewHolder>? = HashMap()

@@ -19,14 +19,10 @@ package mobi.cangol.mobile.http.download
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-
-import java.io.IOException
-import java.io.InputStream
-import java.io.RandomAccessFile
-
 import mobi.cangol.mobile.logging.Log
 import okhttp3.Response
-import okhttp3.ResponseBody
+import java.io.IOException
+import java.io.RandomAccessFile
 
 open class DownloadResponseHandler {
     private var handler: Handler? = null
@@ -103,27 +99,27 @@ open class DownloadResponseHandler {
         //do nothings
     }
 
-     fun sendWaitMessage() {
+    fun sendWaitMessage() {
         sendMessage(obtainMessage(WAIT_MESSAGE, null))
     }
 
-     fun sendStartMessage(start: Long, length: Long) {
+    fun sendStartMessage(start: Long, length: Long) {
         sendMessage(obtainMessage(START_MESSAGE, arrayOf<Any>(start, length)))
     }
 
-     fun sendStopMessage(end: Long) {
+    fun sendStopMessage(end: Long) {
         sendMessage(obtainMessage(STOP_MESSAGE, arrayOf<Any>(end)))
     }
 
-     fun sendFinishMessage(end: Long) {
+    fun sendFinishMessage(end: Long) {
         sendMessage(obtainMessage(FINISH_MESSAGE, arrayOf<Any>(end)))
     }
 
-     fun sendProgressMessage(end: Long, progress: Int, speed: Int) {
+    fun sendProgressMessage(end: Long, progress: Int, speed: Int) {
         sendMessage(obtainMessage(PROGRESS_MESSAGE, arrayOf(end, progress, speed)))
     }
 
-     fun sendFailureMessage(e: Exception, responseBody: String) {
+    fun sendFailureMessage(e: Exception, responseBody: String) {
         sendMessage(obtainMessage(FAILURE_MESSAGE, arrayOf<Any>(e, responseBody)))
     }
 
@@ -142,11 +138,11 @@ open class DownloadResponseHandler {
                 var starTime = System.currentTimeMillis()
                 var startLength: Long = 0
                 var readCount = 0
-                var end=false
-                while (!Thread.currentThread().isInterrupted &&!end) {
+                var end = false
+                while (!Thread.currentThread().isInterrupted && !end) {
                     readCount = inputStream.read(block, 0, BUFF_SIZE)
-                    end = readCount ==-1
-                    if(!end){
+                    end = readCount == -1
+                    if (!end) {
                         threadfile.write(block, 0, readCount)
                         oldLength += readCount.toLong()
                         startLength += readCount.toLong()
@@ -256,14 +252,14 @@ open class DownloadResponseHandler {
     }
 
     companion object {
-        protected const  val TAG = "DownloadResponseHandler"
-        protected const  val WAIT_MESSAGE = 0
-        protected const  val START_MESSAGE = 1
-        protected const  val PROGRESS_MESSAGE = 2
-        protected const  val STOP_MESSAGE = 3
-        protected const  val FAILURE_MESSAGE = 4
-        protected const  val FINISH_MESSAGE = 5
-        private const  val BUFF_SIZE = 8192
-        private const  val DEBUG = false
+        protected const val TAG = "DownloadResponseHandler"
+        protected const val WAIT_MESSAGE = 0
+        protected const val START_MESSAGE = 1
+        protected const val PROGRESS_MESSAGE = 2
+        protected const val STOP_MESSAGE = 3
+        protected const val FAILURE_MESSAGE = 4
+        protected const val FINISH_MESSAGE = 5
+        private const val BUFF_SIZE = 8192
+        private const val DEBUG = false
     }
 }

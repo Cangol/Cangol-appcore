@@ -21,12 +21,9 @@ package mobi.cangol.mobile.http.polling
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-
-import java.io.IOException
-
 import mobi.cangol.mobile.logging.Log
 import okhttp3.Response
-import okhttp3.ResponseBody
+import java.io.IOException
 
 open class PollingResponseHandler {
     private var handler: Handler? = null
@@ -190,9 +187,9 @@ open class PollingResponseHandler {
     }
 
     companion object {
-        protected const  val START_MESSAGE = -1
-        protected const  val SUCCESS_MESSAGE = 0
-        protected const  val FAILURE_MESSAGE = 1
-        protected const  val FINISH_MESSAGE = 2
+        protected const val START_MESSAGE = -1
+        protected const val SUCCESS_MESSAGE = 0
+        protected const val FAILURE_MESSAGE = 1
+        protected const val FINISH_MESSAGE = 2
     }
 }

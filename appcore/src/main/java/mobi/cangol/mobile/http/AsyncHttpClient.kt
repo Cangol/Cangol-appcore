@@ -18,25 +18,13 @@
  */
 package mobi.cangol.mobile.http
 
-import org.json.JSONObject
-
-import java.io.File
-import java.lang.ref.WeakReference
-import java.util.HashMap
-import java.util.LinkedList
-import java.util.WeakHashMap
-import java.util.concurrent.Future
-
 import mobi.cangol.mobile.service.PoolManager
 import mobi.cangol.mobile.service.PoolManager.Pool
-import okhttp3.Call
-import okhttp3.FormBody
-import okhttp3.Headers
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.*
+import org.json.JSONObject
+import java.lang.ref.WeakReference
+import java.util.*
+import java.util.concurrent.Future
 
 /**
  * 异步http请求client
@@ -444,7 +432,8 @@ class AsyncHttpClient {
          * @param group
          * @return
          */
-        @JvmStatic fun build(group: String): AsyncHttpClient {
+        @JvmStatic
+        fun build(group: String): AsyncHttpClient {
             return AsyncHttpClient(group)
         }
 
@@ -455,7 +444,8 @@ class AsyncHttpClient {
          * @param client
          * @return
          */
-        @JvmStatic fun build(group: String, client: OkHttpClient): AsyncHttpClient {
+        @JvmStatic
+        fun build(group: String, client: OkHttpClient): AsyncHttpClient {
             return AsyncHttpClient(group, client)
         }
     }

@@ -55,6 +55,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
     fun setContext(context: Context) {
         this.mContext = context
     }
+
     fun getDownloadDir(): File {
         return mDownloadDir!!
     }
@@ -65,6 +66,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
             directory.mkdirs()
         }
     }
+
     fun setPool(pool: Pool) {
         this.mPool = pool
     }

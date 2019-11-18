@@ -34,26 +34,29 @@ object LocationUtils {
      *
      * @return
      */
-    val utcTime: Long
-        get() {
-            val cal = Calendar.getInstance()
-            cal.timeZone = TimeZone.getTimeZone("gmt")
-            return cal.timeInMillis
-        }
+    @JvmStatic
+    fun utcTime(): Long {
+        val cal = Calendar.getInstance()
+        cal.timeZone = TimeZone.getTimeZone("gmt")
+        return cal.timeInMillis
+    }
 
     /**
      * 获取本地时间
      *
      * @return
      */
-    val localTime: Long
-        get() = Calendar.getInstance().timeInMillis
+    @JvmStatic
+    fun localTime(): Long {
+        return Calendar.getInstance().timeInMillis
+    }
 
     /**
      * 获取偏移值
      *
      * @return
      */
+    @JvmStatic
     fun adjustLoction(lng: Double, lat: Double): DoubleArray {
         val offsetString = getOffset(lat, lng) ?: return doubleArrayOf(lng, lat)
         val index = offsetString.indexOf(',')
@@ -84,6 +87,7 @@ object LocationUtils {
      * @param lng
      * @return
      */
+    @JvmStatic
     fun getOffset(lat: Double, lng: Double): String? {
         val url = String.format("http://www.mapdigit.com/guidebeemap/offsetinchina.php?lng=%f&lat=%f", lat, lng)
         var response: String? = null
@@ -114,6 +118,7 @@ object LocationUtils {
      * @param zoom
      * @return
      */
+    @JvmStatic
     fun lonToPixel(lng: Double, zoom: Int): Double {
         return (lng + 180) * (256L shl zoom) / 360
     }
@@ -125,6 +130,7 @@ object LocationUtils {
      * @param zoom
      * @return
      */
+    @JvmStatic
     fun pixelToLon(pixelX: Double, zoom: Int): Double {
         return pixelX * 360 / (256L shl zoom) - 180
     }
@@ -136,6 +142,7 @@ object LocationUtils {
      * @param zoom
      * @return
      */
+    @JvmStatic
     fun latToPixel(lat: Double, zoom: Int): Double {
         val siny = Math.sin(lat * Math.PI / 180)
         val y = Math.log((1 + siny) / (1 - siny))
@@ -149,6 +156,7 @@ object LocationUtils {
      * @param zoom
      * @return
      */
+    @JvmStatic
     fun pixelToLat(pixelY: Double, zoom: Int): Double {
         val y = 2.0 * Math.PI * (1 - pixelY / (128 shl zoom))
         val z = Math.pow(Math.E, y)
@@ -164,6 +172,7 @@ object LocationUtils {
      * @param lng
      * @return
      */
+    @JvmStatic
     fun getAddressByBaidu(lat: Double, lng: Double, ak: String): String? {
         val url = String
                 .format("http://api.map.baidu.com/geocoder/v2/?ak=%s&callback=renderReverse&location=%f,%f&output=json&pois=0",
@@ -201,6 +210,7 @@ object LocationUtils {
      * @param lng
      * @return
      */
+    @JvmStatic
     fun getAddressByGoogle(lat: Double, lng: Double): String? {
         val url = String
                 .format("http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&language=zh-cn&sensor=true",

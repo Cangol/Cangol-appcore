@@ -17,13 +17,10 @@
 package mobi.cangol.mobile.http.download
 
 import android.util.Log
-
-import java.io.IOException
-import java.io.InterruptedIOException
-
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
+import java.io.IOException
+import java.io.InterruptedIOException
 
 class DownloadThread(private val context: DownloadHttpClient, private val client: OkHttpClient, private val request: Request, private val responseHandler: DownloadResponseHandler?, private val saveFile: String) : Runnable {
     private var executionCount: Int = 0

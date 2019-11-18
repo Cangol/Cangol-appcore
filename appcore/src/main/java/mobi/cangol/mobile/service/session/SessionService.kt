@@ -1,11 +1,9 @@
 package mobi.cangol.mobile.service.session
 
+import mobi.cangol.mobile.service.AppService
 import org.json.JSONArray
 import org.json.JSONObject
-
 import java.io.Serializable
-
-import mobi.cangol.mobile.service.AppService
 
 /**
  * @author Cangol

@@ -19,21 +19,16 @@
 package mobi.cangol.mobile.http.polling
 
 import android.util.Log
-
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.util.LinkedList
-import java.util.WeakHashMap
-import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit
-
 import mobi.cangol.mobile.service.PoolManager
-import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.Response
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.util.*
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 
 class PollingHttpClient
 /**
@@ -209,7 +204,8 @@ class PollingHttpClient
         private const val DEFAULT_WRITE_TIMEOUT = 30 * 1000
         private const val DEFAULT_MAX = 3
 
-        @JvmStatic fun build(group: String): PollingHttpClient {
+        @JvmStatic
+        fun build(group: String): PollingHttpClient {
             return PollingHttpClient(group)
         }
     }

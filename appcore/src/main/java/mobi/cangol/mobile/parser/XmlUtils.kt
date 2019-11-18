@@ -137,7 +137,7 @@ object XmlUtils {
     @Throws(XMLParserException::class)
     @JvmStatic
     fun <T> parserToObject(c: Class<T>, inputSteam: InputStream, useAnnotation: Boolean): T? {
-        return parserToObject(c,  DocumentParser.parserDom(inputSteam), useAnnotation)
+        return parserToObject(c, DocumentParser.parserDom(inputSteam), useAnnotation)
     }
 
     /**
