@@ -28,7 +28,7 @@ import java.io.IOException
 /**
  * Created by weixuewu on 15/11/11.
  */
-abstract class SocketHandler {
+abstract class  SocketHandler {
     private var handler: InternalHandler? = null
     private var isInterrupted = false
     private var readLocker = Any()

@@ -36,7 +36,7 @@ import java.util.concurrent.Future
  *
  * @author Cangol
  */
-open class SoapClient {
+class SoapClient {
     private val requestMap: MutableMap<Context, MutableList<WeakReference<Future<*>>>>
     private val envelope: SoapSerializationEnvelope
     private val threadPool: PoolManager.Pool = PoolManager.buildPool("SoapRequest", 3)

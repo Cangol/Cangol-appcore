@@ -135,7 +135,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
         try {
             val db = mDatabaseHelper.readableDatabase
             val queryBuilder = QueryBuilder(mClazz)
-            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz)!!, paramID, "=")
+            queryBuilder.addQuery(DatabaseUtils.getIdColumnName(mClazz)!!, paramID as Any, "=")
             val cursor = query(db, queryBuilder)
             if (cursor.count > 0 && cursor.moveToFirst()) {
                 obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns)

@@ -36,7 +36,7 @@ abstract class CoreSQLiteOpenHelper {
      *
      * @return
      */
-    protected abstract fun getDataBaseName(): String
+    abstract fun getDataBaseName(): String
 
     /**
      * 获得数据库版本，值至少为1。 当数据库结构发生改变的时候，请将此值加1，系统会在初始化时自动调用
@@ -44,7 +44,7 @@ abstract class CoreSQLiteOpenHelper {
      *
      * @return
      */
-    protected abstract fun getDataBaseVersion(): Int
+    abstract fun getDataBaseVersion(): Int
 
     /**
      * 获取读写数据库
