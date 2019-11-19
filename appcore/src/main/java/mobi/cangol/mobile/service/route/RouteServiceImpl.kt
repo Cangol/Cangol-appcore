@@ -89,22 +89,20 @@ class RouteServiceImpl : RouteService {
     }
 
     fun handleNavigation(clazz: Class<*>, bundle: Bundle, context: Context) {
-        if (clazz.superclass == Activity::class.java) {
-            this.mOnNavigation!!.toActivity(navigationActivity(clazz, bundle, context))
-        } else if (clazz.superclass == Fragment::class.java) {
-            this.mOnNavigation!!.toFragment(navigationFragment(clazz, bundle, context))
-        } else {
-            Log.i(TAG, " not navigation")
+        when {
+            clazz.superclass == Activity::class.java -> this.mOnNavigation!!.toActivity(navigationActivity(clazz, bundle, context))
+            clazz.superclass == Fragment::class.java -> this.mOnNavigation!!.toFragment(navigationFragment(clazz, bundle, context))
+            else -> Log.i(TAG, " not navigation")
         }
     }
 
-    fun navigationActivity(clazz: Class<*>, bundle: Bundle, context: Context): Intent {
+    private fun navigationActivity(clazz: Class<*>, bundle: Bundle, context: Context): Intent {
         val intent = Intent(context, clazz)
         intent.putExtras(bundle)
         return intent
     }
 
-    fun navigationFragment(clazz: Class<*>, bundle: Bundle, context: Context): Fragment {
+    private fun navigationFragment(clazz: Class<*>, bundle: Bundle, context: Context): Fragment {
         return Fragment.instantiate(context, clazz.name, bundle)
     }
 

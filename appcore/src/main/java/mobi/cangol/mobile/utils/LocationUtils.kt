@@ -25,6 +25,10 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 import java.util.*
+import kotlin.math.asin
+import kotlin.math.ln
+import kotlin.math.pow
+import kotlin.math.sin
 
 
 object LocationUtils {
@@ -35,7 +39,7 @@ object LocationUtils {
      * @return
      */
     @JvmStatic
-    fun utcTime(): Long {
+    fun getUtcTime(): Long {
         val cal = Calendar.getInstance()
         cal.timeZone = TimeZone.getTimeZone("gmt")
         return cal.timeInMillis
@@ -47,7 +51,7 @@ object LocationUtils {
      * @return
      */
     @JvmStatic
-    fun localTime(): Long {
+    fun getLocalTime(): Long {
         return Calendar.getInstance().timeInMillis
     }
 
@@ -97,15 +101,15 @@ object LocationUtils {
                 .get()
                 .build()
         var httpResponse: Response? = null
-        try {
+        return try {
             httpResponse = httpClient.newCall(request).execute()
             if (httpResponse!!.isSuccessful) {
                 response = httpResponse.body()!!.string()
             }
-            return response
+            response
         } catch (e: IOException) {
             Log.d(e.message)
-            return null
+            null
         } finally {
             httpResponse?.close()
         }
@@ -144,8 +148,8 @@ object LocationUtils {
      */
     @JvmStatic
     fun latToPixel(lat: Double, zoom: Int): Double {
-        val siny = Math.sin(lat * Math.PI / 180)
-        val y = Math.log((1 + siny) / (1 - siny))
+        val siny = sin(lat * Math.PI / 180)
+        val y = ln((1 + siny) / (1 - siny))
         return (128 shl zoom) * (1 - y / (2 * Math.PI))
     }
 
@@ -159,9 +163,9 @@ object LocationUtils {
     @JvmStatic
     fun pixelToLat(pixelY: Double, zoom: Int): Double {
         val y = 2.0 * Math.PI * (1 - pixelY / (128 shl zoom))
-        val z = Math.pow(Math.E, y)
+        val z = Math.E.pow(y)
         val siny = (z - 1) / (z + 1)
-        return Math.asin(siny) * 180 / Math.PI
+        return asin(siny) * 180 / Math.PI
     }
 
     /**
@@ -222,17 +226,17 @@ object LocationUtils {
                 .get()
                 .build()
         var httpResponse: Response? = null
-        try {
+        return try {
             httpResponse = httpClient.newCall(request).execute()
             if (httpResponse!!.isSuccessful) {
                 val response = httpResponse.body()!!.string()
                 val json = JSONObject(response)
                 address = json.getJSONArray("results").getJSONObject(0).getString("formatted_address")
             }
-            return address
+            address
         } catch (e: Exception) {
             Log.d(e.message)
-            return null
+            null
         } finally {
             httpResponse?.close()
         }

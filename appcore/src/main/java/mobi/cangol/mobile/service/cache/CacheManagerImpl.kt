@@ -139,7 +139,7 @@ internal class CacheManagerImpl : CacheManager {
         }
     }
 
-    override fun getContent(context: String, id: String, cacheLoader: CacheLoader) {
+    override fun getContent(context: String, id: String, cacheLoader: CacheLoader?) {
         if (mDebug)
             Log.d(TAG, "getContent context=$context,id=$id,cacheLoader=$cacheLoader")
         cacheLoader?.loading()
@@ -161,7 +161,7 @@ internal class CacheManagerImpl : CacheManager {
                         if (cacheObject.isExpired) {
                             Log.e(TAG, "expired:" + cacheObject.expired + ",it's expired & removed ")
                             removeContent(context, id)
-                            cacheLoader?.returnContent(null!!)
+                            cacheLoader?.returnContent(null)
                         } else {
                             addContentToMem(context, id, cacheObject.getObject(), cacheObject.period)
                             cacheLoader?.returnContent(cacheObject.getObject()!!)
@@ -175,7 +175,7 @@ internal class CacheManagerImpl : CacheManager {
             if (cacheObject.isExpired) {
                 Log.e(TAG, "expired:" + cacheObject.expired + ",it's expired & removed ")
                 removeContent(context, id)
-                cacheLoader?.returnContent(null!!)
+                cacheLoader?.returnContent(null)
             } else {
                 cacheLoader?.returnContent(cacheObject.getObject()!!)
             }

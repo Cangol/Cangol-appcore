@@ -66,20 +66,20 @@ internal class StatusServiceImpl : StatusService {
                     && State.CONNECTED == mobileState) {
                 // 手机网络连接成功
                 if (mDebug) Log.d(TAG, "手机网络连接成功 ")
-                if (!mListeners.isEmpty()) {
+                if (mListeners.isNotEmpty()) {
                     notifyNetworkTo3G(context)
                 }
             } else if (wifiState != null && mobileState != null && State.CONNECTED != wifiState
                     && State.CONNECTED != mobileState) {
                 // 手机没有任何的网络
                 if (mDebug) Log.d(TAG, "手机没有任何的网络,网络中断 ")
-                if (!mListeners.isEmpty()) {
+                if (mListeners.isNotEmpty()) {
                     notifyNetworkDisconnect(context)
                 }
             } else if (wifiState != null && State.CONNECTED == wifiState) {
                 // 无线网络连接成功
                 if (mDebug) Log.d(TAG, " 无线网络连接成功")
-                if (!mListeners.isEmpty()) {
+                if (mListeners.isNotEmpty()) {
                     notifyNetworkConnect(context)
                 }
             }
@@ -200,7 +200,6 @@ internal class StatusServiceImpl : StatusService {
     }
 
     override fun registerStatusListener(statusListener: StatusListener) {
-        requireNotNull(statusListener) { "The StatusListener is null." }
         synchronized(mListeners) {
             check(!mListeners.contains(statusListener)) { "StatusListener $statusListener is already registered." }
             mListeners.add(statusListener)
@@ -209,7 +208,6 @@ internal class StatusServiceImpl : StatusService {
     }
 
     override fun unregisterStatusListener(statusListener: StatusListener) {
-        requireNotNull(statusListener) { "The StatusListener is null." }
         synchronized(mListeners) {
             if (mListeners.contains(statusListener)) {
                 mListeners.remove(statusListener)
@@ -227,47 +225,43 @@ internal class StatusServiceImpl : StatusService {
 
     private fun notifyNetworkDisconnect(context: Context) {
         for (listener in mListeners) {
-            if (listener != null) {
-                listener.networkDisconnect(context)
-            } else {
-                Log.e("null=$listener")
-            }
+            listener.networkDisconnect(context)
         }
     }
 
     private fun notifyNetworkTo3G(context: Context) {
         for (listener in mListeners) {
-            listener?.networkTo3G(context)
+            listener.networkTo3G(context)
         }
     }
 
     private fun notifyStorageRemove(context: Context) {
         for (listener in mListeners) {
-            listener?.storageRemove(context)
+            listener.storageRemove(context)
         }
     }
 
     private fun notifyStorageMount(context: Context) {
         for (listener in mListeners) {
-            listener?.storageMount(context)
+            listener.storageMount(context)
         }
     }
 
     private fun notifyCallStateIdle() {
         for (listener in mListeners) {
-            listener?.callStateIdle()
+            listener.callStateIdle()
         }
     }
 
     private fun notifyCallStateOffhook() {
         for (listener in mListeners) {
-            listener?.callStateOffhook()
+            listener.callStateOffhook()
         }
     }
 
     private fun notifyCallStateRinging() {
         for (listener in mListeners) {
-            listener?.callStateRinging()
+            listener.callStateRinging()
         }
     }
 

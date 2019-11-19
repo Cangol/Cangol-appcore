@@ -20,7 +20,6 @@ package mobi.cangol.mobile
 
 import android.app.Activity
 import android.app.Application
-import android.os.Build
 import android.os.StrictMode
 import mobi.cangol.mobile.logging.Log
 import mobi.cangol.mobile.service.AppService
@@ -46,14 +45,14 @@ open class CoreApplication : Application() {
     private var mStrictMode = false
     private var mAsyncInit = false
     private var mAppServiceManager: AppServiceManager? = null
-    private val mSharePool=PoolManager.getPool("share")
+    private val mSharePool = PoolManager.getPool("share")
     private var mModuleManager: ModuleManager = ModuleManager()
     private val mActivityManager: MutableList<WeakReference<Activity>> = ArrayList()
     override fun onCreate() {
         super.onCreate()
         mModuleManager.setApplication(this)
         if (DeviceInfo.isAppProcess(this)) {
-            if (mStrictMode && Build.VERSION.SDK_INT >= 14) {
+            if (mStrictMode) {
                 StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())
                 StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
             }
@@ -173,9 +172,7 @@ open class CoreApplication : Application() {
      * @return
      */
     fun getAppService(name: String): AppService? {
-        return if (mAppServiceManager != null) {
-            mAppServiceManager!!.getAppService(name)
-        } else null
+        return mAppServiceManager?.getAppService(name)
     }
 
     /**
@@ -186,6 +183,7 @@ open class CoreApplication : Application() {
     fun getSharePool(): PoolManager.Pool {
         return mSharePool
     }
+
     /**
      * 提交一个后台线程任务
      *
@@ -287,9 +285,7 @@ open class CoreApplication : Application() {
         mModuleManager.clear()
         getSession().saveString(Constants.KEY_EXIT_CODE, "0")
         getSession().saveString(Constants.KEY_EXIT_VERSION, DeviceInfo.getAppVersion(this))
-        if (mAppServiceManager != null) {
-            mAppServiceManager!!.destroy()
-        }
+        mAppServiceManager?.destroy()
         PoolManager.closeAll()
         // 0 正常推退出
         exitProcess(0)

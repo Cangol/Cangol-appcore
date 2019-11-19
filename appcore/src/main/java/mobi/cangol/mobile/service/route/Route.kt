@@ -18,13 +18,10 @@
 package mobi.cangol.mobile.service.route
 
 
-import java.lang.annotation.Documented
 import java.lang.annotation.Inherited
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
-@Retention(RetentionPolicy.RUNTIME)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FILE)
-@Documented
+@MustBeDocumented
 @Inherited
 annotation class Route(val value: String = "", val path: String)

@@ -89,7 +89,6 @@ internal class ConfigServiceImpl : ConfigService {
         return mAppDir
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     override fun setCustomAppDir(path: String) {
         if (mDebug) Log.d(TAG, "setCustomAppDir $path")
         val oldPolicy = StrictMode.allowThreadDiskWrites()

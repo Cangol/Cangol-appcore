@@ -41,6 +41,7 @@ import java.util.*
  * @author Cangol
  */
 @Service("LocationService")
+@SuppressLint("MissingPermission")
 internal class LocationServiceImpl : LocationService {
     private var mDebug = false
     private var mBetterTime = 1000 * 60 * 2
@@ -54,7 +55,6 @@ internal class LocationServiceImpl : LocationService {
     @Volatile
     private var mServiceHandler: ServiceHandler? = null
 
-    @SuppressLint("MissingPermission")
     override fun onCreate(context: Application) {
         mServiceHandler = ServiceHandler(Looper.getMainLooper())
         mLocationManager = context.applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -110,7 +110,7 @@ internal class LocationServiceImpl : LocationService {
         } else {
             Log.e(TAG, "requestLocation  NETWORK_PROVIDER is disabled ")
         }
-        if (!list.isEmpty()) {
+        if (list.isNotEmpty()) {
             Log.e(TAG, "requestLocation need Permission $list")
             val permissions = arrayOfNulls<String>(list.size)
             list.toTypedArray()
@@ -120,7 +120,6 @@ internal class LocationServiceImpl : LocationService {
         return true
     }
 
-    @SuppressLint("MissingPermission")
     override fun requestLocationUpdates(activity: Activity) {
 
         if (!checkLocationPermission(activity)) {
@@ -190,7 +189,6 @@ internal class LocationServiceImpl : LocationService {
         }
     }
 
-    @SuppressLint("MissingPermission")
     override fun removeLocationUpdates() {
         if (mLocationListener != null && !mIsRemove) {
             mLocationManager!!.removeUpdates(mLocationListener)
@@ -204,9 +202,6 @@ internal class LocationServiceImpl : LocationService {
     }
 
     override fun isBetterLocation(location: Location): Boolean {
-        if (null == location) {
-            return false
-        }
         val timeDelta = System.currentTimeMillis() - location.time
         Log.d(TAG, "location time :" + TimeUtils.formatYmdHms(location.time))
         return timeDelta < mBetterTime
@@ -245,8 +240,8 @@ internal class LocationServiceImpl : LocationService {
     }
 
     companion object {
-        private val TAG = "LocationService"
-        private val FLAG_TIMEOUT = 1
-        private val FLAG_BETTER_LOCATION = 2
+        private const val TAG = "LocationService"
+        private const val FLAG_TIMEOUT = 1
+        private const val FLAG_BETTER_LOCATION = 2
     }
 }

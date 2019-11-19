@@ -68,7 +68,7 @@ internal class UpgradeServiceImpl : UpgradeService {
     }
 
     override fun onDestroy() {
-        if (debug) Log.d("onDestory")
+        if (debug) Log.d("onDestroy")
         if (mDownloadHttpClient != null)
             mDownloadHttpClient!!.cancelAll()
         val notificationManager = mContext!!.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -21,7 +21,7 @@ interface CacheManager : AppService {
      * @param id          缓存标示
      * @param cacheLoader
      */
-    fun getContent(context: String, id: String, cacheLoader: CacheLoader)
+    fun getContent(context: String, id: String, cacheLoader: CacheLoader?)
 
     /**
      * 判断是否存在缓存对象

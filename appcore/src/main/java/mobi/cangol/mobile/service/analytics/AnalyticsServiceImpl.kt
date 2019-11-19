@@ -18,10 +18,8 @@
  */
 package mobi.cangol.mobile.service.analytics
 
-import android.annotation.TargetApi
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import android.os.StrictMode
 import android.text.TextUtils
 import mobi.cangol.mobile.core.BuildConfig
@@ -152,8 +150,7 @@ internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
      *
      * @return
      */
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    protected fun initCommonParams(): HashMap<String, String> {
+    private fun initCommonParams(): HashMap<String, String> {
         val oldPolicy = StrictMode.allowThreadDiskReads()
         val params = HashMap<String, String>()
         params["osVersion"] = DeviceInfo.getOSVersion()
@@ -195,8 +192,7 @@ internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
      *
      * @return
      */
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    fun initDeviceParams(): HashMap<String, String> {
+    private fun initDeviceParams(): HashMap<String, String> {
         val oldPolicy = StrictMode.allowThreadDiskReads()
         val params = HashMap<String, String>()
         params["os"] = DeviceInfo.getOS()

@@ -18,9 +18,7 @@
  */
 package mobi.cangol.mobile.service.crash
 
-import android.annotation.TargetApi
 import android.app.Application
-import android.os.Build
 import android.os.StrictMode
 import android.text.TextUtils
 import mobi.cangol.mobile.CoreApplication
@@ -44,6 +42,7 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.lang.Thread.UncaughtExceptionHandler
 import java.util.*
+import kotlin.system.exitProcess
 
 /**
  * @author Cangol
@@ -60,7 +59,6 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
     private var mParams: Map<String, String>? = null
     private var mCrashDir: String? = null
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     override fun onCreate(context: Application) {
         mApplication = context as CoreApplication
         mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
@@ -76,8 +74,8 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
 
     override fun init(serviceProperty: ServiceProperty) {
         this.mServiceProperty = serviceProperty
-        PoolManager.buildPool(mServiceProperty.getString(CrashService.Companion.CRASHSERVICE_THREADPOOL_NAME)!!, mServiceProperty.getInt(CrashService.Companion.CRASHSERVICE_THREAD_MAX))
-        asyncHttpClient = AsyncHttpClient.build(mServiceProperty.getString(CrashService.Companion.CRASHSERVICE_THREADPOOL_NAME)!!)
+        PoolManager.buildPool(mServiceProperty.getString(CrashService.CRASHSERVICE_THREADPOOL_NAME)!!, mServiceProperty.getInt(CrashService.CRASHSERVICE_THREAD_MAX))
+        asyncHttpClient = AsyncHttpClient.build(mServiceProperty.getString(CrashService.CRASHSERVICE_THREADPOOL_NAME)!!)
     }
 
     override fun getName(): String {
@@ -98,14 +96,14 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
 
     override fun defaultServiceProperty(): ServiceProperty {
         val sp = ServiceProperty(TAG)
-        sp.putString(CrashService.Companion.CRASHSERVICE_THREADPOOL_NAME, TAG)
-        sp.putInt(CrashService.Companion.CRASHSERVICE_THREAD_MAX, 1)
-        sp.putString(CrashService.Companion.CRASHSERVICE_REPORT_URL, "")
-        sp.putString(CrashService.Companion.CRASHSERVICE_REPORT_ERROR, "error")
-        sp.putString(CrashService.Companion.CRASHSERVICE_REPORT_POSITION, "position")
-        sp.putString(CrashService.Companion.CRASHSERVICE_REPORT_TIMESTAMP, "timestamp")
-        sp.putString(CrashService.Companion.CRASHSERVICE_REPORT_CONTEXT, "content")
-        sp.putString(CrashService.Companion.CRASHSERVICE_REPORT_FATAL, "fatal")
+        sp.putString(CrashService.CRASHSERVICE_THREADPOOL_NAME, TAG)
+        sp.putInt(CrashService.CRASHSERVICE_THREAD_MAX, 1)
+        sp.putString(CrashService.CRASHSERVICE_REPORT_URL, "")
+        sp.putString(CrashService.CRASHSERVICE_REPORT_ERROR, "error")
+        sp.putString(CrashService.CRASHSERVICE_REPORT_POSITION, "position")
+        sp.putString(CrashService.CRASHSERVICE_REPORT_TIMESTAMP, "timestamp")
+        sp.putString(CrashService.CRASHSERVICE_REPORT_CONTEXT, "content")
+        sp.putString(CrashService.CRASHSERVICE_REPORT_FATAL, "fatal")
         return sp
     }
 
@@ -120,11 +118,11 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         }
 
         val params = if (this.mParams == null) RequestParams() else RequestParams(this.mParams!!)
-        params.put(mServiceProperty!!.getString(CrashService.Companion.CRASHSERVICE_REPORT_ERROR), report.error)
-        params.put(mServiceProperty!!.getString(CrashService.Companion.CRASHSERVICE_REPORT_POSITION), report.position)
-        params.put(mServiceProperty!!.getString(CrashService.Companion.CRASHSERVICE_REPORT_CONTEXT), report.context)
-        params.put(mServiceProperty!!.getString(CrashService.Companion.CRASHSERVICE_REPORT_TIMESTAMP), report.timestamp)
-        params.put(mServiceProperty!!.getString(CrashService.Companion.CRASHSERVICE_REPORT_FATAL), report.fatal)
+        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_ERROR), report.error)
+        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_POSITION), report.position)
+        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_CONTEXT), report.context)
+        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_TIMESTAMP), report.timestamp)
+        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_FATAL), report.fatal)
         asyncHttpClient!!.post(mApplication!!, mUrl!!, params, object : AsyncHttpResponseHandler() {
 
             override fun onStart() {
@@ -143,7 +141,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         })
     }
 
-    protected fun throwableToString(ex: Throwable): String {
+    private fun throwableToString(ex: Throwable): String {
         val writer = StringWriter()
         val pw = PrintWriter(writer)
         ex.printStackTrace(pw)
@@ -151,7 +149,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         return writer.toString()
     }
 
-    protected fun makeReportError(ex: Throwable): ReportError {
+    private fun makeReportError(ex: Throwable): ReportError {
         val timestamp = TimeUtils.getCurrentTime()
         val filename = timestamp.replace(" ".toRegex(), "").replace("-".toRegex(), "").replace(":".toRegex(), "")
         val error = ReportError()
@@ -176,11 +174,11 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         mSessionService!!.saveString("exitCode", "1")
         mSessionService!!.saveString("exitVersion", DeviceInfo.getAppVersion(mApplication!!))
         //0 正常推退出  1异常退出
-        System.exit(0)
+        exitProcess(0)
     }
 
     override fun report(crashReportListener: CrashReportListener) {
-        mApplication!!.post(object : Task<List<ReportError>>() {
+        mApplication?.post(object : Task<List<ReportError>>() {
             override fun call(): List<ReportError> {
                 val files = FileUtils.searchBySuffix(File(mCrashDir), null, CRASH)
 
@@ -228,7 +226,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
     }
 
     companion object {
-        private val TAG = "CrashService"
-        private val CRASH = ".crash"
+        private const val TAG = "CrashService"
+        private const val CRASH = ".crash"
     }
 }
