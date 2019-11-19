@@ -99,7 +99,7 @@ class DownloadTask constructor(private val downloadResource: DownloadResource, p
         this.downloadNotification = downloadNotification
     }
 
-    protected fun exec(downloadResource: DownloadResource, responseHandler: DownloadResponseHandler): Future<*> {
+    private fun exec(downloadResource: DownloadResource, responseHandler: DownloadResponseHandler): Future<*> {
         return downloadHttpClient.send(downloadResource.key!!, downloadResource.url!!, responseHandler, downloadResource.completeSize, downloadResource.sourceFile!!)
     }
 

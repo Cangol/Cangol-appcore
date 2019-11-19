@@ -19,14 +19,20 @@
 package mobi.cangol.mobile.soap
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
+import mobi.cangol.mobile.Task
 import mobi.cangol.mobile.logging.Log
 import mobi.cangol.mobile.service.PoolManager
+import mobi.cangol.mobile.socket.SocketClient
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapSerializationEnvelope
 import org.ksoap2.transport.HttpTransportSE
 import org.kxml2.kdom.Element
 import org.kxml2.kdom.Node
+import java.lang.ref.SoftReference
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Future
@@ -37,13 +43,11 @@ import java.util.concurrent.Future
  * @author Cangol
  */
 class SoapClient {
-    private val requestMap: MutableMap<Context, MutableList<WeakReference<Future<*>>>>
-    private val envelope: SoapSerializationEnvelope
+    private val requestMap= mutableMapOf<Context, MutableList<WeakReference<Future<*>>>>()
+    private val envelope=SoapSerializationEnvelope(SoapEnvelope.VER12)
     private val threadPool: PoolManager.Pool = PoolManager.buildPool("SoapRequest", 3)
 
     init {
-        requestMap = WeakHashMap()
-        envelope = SoapSerializationEnvelope(SoapEnvelope.VER12)
         envelope.dotNet = true
     }
 
@@ -138,7 +142,7 @@ class SoapClient {
      * @param responseHandler
      * @param context
      */
-    protected fun sendRequest(ht: HttpTransportSE, envelope: SoapSerializationEnvelope,
+    private fun sendRequest(ht: HttpTransportSE, envelope: SoapSerializationEnvelope,
                               namespace: String, responseHandler: SoapResponseHandler, context: Context?) {
 
         val request = threadPool.submit(SoapRequest(ht, envelope, namespace, responseHandler))

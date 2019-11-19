@@ -20,15 +20,15 @@ package mobi.cangol.mobile.socket
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.IOException
+import java.lang.ref.WeakReference
 
 /**
  * Created by weixuewu on 15/11/11.
  */
-abstract class  SocketHandler {
+abstract class SocketHandler {
     private var handler: InternalHandler? = null
     private var isInterrupted = false
     private var readLocker = Any()
@@ -44,17 +44,21 @@ abstract class  SocketHandler {
 
     init {
         if (Looper.myLooper() != null) {
-            handler = object : InternalHandler() {
-                override fun handleMessage(msg: Message) {
-                    this@SocketHandler.handleMessage(msg)
-                }
-            }
+            handler = InternalHandler(this)
         }
     }
 
-    private open class InternalHandler : Handler(Looper.getMainLooper())
+    internal class InternalHandler(socketHandler: SocketHandler) : Handler() {
+        private val reference: WeakReference<SocketHandler> = WeakReference(socketHandler)
+
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            reference.get()?.handleMessage(msg)
+        }
+    }
 
     protected fun sendMessage(msg: Message?) {
+
         if (handler != null) {
             handler!!.sendMessage(msg)
         } else {
@@ -88,7 +92,7 @@ abstract class  SocketHandler {
         return msg
     }
 
-    protected open fun handleMessage(msg: Message) {
+    open fun handleMessage(msg: Message) {
         when (msg.what) {
             FAIL_MESSAGE -> handleFailMessage((msg.obj as Array<Any>)[0], Exception((msg.obj as Array<Any>)[1] as Throwable))
             START_MESSAGE -> handleStartMessage()
@@ -105,16 +109,15 @@ abstract class  SocketHandler {
     @Throws(IOException::class, ClassNotFoundException::class)
     abstract fun handleSocketRead(inputStream: DataInputStream): Boolean
 
-    protected abstract fun getSend(): Any
+    abstract fun getSend(): Any
 
-    protected abstract fun onFail(obj: Any, e: Exception)
+    abstract fun onFail(obj: Any, e: Exception)
 
-    protected fun onStart() {}
+    open fun onStart() {}
 
-    protected fun onConnected() {}
+    open fun onConnected() {}
 
-
-    protected fun onDisconnected() {}
+    open fun onDisconnected() {}
 
 
     fun sendFailMessage(obj: Any) {
@@ -133,19 +136,19 @@ abstract class  SocketHandler {
         sendMessage(obtainMessage(DISCONNECTED_MESSAGE, null))
     }
 
-    protected fun handleFailMessage(obj: Any, exception: Exception) {
+    private fun handleFailMessage(obj: Any, exception: Exception) {
         onFail(obj, exception)
     }
 
-    protected fun handleStartMessage() {
+    private fun handleStartMessage() {
         onStart()
     }
 
-    protected fun handleConnectedMessage() {
+    private fun handleConnectedMessage() {
         onConnected()
     }
 
-    protected fun handleDisconnectedMessage() {
+    private fun handleDisconnectedMessage() {
         onDisconnected()
     }
 

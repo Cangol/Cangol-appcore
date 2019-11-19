@@ -37,7 +37,6 @@ object Download {
     //出错
     const val STATUS_FAILURE = 5
 
-
     const val ACTION_DOWNLOAD_START = 0
 
     const val ACTION_DOWNLOAD_FINISH = 1

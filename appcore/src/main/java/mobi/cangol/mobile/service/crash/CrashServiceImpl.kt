@@ -50,7 +50,7 @@ import kotlin.system.exitProcess
 @Service("CrashService")
 internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
     private var debug = true
-    private var mDefaultExceptionHandler: Thread.UncaughtExceptionHandler? = null
+    private var mDefaultExceptionHandler: UncaughtExceptionHandler? = null
     private var mApplication: CoreApplication? = null
     private var mSessionService: SessionService? = null
     private var mServiceProperty = ServiceProperty(TAG)
@@ -118,11 +118,11 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         }
 
         val params = if (this.mParams == null) RequestParams() else RequestParams(this.mParams!!)
-        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_ERROR), report.error)
-        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_POSITION), report.position)
-        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_CONTEXT), report.context)
-        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_TIMESTAMP), report.timestamp)
-        params.put(mServiceProperty!!.getString(CrashService.CRASHSERVICE_REPORT_FATAL), report.fatal)
+        params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_ERROR), report.error)
+        params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_POSITION), report.position)
+        params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_CONTEXT), report.context)
+        params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_TIMESTAMP), report.timestamp)
+        params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_FATAL), report.fatal)
         asyncHttpClient!!.post(mApplication!!, mUrl!!, params, object : AsyncHttpResponseHandler() {
 
             override fun onStart() {

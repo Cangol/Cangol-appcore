@@ -40,6 +40,7 @@ import java.util.*
  */
 @Service("AnalyticsService")
 internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
+
     private var mDebug = false
     private var mContext: Application? = null
     private var mAsyncHttpClient: AsyncHttpClient? = null
@@ -47,6 +48,7 @@ internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
     private val mTrackers = HashMap<String, ITracker>()
     private var commonParams = HashMap<String, String>()
     private var deviceParams = HashMap<String, String>()
+
     override fun onCreate(context: Application) {
         mContext = context
     }

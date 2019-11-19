@@ -21,38 +21,44 @@ package mobi.cangol.mobile.soap
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import java.lang.ref.WeakReference
 
 /**
  * @author Cangol
  */
-open class SoapResponseHandler {
+open abstract class SoapResponseHandler {
 
     private var handler: Handler? = null
 
     init {
         if (Looper.myLooper() != null) {
-            handler = object : Handler() {
-                override fun handleMessage(msg: Message) {
-                    this@SoapResponseHandler.handleMessage(msg)
-                }
-            }
+            handler = InternalHandler(this)
+        }
+    }
+
+    internal class InternalHandler(handler: SoapResponseHandler) : Handler() {
+        private val reference: WeakReference<SoapResponseHandler> = WeakReference(handler)
+
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            reference.get()?.handleMessage(msg)
         }
     }
 
     open fun onStart() {
-        //do nothings
+        //nothings
     }
 
     fun onFinish() {
-        //do nothings
+        //nothings
     }
 
     open fun onSuccess(content: String) {
-        //do nothings
+        //nothings
     }
 
     open fun onFailure(error: String) {
-        //do nothings
+        //nothings
     }
 
     fun sendStartMessage() {
@@ -63,7 +69,7 @@ open class SoapResponseHandler {
         sendMessage(obtainMessage(FINISH_MESSAGE, null))
     }
 
-    fun sendSuccessMessage(responseBody: String?) {
+    private fun sendSuccessMessage(responseBody: String?) {
         sendMessage(obtainMessage(SUCCESS_MESSAGE, responseBody))
     }
 

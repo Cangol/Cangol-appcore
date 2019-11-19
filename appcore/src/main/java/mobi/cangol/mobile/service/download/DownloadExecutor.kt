@@ -35,7 +35,7 @@ import java.util.*
 abstract class DownloadExecutor<T>(private val mName: String) {
     private var mDownloadRes = ArrayList<DownloadResource>()
     private var mTag = "DownloadExecutor"
-    private val listeners = ArrayList<SoftReference<DownloadStatusListener>>()
+    private val mListeners = ArrayList<SoftReference<DownloadStatusListener>>()
     private var mPool: Pool? = null
     private var mContext: Context? = null
     private var mDownloadDir: File? = null
@@ -353,14 +353,14 @@ abstract class DownloadExecutor<T>(private val mName: String) {
     fun registerDownloadStatusListener(downloadStatusListener: DownloadStatusListener?) {
         requireNotNull(downloadStatusListener) { "downloadStatusListener is null!" }
         var isExist = false
-        for (listener in listeners) {
+        for (listener in mListeners) {
             if (downloadStatusListener == listener.get()) {
                 isExist = true
                 break
             }
         }
         if (!isExist) {
-            listeners.add(SoftReference(downloadStatusListener))
+            mListeners.add(SoftReference(downloadStatusListener))
         }
     }
 
@@ -369,16 +369,16 @@ abstract class DownloadExecutor<T>(private val mName: String) {
      */
     fun unregisterDownloadStatusListener(downloadStatusListener: DownloadStatusListener?) {
         requireNotNull(downloadStatusListener) { "downloadStatusListener is null!" }
-        for (listener in listeners) {
+        for (listener in mListeners) {
             if (downloadStatusListener == listener.get()) {
-                listeners.remove(listener)
+                mListeners.remove(listener)
                 break
             }
         }
     }
 
     private fun notifyUpdateStatus(resource: DownloadResource, action: Int) {
-        for (listener in listeners) {
+        for (listener in mListeners) {
             if (null != listener.get()) {
                 listener.get()!!.onStatusChange(resource, action)
             }
@@ -423,11 +423,10 @@ abstract class DownloadExecutor<T>(private val mName: String) {
     }
 
     internal class ExecutorHandler(downloadExecutor: DownloadExecutor<*>) : Handler() {
-        private val mDownloadExecutor: SoftReference<DownloadExecutor<*>> = SoftReference(downloadExecutor)
+        private val reference: SoftReference<DownloadExecutor<*>> = SoftReference(downloadExecutor)
 
         override fun handleMessage(msg: Message) {
-            val downloadExecutor = mDownloadExecutor.get()
-            downloadExecutor?.handleMessage(msg)
+             reference.get()?.handleMessage(msg)
         }
     }
 }
