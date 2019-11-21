@@ -50,13 +50,13 @@ object StringUtils {
     @JvmStatic
     fun byte2hex(b: ByteArray): String {
         val hs = StringBuilder()
-        var stmp = ""
+        var temp:String?
         for (n in b.indices) {
-            stmp = Integer.toHexString(b[n].toInt() and 0XFF)
-            if (stmp.length == 1) {
-                hs.append('0').append(stmp)
+            temp = Integer.toHexString(b[n].toInt() and 0XFF)
+            if (temp.length == 1) {
+                hs.append('0').append(temp)
             } else {
-                hs.append(stmp)
+                hs.append(temp)
             }
 
         }
@@ -420,12 +420,12 @@ object StringUtils {
      */
     @JvmStatic
     fun strip(str: String?, stripChars: String? = null): String? {
-        var str = str
-        if (isEmpty(str)) {
-            return str
+        var value = str
+        if (isEmpty(value)) {
+            return value
         }
-        str = stripStart(str, stripChars)
-        return stripEnd(str, stripChars)
+        value = stripStart(value, stripChars)
+        return stripEnd(value, stripChars)
     }
 
     /**

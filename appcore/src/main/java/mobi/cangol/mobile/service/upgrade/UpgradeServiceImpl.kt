@@ -47,16 +47,15 @@ import java.util.*
 internal class UpgradeServiceImpl : UpgradeService {
     private var debug = false
     private var mContext: Application? = null
-    private var mServiceProperty: ServiceProperty? = null
+    private var mServiceProperty: ServiceProperty = ServiceProperty(TAG)
     private var mConfigService: ConfigService? = null
     private val mIds = ArrayList<Int>()
-    private var mOnUpgradeListeners: MutableMap<String, OnUpgradeListener>? = null
+    private val mOnUpgradeListeners= HashMap<String, OnUpgradeListener>()
     private var mDownloadHttpClient: DownloadHttpClient? = null
 
     override fun onCreate(context: Application) {
         mContext = context
         mConfigService = (mContext as CoreApplication).getAppService(AppService.CONFIG_SERVICE) as ConfigService?
-        mOnUpgradeListeners = HashMap()
     }
 
     override fun init(serviceProperty: ServiceProperty) {
@@ -70,7 +69,7 @@ internal class UpgradeServiceImpl : UpgradeService {
     override fun onDestroy() {
         if (debug) Log.d("onDestroy")
         if (mDownloadHttpClient != null)
-            mDownloadHttpClient!!.cancelAll()
+            mDownloadHttpClient?.cancelAll()
         val notificationManager = mContext!!.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         for (id in mIds) {
             notificationManager.cancel(id)
@@ -79,7 +78,7 @@ internal class UpgradeServiceImpl : UpgradeService {
     }
 
     override fun getServiceProperty(): ServiceProperty {
-        return mServiceProperty!!
+        return mServiceProperty
     }
 
     override fun defaultServiceProperty(): ServiceProperty {
@@ -103,7 +102,7 @@ internal class UpgradeServiceImpl : UpgradeService {
     }
 
     private fun upgrade(filename: String, url: String, notification: Boolean, upgradeType: UpgradeType, install: Boolean, safe: Boolean) {
-        val savePath = mConfigService!!.getUpgradeDir().toString() + File.separator + filename
+        val savePath = mConfigService?.getUpgradeDir().toString() + File.separator + filename
         val saveFile = File(savePath)
         if (debug) Log.d("upgrade savePath:$savePath")
         if (saveFile.exists()) {
@@ -120,7 +119,7 @@ internal class UpgradeServiceImpl : UpgradeService {
         }
         var downloadNotification: DownloadNotification? = null
         if (notification) {
-            var intent: Intent? = null
+            var intent: Intent?
             try {
                 intent = createFinishIntent(savePath, upgradeType)
             } catch (e: Exception) {
@@ -138,7 +137,7 @@ internal class UpgradeServiceImpl : UpgradeService {
         mDownloadHttpClient = DownloadHttpClient.build(TAG, safe)
 
         val finalDownloadNotification = downloadNotification
-        mDownloadHttpClient!!.send(filename, url, object : DownloadResponseHandler() {
+        mDownloadHttpClient?.send(filename, url, object : DownloadResponseHandler() {
             override fun onWait() {
                 super.onWait()
                 Log.d(UpgradeServiceImpl.TAG, "onWait ")
@@ -212,8 +211,6 @@ internal class UpgradeServiceImpl : UpgradeService {
             }
             UpgradeType.SO -> System.load(savePath)
             UpgradeType.OTHER -> Intent()
-            else -> {
-            }
         }
         /**
          * DexClassLoader dexClassLoader = new DexClassLoader(savePath, mConfigService.getTempDir().getAbsolutePath(), null, mContext.getClassLoader());
@@ -252,38 +249,35 @@ internal class UpgradeServiceImpl : UpgradeService {
             }
             UpgradeType.OTHER -> {
             }
-            else -> {
-            }
         }
         return intent
     }
 
     override fun cancel(filename: String) {
-        if (mDownloadHttpClient != null)
-            mDownloadHttpClient!!.cancelRequests(filename, true)
+        mDownloadHttpClient?.cancelRequests(filename, true)
     }
 
     fun notifyUpgradeFinish(filename: String, filepath: String) {
-        if (mOnUpgradeListeners!!.containsKey(filename)) {
-            mOnUpgradeListeners!![filename]!!.onFinish(filepath)
+        if (mOnUpgradeListeners.containsKey(filename)) {
+            mOnUpgradeListeners[filename]?.onFinish(filepath)
         }
     }
 
     fun notifyUpgradeProgress(filename: String, speed: Int, progress: Int) {
-        if (mOnUpgradeListeners!!.containsKey(filename)) {
-            mOnUpgradeListeners!![filename]!!.progress(speed, progress)
+        if (mOnUpgradeListeners.containsKey(filename)) {
+            mOnUpgradeListeners[filename]?.progress(speed, progress)
         }
     }
 
     fun notifyUpgradeFailure(filename: String, error: String) {
-        if (mOnUpgradeListeners!!.containsKey(filename)) {
-            mOnUpgradeListeners!![filename]!!.onFailure(error)
+        if (mOnUpgradeListeners.containsKey(filename)) {
+            mOnUpgradeListeners[filename]?.onFailure(error)
         }
     }
 
     override fun setOnUpgradeListener(filename: String, onUpgradeListener: OnUpgradeListener) {
-        if (!mOnUpgradeListeners!!.containsKey(filename)) {
-            mOnUpgradeListeners!![filename] = onUpgradeListener
+        if (!mOnUpgradeListeners.containsKey(filename)) {
+            mOnUpgradeListeners[filename] = onUpgradeListener
         }
     }
 

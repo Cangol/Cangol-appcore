@@ -23,13 +23,12 @@ internal class SessionServiceImpl : SessionService {
     private var mContext: CoreApplication? = null
     private var mServiceProperty: ServiceProperty? = null
     private var mDebug = false
-    private var mSessionMap: MutableMap<String, Session>? = null
+    private var mSessionMap: MutableMap<String, Session> = ConcurrentHashMap()
     private var mSession: Session? = null
 
     override fun onCreate(context: Application) {
         mContext = context as CoreApplication
         //这里使用application中的session也可实例化一个新的
-        mSessionMap = ConcurrentHashMap()
         val configService = mContext!!.getAppService(AppService.CONFIG_SERVICE) as ConfigService?
         mSession = newSession(mContext, configService!!.getSharedName()!!)
     }
@@ -40,8 +39,8 @@ internal class SessionServiceImpl : SessionService {
 
     override fun onDestroy() {
         mSession!!.clear()
-        for ((_, session) in mSessionMap!!) {
-            session?.clear()
+        for ((_, session) in mSessionMap) {
+            session.clear()
         }
     }
 
@@ -63,8 +62,8 @@ internal class SessionServiceImpl : SessionService {
 
     override fun getUserSession(name: String): Session {
         if (mDebug) Log.d(TAG, "getUserSession $name")
-        return if (mSessionMap!!.containsKey(name)) {
-            mSessionMap!![name]!!
+        return if (mSessionMap.containsKey(name)) {
+            mSessionMap[name]!!
         } else {
             newSession(mContext, name)
         }
@@ -73,7 +72,7 @@ internal class SessionServiceImpl : SessionService {
     private fun newSession(context: Context?, name: String): Session {
         if (mDebug) Log.d(TAG, "newSession $name")
         val session = Session(context!!, name)
-        mSessionMap!![name] = session
+        mSessionMap[name] = session
         session.refresh()
         return session
     }
@@ -188,6 +187,6 @@ internal class SessionServiceImpl : SessionService {
     }
 
     companion object {
-        private val TAG = "SessionService"
+        private const val TAG = "SessionService"
     }
 }

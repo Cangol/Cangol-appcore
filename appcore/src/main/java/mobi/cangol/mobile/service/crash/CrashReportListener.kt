@@ -30,5 +30,5 @@ interface CrashReportListener {
      * @param timestamp
      * @param fatal
      */
-    fun report(path: String, error: String, position: String, context: String, timestamp: String, fatal: String)
+    fun report(path: String?, error: String?, position: String?, context: String?, timestamp: String?, fatal: String?)
 }

@@ -33,7 +33,8 @@ class JSONParserException : ParserException {
 
     constructor(clazz: Class<*>, field: Field, message: String, throwable: Throwable) : super(clazz, field, message, throwable) {}
 
-    constructor(node: JSONObject, message: String, throwable: Throwable) : super(throwable) {
+    constructor(node: JSONObject,
+                message: String, throwable: Throwable) : super(throwable) {
         mNode = node
     }
 

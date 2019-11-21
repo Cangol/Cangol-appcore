@@ -205,12 +205,12 @@ object RSAUtils {
             z = 1
         }
         val strings = arrayOfNulls<String>(x + z)
-        var str = ""
+        var str :String?
         for (i in 0 until x + z) {
-            if (i == x + z - 1 && y != 0) {
-                str = string.substring(i * len, i * len + y)
+            str = if (i == x + z - 1 && y != 0) {
+                string.substring(i * len, i * len + y)
             } else {
-                str = string.substring(i * len, i * len + len)
+                string.substring(i * len, i * len + len)
             }
             strings[i] = str
         }

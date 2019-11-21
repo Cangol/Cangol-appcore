@@ -56,8 +56,8 @@ internal class CacheManagerImpl : CacheManager {
     override fun init(serviceProperty: ServiceProperty) {
         if (mDebug) Log.d(TAG, "init $serviceProperty")
         this.mServiceProperty = serviceProperty
-        val dir = mServiceProperty!!.getString(CacheManager.CACHE_DIR)
-        val size = mServiceProperty!!.getLong(CacheManager.CACHE_SIZE)
+        val dir = mServiceProperty.getString(CacheManager.CACHE_DIR)
+        val size = mServiceProperty.getLong(CacheManager.CACHE_SIZE)
         val configService = mApplication!!.getAppService(AppService.CONFIG_SERVICE) as ConfigService?
         val cacheDir = configService!!.getCacheDir().absolutePath + File.separator + if (!TextUtils.isEmpty(dir)) dir else "contentCache"
         setDiskCache(File(cacheDir), if (size > 0) size else DEFAULT_DISK_CACHE_SIZE)
@@ -190,15 +190,15 @@ internal class CacheManagerImpl : CacheManager {
             mContextMaps[context] = contextMap
         }
         val cacheObject = contextMap[id]
-        if (cacheObject == null) {
-            return hasContentFromDiskCache(id)
+        return if (cacheObject == null) {
+            hasContentFromDiskCache(id)
         } else {
             if (cacheObject.isExpired) {
                 Log.e(TAG, "expired:" + cacheObject.expired + ",it's expired & removed ")
                 removeContent(context, id)
-                return false
+                false
             } else {
-                return true
+                true
             }
         }
     }
@@ -379,7 +379,7 @@ internal class CacheManagerImpl : CacheManager {
                             // 写入out流
                             writeObject(cacheObject, out)
                             editor.commit()
-                            out!!.close()
+                            out.close()
                             flush()
                         }
                     } else {
@@ -405,7 +405,7 @@ internal class CacheManagerImpl : CacheManager {
             return
         }
         val iterator = contextMap.keys.iterator()
-        var id: String? = null
+        var id: String?
         while (iterator.hasNext()) {
             id = iterator.next()
             val key = hashKeyForDisk(id)
@@ -454,12 +454,9 @@ internal class CacheManagerImpl : CacheManager {
     }
 
     override fun clearCache() {
-        if (mContextMaps != null) {
-            mContextMaps.clear()
-            if (mDebug) {
-                Log.d(TAG, "Memory cache cleared")
-            }
-        }
+        mContextMaps.clear()
+        if (mDebug) Log.d(TAG, "Memory cache cleared")
+
 
         synchronized(mDiskCacheLock) {
             mDiskCacheStarting = true
@@ -515,7 +512,7 @@ internal class CacheManagerImpl : CacheManager {
     }
 
     private fun hashKeyForDisk(key: String): String {
-        var cacheKey: String? = null
+        var cacheKey: String?
         cacheKey = try {
             val mDigest = MessageDigest.getInstance("MD5")
             mDigest.update(key.toByteArray(charset("UTF-8")))

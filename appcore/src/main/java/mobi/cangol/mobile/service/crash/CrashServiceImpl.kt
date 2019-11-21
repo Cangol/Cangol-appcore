@@ -63,9 +63,9 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         mApplication = context as CoreApplication
         mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler(this)
-        mSessionService = mApplication!!.getAppService(AppService.SESSION_SERVICE) as SessionService?
+        mSessionService = mApplication?.getAppService(AppService.SESSION_SERVICE) as SessionService?
         val configService = mApplication!!.getAppService(AppService.CONFIG_SERVICE) as ConfigService?
-        mCrashDir = configService!!.getTempDir().absolutePath + File.separator + "crash"
+        mCrashDir = configService?.getTempDir()?.absolutePath + File.separator + "crash"
 
         val oldPolicy = StrictMode.allowThreadDiskReads()
         FileUtils.newFolder(mCrashDir!!)
@@ -83,7 +83,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
     }
 
     override fun onDestroy() {
-        asyncHttpClient!!.cancelRequests(mApplication!!, true)
+        asyncHttpClient?.cancelRequests(mApplication!!, true)
     }
 
     override fun setDebug(mDebug: Boolean) {
@@ -114,7 +114,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
 
     private fun report(report: ReportError) {
         if (debug) {
-            Log.d(TAG, "report .crash " + report.path!!)
+            Log.d(TAG, "report .crash " + report.path)
         }
 
         val params = if (this.mParams == null) RequestParams() else RequestParams(this.mParams!!)
@@ -123,7 +123,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_CONTEXT), report.context)
         params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_TIMESTAMP), report.timestamp)
         params.put(mServiceProperty.getString(CrashService.CRASHSERVICE_REPORT_FATAL), report.fatal)
-        asyncHttpClient!!.post(mApplication!!, mUrl!!, params, object : AsyncHttpResponseHandler() {
+        asyncHttpClient?.post(mApplication!!, mUrl!!, params, object : AsyncHttpResponseHandler() {
 
             override fun onStart() {
                 //do nothings
@@ -131,7 +131,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
 
             override fun onSuccess(content: String) {
                 super.onSuccess(content)
-                mApplication!!.post(Runnable { FileUtils.delFile(report.path!!) })
+                mApplication?.post(Runnable { FileUtils.delFile(report.path!!) })
             }
 
             override fun onFailure(error: Throwable, content: String) {
@@ -171,8 +171,8 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
         }
         Object2FileUtils.writeObject(error, error.path!!)
 
-        mSessionService!!.saveString("exitCode", "1")
-        mSessionService!!.saveString("exitVersion", DeviceInfo.getAppVersion(mApplication!!))
+        mSessionService?.saveString("exitCode", "1")
+        mSessionService?.saveString("exitVersion", DeviceInfo.getAppVersion(mApplication!!))
         //0 正常推退出  1异常退出
         exitProcess(0)
     }
@@ -183,7 +183,7 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
                 val files = FileUtils.searchBySuffix(File(mCrashDir), null, CRASH)
 
                 val reports = ArrayList<ReportError>()
-                var obj: Any? = null
+                var obj: Any?
                 for (file in files) {
                     obj = FileUtils.readObject(file)
                     if (obj != null) {
@@ -200,12 +200,12 @@ internal class CrashServiceImpl : CrashService, UncaughtExceptionHandler {
                     if (!TextUtils.isEmpty(mUrl)) {
                         report(errorReport)
                     }
-                    crashReportListener?.report(errorReport.path!!,
-                            errorReport.error!!,
-                            errorReport.position!!,
-                            errorReport.context!!,
-                            errorReport.timestamp!!,
-                            errorReport.fatal!!)
+                    crashReportListener.report(errorReport.path,
+                            errorReport.error,
+                            errorReport.position,
+                            errorReport.context,
+                            errorReport.timestamp,
+                            errorReport.fatal)
                 }
             }
         })

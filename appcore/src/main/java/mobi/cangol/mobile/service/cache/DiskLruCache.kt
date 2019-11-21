@@ -24,6 +24,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 /**
  * *****************************************************************************
@@ -784,7 +785,7 @@ class DiskLruCache private constructor(
                 throw ArrayIndexOutOfBoundsException()
             }
             val resultLength = end - start
-            val copyLength = Math.min(resultLength, originalLength - start)
+            val copyLength = min(resultLength, originalLength - start)
             val result = Array
                     .newInstance(original.javaClass.getComponentType(), resultLength) as kotlin.Array<T>
             System.arraycopy(original, start, result, 0, copyLength)

@@ -41,13 +41,13 @@ object RootUtils {
     @JvmStatic
     fun checkRootMethod3(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            ExecShell().executeCommand(SHELL_CMD.CHECK_SU_BINARY) != null
+            ExecShell().executeCommand(ShellCmd.CHECK_SU_BINARY).isNotEmpty()
         } else {
             return false
         }
     }
 
-    enum class SHELL_CMD constructor(internal var command: Array<String>) {
+    enum class ShellCmd constructor(internal var command: Array<String>) {
         CHECK_SU_BINARY(arrayOf<String>("/system/xbin/which", "su"))
     }
 
@@ -57,9 +57,9 @@ object RootUtils {
     internal class ExecShell {
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        fun executeCommand(shellCmd: SHELL_CMD): List<String> {
+        fun executeCommand(shellCmd: ShellCmd): List<String> {
             val fullResponse = ArrayList<String>()
-            var localProcess: Process? = null
+            var localProcess: Process?
             try {
                 localProcess = Runtime.getRuntime().exec(shellCmd.command)
             } catch (e: Exception) {

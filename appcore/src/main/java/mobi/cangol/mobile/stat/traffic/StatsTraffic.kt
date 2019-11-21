@@ -169,7 +169,7 @@ object StatsTraffic {
 
     fun calcAppTraffic(date: String, wifi: Boolean) {
         val list = trafficDbService!!.getAppTrafficList()
-        var appTraffic: AppTraffic? = null
+        var appTraffic: AppTraffic?
         for (i in list.indices) {
             appTraffic = list[i]
             calcDateTraffic(appTraffic, date, wifi)
@@ -192,7 +192,7 @@ object StatsTraffic {
 
     fun resetAppTraffic() {
         val list = trafficDbService!!.getAppTrafficList()
-        var appTraffic: AppTraffic? = null
+        var appTraffic: AppTraffic?
         for (i in list.indices) {
             appTraffic = list[i]
             appTraffic.totalRx = TrafficStats.getUidRxBytes(appTraffic.uid)
@@ -203,8 +203,8 @@ object StatsTraffic {
 
     fun getUnPostDateTraffic(uid: Int, date: String): List<Map<String, String>> {
         val list = trafficDbService!!.getDateTrafficByStatus(uid, date, 0)
-        var map: Map<String, String>? = null
-        var dateTraffic: DateTraffic? = null
+        var map: Map<String, String>?
+        var dateTraffic: DateTraffic?
         val maps = ArrayList<Map<String, String>>()
         for (i in list.indices) {
             dateTraffic = list[i]

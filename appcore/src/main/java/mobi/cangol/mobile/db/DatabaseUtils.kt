@@ -43,8 +43,8 @@ object DatabaseUtils {
             val tableName = if ("" == table!!.value) clazz.simpleName else table.value
             val sql = StringBuilder("CREATE INDEX ")
             sql.append(indexName).append(" on ").append(tableName).append('(')
-            var field: Field? = null
-            var columnName: String? = null
+            var field: Field?
+            var columnName: String?
             for (i in fieldNames.indices) {
                 try {
                     field = clazz.getDeclaredField(fieldNames[i])
@@ -84,7 +84,7 @@ object DatabaseUtils {
             val tableName = if ("" == table!!.value) clazz.simpleName else table.value
             sql.append(tableName).append('(')
             val fields = clazz.declaredFields
-            var filedName: String? = null
+            var filedName: String?
             var isFirst = true
             for (field in fields) {
                 field.isAccessible = true
@@ -293,7 +293,7 @@ object DatabaseUtils {
     @JvmStatic
     fun getContentValues(obj: Any): ContentValues {
         val v = ContentValues()
-        var filedName: String? = null
+        var filedName: String?
         for (field in obj.javaClass.declaredFields) {
             field.isAccessible = true
             if (field.isAnnotationPresent(DatabaseField::class.java)) {
@@ -320,7 +320,7 @@ object DatabaseUtils {
     @JvmStatic
     fun getContentValues(obj: Any, columns: Array<out String>?): ContentValues {
         val v = ContentValues()
-        var filedName: String? = null
+        var filedName: String?
         val set = if (columns == null) HashSet() else HashSet(listOf(*columns))
         for (field in obj.javaClass.declaredFields) {
             field.isAccessible = true
@@ -347,7 +347,7 @@ object DatabaseUtils {
     fun <T> cursorToObject(obj: T, cursor: Cursor, columns: Array<out String>?): T {
         val fields = (obj as Any).javaClass.declaredFields
         val set = if (columns == null) HashSet() else HashSet(listOf(*columns))
-        var columnName: String? = null
+        var columnName: String?
         for (field in fields) {
             field.isAccessible = true
             if (field.isEnumConstant || Modifier.isFinal(field.modifiers) || Modifier.isTransient(field.modifiers)) {

@@ -219,7 +219,7 @@ internal class StatusServiceImpl : StatusService {
 
     private fun notifyNetworkConnect(context: Context) {
         for (listener in mListeners) {
-            listener?.networkConnect(context)
+            listener.networkConnect(context)
         }
     }
 

@@ -74,7 +74,7 @@ object HttpClientFactory {
                 .readTimeout(DEFAULT_READ_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 .connectTimeout(DEFAULT_CONNECT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_WRITE_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
-                .authenticator { route, response ->
+                .authenticator { _, response ->
                     val credential = Credentials.basic(username, password)
                     response.request().newBuilder()
                             .header("Authorization", credential)
@@ -114,17 +114,17 @@ object HttpClientFactory {
      * @return
      */
     fun createSafeHttpClient(certificates: Array<InputStream>, bksFile: InputStream, password: String): OkHttpClient {
-        var sslContext: SSLContext? = null
+        var sslContext: SSLContext?
         var sslSocketFactory: SSLSocketFactory? = null
         try {
             val trustManagers = prepareTrustManager(*certificates)
             val keyManagers = prepareKeyManager(bksFile, password)
             sslContext = SSLContext.getInstance("TLS")
-            var trustManager: X509TrustManager? = null
-            if (trustManagers != null) {
-                trustManager = MyTrustManager(chooseTrustManager(trustManagers))
+            var trustManager: X509TrustManager?
+            trustManager = if (trustManagers != null) {
+                MyTrustManager(chooseTrustManager(trustManagers))
             } else {
-                trustManager = UnSafeTrustManager()
+                UnSafeTrustManager()
             }
             sslContext!!.init(keyManagers, arrayOf<TrustManager>(trustManager), SecureRandom())
             sslSocketFactory = sslContext.socketFactory
@@ -146,27 +146,25 @@ object HttpClientFactory {
     }
 
     private fun prepareTrustManager(vararg certificates: InputStream): Array<TrustManager?> {
-        if (certificates == null || certificates.size <= 0) return arrayOfNulls(0)
+        if (certificates == null || certificates.isEmpty()) return arrayOfNulls(0)
         try {
 
             val certificateFactory = CertificateFactory.getInstance("X.509")
             val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
             keyStore.load(null)
-            var index = 0
-            for (certificate in certificates) {
-                val certificateAlias = (index++).toString()
+            for ((index, certificate) in certificates.withIndex()) {
+                val certificateAlias = (index).toString()
                 keyStore.setCertificateEntry(certificateAlias, certificateFactory.generateCertificate(certificate))
                 try {
-                    certificate?.close()
+                    certificate.close()
                 } catch (e: IOException) {
                     Log.d(TAG, e.message)
                 }
 
             }
-            var trustManagerFactory: TrustManagerFactory? = null
+            var trustManagerFactory: TrustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
 
-            trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-            trustManagerFactory!!.init(keyStore)
+            trustManagerFactory.init(keyStore)
 
             return trustManagerFactory.trustManagers
         } catch (e: Exception) {
@@ -243,7 +241,7 @@ object HttpClientFactory {
      * @return
      */
     fun createUnSafeHttpClient(): OkHttpClient {
-        var sslContext: SSLContext? = null
+        var sslContext: SSLContext?
         var sslSocketFactory: SSLSocketFactory? = null
         val trustManager = UnSafeTrustManager()
         try {

@@ -63,16 +63,14 @@ abstract class SocketSerializableHandler : SocketHandler() {
 
     @Throws(IOException::class)
     override fun handleSocketWrite(outputStream: DataOutputStream): Boolean {
-        val sendMsg = getSend() as Serializable
-        if (sendMsg == null || outputStream == null) return false
+        val sendMsg = getSend()
         if (DEBUG) Log.d(TAG, "sendMsg=$sendMsg")
-        write(outputStream, sendMsg)
+        write(outputStream, sendMsg as Serializable)
         return true
     }
 
     @Throws(IOException::class, ClassNotFoundException::class)
     override fun handleSocketRead(inputStream: DataInputStream): Boolean {
-        if (inputStream == null) return false
         val receivedMsg = read(inputStream)
         if (DEBUG) Log.d(TAG, "receivedMsg=$receivedMsg")
         sendReceiveMessage(receivedMsg)

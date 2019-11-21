@@ -19,18 +19,15 @@
 package mobi.cangol.mobile.parser
 
 
-import java.lang.annotation.Documented
 import java.lang.annotation.Inherited
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 
 /**
  * Customer VO annotation
  *
  * @author Cangol
  */
-@Retention(RetentionPolicy.RUNTIME)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD)
-@Documented
+@MustBeDocumented
 @Inherited
 annotation class ElementList(val value: String = "")

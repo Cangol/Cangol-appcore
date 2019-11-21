@@ -22,13 +22,12 @@ import java.util.concurrent.ConcurrentHashMap
  * Created by xuewu.wei on 2018/5/2.
  */
 class Session(context: Context, val name: String) {
-    private var shared: SharedPreferences? = null
+    private var shared: SharedPreferences = context.getSharedPreferences("session_$name", Context.MODE_MULTI_PROCESS)
     private val mMap = mutableMapOf<String, Any>()
     private val mSessionDir: String
     private val mCoreApplication: CoreApplication = context as CoreApplication
 
     init {
-        shared = context.getSharedPreferences("session_$name", Context.MODE_MULTI_PROCESS)
         val configService = mCoreApplication.getAppService(AppService.CONFIG_SERVICE) as ConfigService?
         mSessionDir = configService!!.getCacheDir().absolutePath + File.separator + "session_" + name
 
@@ -101,33 +100,33 @@ class Session(context: Context, val name: String) {
     }
 
     fun saveInt(key: String, value: Int) {
-        shared!!.edit().putInt(key, value).apply()
+        shared.edit().putInt(key, value).apply()
         mMap[key] = value
     }
 
     fun saveBoolean(key: String, value: Boolean) {
-        shared!!.edit().putBoolean(key, value).apply()
+        shared.edit().putBoolean(key, value).apply()
         mMap[key] = value
     }
 
     fun saveFloat(key: String, value: Float) {
-        shared!!.edit().putFloat(key, value).apply()
+        shared.edit().putFloat(key, value).apply()
         mMap[key] = value
     }
 
     fun saveLong(key: String, value: Long) {
-        shared!!.edit().putLong(key, value).apply()
+        shared.edit().putLong(key, value).apply()
         mMap[key] = value
     }
 
     fun saveString(key: String, value: String) {
-        shared!!.edit().putString(key, value).apply()
+        shared.edit().putString(key, value).apply()
         mMap[key] = value
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     fun saveStringSet(key: String, value: Set<String>) {
-        shared!!.edit().putStringSet(key, value).apply()
+        shared.edit().putStringSet(key, value).apply()
         mMap[key] = value
     }
 
@@ -205,7 +204,7 @@ class Session(context: Context, val name: String) {
 
     fun remove(key: String) {
         mMap.remove(key)
-        shared!!.edit().remove(key).apply()
+        shared.edit().remove(key).apply()
         mCoreApplication.post(Runnable {
             FileUtils.delete(mSessionDir + File.separator + key + JSON)
             FileUtils.delete(mSessionDir + File.separator + key + JSONA)
@@ -219,14 +218,14 @@ class Session(context: Context, val name: String) {
 
     fun clearAll() {
         mMap.clear()
-        shared!!.edit().clear().apply()
+        shared.edit().clear().apply()
         mCoreApplication.post(Runnable { FileUtils.delAllFile(mSessionDir) })
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     fun refresh() {
         val oldPolicy = StrictMode.allowThreadDiskReads()
-        val map = shared!!.all as MutableMap<String, Any>
+        val map = shared.all as MutableMap<String, Any>
         StrictMode.setThreadPolicy(oldPolicy)
         mMap.putAll(map)
         mCoreApplication.post(Runnable { mMap.putAll(loadDiskMap()) })

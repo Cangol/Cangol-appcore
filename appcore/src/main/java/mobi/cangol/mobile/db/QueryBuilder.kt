@@ -160,7 +160,7 @@ class QueryBuilder(clazz: Class<*>) {
 
     fun getWhere(): String? {
         val sql = StringBuilder()
-        var str: String? = null
+        var str: String?
         for (i in paraKey.indices) {
             if (i > 0) {
                 sql.append(condList[i])

@@ -102,7 +102,7 @@ open class PollingResponseHandler {
     }
 
     fun sendResponseMessage(response: Response): Boolean {
-        var result = false
+        var result:Boolean
         val responseBody = response.body()
         var content: String? = null
         if (response.isSuccessful) {
@@ -175,7 +175,7 @@ open class PollingResponseHandler {
     }
 
     protected fun obtainMessage(responseMessage: Int, response: Any): Message? {
-        var msg: Message? = null
+        var msg: Message?
         if (handler != null) {
             msg = this.handler!!.obtainMessage(responseMessage, response)
         } else {

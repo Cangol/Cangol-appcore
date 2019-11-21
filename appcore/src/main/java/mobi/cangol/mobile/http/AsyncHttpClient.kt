@@ -267,16 +267,16 @@ class AsyncHttpClient {
                     requestBodyBuilder.add(key, value)
             }
         }
-        var request: Request? = null
-        if ("GET".equals(method, ignoreCase = true)) {
-            request = Request.Builder()
+        var request: Request?
+        request = if ("GET".equals(method, ignoreCase = true)) {
+            Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
                     .get()
                     .build()
         } else {
-            request = Request.Builder()
+            Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
@@ -314,16 +314,16 @@ class AsyncHttpClient {
             requestBodyBuilder.addFormDataPart(key, value)
         }
 
-        var request: Request? = null
-        if ("GET".equals(method, ignoreCase = true)) {
-            request = Request.Builder()
+        var request: Request?
+        request = if ("GET".equals(method, ignoreCase = true)) {
+            Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
                     .get()
                     .build()
         } else {
-            request = Request.Builder()
+            Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
@@ -350,16 +350,16 @@ class AsyncHttpClient {
             }
         }
 
-        var request: Request? = null
-        if ("GET".equals(method, ignoreCase = true)) {
-            request = Request.Builder()
+        var request: Request?
+        request = if ("GET".equals(method, ignoreCase = true)) {
+            Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)
                     .get()
                     .build()
         } else {
-            request = Request.Builder()
+            Request.Builder()
                     .tag(context)
                     .headers(headerBuilder.build())
                     .url(url)

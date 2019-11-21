@@ -89,10 +89,8 @@ object XmlUtils {
                     //集合类型
                     if (field.genericType is ParameterizedType) {
                         val list = field.get(obj) as List<*>
-                        if (list != null) {
-                            for (i in list.indices) {
-                                list[i]?.let { toXml(serializer, it, useAnnotation) }
-                            }
+                        for (i in list.indices) {
+                            list[i]?.let { toXml(serializer, it, useAnnotation) }
                         }
                     } else {
                         Log.i(TAG, field.name + " require have generic")
@@ -178,13 +176,13 @@ object XmlUtils {
         if (null == node) {
             return null
         }
-        var t: T? = null
+        var t: T?
         try {
             val constructor = c.getDeclaredConstructor()
             constructor.isAccessible = true
             t = constructor.newInstance() as T
             val fields = c.declaredFields
-            var filedName: String? = null
+            var filedName: String?
             for (field in fields) {
                 field.isAccessible = true
                 if (field.isEnumConstant || Modifier.isFinal(field.modifiers)) {
@@ -221,7 +219,7 @@ object XmlUtils {
             return ArrayList()
         }
         val list = ArrayList<T>()
-        var t: T? = null
+        var t: T?
         for (i in 0 until nodeList.length) {
             t = parserToObject(c, nodeList.item(i), useAnnotation)
             if (t != null)
@@ -236,11 +234,10 @@ object XmlUtils {
         var value: Any? = null
         try {
             if (Converter.isBaseClass(field.type)) {
-                var valueStr: String? = null
-                if (field.isAnnotationPresent(Attribute::class.java)) {
-                    valueStr = getNodeAttr(node, filedName)
+                var valueStr: String? = if (field.isAnnotationPresent(Attribute::class.java)) {
+                    getNodeAttr(node, filedName)
                 } else {
-                    valueStr = getNodeValue(node, filedName)
+                    getNodeValue(node, filedName)
                 }
 
                 if (field.type == String::class.java) {

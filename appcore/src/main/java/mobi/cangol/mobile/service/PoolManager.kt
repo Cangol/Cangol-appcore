@@ -76,7 +76,7 @@ object PoolManager {
      */
     fun closeAll() {
         for ((_, value) in poolMap) {
-            value?.close(false)
+            value.close(false)
         }
         poolMap.clear()
     }

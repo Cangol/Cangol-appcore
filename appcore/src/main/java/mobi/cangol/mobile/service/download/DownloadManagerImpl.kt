@@ -84,7 +84,7 @@ internal open class DownloadManagerImpl : DownloadManager {
 
     override fun recoverAllAllDownloadExecutor() {
         val en = executorMap.elements()
-        var downloadExecutor: DownloadExecutor<*>? = null
+        var downloadExecutor: DownloadExecutor<*>?
         while (en.hasMoreElements()) {
             downloadExecutor = en.nextElement()
             downloadExecutor!!.recoverAll()
@@ -93,7 +93,7 @@ internal open class DownloadManagerImpl : DownloadManager {
 
     override fun interruptAllDownloadExecutor() {
         val en = executorMap.elements()
-        var downloadExecutor: DownloadExecutor<*>? = null
+        var downloadExecutor: DownloadExecutor<*>?
         while (en.hasMoreElements()) {
             downloadExecutor = en.nextElement()
             downloadExecutor!!.interruptAll()

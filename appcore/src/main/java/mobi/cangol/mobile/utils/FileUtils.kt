@@ -82,11 +82,11 @@ object FileUtils {
      * @return 目录删除成功返回true, 否则返回false
      */
     @JvmStatic
-    fun deleteDirectory(dir: String): Boolean {
-        var dir = dir
+    fun deleteDirectory(directory: String): Boolean {
+        var dir = directory
         // 如果dir不以文件分隔符结尾，自动添加文件分隔符
         if (!dir.endsWith(File.separator)) {
-            dir = dir + File.separator
+            dir += File.separator
         }
         val dirFile = File(dir)
         // 如果dir对应的文件不存在，或者不是一个目录，则退出
@@ -276,7 +276,7 @@ object FileUtils {
             return
         }
         val tempList = file.list()
-        var temp: File? = null
+        var temp: File?
         for (i in tempList.indices) {
             if (path.endsWith(File.separator)) {
                 temp = File(path + tempList[i])
@@ -307,7 +307,7 @@ object FileUtils {
             File(newPath).mkdirs() // 如果文件夹不存在 则建立新文件夹
             val a = File(oldPath)
             val file = a.list()
-            var temp: File? = null
+            var temp: File?
             for (i in file.indices) {
                 temp = if (oldPath.endsWith(File.separator)) {
                     File(oldPath + file[i])
@@ -396,20 +396,20 @@ object FileUtils {
     @JvmStatic
     fun searchBySuffix(f: File, fileList: MutableList<File>?,
                        vararg suffix: String): List<File> {
-        var fileList = fileList
-        if (null == fileList) {
-            fileList = ArrayList()
+        var list = fileList
+        if (null == list) {
+            list = ArrayList()
         }
         if (f.isDirectory) {
             val childs = f.listFiles()
             if (childs != null) {
                 for (i in childs.indices) {
                     if (childs[i].isDirectory) {
-                        searchBySuffix(childs[i], fileList, *suffix)
+                        searchBySuffix(childs[i], list, *suffix)
                     } else {
                         for (j in suffix.indices) {
                             if (childs[i].name.endsWith(suffix[j])) {
-                                fileList.add(childs[i])
+                                list.add(childs[i])
                             }
                         }
 
@@ -417,7 +417,7 @@ object FileUtils {
                 }
             }
         }
-        return fileList
+        return list
     }
 
     /**
@@ -525,12 +525,12 @@ object FileUtils {
     @JvmStatic
     fun convertString(`is`: InputStream): String {
         val sb = StringBuilder()
-        var readline = ""
+        var readLine:String?
         try {
             val br = BufferedReader(InputStreamReader(`is`, UTF_8))
             while (br.ready()) {
-                readline = br.readLine()
-                sb.append(readline)
+                readLine = br.readLine()
+                sb.append(readLine)
             }
             br.close()
         } catch (ie: IOException) {

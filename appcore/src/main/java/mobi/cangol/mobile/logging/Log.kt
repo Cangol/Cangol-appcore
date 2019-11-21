@@ -64,7 +64,7 @@ object Log {
     @JvmStatic
     fun setLogTag(clazz: Class<*>, obj: Any) {
         if (clazz != Any::class.java) {
-            var field: Field? = null
+            var field: Field?
             try {
                 field = findField(clazz, "TAG")
                 if (field != null) {
@@ -190,8 +190,8 @@ object Log {
         formatLog(android.util.Log.ERROR, tag, msg, t)
     }
 
-    private fun formatLog(logLevel: Int, tag: String?, msg: String?, error: Throwable?) {
-        var tag = tag
+    private fun formatLog(logLevel: Int, str: String?, msg: String?, error: Throwable?) {
+        var tag = str
         if (level > logLevel) {
             return
         }
@@ -200,17 +200,17 @@ object Log {
         val filename = stackTrace.fileName
         val methodName = stackTrace.methodName
         val linenumber = stackTrace.lineNumber
-        var output: String? = null
-        if (format) {
-            output = String.format("%s.%s(%s:%d)-->%s", classname, methodName, filename, linenumber, msg)
+        var output: String?
+        output = if (format) {
+            String.format("%s.%s(%s:%d)-->%s", classname, methodName, filename, linenumber, msg)
         } else {
-            output = msg
+            msg
         }
         if (null == tag) {
             tag = if (filename != null && filename.contains(".java")) filename.replace(".java", "") else ""
         }
         if (output == null) {
-            output = "" + null!!
+            output = ""
         }
         when (logLevel) {
             android.util.Log.VERBOSE -> if (error == null) {

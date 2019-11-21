@@ -49,7 +49,7 @@ internal class ConnectionQueue(private val mSessionListener: StatsSession.OnSess
     }
 
     fun updateSession(duration: Long) {
-        var data: SessionEntity? = null
+        var data: SessionEntity?
         try {
             val itr = entices.keys.iterator()
             while (itr.hasNext()) {
@@ -68,7 +68,7 @@ internal class ConnectionQueue(private val mSessionListener: StatsSession.OnSess
     }
 
     fun endSession(page: String, duration: Long) {
-        var data: SessionEntity? = null
+        var data: SessionEntity?
         try {
             if (entices.containsKey(page)) {
                 data = entices[page]!!.clone() as SessionEntity

@@ -121,14 +121,13 @@ internal class ConfigServiceImpl : ConfigService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private fun initAppDir(): File? {
         val oldPolicy = StrictMode.allowThreadDiskWrites()
-        var file: File? = null
-        if (mUseInternalStorage) {
-            file = mContext!!.filesDir.parentFile
+        var file: File? = if (mUseInternalStorage) {
+            mContext!!.filesDir.parentFile
         } else {
             if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState() && !StorageUtils.isExternalStorageRemovable()) {
-                file = File(StorageUtils.getExternalStorageDir(mContext!!, mContext!!.packageName))
+                File(StorageUtils.getExternalStorageDir(mContext!!, mContext!!.packageName))
             } else {
-                file = mContext!!.filesDir.parentFile
+                mContext!!.filesDir.parentFile
             }
         }
         StrictMode.setThreadPolicy(oldPolicy)
@@ -138,17 +137,16 @@ internal class ConfigServiceImpl : ConfigService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     fun getFileDir(name: String?): File {
         val oldPolicy = StrictMode.allowThreadDiskWrites()
-        var file: File? = null
-        if (mIsCustomAppDir) {
-            file = File(mAppDir, name)
+        var file: File? = if (mIsCustomAppDir) {
+            File(mAppDir, name)
         } else {
             if (mUseInternalStorage) {
-                file = mContext!!.getFileStreamPath(name)
+                mContext!!.getFileStreamPath(name)
             } else {
                 if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState() && !StorageUtils.isExternalStorageRemovable()) {
-                    file = StorageUtils.getExternalFileDir(mContext!!, name!!)
+                    StorageUtils.getExternalFileDir(mContext!!, name!!)
                 } else {
-                    file = mContext!!.getFileStreamPath(name)
+                    mContext!!.getFileStreamPath(name)
                 }
 
             }
@@ -163,17 +161,17 @@ internal class ConfigServiceImpl : ConfigService {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     override fun getCacheDir(): File {
         val oldPolicy = StrictMode.allowThreadDiskWrites()
-        var file: File? = null
-        if (mIsCustomAppDir) {
-            file = File(mAppDir, "cache")
+        var file: File?
+        file = if (mIsCustomAppDir) {
+            File(mAppDir, "cache")
         } else {
             if (mUseInternalStorage) {
-                file = mContext!!.cacheDir
+                mContext!!.cacheDir
             } else {
                 if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState() && !StorageUtils.isExternalStorageRemovable()) {
-                    file = StorageUtils.getExternalCacheDir(mContext!!)
+                    StorageUtils.getExternalCacheDir(mContext!!)
                 } else {
-                    file = mContext!!.cacheDir
+                    mContext!!.cacheDir
                 }
             }
         }

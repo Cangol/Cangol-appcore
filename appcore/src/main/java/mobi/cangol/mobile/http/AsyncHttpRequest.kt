@@ -38,11 +38,11 @@ internal class AsyncHttpRequest(private val client: AsyncHttpClient, private val
 
     override fun run() {
         try {
-            responseHandler!!.sendStartMessage()
+            responseHandler?.sendStartMessage()
 
             makeRequestWithRetries()
 
-            responseHandler!!.sendFinishMessage()
+            responseHandler?.sendFinishMessage()
         } catch (e: IOException) {
             if (responseHandler != null) {
                 responseHandler.sendFinishMessage()

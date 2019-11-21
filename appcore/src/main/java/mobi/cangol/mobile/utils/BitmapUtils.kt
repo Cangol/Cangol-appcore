@@ -32,6 +32,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import kotlin.math.floor
 
 /**
  * Bitmap 工具类
@@ -391,11 +392,11 @@ object BitmapUtils {
             val hb = 1.0f * originHeight / maxHeight
             if (originWidth > maxWidth || originHeight > maxHeight) {
                 if (wb >= hb) {
-                    val i = Math.floor(originWidth * 1.0 / maxWidth).toInt()
+                    val i = floor(originWidth * 1.0 / maxWidth).toInt()
                     options.inSampleSize = i
 
                 } else {
-                    val i = Math.floor(originHeight * 1.0 / maxHeight).toInt()
+                    val i = floor(originHeight * 1.0 / maxHeight).toInt()
                     options.inSampleSize = i
                 }
             }
@@ -412,8 +413,8 @@ object BitmapUtils {
      * @return
      */
     @JvmStatic
-    fun resizeBitmap(bitmap: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
-        var bitmap = bitmap
+    fun resizeBitmap(src: Bitmap, maxWidth: Int, maxHeight: Int): Bitmap {
+        var bitmap = src
         val originWidth = bitmap.width
         val originHeight = bitmap.height
         // no need to resize
@@ -429,12 +430,12 @@ object BitmapUtils {
             if (wb > hb) {
                 width = maxWidth
                 val i = originWidth * 1.0 / maxWidth
-                height = Math.floor(originHeight / i).toInt()
+                height = floor(originHeight / i).toInt()
                 bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
             } else {
                 height = maxHeight
                 val i = originHeight * 1.0 / maxHeight
-                width = Math.floor(originWidth / i).toInt()
+                width = floor(originWidth / i).toInt()
                 bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
             }
         }
@@ -547,10 +548,10 @@ object BitmapUtils {
      */
     @JvmStatic
     fun getNumberLength(number: Int): Int {
-        var number = number
+        var num = number
         var count = 0
-        while (number != 0) {
-            number = number / 10
+        while (num != 0) {
+            num /= 10
             count++
         }
         return count
@@ -709,7 +710,7 @@ object BitmapUtils {
      */
     @JvmStatic
     fun stringToBitmap(string: String): Bitmap? {
-        var bitmap: Bitmap? = null
+        var bitmap: Bitmap?
         val bitmapArray: ByteArray
         return try {
             bitmapArray = Base64.decode(string, Base64.DEFAULT)

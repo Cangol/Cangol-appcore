@@ -109,13 +109,11 @@ object JsonUtils {
                     if (field.genericType is ParameterizedType) {
                         val list = field.get(obj) as List<*>
                         val jsonArray = JSONArray()
-                        if (list != null) {
-                            for (i in list.indices) {
-                                if (Converter.isBaseClass((list[i] as Any).javaClass)) {
-                                    jsonArray.put(list[i])
-                                } else {
-                                    jsonArray.put(toJSONObject(list[i], useAnnotation))
-                                }
+                        for (i in list.indices) {
+                            if (Converter.isBaseClass((list[i] as Any).javaClass)) {
+                                jsonArray.put(list[i])
+                            } else {
+                                jsonArray.put(toJSONObject(list[i], useAnnotation))
                             }
                         }
                         json.put(filedName, jsonArray)
@@ -153,7 +151,7 @@ object JsonUtils {
     fun <T> parserToObject(c: Class<T>, str: String?, useAnnotation: Boolean, excludeTransient: Boolean): T? {
         require(!(null == str || "" == str)) { "str=null" }
         val json = formatJson(str)
-        var jsonObject: JSONObject? = null
+        var jsonObject: JSONObject?
         try {
             jsonObject = JSONObject(json)
         } catch (e: JSONException) {
@@ -184,7 +182,7 @@ object JsonUtils {
     fun <T> parserToList(c: Class<T>, str: String?, useAnnotation: Boolean, excludeTransient: Boolean): List<T> {
         require(!(null == str || "" == str)) { "str=null" }
         val json = formatJson(str)
-        var jsonArray: JSONArray? = null
+        var jsonArray: JSONArray?
         try {
             jsonArray = JSONArray(json)
         } catch (e: JSONException) {
@@ -205,10 +203,10 @@ object JsonUtils {
     @JvmStatic
     fun <T> parserToObjectByUrl(c: Class<T>, urlStr: String?): T? {
         require(!(null == urlStr || "" == urlStr)) { "urlStr=null" }
-        var url: URL? = null
-        var urlConnection: HttpURLConnection? = null
-        var json: String? = null
-        var jsonObject: JSONObject? = null
+        var url: URL?
+        var urlConnection: HttpURLConnection?
+        var json: String?
+        var jsonObject: JSONObject?
         try {
             url = URL(urlStr)
             urlConnection = url.openConnection() as HttpURLConnection
@@ -250,14 +248,14 @@ object JsonUtils {
         if (jsonObject == null) {
             return null
         }
-        var t: T? = null
+        var t: T?
         try {
             val typeMap = HashMap<String, Class<*>>()
             val constructor = c.getDeclaredConstructor()
             constructor.isAccessible = true
             t = constructor.newInstance() as T
             val fields = c.declaredFields
-            var filedName: String? = null
+            var filedName: String?
             for (field in fields) {
                 field.isAccessible = true
                 if (field.isEnumConstant || Modifier.isFinal(field.modifiers)) {
@@ -308,7 +306,7 @@ object JsonUtils {
             return ArrayList()
         }
         val list = ArrayList<T>()
-        var t: T? = null
+        var t: T?
         for (i in 0 until jsonArray.length()) {
             try {
                 t = if (jsonArray.get(i) is JSONObject) {
@@ -434,7 +432,7 @@ object JsonUtils {
 
     @JvmStatic
     fun getFloat(obj: JSONObject, key: String?, defaultValue: Float): Float {
-        var floatStr: String? = null
+        var floatStr: String?
         return try {
             floatStr = "" + obj.get(key)
             java.lang.Float.valueOf(floatStr)

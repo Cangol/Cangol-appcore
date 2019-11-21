@@ -307,7 +307,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
      */
     fun recoverAll() {
         synchronized(mDownloadRes) {
-            var downloadTask: DownloadTask? = null
+            var downloadTask: DownloadTask?
             for (resource in mDownloadRes) {
                 downloadTask = resource.downloadTask
                 if (resource.status == Download.STATUS_RERUN) {
@@ -322,7 +322,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
      */
     fun interruptAll() {
         synchronized(mDownloadRes) {
-            var downloadTask: DownloadTask? = null
+            var downloadTask: DownloadTask?
             for (resource in mDownloadRes) {
                 downloadTask = resource.downloadTask
                 if (resource.status < Download.STATUS_STOP) {
@@ -337,7 +337,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
      */
     fun close() {
         synchronized(mDownloadRes) {
-            var downloadTask: DownloadTask? = null
+            var downloadTask: DownloadTask?
             for (resource in mDownloadRes) {
                 downloadTask = resource.downloadTask
                 downloadTask?.stop()

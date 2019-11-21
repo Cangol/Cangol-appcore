@@ -110,14 +110,11 @@ object Object2FileUtils {
         } catch (e: IOException) {
             Log.d(e.message)
         } finally {
-            if (os != null) {
                 try {
                     os.close()
                 } catch (e: IOException) {
                     Log.d(e.message)
                 }
-
-            }
         }
     }
 

@@ -67,7 +67,7 @@ object StorageUtils {
     @JvmStatic
     fun getExternalCacheDir(context: Context): File {
         if (context.externalCacheDir != null) {
-            return context.externalCacheDir
+            return context.externalCacheDir!!
         }
         // Before Froyo we need to construct the external cache dir ourselves
         val cacheDir = ("/Android/data/" + context.packageName

@@ -128,7 +128,7 @@ open class AsyncHttpResponseHandler {
     }
 
     protected fun obtainMessage(responseMessage: Int, response: Any?): Message? {
-        var msg: Message? = null
+        var msg: Message?
         if (handler != null) {
             msg = this.handler!!.obtainMessage(responseMessage, response)
         } else {

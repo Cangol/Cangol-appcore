@@ -55,7 +55,7 @@ internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
 
     override fun init(serviceProperty: ServiceProperty) {
         this.mServiceProperty = serviceProperty
-        PoolManager.buildPool(mServiceProperty.getString(AnalyticsService.ANALYTICSSERVICE_THREADPOOL_NAME)!!, mServiceProperty!!.getInt(AnalyticsService.ANALYTICSSERVICE_THREAD_MAX))
+        PoolManager.buildPool(mServiceProperty.getString(AnalyticsService.ANALYTICSSERVICE_THREADPOOL_NAME)!!, mServiceProperty.getInt(AnalyticsService.ANALYTICSSERVICE_THREAD_MAX))
         mAsyncHttpClient = AsyncHttpClient.build(mServiceProperty.getString(AnalyticsService.ANALYTICSSERVICE_THREADPOOL_NAME)!!)
         try {
             commonParams = initCommonParams()
@@ -87,7 +87,7 @@ internal class AnalyticsServiceImpl : ITrackerHandler(), AnalyticsService {
     override fun send(iTracker: ITracker, url: String, params: Map<String, String>) {
         val headers = HashMap<String, String>()
         headers["device"] = JSONObject(deviceParams).toString()
-        headers.putAll(commonParams!!)
+        headers.putAll(commonParams)
 
         mAsyncHttpClient!!.post(mContext!!, url, headers, params, object : AsyncHttpResponseHandler() {
 

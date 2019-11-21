@@ -128,22 +128,22 @@ open class DownloadResponseHandler {
         if (response.isSuccessful) {
             val responseBody = response.body()
             val length = responseBody!!.contentLength()
-            val threadfile = RandomAccessFile(saveFile, "rwd")
+            val threadFile = RandomAccessFile(saveFile, "rwd")
             val inputStream = responseBody.byteStream()
-            var oldLength = threadfile.length()
+            var oldLength = threadFile.length()
             sendStartMessage(oldLength, length)
             if (oldLength < length) {
-                threadfile.seek(oldLength)
+                threadFile.seek(oldLength)
                 val block = ByteArray(BUFF_SIZE)
                 var starTime = System.currentTimeMillis()
                 var startLength: Long = 0
-                var readCount = 0
+                var readCount:Int
                 var end = false
                 while (!Thread.currentThread().isInterrupted && !end) {
                     readCount = inputStream.read(block, 0, BUFF_SIZE)
                     end = readCount == -1
                     if (!end) {
-                        threadfile.write(block, 0, readCount)
+                        threadFile.write(block, 0, readCount)
                         oldLength += readCount.toLong()
                         startLength += readCount.toLong()
                         if (System.currentTimeMillis() - starTime > 1000L) {
@@ -155,7 +155,7 @@ open class DownloadResponseHandler {
                         }
                     }
                 }
-                threadfile?.close()
+                threadFile.close()
                 if (Thread.currentThread().isInterrupted) {
                     sendStopMessage(oldLength)
                 } else {
@@ -172,14 +172,14 @@ open class DownloadResponseHandler {
             } else {
                 sendFailureMessage(IOException(), "oldfile error oldLength>length")
             }
-            responseBody?.close()
+            responseBody.close()
         } else {
             sendFailureMessage(IOException(), "StatusCode " + response.code())
         }
     }
 
     protected fun handleMessage(msg: Message) {
-        var response: Array<Any>? = null
+        var response: Array<Any>?
         when (msg.what) {
             PROGRESS_MESSAGE -> {
                 response = msg.obj as Array<Any>
@@ -240,7 +240,7 @@ open class DownloadResponseHandler {
     }
 
     protected fun obtainMessage(responseMessage: Int, response: Any?): Message? {
-        var msg: Message? = null
+        var msg: Message?
         if (handler != null) {
             msg = this.handler!!.obtainMessage(responseMessage, response)
         } else {

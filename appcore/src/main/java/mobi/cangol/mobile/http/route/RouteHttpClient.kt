@@ -59,7 +59,7 @@ class RouteHttpClient {
      * @param host
      */
     fun send(tag: Any, url: String, params: Map<String, String>?, responseHandler: RouteResponseHandler, vararg host: String) {
-        var request: Request? = null
+        var request: Request?
         if (params != null) {
             val requestBodyBuilder = FormBody.Builder()
             for ((key, value) in params) {
@@ -139,7 +139,7 @@ class RouteHttpClient {
 
         override fun run() {
             if (!Thread.currentThread().isInterrupted) {
-                responseHandler!!.sendStartMessage()
+                responseHandler?.sendStartMessage()
                 var exec = 0
                 while (exec < host!!.size) {
                     try {
@@ -147,19 +147,17 @@ class RouteHttpClient {
                         exec++
                         val response = client.newCall(request).execute()
                         if (!Thread.currentThread().isInterrupted) {
-                            if (responseHandler != null) {
-                                if (responseHandler.sendResponseMessage(response)) {
+                                if (responseHandler?.sendResponseMessage(response)!!) {
                                     break
                                 } else {
                                     //
                                 }
-                            }
                         } else {
                             break
                         }
                     } catch (e: IOException) {
                         if (exec >= host.size) {
-                            responseHandler.sendFailureMessage(e, "IOException")
+                            responseHandler?.sendFailureMessage(e, "IOException")
                             break
                         }
                     }

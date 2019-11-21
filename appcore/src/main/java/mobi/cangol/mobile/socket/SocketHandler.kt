@@ -67,7 +67,7 @@ abstract class SocketHandler {
     }
 
     protected fun obtainMessage(responseMessage: Int, response: Any?): Message? {
-        var msg: Message? = null
+        var msg: Message?
         if (handler != null) {
             msg = this.handler!!.obtainMessage(responseMessage, response)
         } else {
@@ -79,7 +79,7 @@ abstract class SocketHandler {
     }
 
     protected fun obtainMessage(responseMessage: Int, arg1: Int, arg2: Int, response: Any): Message? {
-        var msg: Message? = null
+        var msg: Message?
         if (handler != null) {
             msg = this.handler!!.obtainMessage(responseMessage, arg1, arg2, response)
         } else {

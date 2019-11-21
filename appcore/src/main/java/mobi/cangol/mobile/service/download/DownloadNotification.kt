@@ -80,8 +80,7 @@ class DownloadNotification {
     fun createNotification() {
         id = Random().nextInt(10000)
         val pendingIntent = PendingIntent.getActivity(context, id, Intent(), PendingIntent.FLAG_UPDATE_CURRENT)
-        var builder: NotificationCompat.Builder? = null
-        builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        var builder: NotificationCompat.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(context!!, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context)
@@ -100,8 +99,7 @@ class DownloadNotification {
     }
 
     fun updateNotification(progress: Int, speed: Int) {
-        var builder: NotificationCompat.Builder? = null
-        builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        var builder: NotificationCompat.Builder= if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(context!!, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context)
@@ -119,8 +117,7 @@ class DownloadNotification {
 
     fun finishNotification() {
         val pendingIntent = PendingIntent.getActivity(context, id, finishIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        var builder: NotificationCompat.Builder? = null
-        builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        var builder: NotificationCompat.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(context!!, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context)
@@ -137,8 +134,7 @@ class DownloadNotification {
     }
 
     fun failureNotification() {
-        var builder: NotificationCompat.Builder? = null
-        builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        var builder: NotificationCompat.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationCompat.Builder(context!!, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
         } else {
             NotificationCompat.Builder(context)

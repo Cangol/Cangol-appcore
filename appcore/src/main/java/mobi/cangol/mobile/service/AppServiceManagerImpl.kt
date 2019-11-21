@@ -45,7 +45,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
     }
 
     private fun initClass() {
-        var classList: MutableList<Class<out AppService>>? = null
+        var classList: MutableList<Class<out AppService>>?
         Log.d(TAG, "SDK_INT=" + Build.VERSION.SDK_INT)
         /** mulit dex not used
          * if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -136,7 +136,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
      */
     @Deprecated("")
     private fun init(appService: AppService, serviceProperty: ServiceProperty) {
-        var filed: Field? = null
+        var filed: Field?
         try {
             filed = appService.javaClass.getDeclaredField("mServiceProperty")
             if (filed == null) {
@@ -161,7 +161,7 @@ class AppServiceManagerImpl(private val mContext: CoreApplication) : AppServiceM
     }
 
     override fun destroyService(name: String) {
-        var appService: AppService? = null
+        var appService: AppService?
         if (mRunServiceMap.containsKey(name)) {
             appService = mRunServiceMap[name]
             appService!!.onDestroy()

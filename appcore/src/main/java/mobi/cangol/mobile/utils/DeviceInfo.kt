@@ -147,7 +147,7 @@ object DeviceInfo {
      */
     @JvmStatic
     fun getMemTotalSize(): Long {
-        var result: Long = 0
+        var result: Long
         result = try {
             val process = ProcessBuilder("/system/bin/cat", "/proc/meminfo").start()
             val bufferedReader = BufferedReader(InputStreamReader(process.inputStream, CHARSET))
@@ -169,7 +169,7 @@ object DeviceInfo {
      */
     @JvmStatic
     fun getMemFreeSize(): Long {
-        var result: Long = 0
+        var result: Long
         result = try {
             val process = ProcessBuilder("/system/bin/cat", "/proc/meminfo").start()
             val bufferedReader = BufferedReader(InputStreamReader(process.inputStream, CHARSET))
@@ -696,19 +696,18 @@ object DeviceInfo {
     @JvmStatic
     fun getOpenUDID(context: Context): String? {
         var openUDID: String? = null
-        var clazz: Class<*>? = null
-        try {
-            clazz = Class.forName("org.OpenUDID.OpenUDID_manager")
+        var clazz: Class<*>? = try {
+            Class.forName("org.OpenUDID.OpenUDID_manager")
         } catch (e: ClassNotFoundException) {
             try {
-                clazz = Class.forName("org.openudid.OpenUDIDManager")
+                Class.forName("org.openudid.OpenUDIDManager")
             } catch (e1: ClassNotFoundException) {
                 return null
             }
 
         }
 
-        var method: Method? = null
+        var method: Method?
         try {
             method = clazz!!.getDeclaredMethod("getOpenUDID")
             var obj: Any? = method!!.invoke(null)
@@ -732,16 +731,14 @@ object DeviceInfo {
 
     @JvmStatic
     fun syncOpenUDID(context: Context) {
-        var clazz: Class<*>? = null
-        try {
-            clazz = Class.forName("org.OpenUDID.OpenUDID_manager")
+        var clazz: Class<*>? = try {
+            Class.forName("org.OpenUDID.OpenUDID_manager")
         } catch (e: ClassNotFoundException) {
             try {
-                clazz = Class.forName("org.openudid.OpenUDIDManager")
+                Class.forName("org.openudid.OpenUDIDManager")
             } catch (e1: ClassNotFoundException) {
                 return
             }
-
         }
 
         try {
@@ -770,11 +767,10 @@ object DeviceInfo {
             Log.i("macAddress did:$did")
         } else {
             val tm = context.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            var imei: String? = null
-            try {
-                imei = tm.deviceId
+            var imei: String?= try {
+                tm.deviceId
             } catch (e: SecurityException) {
-                //
+                null
             }
 
             // no sim: sdk|any pad
@@ -815,7 +811,7 @@ object DeviceInfo {
     fun isWifiConnection(context: Context): Boolean {
         val cm = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        return networkInfo != null && networkInfo.isConnected
+        return networkInfo?.isConnected?:false
     }
 
     /**
@@ -828,7 +824,7 @@ object DeviceInfo {
     fun isConnection(context: Context): Boolean {
         val cm = context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnectedOrConnecting
+        return networkInfo?.isConnectedOrConnecting?:false
     }
 
     /**
@@ -932,7 +928,7 @@ object DeviceInfo {
         }
         val am = context.applicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val list = am.getRunningTasks(1)
-        if (list != null && !list.isEmpty()) {
+        if (list != null && list.isNotEmpty()) {
             val cpn = list[0].topActivity
             return activityName == cpn.className
         }

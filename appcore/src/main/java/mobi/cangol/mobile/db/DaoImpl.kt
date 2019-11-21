@@ -51,7 +51,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
     override fun create(paramT: T): Int {
         val oldPolicy = StrictMode.allowThreadDiskWrites()
         val db = mDatabaseHelper.writableDatabase
-        var result: Long = -1
+        var result: Long
         try {
             db.beginTransaction()
             result = db.insert(mTableName, null, DatabaseUtils.getContentValues(paramT as Any))
@@ -114,7 +114,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
         try {
             val db = mDatabaseHelper.readableDatabase
             val cursor = query(db, queryBuilder, *columns)
-            var obj: T? = null
+            var obj: T?
             while (cursor.moveToNext()) {
                 obj = DatabaseUtils.cursorToClassObject(mClazz, cursor, columns)
                 list.add(obj)
@@ -201,7 +201,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
     override fun update(paramT: T, vararg columns: String): Int {
         val oldPolicy = StrictMode.allowThreadDiskWrites()
         val db = mDatabaseHelper.writableDatabase
-        var result = -1
+        var result:Int
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT as Any, columns), DatabaseUtils.getIdColumnName(mClazz)!! + "=?", arrayOf("" + DatabaseUtils.getIdValue(paramT)!!))
         } catch (e: Exception) {
@@ -237,7 +237,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
         val oldPolicy = StrictMode.allowThreadDiskWrites()
 
         val db = mDatabaseHelper.writableDatabase
-        var result = -1
+        var result :Int
         try {
             result = db.update(mTableName, DatabaseUtils.getContentValues(paramT as Any, columns), DatabaseUtils.getIdColumnName(mClazz)!! + "=?", arrayOf("" + paramID))
         } catch (e: Exception) {
@@ -252,7 +252,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
     override fun delete(paramT: T): Int {
         val oldPolicy = StrictMode.allowThreadDiskWrites()
         val db = mDatabaseHelper.writableDatabase
-        var result = -1
+        var result :Int
         try {
             result = db.delete(mTableName, DatabaseUtils.getIdColumnName(mClazz)!! + "=?", arrayOf("" + DatabaseUtils.getIdValue(paramT as Any)!!))
         } catch (e: Exception) {
@@ -313,7 +313,7 @@ internal class DaoImpl<T, I>(private val mDatabaseHelper: CoreSQLiteOpenHelper, 
     @Throws(SQLException::class)
     override fun deleteAll(): Int {
         val db = mDatabaseHelper.writableDatabase
-        var result = 0
+        var result :Int
         try {
             db.beginTransaction()
             result = db.delete(mTableName, null, null)

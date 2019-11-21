@@ -301,7 +301,7 @@ object TimeUtils {
      */
     @JvmStatic
     fun convertLong(str: String): Long {
-        var currentTime: Date? = null
+        var currentTime: Date?
         var time: Long = -1
         try {
             currentTime = SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(str)
@@ -549,8 +549,8 @@ object TimeUtils {
         if (null == time || "" == time) {
             return ""
         }
-        var commentTime: Date? = null
-        var currentTime: Date? = null
+        var commentTime: Date?
+        var currentTime: Date?
         try {
             commentTime = SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time)
             currentTime = Calendar.getInstance().time
@@ -666,7 +666,7 @@ object TimeUtils {
         if (null == strTime || "" == strTime) {
             return ""
         }
-        var str: String? = null
+        var str: String?
         val currentCalendar: Calendar
         val commentCalendar: Calendar
         try {

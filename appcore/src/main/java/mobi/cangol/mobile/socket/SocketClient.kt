@@ -51,7 +51,7 @@ class SocketClient {
     }
 
     fun connect(tag: String?, host: String, port: Int, isLong: Boolean, timeout: Int, socketHandler: SocketHandler?): Future<*> {
-        val request = pool.submit(SocketThread(host, port, isLong, timeout, pool!!.executorService!!, socketHandler))
+        val request = pool.submit(SocketThread(host, port, isLong, timeout, pool.executorService!!, socketHandler))
         if (tag != null && socketHandler != null) {
             handlerMap[tag] = WeakReference(socketHandler)
         }

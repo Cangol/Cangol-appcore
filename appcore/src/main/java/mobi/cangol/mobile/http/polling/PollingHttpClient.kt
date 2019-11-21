@@ -64,7 +64,7 @@ class PollingHttpClient
      */
     fun send(tag: Any, url: String, params: Map<String, String>?, responseHandler: PollingResponseHandler, retryTimes: Int, sleeptimes: Long) {
 
-        var request: Request? = null
+        var request: Request?
         if (params != null) {
             val requestBodyBuilder = FormBody.Builder()
             for ((key, value) in params) {
@@ -152,7 +152,7 @@ class PollingHttpClient
 
         override fun run() {
             if (!Thread.currentThread().isInterrupted) {
-                responseHandler!!.sendStartMessage()
+                responseHandler?.sendStartMessage()
                 var exec = 0
                 var isSuccess = false
                 var isInterrupted = false
@@ -161,14 +161,12 @@ class PollingHttpClient
                         exec++
                         val response = client.newCall(request).execute()
                         if (!Thread.currentThread().isInterrupted) {
-                            if (responseHandler != null) {
-                                isSuccess = responseHandler.sendResponseMessage(response)
+                                isSuccess = responseHandler?.sendResponseMessage(response)?:false
                                 if (isSuccess) {
 
                                 } else {
                                     break
                                 }
-                            }
                         } else {
                             Log.d(TAG, "Thread.isInterrupted")
                             break
@@ -180,7 +178,7 @@ class PollingHttpClient
                         }
                         Log.d(TAG, "Thread sleeptimes end")
                     } catch (e: IOException) {
-                        responseHandler.sendFailureMessage(e, "IOException")
+                        responseHandler?.sendFailureMessage(e, "IOException")
                         if (exec >= retryTimes) {
                             break
                         }
@@ -191,7 +189,7 @@ class PollingHttpClient
 
                 }
                 if (!isSuccess && !isInterrupted) {
-                    responseHandler.sendFinishMessage(exec)
+                    responseHandler?.sendFinishMessage(exec)
                 }
             }
         }

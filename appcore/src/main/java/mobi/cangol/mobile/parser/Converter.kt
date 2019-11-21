@@ -176,7 +176,7 @@ object Converter {
      */
     @JvmStatic
     fun getFieldName(field: Field, useAnnotation: Boolean): String {
-        var filedName: String? = null
+        var filedName: String?
         if (useAnnotation) {
             filedName = if (field.isAnnotationPresent(Attribute::class.java)) {
                 val attr = field.getAnnotation(Attribute::class.java)

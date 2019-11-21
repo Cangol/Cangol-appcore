@@ -91,7 +91,7 @@ object StatAgent {
                 send(Builder.createSession(sessionId, beginSession, sessionDuration, endSession, activityId))
             }
         })
-        StatsTraffic.getInstance(context).onCreated(context!!)
+        StatsTraffic.getInstance(context).onCreated(context)
         crashService?.setReport(getStatHostUrl() + STAT_ACTION_EXCEPTION, null)
     }
 

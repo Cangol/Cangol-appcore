@@ -26,11 +26,11 @@ class IMapBuilder private constructor() {
     private var mUrl: String? = null
     private val mParams = HashMap<String, String>()
 
-    open fun getParams(): Map<String, String> {
+    fun getParams(): Map<String, String> {
         return mParams
     }
 
-    open fun getUrl(): String? {
+    fun getUrl(): String? {
         return mUrl
     }
 

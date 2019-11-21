@@ -38,7 +38,7 @@ open class HanziToPinyin protected constructor(private val mHasChinaCollator: Bo
 
     private fun getToken(character: Char): Token {
         var token = Token()
-        val letter = Character.toString(character)
+        val letter = character.toString()
         token.source = letter
         var offset = -1
         var cmp: Int
@@ -74,8 +74,7 @@ open class HanziToPinyin protected constructor(private val mHasChinaCollator: Bo
             var end = UNIHANS.size - 1
             while (begin <= end) {
                 offset = (begin + end) / 2
-                val unihan = Character.toString(UNIHANS[offset])
-                cmp = COLLATOR.compare(letter, unihan)
+                cmp = COLLATOR.compare(letter, UNIHANS[offset].toString())
                 if (cmp == 0) {
                     break
                 } else if (cmp > 0) {
@@ -188,11 +187,11 @@ open class HanziToPinyin protected constructor(private val mHasChinaCollator: Bo
             /**
              * Separator between target string for each source char
              */
-            val SEPARATOR = " "
+            const val SEPARATOR = " "
 
-            val LATIN = 1
-            val PINYIN = 2
-            val UNKNOWN = 3
+            const val LATIN = 1
+            const val PINYIN = 2
+            const val UNKNOWN = 3
         }
     }
 
@@ -254,12 +253,12 @@ open class HanziToPinyin protected constructor(private val mHasChinaCollator: Bo
          */
         private fun doSelfValidation(): Boolean {
             val lastChar = UNIHANS[0]
-            var lastString = Character.toString(lastChar)
+            var lastString = lastChar.toString()
             for (c in UNIHANS) {
                 if (lastChar == c) {
                     continue
                 }
-                val curString = Character.toString(c)
+                val curString = c.toString()
                 val cmp = COLLATOR.compare(lastString, curString)
                 if (cmp >= 0) {
                     Log.e(TAG, "Internal error in Unihan table. " + "The last string \"" + lastString
@@ -273,7 +272,7 @@ open class HanziToPinyin protected constructor(private val mHasChinaCollator: Bo
 
         @JvmStatic
         fun getFullPinYin(source: String): String {
-            if (!Arrays.asList(*Collator.getAvailableLocales()).contains(
+            if (!listOf(*Collator.getAvailableLocales()).contains(
                             Locale.CHINA)) {
                 return source
             }
@@ -294,7 +293,7 @@ open class HanziToPinyin protected constructor(private val mHasChinaCollator: Bo
 
         @JvmStatic
         fun getFirstPinYin(source: String): String {
-            if (!Arrays.asList(*Collator.getAvailableLocales()).contains(
+            if (!listOf(*Collator.getAvailableLocales()).contains(
                             Locale.CHINA)) {
                 return source
             }

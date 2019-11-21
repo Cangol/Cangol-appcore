@@ -64,8 +64,8 @@ internal class LocationServiceImpl : LocationService {
     override fun init(serviceProperty: ServiceProperty) {
         Log.d(TAG, "init $serviceProperty")
         this.mServiceProperty = serviceProperty
-        mBetterTime = mServiceProperty!!.getInt(LocationService.LOCATIONSERVICE_BETTERTIME)
-        mTimeOut = mServiceProperty!!.getInt(LocationService.LOCATIONSERVICE_TIMEOUT)
+        mBetterTime = mServiceProperty.getInt(LocationService.LOCATIONSERVICE_BETTERTIME)
+        mTimeOut = mServiceProperty.getInt(LocationService.LOCATIONSERVICE_TIMEOUT)
     }
 
     override fun getName(): String {
@@ -174,14 +174,14 @@ internal class LocationServiceImpl : LocationService {
             }
             if (gpsProvider) {
                 mLocationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        mServiceProperty!!.getInt(LocationService.LOCATIONSERVICE_GPS_MINTIME).toLong(),
-                        mServiceProperty!!.getInt(LocationService.LOCATIONSERVICE_GPS_MINDISTANCE).toFloat(),
+                        mServiceProperty.getInt(LocationService.LOCATIONSERVICE_GPS_MINTIME).toLong(),
+                        mServiceProperty.getInt(LocationService.LOCATIONSERVICE_GPS_MINDISTANCE).toFloat(),
                         mLocationListener)
             }
             if (networkProvider) {
                 mLocationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        mServiceProperty!!.getInt(LocationService.LOCATIONSERVICE_NETWORK_MINTIME).toLong(),
-                        mServiceProperty!!.getInt(LocationService.LOCATIONSERVICE_NETWORK_MINDISTANCE).toFloat(),
+                        mServiceProperty.getInt(LocationService.LOCATIONSERVICE_NETWORK_MINTIME).toLong(),
+                        mServiceProperty.getInt(LocationService.LOCATIONSERVICE_NETWORK_MINDISTANCE).toFloat(),
                         mLocationListener)
             }
             mServiceHandler!!.sendEmptyMessageDelayed(FLAG_TIMEOUT, mTimeOut.toLong())
