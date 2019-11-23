@@ -300,6 +300,8 @@ public abstract class DownloadExecutor<T> {
                 final DownloadTask downloadTask = resource.getDownloadTask();
                 if(downloadTask != null) downloadTask.remove();
                 mDownloadRes.remove(resource);
+                FileUtils.delete(resource.getConfFile());
+                FileUtils.delete(resource.getSourceFile());
             } else {
                 Log.e(mTag, "resource isn't exist");
             }
