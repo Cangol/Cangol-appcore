@@ -77,10 +77,12 @@ public abstract class DownloadExecutor<T> {
         mDownloadRes.addAll(scanResource(mDownloadDir));
     }
 
+    public ArrayList<DownloadResource> getDownloadResource() {
+       return  mDownloadRes;
+    }
     public void setDownloadEvent(DownloadEvent downloadEvent) {
         this.mDownloadEvent = downloadEvent;
     }
-
     /**
      * 下载对象转换为DownloadResource
      *
