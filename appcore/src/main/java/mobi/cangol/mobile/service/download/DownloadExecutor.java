@@ -219,7 +219,7 @@ public abstract class DownloadExecutor<T> {
         }
         if (mDownloadRes.contains(resource)) {
             DownloadTask downloadTask = resource.getDownloadTask();
-            if (downloadTask.isRunning()) {
+            if(downloadTask != null&&downloadTask.isRunning()){
                 downloadTask.stop();
             }
         } else {
@@ -239,7 +239,7 @@ public abstract class DownloadExecutor<T> {
         }
         if (mDownloadRes.contains(resource)) {
             final DownloadTask downloadTask = resource.getDownloadTask();
-            downloadTask.resume();
+            if(downloadTask != null) downloadTask.resume();
         }
     }
 
@@ -255,7 +255,7 @@ public abstract class DownloadExecutor<T> {
         }
         if (mDownloadRes.contains(resource)) {
             final DownloadTask downloadTask = resource.getDownloadTask();
-            downloadTask.restart();
+            if(downloadTask != null) downloadTask.restart();
         }
     }
 
@@ -298,7 +298,7 @@ public abstract class DownloadExecutor<T> {
         synchronized (mDownloadRes) {
             if (mDownloadRes.contains(resource)) {
                 final DownloadTask downloadTask = resource.getDownloadTask();
-                downloadTask.remove();
+                if(downloadTask != null) downloadTask.remove();
                 mDownloadRes.remove(resource);
             } else {
                 Log.e(mTag, "resource isn't exist");
@@ -344,9 +344,8 @@ public abstract class DownloadExecutor<T> {
             DownloadTask downloadTask = null;
             for (final DownloadResource resource : mDownloadRes) {
                 downloadTask = resource.getDownloadTask();
-                if (downloadTask != null) {
-                    downloadTask.stop();
-                }
+                if (downloadTask != null) downloadTask.stop();
+
             }
         }
         mDownloadRes.clear();
