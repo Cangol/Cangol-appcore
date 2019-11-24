@@ -59,7 +59,9 @@ abstract class DownloadExecutor<T>(private val mName: String) {
     fun getDownloadDir(): File {
         return mDownloadDir!!
     }
-
+    fun getDownloadResource():ArrayList<DownloadResource> {
+        return mDownloadRes
+    }
     fun setDownloadDir(directory: File) {
         mDownloadDir = directory
         if (!directory.exists()) {
@@ -215,8 +217,8 @@ abstract class DownloadExecutor<T>(private val mName: String) {
         }
         if (mDownloadRes.contains(resource)) {
             val downloadTask = resource.downloadTask
-            if (downloadTask!!.isRunning) {
-                downloadTask.stop()
+            if (downloadTask!=null) {
+                if(downloadTask.isRunning)downloadTask.stop()
             }
         } else {
             Log.e(mTag, "resource isn't exist")
@@ -235,7 +237,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
         }
         if (mDownloadRes.contains(resource)) {
             val downloadTask = resource.downloadTask
-            downloadTask!!.resume()
+            downloadTask?.resume()
         }
     }
 
@@ -251,7 +253,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
         }
         if (mDownloadRes.contains(resource)) {
             val downloadTask = resource.downloadTask
-            downloadTask!!.restart()
+            downloadTask?.restart()
         }
     }
 
@@ -294,7 +296,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
         synchronized(mDownloadRes) {
             if (mDownloadRes.contains(resource)) {
                 val downloadTask = resource.downloadTask
-                downloadTask!!.remove()
+                downloadTask?.remove()
                 mDownloadRes.remove(resource)
             } else {
                 Log.e(mTag, "resource isn't exist")
@@ -311,7 +313,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
             for (resource in mDownloadRes) {
                 downloadTask = resource.downloadTask
                 if (resource.status == Download.STATUS_RERUN) {
-                    downloadTask!!.resume()
+                    downloadTask?.resume()
                 }
             }
         }
@@ -326,7 +328,7 @@ abstract class DownloadExecutor<T>(private val mName: String) {
             for (resource in mDownloadRes) {
                 downloadTask = resource.downloadTask
                 if (resource.status < Download.STATUS_STOP) {
-                    downloadTask!!.interrupt()
+                    downloadTask?.interrupt()
                 }
             }
         }
