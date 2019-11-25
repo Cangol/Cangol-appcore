@@ -58,22 +58,23 @@ object DeviceInfo {
     /**
      * 默认IMEI
      */
-    private const val SPECIAL_IMEI = "000000000000000"
+    const val SPECIAL_IMEI = "000000000000000"
     /**
      * 默认ANDROID_ID
      */
-    private const val SPECIAL_ANDROID_ID = "9774d56d682e549c"
+    const val SPECIAL_ANDROID_ID = "9774d56d682e549c"
+
 
     /**
      * 默认MAC(小米)
      */
-    private const val SPECIAL_MAC = "02:00:00:00:00:00"
+    const  val SPECIAL_MAC = "02:00:00:00:00:00"
     /**
      * 默认CHARSET
      */
-    private const val CHARSET = "UTF-8"
-    private const val UNKNOWN = "UNKNOWN"
-    private const val ANDROID = "android"
+    const val CHARSET = "UTF-8"
+    const val UNKNOWN = "UNKNOWN"
+    const val ANDROID = "android"
 
     /**
      * 获取操作系统类型
@@ -248,14 +249,14 @@ object DeviceInfo {
         return Build.CPU_ABI
     }
 
-    private const val NETWORK_TYPE_UNAVAILABLE = -1
-    private const val NETWORK_TYPE_WIFI = -101
-    private const val NETWORK_CLASS_WIFI = -101
-    private const val NETWORK_CLASS_UNAVAILABLE = -1
-    private const val NETWORK_CLASS_2G = 1
-    private const val NETWORK_CLASS_3G = 2
-    private const val NETWORK_CLASS_4G = 3
-    private const val NETWORK_CLASS_UNKNOWN = 0
+     const val NETWORK_TYPE_UNAVAILABLE = -1
+     const val NETWORK_TYPE_WIFI = -101
+     const val NETWORK_CLASS_WIFI = -101
+     const val NETWORK_CLASS_UNAVAILABLE = -1
+     const val NETWORK_CLASS_2G = 1
+     const val NETWORK_CLASS_3G = 2
+     const val NETWORK_CLASS_4G = 3
+     const val NETWORK_CLASS_UNKNOWN = 0
 
     /**
      * 获取设备Locale信息
