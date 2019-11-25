@@ -18,6 +18,7 @@
  */
 package mobi.cangol.mobile.logging
 
+import android.text.TextUtils
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
@@ -206,9 +207,16 @@ object Log {
         } else {
             msg
         }
-        if (null == tag) {
+        if (TextUtils.isEmpty(tag)) {
             tag = if (filename != null && filename.contains(".java")) filename.replace(".java", "") else ""
+        }else if(TextUtils.equals(tag,"BaseFragment")
+                ||TextUtils.equals(tag,"BaseActivity")
+                ||TextUtils.equals(tag,"BaseActionBarActivity")
+                ||TextUtils.equals(tag,"BaseFragmentActivity")
+                ||TextUtils.equals(tag,"BaseActionBarActivity")){
+            tag=classname
         }
+
         if (output == null) {
             output = ""
         }

@@ -280,7 +280,7 @@ open class CoreApplication : Application() {
     /**
      * 退出应用
      */
-    fun exit() {
+    open fun exit() {
         mModuleManager.onExit()
         mModuleManager.clear()
         getSession().saveString(Constants.KEY_EXIT_CODE, "0")
