@@ -38,51 +38,39 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    dexOptions {
-        javaMaxHeapSize "4g"
-        preDexLibraries false
-        //dexInProcess  true
-        jumboMode true
-    }
+
     buildTypes {
         debug {
             testCoverageEnabled true
         }
     }
+    androidExtensions {
+        experimental = true
+    }
 }
 
-android.libraryVariants.all { variant ->
-    def name = variant.buildType.name
-    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
-        return // Skip debug builds.
-    }
-    def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompile
-    task.from variant.javaCompile.destinationDir
-    task.exclude '**/BuildConfig.class'
-    task.exclude '**/R.class'
-    task.manifest{
-        attributes(
-                "Implementation-Title": project.name,
-                "Implementation-Version": version
-        )
-    }
-    artifacts.add('archives', task)
-}
+//android.libraryVariants.all { variant ->
+//    def name = variant.buildType.name
+//    if (name.equals(com.android.builder.core.BuilderConstants.DEBUG)) {
+//        return // Skip debug builds.
+//    }
+//    def task = project.tasks.create "jar${name.capitalize()}", Jar
+//    task.dependsOn variant.javaCompile
+//    task.from variant.javaCompile.destinationDir
+//    task.exclude '**/BuildConfig.class'
+//    task.exclude '**/R.class'
+//    task.manifest{
+//        attributes(
+//                "Implementation-Title": project.name,
+//                "Implementation-Version": version
+//        )
+//    }
+//    artifacts.add('archives', task)
+//}
 
-// build a jar with source files
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-    exclude '**/BuildConfig.java'
-    exclude '**/R.java'
-}
-//
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath = configurations.compile
-    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    //classpath += project.files(configurations.compile.files,android.getBootClasspath().join(File.pathSeparator))
     options {
         encoding "UTF-8"
         links "http://docs.oracle.com/javase/8/docs/api/"
@@ -100,6 +88,13 @@ task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
 task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+    exclude '**/properties.xml'
 }
 artifacts {
     archives sourcesJar

@@ -22,7 +22,7 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import android.text.TextUtils
-import mobi.cangol.mobile.core.BuildConfig
+import mobi.cangol.mobile.BuildConfig
 import mobi.cangol.mobile.http.AsyncHttpClient
 import mobi.cangol.mobile.http.AsyncHttpResponseHandler
 import mobi.cangol.mobile.http.RequestParams
