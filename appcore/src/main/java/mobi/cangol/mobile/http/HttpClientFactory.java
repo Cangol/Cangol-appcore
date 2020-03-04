@@ -68,7 +68,6 @@ public class HttpClientFactory {
     private static final int DEFAULT_READ_TIMEOUT = 20 * 1000;
     private static final int DEFAULT_WRITE_TIMEOUT = 20 * 1000;
 
-    private static OkHttpClient httpClient;
     private HttpClientFactory(){}
 
     /**
@@ -76,20 +75,30 @@ public class HttpClientFactory {
      * @return
      */
     public static OkHttpClient createDefaultHttpClient() {
-        X509TrustManager trustAllCert = getX509TrustManager();
-        httpClient = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
-                .build();
-        return httpClient;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            X509TrustManager trustAllCert = getX509TrustManager();
+            return new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
+                    .build();
+        }else{
+            return new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .build();
+        }
     }
 
-    public static X509TrustManager getX509TrustManager(){
+    private static X509TrustManager getX509TrustManager(){
         return   new X509TrustManager() {
             @Override
             public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -113,25 +122,46 @@ public class HttpClientFactory {
      * @return
      */
     public static OkHttpClient createAuthHttpClient(final String username, final String password) {
-        X509TrustManager trustAllCert = getX509TrustManager();
-        return new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
-                .authenticator(new Authenticator() {
-                    @Override
-                    public Request authenticate(Route route, Response response) {
-                        final  String credential = Credentials.basic(username, password);
-                        return response.request().newBuilder()
-                                .header("Authorization", credential)
-                                .build();
-                    }
-                })
-                .build();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            X509TrustManager trustAllCert = getX509TrustManager();
+            return new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
+                    .authenticator(new Authenticator() {
+                        @Override
+                        public Request authenticate(Route route, Response response) {
+                            final  String credential = Credentials.basic(username, password);
+                            return response.request().newBuilder()
+                                    .header("Authorization", credential)
+                                    .build();
+                        }
+                    })
+                    .build();
+        }else{
+            return new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .authenticator(new Authenticator() {
+                        @Override
+                        public Request authenticate(Route route, Response response) {
+                            final  String credential = Credentials.basic(username, password);
+                            return response.request().newBuilder()
+                                    .header("Authorization", credential)
+                                    .build();
+                        }
+                    })
+                    .build();
+        }
+
     }
 
     /**
@@ -142,19 +172,34 @@ public class HttpClientFactory {
      * @return
      */
     public static OkHttpClient createCertHttpClient(final String pattern, final String... pins) {
-        X509TrustManager trustAllCert = getX509TrustManager();
-        return new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
-                .certificatePinner(new CertificatePinner.Builder()
-                        .add(pattern, pins)
-                        .build())
-                .build();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            X509TrustManager trustAllCert = getX509TrustManager();
+            return new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
+                    .certificatePinner(new CertificatePinner.Builder()
+                            .add(pattern, pins)
+                            .build())
+                    .build();
+        }else{
+            return new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                    .certificatePinner(new CertificatePinner.Builder()
+                            .add(pattern, pins)
+                            .build())
+                    .build();
+        }
+
     }
 
     /**
@@ -348,6 +393,7 @@ public class HttpClientFactory {
             return new X509Certificate[]{};
         }
     }
+
     //https://www.cnblogs.com/renhui/p/6591347.html
     public static class SSL extends SSLSocketFactory {
 

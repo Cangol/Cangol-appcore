@@ -39,9 +39,6 @@ import okhttp3.Response;
 
 public class PollingHttpClient {
     public static final  String TAG = "PollingHttpClient";
-    private static final  int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
-    private static final  int DEFAULT_READ_TIMEOUT = 30 * 1000;
-    private static final  int DEFAULT_WRITE_TIMEOUT = 30 * 1000;
     private static final  int DEFAULT_MAX = 3;
     private final Map<Object, List<WeakReference<Future<?>>>> requestMap;
     private OkHttpClient httpClient;
@@ -51,16 +48,7 @@ public class PollingHttpClient {
      * 构造实例
      */
     public PollingHttpClient(final String group) {
-        X509TrustManager trustAllCert = HttpClientFactory.getX509TrustManager();
-        httpClient = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .followRedirects(true)
-                .followSslRedirects(true)
-                .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .sslSocketFactory(new HttpClientFactory.SSL(trustAllCert), trustAllCert)
-                .build();
+        httpClient = HttpClientFactory.createDefaultHttpClient();
         threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
         requestMap = new WeakHashMap<>();
     }
