@@ -26,6 +26,9 @@ import java.util.WeakHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.X509TrustManager;
+
+import mobi.cangol.mobile.http.HttpClientFactory;
 import mobi.cangol.mobile.service.PoolManager;
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -48,6 +51,7 @@ public class PollingHttpClient {
      * 构造实例
      */
     public PollingHttpClient(final String group) {
+        X509TrustManager trustAllCert = HttpClientFactory.getX509TrustManager();
         httpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
                 .followRedirects(true)
@@ -55,6 +59,7 @@ public class PollingHttpClient {
                 .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+                .sslSocketFactory(new HttpClientFactory.SSL(trustAllCert), trustAllCert)
                 .build();
         threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
         requestMap = new WeakHashMap<>();

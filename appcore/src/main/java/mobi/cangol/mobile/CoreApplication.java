@@ -17,8 +17,10 @@ package mobi.cangol.mobile;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -316,5 +318,10 @@ public class CoreApplication extends Application {
         System.exit(0);
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
 }
