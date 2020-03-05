@@ -17,7 +17,6 @@ package mobi.cangol.mobile.http;
 
 
 import android.os.Build;
-import android.support.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +24,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -33,7 +31,6 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -54,8 +51,6 @@ import javax.net.ssl.X509TrustManager;
 import mobi.cangol.mobile.logging.Log;
 import okhttp3.Authenticator;
 import okhttp3.CertificatePinner;
-import okhttp3.CipherSuite;
-import okhttp3.ConnectionSpec;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -84,7 +79,7 @@ public class HttpClientFactory {
                     .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
                     .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
+                    .sslSocketFactory(new KitkatSSLSocketFactory(trustAllCert), trustAllCert)
                     .build();
         }else{
             return new OkHttpClient.Builder()
@@ -98,7 +93,7 @@ public class HttpClientFactory {
         }
     }
 
-    private static X509TrustManager getX509TrustManager(){
+    public static X509TrustManager getX509TrustManager(){
         return   new X509TrustManager() {
             @Override
             public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
@@ -131,7 +126,7 @@ public class HttpClientFactory {
                     .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
                     .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
+                    .sslSocketFactory(new KitkatSSLSocketFactory(trustAllCert), trustAllCert)
                     .authenticator(new Authenticator() {
                         @Override
                         public Request authenticate(Route route, Response response) {
@@ -181,7 +176,7 @@ public class HttpClientFactory {
                     .readTimeout(DEFAULT_READ_TIMEOUT, TimeUnit.MILLISECONDS)
                     .connectTimeout(DEFAULT_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(DEFAULT_WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .sslSocketFactory(new SSL(trustAllCert), trustAllCert)
+                    .sslSocketFactory(new KitkatSSLSocketFactory(trustAllCert), trustAllCert)
                     .certificatePinner(new CertificatePinner.Builder()
                             .add(pattern, pins)
                             .build())
@@ -395,7 +390,7 @@ public class HttpClientFactory {
     }
 
     //https://www.cnblogs.com/renhui/p/6591347.html
-    public static class SSL extends SSLSocketFactory {
+    public static class KitkatSSLSocketFactory extends SSLSocketFactory {
 
         private SSLSocketFactory defaultFactory;
         // Android 5.0+ (API level21) provides reasonable default settings
@@ -409,12 +404,12 @@ public class HttpClientFactory {
                 if (socket != null) {
                     /* set reasonable protocol versions */
                     // - enable all supported protocols (enables TLSv1.1 and TLSv1.2 on Android <5.0)
-                    // - remove all SSL versions (especially SSLv3) because they're insecure now
+                    // - remove all KitkatSSLSocketFactory versions (especially SSLv3) because they're insecure now
                     List<String> protocols = new LinkedList<>();
                     for (String protocol : socket.getSupportedProtocols())
-                        if (!protocol.toUpperCase().contains("SSL"))
+                        if (!protocol.toUpperCase().contains("KitkatSSLSocketFactory"))
                             protocols.add(protocol);
-                    SSL.protocols = protocols.toArray(new String[protocols.size()]);
+                    KitkatSSLSocketFactory.protocols = protocols.toArray(new String[protocols.size()]);
                     /* set up reasonable cipher suites */
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                         // choose known secure cipher suites
@@ -447,7 +442,7 @@ public class HttpClientFactory {
                         // add preferred ciphers to enabled ciphers
                         HashSet<String> enabledCiphers = preferredCiphers;
                         enabledCiphers.addAll(new HashSet<>(Arrays.asList(socket.getEnabledCipherSuites())));
-                        SSL.cipherSuites = enabledCiphers.toArray(new String[enabledCiphers.size()]);
+                        KitkatSSLSocketFactory.cipherSuites = enabledCiphers.toArray(new String[enabledCiphers.size()]);
                     }
                 }
             } catch (IOException e) {
@@ -455,7 +450,7 @@ public class HttpClientFactory {
             }
         }
 
-        public SSL(X509TrustManager tm) {
+        public KitkatSSLSocketFactory(X509TrustManager tm) {
             try {
                 SSLContext sslContext = SSLContext.getInstance("TLS");
                 sslContext.init(null, (tm != null) ? new X509TrustManager[]{tm} : null, null);

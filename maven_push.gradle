@@ -10,6 +10,8 @@ bintray (){
     user = 'cangol'
     key = '60f11531c76078139c54e6bb10af74b3f2965bef'
 
+
+
     configurations = ['archives']
     pkg {
         repo = 'maven'
