@@ -29,14 +29,12 @@ class SessionServiceImpl implements SessionService {
     private CoreApplication mContext = null;
     private ServiceProperty mServiceProperty = null;
     private boolean mDebug = false;
-    private Map<String, Session> mSessionMap = null;
+    private Map<String, Session> mSessionMap = new ConcurrentHashMap<>();
     private Session mSession = null;
 
     @Override
     public void onCreate(Application context) {
         mContext = (CoreApplication) context;
-        //这里使用application中的session也可实例化一个新的
-        mSessionMap = new ConcurrentHashMap<>();
         final ConfigService configService = (ConfigService) mContext.getAppService(AppService.CONFIG_SERVICE);
         mSession = newSession(mContext, configService.getSharedName());
     }
@@ -55,6 +53,7 @@ class SessionServiceImpl implements SessionService {
                 session.clear();
             }
         }
+        mSessionMap.clear();
     }
 
     @Override
