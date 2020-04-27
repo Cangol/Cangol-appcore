@@ -37,7 +37,7 @@ class ConfigServiceImpl implements ConfigService {
     private Application mContext = null;
     private ServiceProperty mServiceProperty = null;
     private boolean mDebug = false;
-    private boolean mUseInternalStorage = false;
+    private boolean mUseInternalStorage = true;
     private boolean mIsCustomAppDir = false;
     private File mAppDir;
 
