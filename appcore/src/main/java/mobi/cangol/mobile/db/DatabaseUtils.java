@@ -379,6 +379,8 @@ public class DatabaseUtils {
             fieldList.addAll(Arrays.asList(tempClass.getDeclaredFields()));
             if (tempClass.getSuperclass().isAnnotationPresent(DatabaseTable.class)) {
                 tempClass = tempClass.getSuperclass();
+            }else{
+                tempClass=null;
             }
         }
         List<Field> list = new ArrayList<>();
