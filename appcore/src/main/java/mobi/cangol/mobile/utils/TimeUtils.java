@@ -31,7 +31,6 @@ import java.util.TimeZone;
 import mobi.cangol.mobile.logging.Log;
 
 public class TimeUtils {
-
     private static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
     private static final String YYYYMMDD = "yyyyMMdd";
     private static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
@@ -92,18 +91,16 @@ public class TimeUtils {
      * @return String
      */
     public static String getCurrentTime() {
-        return new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).format(new Date());
+        return getCurrentTime(YYYY_MM_DD_HH_MM_SS);
     }
-
     /**
-     * 得到当前的时间，精确到毫秒,共14位 返回格式:yyyyMMddHHmmss
+     * 得到当前的时间，返回格式:pattern
      *
      * @return String
      */
-    public static String getCurrentTime2() {
-        return new SimpleDateFormat(YYYYMMDDHHMMSS).format(new Date());
+    public static String getCurrentTime(String pattern) {
+        return new SimpleDateFormat(pattern).format(new Date());
     }
-
     /**
      * 转换字符（yyyy-MM-dd）串日期到Date
      *
@@ -111,14 +108,22 @@ public class TimeUtils {
      * @return
      */
     public static Date convertToDate(String date) {
+        return convertToDate(YYYY_MM_DD,date);
+    }
+    /**
+     * 转换字符pattern串日期到Date
+     *
+     * @param date
+     * @return
+     */
+    public static Date convertToDate(String pattern,String date) {
         try {
-            return new SimpleDateFormat(YYYY_MM_DD).parse(date);
+            return new SimpleDateFormat(pattern).parse(date);
         } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
         }
     }
-
     /**
      * 转换日期到字符换yyyy-MM-dd
      *
@@ -126,14 +131,16 @@ public class TimeUtils {
      * @return
      */
     public static String convertToString(Date date) {
+        return convertToString(date,YYYY_MM_DD);
+    }
+    public static String convertToString(Date date,String pattern) {
         try {
-            return new SimpleDateFormat(YYYY_MM_DD).format(date);
+            return new SimpleDateFormat(pattern).format(date);
         } catch (Exception e) {
             Log.d(e.getMessage());
             return null;
         }
     }
-
     /**
      * 得到当前的时间加上输入年后的时间，精确到毫秒,共19位 返回格式:yyyy-MM-dd:HH:mm:ss
      *
@@ -244,16 +251,7 @@ public class TimeUtils {
      * @return
      */
     public static String convertStandard(String str) {
-        String timeStr = null;
-        if (str != null && !str.equals("")) {
-            try {
-                final Date date = new SimpleDateFormat(YYYYMMDD).parse(str);
-                timeStr = new SimpleDateFormat(YYYY_MM_DD).format(date);
-            } catch (ParseException e) {
-                Log.d(e.getMessage());
-            }
-        }
-        return timeStr;
+        return convertToString(YYYYMMDD,YYYY_MM_DD,str);
     }
 
     /**
@@ -263,18 +261,21 @@ public class TimeUtils {
      * @return
      */
     public static String convert8Bit(String str) {
+        return convertToString(YYYY_MM_DD,YYYYMMDD,str);
+    }
+
+    public static String convertToString(String srcPattern,String dstPattern,String time) {
         String timeStr = null;
-        if (str!= null && !str.equals("")) {
+        if (time!= null && !time.equals("")) {
             try {
-                final Date date = new SimpleDateFormat(YYYY_MM_DD).parse(str);
-                timeStr = new SimpleDateFormat(YYYYMMDD).format(date);
+                final Date date = new SimpleDateFormat(srcPattern).parse(time);
+                timeStr = new SimpleDateFormat(dstPattern).format(date);
             } catch (ParseException e) {
                 Log.d(e.getMessage());
             }
         }
         return timeStr;
     }
-
     /**
      * 转换时间yyyy-MM-dd HH:mm:ss到毫秒数
      *
@@ -282,47 +283,20 @@ public class TimeUtils {
      * @return
      */
     public static long convertLong(String str) {
+        return convertLong(YYYY_MM_DD_HH_MM_SS,str);
+    }
+
+    public static long convertLong(String pattern,String str) {
         Date currentTime = null;
         long time = -1;
         try {
-            currentTime = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(str);
+            currentTime = new SimpleDateFormat(pattern).parse(str);
             time = currentTime.getTime();
         } catch (ParseException e) {
             Log.d(e.getMessage());
         }
         return time;
     }
-
-    public static String formatDateString(String time) {
-        Date date = null;
-        try {
-            date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
-        } catch (ParseException e) {
-            Log.d(e.getMessage());
-        }
-        return new SimpleDateFormat(YYYY_MM_DD).format(date);
-    }
-
-    public static String formatTimeString2(String time) {
-        Date date = null;
-        try {
-            date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
-        } catch (ParseException e) {
-            Log.d(e.getMessage());
-        }
-        return new SimpleDateFormat(HH_MM_SS).format(date);
-    }
-
-    public static String formatTimeString(String time) {
-        Date date = null;
-        try {
-            date = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).parse(time);
-        } catch (ParseException e) {
-            Log.d(e.getMessage());
-        }
-        return new SimpleDateFormat(HH_MM).format(date);
-    }
-
     /**
      * 将long形式改成yyyy-MM-dd HH:mm:ss
      *
@@ -563,7 +537,7 @@ public class TimeUtils {
             return sb.toString();
         }
 
-        return "";
+        return "刚刚";
     }
 
     /**
