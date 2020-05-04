@@ -33,6 +33,8 @@ import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -58,6 +60,7 @@ public final class BitmapUtils {
      * @param v
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     public static Bitmap screen(View v) {
         Bitmap bitmap = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bitmap);
