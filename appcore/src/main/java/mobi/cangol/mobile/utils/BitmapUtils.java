@@ -54,6 +54,18 @@ public final class BitmapUtils {
     }
 
     /**
+     * 截屏
+     * @param v
+     * @return
+     */
+    public static Bitmap screen(View v) {
+        Bitmap bitmap = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        c.translate(-v.getScaleX(), -v.getScrollY());
+        v.draw(c);
+        return bitmap;
+    }
+    /**
      * 添加水印文字
      *
      * @param src

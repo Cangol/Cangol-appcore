@@ -24,9 +24,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -86,22 +88,14 @@ public class DatabaseUtils {
             final DatabaseTable table = clazz.getAnnotation(DatabaseTable.class);
             final String tableName = "".equals(table.value()) ? clazz.getSimpleName() : table.value();
             sql.append(tableName).append('(');
-            final Field[] fields = clazz.getDeclaredFields();
             String filedName = null;
             boolean isFirst = true;
-            for (final Field field : fields) {
-                field.setAccessible(true);
-                if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                    continue;
-                }
-                if (field.isAnnotationPresent(DatabaseField.class)) {
-
+            for (final Field field : getDBFields(clazz)) {
                     if (!isFirst) {
                         sql.append(',');
                     } else {
                         isFirst = false;
                     }
-
                     final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
                     filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
                     sql.append(filedName);
@@ -115,7 +109,6 @@ public class DatabaseUtils {
                     if (dbField.notNull()) {
                         sql.append(" NOT NULL");
                     }
-                }
             }
             sql.append(')');
             db.execSQL(sql.toString());
@@ -223,30 +216,23 @@ public class DatabaseUtils {
      */
     public static Map<String, Field> getColumnNames(Class<?> clazz) {
         final Map<String, Field> map = new HashMap<>();
-        for (final Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.isAnnotationPresent(DatabaseField.class)) {
-                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                map.put("".equals(dbField.value()) ? field.getName() : dbField.value(), field);
-            }
+        List<Field> fields=getDBFields(clazz);
+        for (final Field field : fields) {
+            final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+            map.put("".equals(dbField.value()) ? field.getName() : dbField.value(), field);
         }
         return map;
     }
 
     public static String getIdColumnName(Class<?> clazz) {
         String columnName = null;
-        for (final Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                continue;
+        for (final Field field : getDBFields(clazz)) {
+            final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+            if (field.getAnnotation(DatabaseField.class).primaryKey()) {
+                columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+                break;
             }
-            if (field.isAnnotationPresent(DatabaseField.class)) {
-                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (dbField.primaryKey()) {
-                    columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                    break;
-                }
-            }
+
         }
         return columnName;
     }
@@ -254,24 +240,17 @@ public class DatabaseUtils {
     /**
      * 获取主键的值
      *
-     * @param obj
+     * @param object
      * @return
      * @throws IllegalAccessException
      */
-    public static Object getIdValue(Object obj) throws IllegalAccessException {
+    public static Object getIdValue(Object object) throws IllegalAccessException {
         Object value = null;
-        for (final Field field : obj.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                continue;
-            }
-
-            if (field.isAnnotationPresent(DatabaseField.class)) {
-                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (dbField.primaryKey()) {
-                    value = field.get(obj);
-                    break;
-                }
+        for (final Field field : getDBFields(object.getClass())) {
+            final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+            if (dbField.primaryKey()) {
+                value = field.get(object);
+                break;
             }
         }
         return value;
@@ -287,14 +266,11 @@ public class DatabaseUtils {
     public static ContentValues getContentValues(Object object) throws IllegalAccessException {
         final ContentValues v = new ContentValues();
         String filedName = null;
-        for (final Field field : object.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.isAnnotationPresent(DatabaseField.class)) {
-                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                if (!dbField.primaryKey()) {
-                    filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                    v.put(filedName, String.valueOf(field.get(object)));
-                }
+        for (final Field field : getDBFields(object.getClass())) {
+            final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+            if (!dbField.primaryKey()) {
+                filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+                v.put(filedName, String.valueOf(field.get(object)));
             }
         }
         return v;
@@ -313,14 +289,11 @@ public class DatabaseUtils {
         final ContentValues v = new ContentValues();
         String filedName = null;
         final Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
-        for (final Field field : object.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.isAnnotationPresent(DatabaseField.class)) {
-                 final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if (!dbField.primaryKey() && (set.isEmpty() || set.contains(filedName))) {
-                    v.put(filedName, String.valueOf(field.get(object)));
-                }
+        for (final Field field : getDBFields(object.getClass())) {
+             final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+            filedName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+            if (!dbField.primaryKey() && (set.isEmpty() || set.contains(filedName))) {
+                v.put(filedName, String.valueOf(field.get(object)));
             }
         }
         return v;
@@ -335,20 +308,13 @@ public class DatabaseUtils {
      * @return
      */
     public static <T> T cursorToObject(T obj, Cursor cursor, String[] columns) {
-        final Field[] fields = obj.getClass().getDeclaredFields();
         final Set<String> set = (columns == null) ? new HashSet<String>() : new HashSet<>(Arrays.asList(columns));
         String columnName = null;
-        for (final Field field : fields) {
-            field.setAccessible(true);
-            if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                continue;
-            }
-            if (field.isAnnotationPresent(DatabaseField.class)) {
-                final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
-                columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
-                if (set.isEmpty() || set.contains(columnName))
-                    setFieldValue(obj, field, columnName, cursor);
-            }
+        for (final Field field : getDBFields(obj.getClass())) {
+            final DatabaseField dbField = field.getAnnotation(DatabaseField.class);
+            columnName = "".equals(dbField.value()) ? field.getName() : dbField.value();
+            if (set.isEmpty() || set.contains(columnName))
+                setFieldValue(obj, field, columnName, cursor);
         }
         return obj;
     }
@@ -401,4 +367,30 @@ public class DatabaseUtils {
         }
     }
 
+    /**
+     * 获取所有有效的db字段 包含父类的
+     * @param clazz
+     * @return
+     */
+    public static final List<Field> getDBFields(Class clazz) {
+        List<Field> fieldList = new ArrayList<>();
+        Class tempClass = clazz;
+        while (tempClass != null) {
+            fieldList.addAll(Arrays.asList(tempClass.getDeclaredFields()));
+            if (tempClass.getSuperclass().isAnnotationPresent(DatabaseTable.class)) {
+                tempClass = tempClass.getSuperclass();
+            }
+        }
+        List<Field> list = new ArrayList<>();
+        for (Field field : fieldList) {
+            field.setAccessible(true);
+            if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+            if (field.isAnnotationPresent(DatabaseField.class)) {
+                list.add(field);
+            }
+        }
+        return fieldList;
+    }
 }
