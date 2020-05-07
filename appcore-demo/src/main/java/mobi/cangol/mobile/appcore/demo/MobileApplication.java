@@ -1,7 +1,6 @@
 package mobi.cangol.mobile.appcore.demo;
 
 
-import com.squareup.leakcanary.LeakCanary;
 
 import hugo.weaving.DebugLog;
 import mobi.cangol.mobile.CoreApplication;
@@ -24,18 +23,8 @@ public class MobileApplication extends CoreApplication {
 
     @Override
     public void init() {
-        initLeakCanary();
         if (DeviceInfo.isAppProcess(this)) {
             StatAgent.initInstance(this);
         }
-    }
-
-    private void initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
     }
 }

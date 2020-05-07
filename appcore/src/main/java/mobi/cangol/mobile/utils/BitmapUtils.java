@@ -61,7 +61,7 @@ public final class BitmapUtils {
      * @return
      */
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    public static Bitmap screen(View v) {
+    public static Bitmap viewScreenshot(View v) {
         Bitmap bitmap = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bitmap);
         c.translate(-v.getScaleX(), -v.getScrollY());

@@ -17,6 +17,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.soap.SoapClient;
 import mobi.cangol.mobile.soap.SoapResponseHandler;
 import mobi.cangol.mobile.stat.StatAgent;
+import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
  * Created by weixuewu on 16/4/30.
@@ -50,7 +51,7 @@ public class SoapFragment extends Fragment {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request();
+                request2();
             }
         });
 
@@ -71,6 +72,38 @@ public class SoapFragment extends Fragment {
         params.put("byProvinceName","河北");
         mSoapClient.send(getActivity(),url,namespace,action,params,new SoapResponseHandler(){
             ProgressDialog progressDialog;
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        progressDialog=ProgressDialog.show(getActivity(),null,"loading...");
+                        printLog("onStart\n");
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        super.onFailure(error);
+                        progressDialog.dismiss();
+                        printLog("onFailure "+error);
+                    }
+
+                    @Override
+                    public void onSuccess(String content) {
+                        super.onSuccess(content);
+                        progressDialog.dismiss();
+                        printLog("onSuccess "+content);
+                    }
+                }
+        );
+    }
+    private void request2(){
+        String url="http://www.webxml.com.cn/WebServices/ChinaTVprogramWebService.asmx";
+        String namespace="http://WebXml.com.cn/";
+        String action="getTVprogramString";
+        HashMap<String, String> params=new HashMap<String, String>();
+        params.put("theTVchannelID","17");
+        params.put("theDate", TimeUtils.getCurrentDate());
+        mSoapClient.send(getActivity(),url,namespace,action,params,new SoapResponseHandler(){
+                    ProgressDialog progressDialog;
                     @Override
                     public void onStart() {
                         super.onStart();

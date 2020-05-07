@@ -35,6 +35,7 @@ import java.util.Set;
 import mobi.cangol.mobile.logging.Log;
 
 public class DatabaseUtils {
+    private static final String TAG="DatabaseUtils";
     private DatabaseUtils() {
     }
 
@@ -386,13 +387,15 @@ public class DatabaseUtils {
         List<Field> list = new ArrayList<>();
         for (Field field : fieldList) {
             field.setAccessible(true);
-            if (field.isEnumConstant() || Modifier.isFinal(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+            if (field.isEnumConstant()
+                    || Modifier.isFinal(field.getModifiers())
+                    || Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
             if (field.isAnnotationPresent(DatabaseField.class)) {
                 list.add(field);
             }
         }
-        return fieldList;
+        return list;
     }
 }
