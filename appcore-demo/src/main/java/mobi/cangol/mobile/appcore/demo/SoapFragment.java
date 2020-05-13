@@ -100,7 +100,7 @@ public class SoapFragment extends Fragment {
         String namespace="http://WebXml.com.cn/";
         String action="getTVprogramString";
         HashMap<String, String> params=new HashMap<String, String>();
-        params.put("theTVchannelID","17");
+        params.put("theTVchannelID","606");
         params.put("theDate", TimeUtils.getCurrentDate());
         mSoapClient.send(getActivity(),url,namespace,action,params,new SoapResponseHandler(){
                     ProgressDialog progressDialog;

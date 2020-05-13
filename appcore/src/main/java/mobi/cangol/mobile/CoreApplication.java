@@ -22,7 +22,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -48,7 +48,7 @@ public class CoreApplication extends Application {
     private AppServiceManager mAppServiceManager;
     private PoolManager.Pool mSharePool;
     private ModuleManager mModuleManager;
-    public final List<WeakReference<Activity>> mActivityManager = new ArrayList<>();
+    public final List<SoftReference<Activity>> mActivityManager = new ArrayList<>();
 
     public CoreApplication() {
         super();
@@ -253,18 +253,23 @@ public class CoreApplication extends Application {
      * @param activity
      */
     public final void addActivityToManager(Activity activity) {
-        for (final WeakReference<Activity> activityReference : getActivityManager()) {
-            if (activityReference != null && !activity.equals(activityReference.get())) {
-                getActivityManager().add(new WeakReference<Activity>(activity));
+        boolean contain=false;
+        for (final SoftReference<Activity> activityReference : getActivityManager()) {
+            if (activityReference != null && activity.equals(activityReference.get())) {
+                contain=true;
             }
         }
+        if(!contain)
+            getActivityManager().add(new SoftReference<Activity>(activity));
     }
 
     /**
      * 关闭所有activity
      */
     public final void closeAllActivities() {
-        for (final WeakReference<Activity> activityReference : getActivityManager()) {
+        List<SoftReference<Activity>> list=getActivityManager();
+        for (int i = list.size(); i >=0; i--) {
+            SoftReference<Activity> activityReference=list.get(i);
             if (activityReference != null && activityReference.get() != null) {
                 activityReference.get().finish();
             }
@@ -277,7 +282,7 @@ public class CoreApplication extends Application {
      * @param activity
      */
     public final void delActivityFromManager(Activity activity) {
-        for (final WeakReference<Activity> activityReference : getActivityManager()) {
+        for (final SoftReference<Activity> activityReference : getActivityManager()) {
             if (activityReference != null && activity.equals(activityReference.get())) {
                 getActivityManager().remove(activityReference);
             }
@@ -290,7 +295,7 @@ public class CoreApplication extends Application {
      * @return
      */
 
-    public final List<WeakReference<Activity>> getActivityManager() {
+    public final List<SoftReference<Activity>> getActivityManager() {
         return mActivityManager;
     }
 

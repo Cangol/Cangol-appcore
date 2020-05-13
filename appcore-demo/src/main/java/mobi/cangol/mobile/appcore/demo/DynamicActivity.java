@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
+import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.stat.StatAgent;
 
@@ -19,6 +20,7 @@ public class DynamicActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         handleIntent(getIntent());
+        Log.d("ActivityManager="+((CoreApplication)getApplication()).getActivityManager().size());
     }
     @Override
     protected void onPause() {

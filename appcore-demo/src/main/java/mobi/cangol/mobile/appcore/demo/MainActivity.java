@@ -39,6 +39,8 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
         mRouteService.registerNavigation(this);
         mRouteService.register("lib",LibTestFragment.class);
         test();
+        ((CoreApplication)getApplication()).addActivityToManager(this);
+        Log.d("ActivityManager="+((CoreApplication)getApplication()).getActivityManager().size());
     }
     public void test(){
         try {
