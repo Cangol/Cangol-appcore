@@ -268,7 +268,7 @@ public class CoreApplication extends Application {
      */
     public final void closeAllActivities() {
         List<SoftReference<Activity>> list=getActivityManager();
-        for (int i = list.size(); i >=0; i--) {
+        for (int i = list.size()-1; i >=0; i--) {
             SoftReference<Activity> activityReference=list.get(i);
             if (activityReference != null && activityReference.get() != null) {
                 activityReference.get().finish();
