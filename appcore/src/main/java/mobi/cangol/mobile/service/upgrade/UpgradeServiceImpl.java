@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.FileProvider;
 
 import java.io.File;
@@ -114,7 +115,14 @@ class UpgradeServiceImpl implements UpgradeService {
         upgrade(filename, url, notification, UpgradeType.APK, install, safe);
     }
 
-    private void upgrade(final String filename, String url, final boolean notification, final UpgradeType upgradeType, final boolean install, final boolean safe) {
+    private void upgrade(final String filename, String url,  final boolean notification, final UpgradeType upgradeType, final boolean install, final boolean safe) {
+        if(notification&&!NotificationManagerCompat.from(mContext).areNotificationsEnabled()){
+            String error="NotificationsEnabled=false notification not show! ";
+            Log.e(TAG,error);
+            notifyUpgradeFailure(filename, error);
+            return;
+        }
+
         final String savePath = mConfigService.getUpgradeDir() + File.separator + filename;
         final File saveFile = new File(savePath);
         if (debug) Log.d("upgrade savePath:" + savePath);
