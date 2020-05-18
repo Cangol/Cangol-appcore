@@ -72,7 +72,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
         mSessionService = (SessionService) mApplication.getAppService(AppService.SESSION_SERVICE);
         final ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
-        mCrashDir = configService.getTempDir().getAbsolutePath() + File.separator + "crash";
+        mCrashDir = configService.getFileDir("crash").getAbsolutePath();
 
         final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();
         FileUtils.newFolder(mCrashDir);

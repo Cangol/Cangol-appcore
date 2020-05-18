@@ -63,7 +63,12 @@ public interface ConfigService extends AppService {
      * @return
      */
     File getUpgradeDir();
-
+    /**
+     * 获取缓存目录
+     *
+     * @return
+     */
+    File getFileDir(String name);
     /**
      * 获取数据库名称
      *

@@ -37,7 +37,7 @@ class ConfigServiceImpl implements ConfigService {
     private Application mContext = null;
     private ServiceProperty mServiceProperty = null;
     private boolean mDebug = false;
-    private boolean mUseInternalStorage = true;
+    private boolean mUseInternalStorage = false;
     private boolean mIsCustomAppDir = false;
     private File mAppDir;
 
@@ -152,6 +152,7 @@ class ConfigServiceImpl implements ConfigService {
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
     public File getFileDir(String name) {
         final StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskWrites();
         File file = null;
