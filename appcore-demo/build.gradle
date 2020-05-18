@@ -16,6 +16,7 @@ android {
 
     defaultConfig {
         minSdkVersion Integer.decode("$min_version")
+        targetSdkVersion Integer.decode("$target_version")
         versionCode Integer.decode("${POM_VERSION_CODE}")
         versionName "${POM_VERSION}"
         multiDexEnabled true
