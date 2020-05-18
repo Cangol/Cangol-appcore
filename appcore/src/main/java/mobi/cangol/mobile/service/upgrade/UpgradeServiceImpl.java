@@ -143,7 +143,7 @@ class UpgradeServiceImpl implements UpgradeService {
             try {
                 intent=createFinishIntent(savePath, upgradeType);
             }catch (Exception e){
-                Log.e(TAG,"createFinishIntent fail!");
+                Log.e(TAG,"createFinishIntent fail!",e);
                 return;
             }
             if(intent==null){
