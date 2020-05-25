@@ -20,8 +20,16 @@ public class DynamicActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         handleIntent(getIntent());
-        Log.d("ActivityManager="+((CoreApplication)getApplication()).getActivityManager().size());
+        ((CoreApplication)getApplication()).addActivityToManager(this);
+        this.getActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    @Override
+    protected void onDestroy() {
+        ((CoreApplication)getApplication()).delActivityFromManager(this);
+        super.onDestroy();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -61,7 +69,7 @@ public class DynamicActivity extends FragmentActivity {
             fm.popBackStack();
             return true;
         } else {
-            super.onBackPressed();
+            finish();
             return true;
         }
     }
@@ -70,7 +78,7 @@ public class DynamicActivity extends FragmentActivity {
     public void onBackPressed() {
         FragmentManager fm = this.getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 1) {
-            super.onBackPressed();
+            fm.popBackStack();
         } else {
             finish();
         }
@@ -83,4 +91,6 @@ public class DynamicActivity extends FragmentActivity {
                 .addToBackStack(fragmentClass.getName())
                 .commit();
     }
+
+
 }

@@ -24,6 +24,7 @@ import android.support.multidex.MultiDex;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -252,7 +253,7 @@ public class CoreApplication extends Application {
      *
      * @param activity
      */
-    public final void addActivityToManager(Activity activity) {
+    public final  void addActivityToManager(Activity activity) {
         boolean contain=false;
         for (final SoftReference<Activity> activityReference : getActivityManager()) {
             if (activityReference != null && activity.equals(activityReference.get())) {
@@ -274,6 +275,7 @@ public class CoreApplication extends Application {
                 activityReference.get().finish();
             }
         }
+        list.clear();
     }
 
     /**
@@ -281,10 +283,12 @@ public class CoreApplication extends Application {
      *
      * @param activity
      */
-    public final void delActivityFromManager(Activity activity) {
-        for (final SoftReference<Activity> activityReference : getActivityManager()) {
-            if (activityReference != null && activity.equals(activityReference.get())) {
-                getActivityManager().remove(activityReference);
+    public  final void delActivityFromManager(Activity activity) {
+        Iterator<SoftReference<Activity>> iterator = getActivityManager().iterator();
+        while (iterator.hasNext()) {
+            SoftReference<Activity> reference = iterator.next();
+            if (reference!=null&activity.equals(reference.get())) {
+                iterator.remove();
             }
         }
     }

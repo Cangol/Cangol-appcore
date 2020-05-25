@@ -74,7 +74,7 @@ public class MainFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         if(position>=0){
             getActivity().setTitle((String)getListAdapter().getItem(position));
-            ((MainActivity)getActivity()).toFragment(fragments.get(position));
+            ((MainActivity)getActivity()).toFragmentByDynamicActivity(fragments.get(position));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
             }

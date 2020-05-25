@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
-import java.text.SimpleDateFormat;
-
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
 import mobi.cangol.mobile.logging.Log;
@@ -81,6 +79,13 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
                 .replace(R.id.framelayout, Fragment.instantiate(this, fragmentClass.getName(), null))
                 .addToBackStack(fragmentClass.getName())
                 .commit();
+    }
+    protected void toFragmentByDynamicActivity(Class<? extends Fragment> fragmentClass) {
+        Intent intent = new Intent(this, DynamicActivity.class);
+        Bundle bundle = new Bundle();
+        intent.putExtra("class", fragmentClass.getName());
+        intent.putExtra("args", bundle);
+        startActivity(intent);
     }
 
     @Override
