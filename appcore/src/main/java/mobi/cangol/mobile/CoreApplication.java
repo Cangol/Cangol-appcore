@@ -287,7 +287,7 @@ public class CoreApplication extends Application {
         Iterator<SoftReference<Activity>> iterator = getActivityManager().iterator();
         while (iterator.hasNext()) {
             SoftReference<Activity> reference = iterator.next();
-            if (reference!=null&activity.equals(reference.get())) {
+            if (reference!=null&reference.get()!=null&reference.get().equals(activity)) {
                 iterator.remove();
             }
         }
