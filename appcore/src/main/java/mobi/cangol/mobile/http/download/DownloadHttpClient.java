@@ -40,7 +40,7 @@ public class DownloadHttpClient {
 
     protected DownloadHttpClient(final String group, boolean safe) {
         this.group = group;
-        this.httpClient = safe ? HttpClientFactory.createDefaultHttpClient() : HttpClientFactory.createUnSafeHttpClient();
+        this.httpClient = HttpClientFactory.createDefaultHttpClient();
         threadPool = PoolManager.buildPool(group, DEFAULT_MAX);
         this.requestMap = new WeakHashMap<>();
         this.downloadRetryHandler = new DownloadRetryHandler(DEFAULT_RETRYTIMES);
