@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.X509TrustManager;
 
 import mobi.cangol.mobile.http.HttpClientFactory;
 import mobi.cangol.mobile.service.PoolManager;
