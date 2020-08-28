@@ -22,23 +22,17 @@ android {
     buildToolsVersion "$build_version"
 
     defaultConfig {
-//        minSdkVersion Integer.decode("$min_version")
-//        versionCode Integer.decode("${POM_VERSION_CODE}")
-//        versionName "${POM_VERSION}"
-
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 11
-        versionName "1.0.0"
-
+        minSdkVersion Integer.decode("$min_version")
+        versionCode Integer.decode("${POM_VERSION_CODE}")
+        versionName "${POM_VERSION}"
         multiDexEnabled true
     }
     lintOptions {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     dexOptions {
         javaMaxHeapSize "4g"
