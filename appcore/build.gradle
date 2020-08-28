@@ -9,6 +9,7 @@ apply from: '../config/quality.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.12'
     implementation 'com.squareup.okio:okio:2.2.2'
 }
