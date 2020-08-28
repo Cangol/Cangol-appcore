@@ -16,8 +16,8 @@
 package mobi.cangol.mobile.service.cache;
 
 import android.app.Application;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
@@ -30,7 +30,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;

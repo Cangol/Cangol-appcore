@@ -1,8 +1,8 @@
 package mobi.cangol.mobile.appcore.demo;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -15,21 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
 import java.util.HashMap;
 import java.util.Map;
 
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.parser.Element;
-import mobi.cangol.mobile.parser.JSONParserException;
 import mobi.cangol.mobile.parser.JsonUtils;
-import mobi.cangol.mobile.parser.XMLParserException;
 import mobi.cangol.mobile.parser.XmlUtils;
 import mobi.cangol.mobile.stat.StatAgent;
 

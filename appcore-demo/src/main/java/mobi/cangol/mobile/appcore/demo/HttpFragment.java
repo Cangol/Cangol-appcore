@@ -2,8 +2,8 @@ package mobi.cangol.mobile.appcore.demo;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +35,7 @@ import mobi.cangol.mobile.utils.FileUtils;
 public class HttpFragment extends Fragment {
     private static final String TAG="HttpFragment";
     private AsyncHttpClient mAsyncHttpClient;
-    private String url="https://www.cangol.mobi/cmweb/api/station/sync.do";
+    private String url="https://freevideotv.com/cmweb/api/station/sync.do";
     private String pollUrl="https://hq.sinajs.cn/list=rt_hkHSI";
     private String download="https://www1.hkexnews.hk/listedco/listconews/sehk/2020/0228/2020022800003.pdf";
     private TextView textView1;

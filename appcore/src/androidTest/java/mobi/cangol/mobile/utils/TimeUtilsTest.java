@@ -61,7 +61,7 @@ public class TimeUtilsTest extends InstrumentationTestCase {
 
     public void testGetCurrentTime2() {
         Calendar calendar=Calendar.getInstance();
-        assertNotNull(TimeUtils.getCurrentTime2());
+        assertNotNull(TimeUtils.getCurrentTime("yyyy-MM-dd HH:mm:ss"));
     }
 
     public void testConvertToDate() {
@@ -134,11 +134,6 @@ public class TimeUtilsTest extends InstrumentationTestCase {
         assertNotNull(TimeUtils.convertLong("2012-12-12 00"));
         assertNotNull(TimeUtils.convertLong("2012-12-12 00:00:"));
         assertNotNull(TimeUtils.convertLong("2012-12-12 00:00:00"));
-    }
-    public void testFormatDateString() {
-        assertNotNull(TimeUtils.formatDateString("2012-12-12 00:00:00"));
-        assertNotNull(TimeUtils.formatTimeString("2012-12-12 00:00:00"));
-        assertNotNull(TimeUtils.formatTimeString2("2012-12-12 00:00:00"));
     }
     public void testGetFormatDate() {
         assertNotNull(TimeUtils.getFormatDate(2012,12-1,12));

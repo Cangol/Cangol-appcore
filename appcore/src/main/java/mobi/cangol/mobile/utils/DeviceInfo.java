@@ -546,8 +546,10 @@ public final class DeviceInfo {
     public static String getAppVersion(Context context) {
         String result = UNKNOWN;
         try {
-            result = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0).versionName;
+            PackageInfo packageInfo = context.getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            result = packageInfo.versionName;
         } catch (NameNotFoundException e) {
             Log.e(e.getMessage());
         }
@@ -563,8 +565,14 @@ public final class DeviceInfo {
     public static int getAppVersionCode(Context context) {
         int result = -1;
         try {
-            result = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0).versionCode;
+            PackageInfo packageInfo = context.getApplicationContext()
+                    .getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                result = (int) packageInfo.getLongVersionCode();
+            } else {
+                result = packageInfo.versionCode;
+            }
         } catch (NameNotFoundException e) {
             Log.e(e.getMessage());
         }
@@ -582,7 +590,7 @@ public final class DeviceInfo {
         Object data = null;
         ApplicationInfo appInfo;
         try {
-            appInfo = context.getPackageManager().getApplicationInfo(
+            appInfo = context.getApplicationContext().getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
             data = appInfo.metaData.get(key);
         } catch (NameNotFoundException e) {
@@ -602,7 +610,7 @@ public final class DeviceInfo {
         String data = null;
         ApplicationInfo appInfo;
         try {
-            appInfo = context.getPackageManager().getApplicationInfo(
+            appInfo = context.getApplicationContext().getPackageManager().getApplicationInfo(
                     context.getPackageName(), PackageManager.GET_META_DATA);
             if (appInfo.metaData != null) {
                 data = appInfo.metaData.getString(key);

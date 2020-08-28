@@ -20,7 +20,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
-import android.support.multidex.MultiDex;
+import androidx.multidex.MultiDex;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

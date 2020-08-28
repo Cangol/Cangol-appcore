@@ -2,7 +2,7 @@ package mobi.cangol.mobile.utils;
 
 
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 import java.io.BufferedReader;
 import java.io.File;

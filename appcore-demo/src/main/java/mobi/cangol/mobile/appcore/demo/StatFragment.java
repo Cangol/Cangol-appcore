@@ -1,24 +1,13 @@
 package mobi.cangol.mobile.appcore.demo;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.method.ScrollingMovementMethod;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
-import java.util.HashMap;
-
-import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.logging.Log;
-import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.analytics.AnalyticsService;
-import mobi.cangol.mobile.soap.SoapClient;
-import mobi.cangol.mobile.soap.SoapResponseHandler;
 import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.TimeUtils;
 

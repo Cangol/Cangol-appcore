@@ -1,8 +1,8 @@
 package mobi.cangol.mobile.appcore.demo.appservice;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,6 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.analytics.AnalyticsService;
 import mobi.cangol.mobile.service.analytics.IMapBuilder;
 import mobi.cangol.mobile.service.analytics.ITracker;
-import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
