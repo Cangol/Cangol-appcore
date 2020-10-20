@@ -36,7 +36,8 @@ public class DownloadResponseHandler {
     protected static final int STOP_MESSAGE = 3;
     protected static final int FAILURE_MESSAGE = 4;
     protected static final int FINISH_MESSAGE = 5;
-    private static final int BUFF_SIZE = 8192;
+    private static final int BUFF_SIZE = 8192*2;
+    private static final long PROGRESS_PERIOD = 3*1000L;
     private static final boolean DEBUG=false;
     private Handler handler;
 
@@ -154,7 +155,7 @@ public class DownloadResponseHandler {
                     threadfile.write(block, 0, readCount);
                     oldLength += readCount;
                     startLength += readCount;
-                    if ((System.currentTimeMillis() - starTime) > 1000L) {
+                    if ((System.currentTimeMillis() - starTime) > PROGRESS_PERIOD) {
                         final int progress = (int) (oldLength * 1.0f / length * 100);
                         final int speed = (int) (startLength * 1000.0f / (System.currentTimeMillis() - starTime));
                         sendProgressMessage(oldLength, progress, speed);
