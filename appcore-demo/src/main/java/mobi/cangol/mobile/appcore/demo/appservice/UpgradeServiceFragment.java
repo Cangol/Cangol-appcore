@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
@@ -72,7 +73,7 @@ public class UpgradeServiceFragment extends Fragment{
 
             @Override
             public void onFailure(String error) {
-
+                Toast.makeText(getContext(),error,Toast.LENGTH_SHORT).show();
             }
         });
     }

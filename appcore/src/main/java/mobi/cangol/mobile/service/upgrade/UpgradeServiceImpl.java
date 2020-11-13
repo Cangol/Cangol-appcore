@@ -117,7 +117,7 @@ class UpgradeServiceImpl implements UpgradeService {
 
     private void upgrade(final String filename, String url,  final boolean notification, final UpgradeType upgradeType, final boolean install, final boolean safe) {
         if(notification&&!NotificationManagerCompat.from(mContext).areNotificationsEnabled()){
-            String error="NotificationsEnabled=false notification not show! ";
+            String error="create Notification fail:NotificationsEnabled=false";
             Log.e(TAG,error);
             notifyUpgradeFailure(filename, error);
             return;
@@ -129,16 +129,22 @@ class UpgradeServiceImpl implements UpgradeService {
         if (saveFile.exists()) {
             final boolean result=saveFile.delete();
             if(!result){
-                Log.d("delete oldFile fail:" + savePath);
+                Log.e(TAG,"delete oldFile fail:" + savePath);
                 notifyUpgradeFailure(savePath, "delete oldFile fail:");
                 return;
             }
         } else {
             try {
                 final boolean result=saveFile.createNewFile();
-                if(!result)Log.d("createNewFile  fail:" + savePath);
-            } catch (IOException e) {
-                Log.e(e.getMessage());
+                if(!result){
+                    Log.e(TAG,"createNewFile  fail:" + savePath);
+                    notifyUpgradeFailure(savePath, "createNewFile  fail:"+savePath);
+                    return;
+                }
+            } catch (Exception e) {
+                Log.e(TAG,"createNewFile  fail:" + e.getMessage());
+                notifyUpgradeFailure(savePath, "createNewFile  fail:"+e.getMessage());
+                return;
             }
         }
         DownloadNotification downloadNotification =null;
