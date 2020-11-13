@@ -240,7 +240,7 @@ class AnalyticsServiceImpl extends ITrackerHandler implements AnalyticsService {
         return deviceParams;
     }
     private String getDeviceId(Context context) {
-        String deviceId = DeviceInfo.getOpenUDID(context);
+        String deviceId = DeviceInfo.getDeviceId(context);
         if (TextUtils.isEmpty(deviceId)) {
             deviceId = DeviceInfo.getDeviceId(context);
         }

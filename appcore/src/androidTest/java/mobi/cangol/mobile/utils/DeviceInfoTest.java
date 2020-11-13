@@ -143,15 +143,6 @@ public class DeviceInfoTest extends AndroidTestCase {
         assertNotNull(DeviceInfo.getCharset());
     }
 
-    public void testGetOpenUDID() {
-        DeviceInfo.syncOpenUDID(getContext());
-        DeviceInfo.getOpenUDID(getContext());
-    }
-
-    public void testSyncOpenUDID() {
-       DeviceInfo.syncOpenUDID(getContext());
-    }
-
     public void testGetDeviceId() {
         assertNotNull(DeviceInfo.getDeviceId(getContext()));
     }

@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.NetworkInterface;
 import java.security.MessageDigest;
@@ -689,69 +688,6 @@ public final class DeviceInfo {
      */
     public static String getCharset() {
         return System.getProperty("file.encoding");
-    }
-
-    /**
-     * 获取设备openUDID
-     *
-     * @param context
-     * @return
-     */
-    public static String getOpenUDID(Context context) {
-        String openUDID = null;
-        Class clazz = null;
-        try {
-            clazz = Class.forName("org.OpenUDID.OpenUDID_manager");
-        } catch (ClassNotFoundException e) {
-            try {
-                clazz = Class.forName("org.openudid.OpenUDIDManager");
-            } catch (ClassNotFoundException e1) {
-                return null;
-            }
-        }
-        Method method = null;
-        try {
-            method = clazz.getDeclaredMethod("getOpenUDID");
-            Object obj = method.invoke(null);
-            if (obj != null) {
-                openUDID = String.valueOf(obj);
-            } else {
-                syncOpenUDID(context);
-                obj = method.invoke(null);
-                openUDID = String.valueOf(obj);
-            }
-        } catch (InvocationTargetException e) {
-            Log.d("InvocationTargetException", e.toString());
-        } catch (NoSuchMethodException e) {
-            Log.d("NoSuchMethodException", e.toString());
-        } catch (IllegalAccessException e) {
-            Log.d("IllegalAccessException", e.toString());
-        }
-
-        return openUDID;
-    }
-
-    public static void syncOpenUDID(Context context) {
-        Class clazz = null;
-        try {
-            clazz = Class.forName("org.OpenUDID.OpenUDID_manager");
-        } catch (ClassNotFoundException e) {
-            try {
-                clazz = Class.forName("org.openudid.OpenUDIDManager");
-            } catch (ClassNotFoundException e1) {
-                return;
-            }
-        }
-        try {
-            final Method method = clazz.getDeclaredMethod("sync", Context.class);
-            method.invoke(null, context);
-        } catch (InvocationTargetException e) {
-            Log.d("InvocationTargetException", e.toString());
-        } catch (NoSuchMethodException e) {
-            Log.d("NoSuchMethodException", e.toString());
-        } catch (IllegalAccessException e) {
-            Log.d("IllegalAccessException", e.toString());
-        }
     }
 
     public static String getSerialNumber() {

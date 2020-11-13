@@ -62,7 +62,7 @@ public class AppServiceFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         getActivity().setTitle((String)getListAdapter().getItem(position));
-        ((MainActivity)getActivity()).toFragment(list.get(position));
+        ((DynamicActivity)getActivity()).toFragment(list.get(position),null);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

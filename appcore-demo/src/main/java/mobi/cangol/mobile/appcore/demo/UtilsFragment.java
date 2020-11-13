@@ -1,6 +1,5 @@
 package mobi.cangol.mobile.appcore.demo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -59,7 +58,6 @@ public class UtilsFragment extends Fragment {
                 sb.append("\nAppVersion="+DeviceInfo.getAppVersion(getContext()));
                 sb.append("\nSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(getContext()));
                 sb.append("\nMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(getContext()));
-                sb.append("\nOpenUDID="+DeviceInfo.getOpenUDID(getContext()));
                 sb.append("\ngetMobileInfo="+DeviceInfo.getMobileInfo()+"\n---------|\n");
                 sb.append("\nMemTotalSize="+DeviceInfo.getMemTotalSize());
                 sb.append("\nMemFreeSize="+DeviceInfo.getMemFreeSize());
