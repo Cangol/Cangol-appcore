@@ -128,7 +128,11 @@ class UpgradeServiceImpl implements UpgradeService {
         if (debug) Log.d("upgrade savePath:" + savePath);
         if (saveFile.exists()) {
             final boolean result=saveFile.delete();
-            if(!result)Log.d("delete oldFile fail:" + savePath);
+            if(!result){
+                Log.d("delete oldFile fail:" + savePath);
+                notifyUpgradeFailure(savePath, "delete oldFile fail:");
+                return;
+            }
         } else {
             try {
                 final boolean result=saveFile.createNewFile();
@@ -187,10 +191,16 @@ class UpgradeServiceImpl implements UpgradeService {
                     finalDownloadNotification.finishNotification();
                 }
                 if (install) {
-                    makeLoad(savePath, upgradeType);
+                    try {
+                        makeLoad(savePath, upgradeType);
+                        notifyUpgradeFinish(filename, savePath);
+                    }catch (Exception e){
+                        if (debug) Log.e("install " + e.getMessage());
+                        notifyUpgradeFailure(savePath, e.getMessage());
+                    }
+                }else{
+                    notifyUpgradeFinish(filename, savePath);
                 }
-
-                notifyUpgradeFinish(filename, savePath);
             }
 
             @Override
