@@ -236,7 +236,7 @@ class UpgradeServiceImpl implements UpgradeService {
             case APK:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     final String authority = mContext.getPackageName() + ".fileprovider";
-                    if (debug) Log.e("authority=" + authority);
+                    if (debug) Log.i("authority=" + authority);
                     final Uri contentUri = FileProvider.getUriForFile(mContext, authority, new File(savePath));
                     AppUtils.install(mContext, contentUri);
                 } else {
@@ -276,9 +276,9 @@ class UpgradeServiceImpl implements UpgradeService {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     final String authority = mContext.getPackageName() + ".fileprovider";
-                    if (debug) Log.e("authority=" + authority);
+                    if (debug) Log.i("authority=" + authority);
                     final Uri contentUri = FileProvider.getUriForFile(mContext, authority, file);
-                    if (debug) Log.e("uri=" + contentUri);
+                    if (debug) Log.i("uri=" + contentUri);
                     intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 } else {

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.demo.R;
+import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.upgrade.OnUpgradeListener;
 import mobi.cangol.mobile.service.upgrade.UpgradeService;
@@ -20,8 +21,8 @@ import mobi.cangol.mobile.stat.StatAgent;
  */
 public class UpgradeServiceFragment extends Fragment{
     private static final String TAG = "UpgradeServiceFragment";
-    private String url="http://music-hotpot.oss-cn-hongkong.aliyuncs.com/songs/803263126016617416171574.mp3";
-    //private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
+    //private String url="http://music-hotpot.oss-cn-hongkong.aliyuncs.com/songs/803263126016617416171574.mp3";
+    private String url="http://180.153.105.145/dd.myapp.com/16891/8E5A9885970F76080F8445C652DE347C.apk?mkey=5715c34fc20a8141&f=d511&fsname=com.tencent.mobileqq_6.3.1_350.apk&p=.apk";
     //private String url="https://pro-app-qn.fir.im/d5852a8288097d15e89c75a865d16e280ed91fb0.apk?attname=FR_2.2.0_build18_re937f380_20171011_alpha.apk_2.2.0.apk&e=1507694083&token=LOvmia8oXF4xnLh0IdH05XMYpH6ENHNpARlmPc-T:kHSDWbSVL2qCs2OBRU69NGysoiU=";
     private UpgradeService upgradeService;
     @Override
@@ -45,34 +46,35 @@ public class UpgradeServiceFragment extends Fragment{
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upgradeService.upgrade("QQ",url,true,false);
+                upgradeService.upgrade("QQ.apk",url,true,true);
             }
         });
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                upgradeService.cancel("QQ");
+                upgradeService.cancel("QQ.apk");
             }
         });
         upgradeService.setOnUpgradeListener("QQ.apk",new OnUpgradeListener(){
 
             @Override
             public void upgrade(boolean focue) {
-
+                Log.d(TAG,"upgrade "+focue);
             }
 
             @Override
             public void progress(int speed, int progress) {
-
+                Log.d(TAG,"progress "+progress);
             }
 
             @Override
             public void onFinish(String filePath) {
-
+                Log.d(TAG,"onFinish "+filePath);
             }
 
             @Override
             public void onFailure(String error) {
+                Log.d(TAG,"onFailure "+error);
                 Toast.makeText(getContext(),error,Toast.LENGTH_SHORT).show();
             }
         });
