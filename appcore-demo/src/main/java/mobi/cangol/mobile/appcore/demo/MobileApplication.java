@@ -2,6 +2,8 @@ package mobi.cangol.mobile.appcore.demo;
 
 
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import hugo.weaving.DebugLog;
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.appcore.libdemo.LibApplication;
@@ -19,6 +21,7 @@ public class MobileApplication extends CoreApplication {
         this.setAsyncInit(false);
         this.getModuleManager().addModule(new LibApplication());
         super.onCreate();
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
     }
 
     @Override

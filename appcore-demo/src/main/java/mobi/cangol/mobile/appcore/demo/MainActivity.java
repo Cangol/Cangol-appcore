@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.net.ParseException;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
@@ -18,9 +20,7 @@ import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;
 
-//import com.testfairy.TestFairy;
-
-public class MainActivity extends FragmentActivity implements OnNavigation {
+public class MainActivity extends AppCompatActivity implements OnNavigation {
     private static final String TAG = "MainActivity";
     private RouteService mRouteService;
     @Override
@@ -30,7 +30,9 @@ public class MainActivity extends FragmentActivity implements OnNavigation {
         if (savedInstanceState == null) {
             toFragment(MainFragment.class);
         }
-        //TestFairy.begin(this, "47ea7365f8383a1cb728d0f84a918503f8acaae4");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setActionBar(new Toolbar(this));
+        }
         Log.d("getMD5Fingerprint="+DeviceInfo.getMD5Fingerprint(this));
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
         mRouteService= (RouteService) ((CoreApplication)getApplication()).getAppService(AppService.ROUTE_SERVICE);

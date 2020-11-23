@@ -2,9 +2,12 @@ package mobi.cangol.mobile.appcore.demo;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
@@ -12,7 +15,7 @@ import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.stat.StatAgent;
 
 
-public class DynamicActivity extends FragmentActivity {
+public class DynamicActivity extends AppCompatActivity {
     private static final String TAG = "DynamicActivity";
 
     @Override
@@ -21,7 +24,10 @@ public class DynamicActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         handleIntent(getIntent());
         ((CoreApplication)getApplication()).addActivityToManager(this);
-        this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setActionBar(new Toolbar(this));
+            this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -40,10 +46,6 @@ public class DynamicActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         StatAgent.getInstance().onFragmentPause(TAG);
-    }
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
     }
 
     protected void handleIntent(Intent intent) {
