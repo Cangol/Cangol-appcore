@@ -7,8 +7,11 @@ android:
      - platform-tools
      - build-tools-30.0.2
      - android-30
+     - android-25
      - extra-android-m2repository
      - extra-android-support
+     - extra-google-google_play_services
+     - extra-google-m2repository
      - add-on
      - extra
   licenses:
@@ -34,7 +37,7 @@ before_install:
     - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 # Emulator Management: Create, Start and Wait
 before_script:
-  - echo no | android create avd --force -n test -t android-30 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-25 --abi arm64-v8a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
