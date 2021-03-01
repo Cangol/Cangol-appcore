@@ -44,6 +44,7 @@ import mobi.cangol.mobile.stat.StatAgent;
  */
 public class MainFragment extends ListFragment {
     private static final String TAG="MainFragment";
+    private  RouteService mRouteService;
     private static List<Class<? extends Fragment>> fragments=new ArrayList<Class<? extends Fragment>>();
     static {
         fragments.add(AppServiceFragment.class);
@@ -56,10 +57,13 @@ public class MainFragment extends ListFragment {
         fragments.add(UtilsFragment.class);
         fragments.add(StatFragment.class);
         fragments.add(LibTestFragment.class);
+        fragments.add(LibTestFragment.class);
+        fragments.add(LibTestFragment.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -74,24 +78,23 @@ public class MainFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if(position>=0){
+        if(!getListAdapter().getItem(position).equals("LibTest")){
             getActivity().setTitle((String)getListAdapter().getItem(position));
             ((MainActivity)getActivity()).toFragment(fragments.get(position),new Bundle(),false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
             }
-        }else{
-            RouteService mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
+        }else  if(position==getListAdapter().getCount()-1){
             mRouteService.build("lib")
                     .putString("key","hello "+new Random().nextInt(100))
                     .navigation(this.getContext());
-
+        }else  if(position==getListAdapter().getCount()-2){
+            mRouteService.build("lib")
+                    .putString("key","newStack "+new Random().nextInt(100))
+                    .navigation(this.getContext(),true);
+        }else  if(position==getListAdapter().getCount()-3){
             Intent intent=new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("app://main/lib"));
-            intent.putExtra("class","");
-            Bundle bundle=new Bundle();
-            bundle.putString("key","hello "+new Random().nextInt(100));
-            intent.putExtra("args",bundle);
+            intent.setData(Uri.parse("app://main/lib?key=actionView "+new Random().nextInt(100)));
             startActivity(intent);
         }
     }

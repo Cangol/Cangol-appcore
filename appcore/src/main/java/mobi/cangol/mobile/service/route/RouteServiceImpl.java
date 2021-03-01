@@ -63,7 +63,7 @@ class RouteServiceImpl implements RouteService {
 
 
     @Override
-    public void register(Class clazz) {
+    public void registerByAnnotation(Class clazz) {
         if (clazz.isAnnotationPresent(Route.class)) {
             final Route route = (Route) clazz.getAnnotation(Route.class);
             register(route.path(), clazz);

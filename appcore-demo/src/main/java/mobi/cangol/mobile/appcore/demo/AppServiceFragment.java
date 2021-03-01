@@ -65,7 +65,7 @@ public class AppServiceFragment extends ListFragment {
         if(getActivity() instanceof MainActivity){
             ((MainActivity)getActivity()).toFragment(list.get(position),new Bundle(),false);
         }else{
-            ((DynamicActivity)getActivity()).toFragment(list.get(position),null);
+            ((DynamicActivity)getActivity()).toFragment(list.get(position),new Bundle(),false);
         }
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }

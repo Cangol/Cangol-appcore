@@ -17,7 +17,6 @@ import mobi.cangol.mobile.utils.UrlUtils;
  * Created by xuewu.wei on 2018/10/16.
  */
 public class RouteBuilder {
-    private boolean newStack =true;
     private String path = null;
     private Bundle bundle = null;
     private Context context = null;
@@ -39,10 +38,6 @@ public class RouteBuilder {
         }
     }
 
-    protected boolean isNewStack() {
-        return newStack;
-    }
-
     protected String getPath() {
         return path;
     }
@@ -56,15 +51,15 @@ public class RouteBuilder {
     }
 
     public void navigation(Context context) {
+        this.navigation(context,false);
+    }
+
+    public void navigation(Context context,boolean newStack) {
         this.context = context;
         final Class clazz = routeService.getClassByPath(getPath());
         if (clazz != null) {
             routeService.handleNavigation(clazz, getBundle(), getContext(),newStack);
         }
-    }
-
-    public void setNewStack(boolean newStack) {
-        this.newStack = newStack;
     }
 
     public RouteBuilder putString(String key, String value) {

@@ -12,16 +12,20 @@ import androidx.fragment.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
+import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.route.RouteBuilder;
+import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
 
 
 public class DynamicActivity extends AppCompatActivity {
     private static final String TAG = "DynamicActivity";
-
+    private RouteService mRouteService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRouteService= (RouteService) ((CoreApplication)getApplication()).getAppService(AppService.ROUTE_SERVICE);
         handleIntent(getIntent());
         ((CoreApplication)getApplication()).addActivityToManager(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -53,11 +57,16 @@ public class DynamicActivity extends AppCompatActivity {
         Uri data = intent.getData();
         if(data!=null){
             Log.i("data="+data+",host="+data.getHost()+",path="+data.getPath());
+            RouteBuilder builder=mRouteService.build(data.getPath().replaceFirst("/",""));
+            for (String key : data.getQueryParameterNames()) {
+                builder.putString(key,data.getQueryParameter(key));
+            }
+            builder.navigation(this,data.getBooleanQueryParameter("newStack",false));
         }else{
             String className = intent.getStringExtra("class");
             Bundle bundle = intent.getBundleExtra("args");
             try {
-                toFragment(Class.forName(className), bundle);
+                toFragment((Class<? extends Fragment>) Class.forName(className), bundle,false);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -85,14 +94,20 @@ public class DynamicActivity extends AppCompatActivity {
             finish();
         }
     }
-
-    public void toFragment(Class fragmentClass, Bundle bundle) {
-        FragmentManager fm = this.getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.framelayout, Fragment.instantiate(this, fragmentClass.getName(), bundle))
-                .addToBackStack(fragmentClass.getName())
-                .commit();
+    public void toFragment(Class<? extends Fragment> fragmentClass, Bundle bundle, boolean newStack) {
+        Log.i("fragment ");
+        if(newStack){
+            Intent intent = new Intent(this, DynamicActivity.class);
+            intent.putExtra("class", fragmentClass.getName());
+            intent.putExtra("args", bundle);
+            startActivity(intent);
+        }else{
+            FragmentManager fm = this.getSupportFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.framelayout, Fragment.instantiate(this, fragmentClass.getName(), bundle))
+                    .addToBackStack(fragmentClass.getName())
+                    .commit();
+        }
     }
-
 
 }
