@@ -53,7 +53,6 @@ public class DynamicActivity extends AppCompatActivity {
     }
 
     protected void handleIntent(Intent intent) {
-
         Uri data = intent.getData();
         if(data!=null){
             Log.i("data="+data+",host="+data.getHost()+",path="+data.getPath());

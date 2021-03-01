@@ -1,9 +1,9 @@
 package mobi.cangol.mobile.appcore.demo;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.ParseException;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toolbar;
@@ -16,6 +16,7 @@ import mobi.cangol.mobile.CoreApplication;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.route.OnNavigation;
+import mobi.cangol.mobile.service.route.RouteBuilder;
 import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;
@@ -23,6 +24,13 @@ import mobi.cangol.mobile.utils.DeviceInfo;
 public class MainActivity extends AppCompatActivity implements OnNavigation {
     private static final String TAG = "MainActivity";
     private RouteService mRouteService;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +48,19 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
         test();
         ((CoreApplication)getApplication()).addActivityToManager(this);
         Log.d("ActivityManager="+((CoreApplication)getApplication()).getActivityManager().size());
+        handleIntent(getIntent());
+    }
+    protected void handleIntent(Intent intent) {
+        Uri data = intent.getData();
+        if(data!=null){
+            Log.i("data="+data+",host="+data.getHost()+",path="+data.getPath());
+            RouteBuilder builder=mRouteService.build(data.getPath().replaceFirst("/",""));
+            for (String key : data.getQueryParameterNames()) {
+                builder.putString(key,data.getQueryParameter(key));
+            }
+            builder.navigation(this,data.getBooleanQueryParameter("newStack",true));
+        }
+
     }
     public void test(){
         try {
