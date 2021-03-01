@@ -63,7 +63,7 @@ public class AppServiceFragment extends ListFragment {
         super.onListItemClick(l, v, position, id);
         getActivity().setTitle((String)getListAdapter().getItem(position));
         if(getActivity() instanceof MainActivity){
-            ((MainActivity)getActivity()).toFragment(list.get(position));
+            ((MainActivity)getActivity()).toFragment(list.get(position),new Bundle(),false);
         }else{
             ((DynamicActivity)getActivity()).toFragment(list.get(position),null);
         }

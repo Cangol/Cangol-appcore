@@ -6,12 +6,18 @@ import android.os.Parcelable;
 import android.util.SparseArray;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import mobi.cangol.mobile.utils.UrlUtils;
 
 /**
  * Created by xuewu.wei on 2018/10/16.
  */
 public class RouteBuilder {
+    private boolean newStack =true;
     private String path = null;
     private Bundle bundle = null;
     private Context context = null;
@@ -21,6 +27,20 @@ public class RouteBuilder {
         this.routeService = routeService;
         this.bundle = new Bundle();
         this.path = path;
+        if(path.contains("?")){
+            String query =path.substring(path.indexOf("?")+1);
+            for (final String entry : query.split("&")) {
+                final String[] keyValue = entry.split("=");
+                if (keyValue.length != 2) {
+                    continue;
+                }
+                bundle.putString(keyValue[0], keyValue[1]);
+            }
+        }
+    }
+
+    protected boolean isNewStack() {
+        return newStack;
     }
 
     protected String getPath() {
@@ -39,8 +59,12 @@ public class RouteBuilder {
         this.context = context;
         final Class clazz = routeService.getClassByPath(getPath());
         if (clazz != null) {
-            routeService.handleNavigation(clazz, getBundle(), getContext());
+            routeService.handleNavigation(clazz, getBundle(), getContext(),newStack);
         }
+    }
+
+    public void setNewStack(boolean newStack) {
+        this.newStack = newStack;
     }
 
     public RouteBuilder putString(String key, String value) {

@@ -1,6 +1,7 @@
 package mobi.cangol.mobile.appcore.demo;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.ParseException;
 import android.os.Build;
@@ -12,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.route.OnNavigation;
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            toFragment(MainFragment.class);
+            toFragment(MainFragment.class,null,false);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.setActionBar(new Toolbar(this));
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
         Log.d("getSHA1Fingerprint="+DeviceInfo.getSHA1Fingerprint(this));
         mRouteService= (RouteService) ((CoreApplication)getApplication()).getAppService(AppService.ROUTE_SERVICE);
         mRouteService.registerNavigation(this);
-        mRouteService.register("lib",LibTestFragment.class);
         test();
         ((CoreApplication)getApplication()).addActivityToManager(this);
         Log.d("ActivityManager="+((CoreApplication)getApplication()).getActivityManager().size());
@@ -75,20 +74,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
             finish();
         }
     }
-    protected void toFragment(Class<? extends Fragment> fragmentClass) {
-        FragmentManager fm = this.getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.framelayout, Fragment.instantiate(this, fragmentClass.getName(), null))
-                .addToBackStack(fragmentClass.getName())
-                .commit();
-    }
-    protected void toFragmentByDynamicActivity(Class<? extends Fragment> fragmentClass) {
-        Intent intent = new Intent(this, DynamicActivity.class);
-        Bundle bundle = new Bundle();
-        intent.putExtra("class", fragmentClass.getName());
-        intent.putExtra("args", bundle);
-        startActivity(intent);
-    }
 
     @Override
     protected void onPause() {
@@ -109,19 +94,26 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
     }
 
     @Override
-    public void toActivity(Intent intent) {
+    public void toActivity(Intent intent, boolean newStack) {
         Log.i("activity ");
         startActivity(intent);
     }
 
     @Override
-    public void toFragment(Fragment fragment) {
+    public void toFragment(Class<? extends Fragment> fragmentClass, Bundle bundle, boolean newStack) {
         Log.i("fragment ");
-        FragmentManager fm = this.getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.framelayout, fragment)
-                .addToBackStack(fragment.getClass().getName())
-                .commit();
+        if(newStack){
+            Intent intent = new Intent(this, DynamicActivity.class);
+            intent.putExtra("class", fragmentClass.getName());
+            intent.putExtra("args", bundle);
+            startActivity(intent);
+        }else{
+            FragmentManager fm = this.getSupportFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.framelayout, Fragment.instantiate(this, fragmentClass.getName(), bundle))
+                    .addToBackStack(fragmentClass.getName())
+                    .commit();
+        }
     }
 }
 

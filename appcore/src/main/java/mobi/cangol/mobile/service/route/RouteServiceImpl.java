@@ -106,11 +106,11 @@ class RouteServiceImpl implements RouteService {
         return mRouteMap.get(path);
     }
 
-    void handleNavigation(Class clazz, Bundle bundle, Context context) {
+    void handleNavigation(Class clazz, Bundle bundle, Context context, boolean newStack) {
         if (clazz.getSuperclass() == Activity.class) {
-            this.mOnNavigation.toActivity(navigationActivity(clazz, bundle, context));
+            this.mOnNavigation.toActivity(navigationActivity(clazz, bundle, context),newStack);
         } else if (clazz.getSuperclass() == Fragment.class) {
-            this.mOnNavigation.toFragment(navigationFragment(clazz, bundle, context));
+            this.mOnNavigation.toFragment(clazz, bundle,newStack);
         } else {
             Log.i(TAG, " not navigation");
         }
@@ -120,10 +120,6 @@ class RouteServiceImpl implements RouteService {
         final Intent intent = new Intent(context, clazz);
         intent.putExtras(bundle);
         return intent;
-    }
-
-    Fragment navigationFragment(Class clazz, Bundle bundle, Context context) {
-        return Fragment.instantiate(context, clazz.getName(), bundle);
     }
 
 }

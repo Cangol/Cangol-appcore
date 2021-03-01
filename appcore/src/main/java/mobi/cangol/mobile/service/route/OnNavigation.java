@@ -1,6 +1,9 @@
 package mobi.cangol.mobile.service.route;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 
 /**
@@ -8,7 +11,7 @@ import androidx.fragment.app.Fragment;
  */
 public interface OnNavigation {
 
-    void toActivity(Intent intent);
+    void toActivity(Intent intent,boolean newStack);
 
-    void toFragment(Fragment fragment);
+    void toFragment(Class<? extends Fragment> fragmentClass, Bundle bundle, boolean newStack);
 }
