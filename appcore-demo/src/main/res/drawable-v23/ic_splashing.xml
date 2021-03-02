@@ -8,9 +8,12 @@
         </shape>
     </item>
     <item
+        android:width="72dp"
+        android:height="72dp"
         android:bottom="40dp"
         android:drawable="@drawable/ic_launcher"
         android:gravity="center"/>
+
     <item
         android:bottom="60dp"
         android:drawable="@drawable/ic_cm"
