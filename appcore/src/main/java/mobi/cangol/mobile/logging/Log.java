@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier;
 public class Log {
     private Log() {
     }
-
+    private static final int MAX_LENGTH=3000;
     private static int level = android.util.Log.VERBOSE;
 
     private static boolean format = false;
@@ -161,7 +161,6 @@ public class Log {
     public static void e(String tag, String msg, Throwable t) {
         formatLog(android.util.Log.ERROR, tag, msg, t);
     }
-
     private static void formatLog(int logLevel, String tag, String msg, Throwable error) {
         if (level > logLevel) {
             return;
@@ -183,44 +182,26 @@ public class Log {
         if (output == null) {
             output = "" + null;
         }
-        switch (logLevel) {
-            case android.util.Log.VERBOSE:
-                if (error == null) {
-                    android.util.Log.v(tag, output);
-                } else {
-                    android.util.Log.v(tag, output, error);
-                }
+        if (error == null) {
+            println(logLevel,tag, output);
+        } else {
+            println(logLevel,tag,output + '\n' + android.util.Log.getStackTraceString(error));
+        }
+    }
+    private static void println(int logLevel,String tag,String msg){
+        int strLength = msg.length();
+        int start = 0;
+        int end = MAX_LENGTH;
+        int line=strLength/MAX_LENGTH+1;
+        for (int i = 0; i < line; i++) {
+            if (strLength > end) {
+                android.util.Log.println(logLevel,tag + i, msg.substring(start, end));
+                start = end;
+                end = end + MAX_LENGTH;
+            } else {
+                android.util.Log.println(logLevel,tag, msg.substring(start, strLength));
                 break;
-            case android.util.Log.DEBUG:
-                if (error == null) {
-                    android.util.Log.d(tag, output);
-                } else {
-                    android.util.Log.d(tag, output, error);
-                }
-                break;
-            case android.util.Log.INFO:
-                if (error == null) {
-                    android.util.Log.i(tag, output);
-                } else {
-                    android.util.Log.i(tag, output, error);
-                }
-                break;
-            case android.util.Log.WARN:
-                if (error == null) {
-                    android.util.Log.w(tag, output);
-                } else {
-                    android.util.Log.w(tag, output, error);
-                }
-                break;
-            case android.util.Log.ERROR:
-                if (error == null) {
-                    android.util.Log.e(tag, output);
-                } else {
-                    android.util.Log.e(tag, output, error);
-                }
-                break;
-            default:
-                break;
+            }
         }
     }
 }
