@@ -20,6 +20,7 @@ import java.util.concurrent.Future;
 
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.session.Session;
 import mobi.cangol.mobile.service.session.SessionService;
 
 /**
@@ -41,7 +42,7 @@ public class ModuleApplication {
 
     }
 
-    public final AppService getAppService(String name) {
+    public final  <T extends AppService> T getAppService(String name) {
         return getApplication().getAppService(name);
     }
 
@@ -50,8 +51,8 @@ public class ModuleApplication {
      *
      * @return
      */
-    public final SessionService getSession() {
-        return ((SessionService) getAppService(AppService.SESSION_SERVICE));
+    public final Session getSession() {
+        return ((SessionService) getAppService(AppService.SESSION_SERVICE)).getSession();
     }
 
     /**
