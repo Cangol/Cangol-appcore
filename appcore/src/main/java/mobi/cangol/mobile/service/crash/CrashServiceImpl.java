@@ -41,6 +41,7 @@ import mobi.cangol.mobile.service.PoolManager;
 import mobi.cangol.mobile.service.Service;
 import mobi.cangol.mobile.service.ServiceProperty;
 import mobi.cangol.mobile.service.conf.ConfigService;
+import mobi.cangol.mobile.service.session.Session;
 import mobi.cangol.mobile.service.session.SessionService;
 import mobi.cangol.mobile.utils.DeviceInfo;
 import mobi.cangol.mobile.utils.FileUtils;
@@ -57,7 +58,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
     private boolean debug = true;
     private Thread.UncaughtExceptionHandler mDefaultExceptionHandler;
     private CoreApplication mApplication;
-    private SessionService mSessionService;
+    private Session mSession;
     private ServiceProperty mServiceProperty = null;
     private AsyncHttpClient asyncHttpClient;
     private String mUrl;
@@ -70,7 +71,7 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         mApplication = (CoreApplication) context;
         mDefaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        mSessionService = (SessionService) mApplication.getAppService(AppService.SESSION_SERVICE);
+        mSession = ((SessionService) mApplication.getAppService(AppService.SESSION_SERVICE)).getSession();
         final ConfigService configService = (ConfigService) mApplication.getAppService(AppService.CONFIG_SERVICE);
         mCrashDir = configService.getFileDir("crash").getAbsolutePath();
 
@@ -194,8 +195,8 @@ class CrashServiceImpl implements CrashService, UncaughtExceptionHandler {
         }
         Object2FileUtils.writeObject(error, error.path);
 
-        mSessionService.saveString("exitCode", "1");
-        mSessionService.saveString("exitVersion", DeviceInfo.getAppVersion(mApplication));
+        mSession.saveString("exitCode", "1");
+        mSession.saveString("exitVersion", DeviceInfo.getAppVersion(mApplication));
         //0 正常推退出  1异常退出
         System.exit(0);
     }

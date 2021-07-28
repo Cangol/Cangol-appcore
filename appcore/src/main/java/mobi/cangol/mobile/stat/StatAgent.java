@@ -29,6 +29,7 @@ import mobi.cangol.mobile.service.analytics.AnalyticsService;
 import mobi.cangol.mobile.service.analytics.IMapBuilder;
 import mobi.cangol.mobile.service.analytics.ITracker;
 import mobi.cangol.mobile.service.crash.CrashService;
+import mobi.cangol.mobile.service.session.Session;
 import mobi.cangol.mobile.service.session.SessionService;
 import mobi.cangol.mobile.stat.session.StatsSession;
 import mobi.cangol.mobile.stat.traffic.StatsTraffic;
@@ -49,13 +50,13 @@ public class StatAgent {
     private CoreApplication context;
     private ITracker itracker;
     private AnalyticsService analyticsService;
-    private SessionService sessionService;
+    private Session session;
     private CrashService crashService;
     private String statServerURL=null;
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     protected StatAgent(CoreApplication coreApplication) {
         this.context = coreApplication;
-        sessionService = (SessionService) coreApplication.getAppService(AppService.SESSION_SERVICE);
+        session = ((SessionService) coreApplication.getAppService(AppService.SESSION_SERVICE)).getSession();
         analyticsService = (AnalyticsService) coreApplication.getAppService(AppService.ANALYTICS_SERVICE);
         crashService = (CrashService) coreApplication.getAppService(AppService.CRASH_SERVICE);
         itracker = analyticsService.getTracker(STAT_TRACKING_ID);
@@ -135,16 +136,16 @@ public class StatAgent {
         String exitCode = "";
         String exitVersion = "";
         boolean isnew = true;
-        if (sessionService.containsKey(Constants.KEY_IS_NEW_USER)) {
-            sessionService.saveBoolean(Constants.KEY_IS_NEW_USER, false);
+        if (session.containsKey(Constants.KEY_IS_NEW_USER)) {
+            session.saveBoolean(Constants.KEY_IS_NEW_USER, false);
         } else {
-            isnew = sessionService.getBoolean(Constants.KEY_IS_NEW_USER, false);
+            isnew = session.getBoolean(Constants.KEY_IS_NEW_USER, false);
         }
-        if (sessionService.getString(Constants.KEY_EXIT_CODE, null) != null) {
-            exitCode = sessionService.getString(Constants.KEY_EXIT_CODE, null);
+        if (session.getString(Constants.KEY_EXIT_CODE, null) != null) {
+            exitCode = session.getString(Constants.KEY_EXIT_CODE, null);
         }
-        if (sessionService.getString(Constants.KEY_EXIT_VERSION, null) != null) {
-            exitVersion = sessionService.getString(Constants.KEY_EXIT_VERSION, null);
+        if (session.getString(Constants.KEY_EXIT_VERSION, null) != null) {
+            exitVersion = session.getString(Constants.KEY_EXIT_VERSION, null);
         }
         send(Builder.createLaunch(exitCode, exitVersion, isnew, TimeUtils.getCurrentTime()));
     }

@@ -27,15 +27,17 @@ import mobi.cangol.mobile.stat.StatAgent;
  */
 public class SessionServiceFragment extends Fragment{
     private static final String TAG = "SessionServiceFragment";
-    private SessionService sessionService;
+    private SessionService mSessionService;
     private TextView textView1;
     private Button button1, button2,button3,button33,button4,button5;
+    private Session mSession;
     private Session mUserSession;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sessionService = (SessionService) ((CoreApplication) this.getActivity().getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
-        mUserSession=sessionService.getUserSession("test");
+        mSessionService =((CoreApplication) this.getActivity().getApplicationContext()).getAppService(AppService.SESSION_SERVICE);
+        mSession=mSessionService.getSession();
+        mUserSession=mSessionService.getSession("test");
     }
 
     @Override
@@ -60,14 +62,14 @@ public class SessionServiceFragment extends Fragment{
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sessionService.put(TAG,1);
+                mSession.put(TAG,1);
                 updateViews();
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sessionService.put(TAG,new User(1,"Rose","18"));
+                mSession.put(TAG,new User(1,"Rose","18"));
                 updateViews();
             }
         });
@@ -82,7 +84,7 @@ public class SessionServiceFragment extends Fragment{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                sessionService.saveJSONObject(TAG,jsonObject);
+                mSession.saveJSONObject(TAG,jsonObject);
                 updateViews();
             }
         });
@@ -101,22 +103,22 @@ public class SessionServiceFragment extends Fragment{
                         e.printStackTrace();
                     }
                 }
-                sessionService.saveJSONArray(TAG,jsonArray);
-                sessionService.refresh();
+                mSession.saveJSONArray(TAG,jsonArray);
+                mSession.refresh();
                 updateViews();
             }
         });
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sessionService.remove(TAG);
+                mSession.remove(TAG);
                 updateViews();
             }
         });
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sessionService.clearAll();
+                mSession.clearAll();
                 updateViews();
             }
         });
@@ -135,8 +137,8 @@ public class SessionServiceFragment extends Fragment{
     private void updateViews() {
         textView1.setMovementMethod(ScrollingMovementMethod.getInstance());
         textView1.setText("--------------session---------------");
-        textView1.append("\n containsKey=" + sessionService.containsKey(TAG));
-        textView1.append("\n value=" + sessionService.get(TAG));
+        textView1.append("\n containsKey=" + mSession.containsKey(TAG));
+        textView1.append("\n value=" + mSession.get(TAG));
 
         Log.d(textView1.getText().toString());
     }

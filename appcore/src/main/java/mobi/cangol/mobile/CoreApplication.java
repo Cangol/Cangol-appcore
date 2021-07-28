@@ -20,6 +20,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+
 import androidx.multidex.MultiDex;
 
 import java.lang.ref.SoftReference;
@@ -34,6 +35,7 @@ import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.AppServiceManager;
 import mobi.cangol.mobile.service.AppServiceManagerImpl;
 import mobi.cangol.mobile.service.PoolManager;
+import mobi.cangol.mobile.service.session.Session;
 import mobi.cangol.mobile.service.session.SessionService;
 import mobi.cangol.mobile.utils.Constants;
 import mobi.cangol.mobile.utils.DeviceInfo;
@@ -195,9 +197,9 @@ public class CoreApplication extends Application {
      * @param name
      * @return
      */
-    public final AppService getAppService(String name) {
+    public final  <T extends AppService> T getAppService(String name) {
         if (mAppServiceManager != null) {
-            return mAppServiceManager.getAppService(name);
+            return (T)mAppServiceManager.getAppService(name);
         }
         return null;
     }
@@ -247,7 +249,16 @@ public class CoreApplication extends Application {
         return getSharePool().submit(task);
     }
 
-
+    /**
+     * @return 获得栈顶Activity
+     */
+    public SoftReference<Activity> getTopActivity() {
+        List<SoftReference<Activity>> activityManager = getActivityManager();
+        if (null == activityManager || activityManager.size() <= 0) {
+            return null;
+        }
+        return activityManager.get(activityManager.size() - 1);
+    }
     /**
      * 添加一个activity到管理列表里
      *
@@ -308,8 +319,8 @@ public class CoreApplication extends Application {
      *
      * @return
      */
-    public final SessionService getSession() {
-        return (SessionService) getAppService(AppService.SESSION_SERVICE);
+    public final Session getSession() {
+        return  ((SessionService)getAppService(AppService.SESSION_SERVICE)).getSession();
     }
 
     /**
