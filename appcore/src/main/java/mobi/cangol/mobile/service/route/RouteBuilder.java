@@ -19,7 +19,6 @@ import mobi.cangol.mobile.utils.UrlUtils;
 public class RouteBuilder {
     private String path = null;
     private Bundle bundle = null;
-    private Context context = null;
     private RouteServiceImpl routeService;
 
     protected RouteBuilder(RouteServiceImpl routeService, String path) {
@@ -46,20 +45,12 @@ public class RouteBuilder {
         return bundle;
     }
 
-    protected Context getContext() {
-        return context;
-    }
-
     public void navigation(Context context) {
         this.navigation(context,false);
     }
 
     public void navigation(Context context,boolean newStack) {
-        this.context = context;
-        final Class clazz = routeService.getClassByPath(getPath());
-        if (clazz != null) {
-            routeService.handleNavigation(clazz, getBundle(), getContext(),newStack);
-        }
+        this.routeService.handleNavigation(getPath(),getBundle(),context,newStack);
     }
 
     public RouteBuilder putString(String key, String value) {

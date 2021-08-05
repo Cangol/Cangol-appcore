@@ -6,6 +6,7 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -111,14 +112,19 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
     }
 
     @Override
+    public void notFound(String path) {
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void toActivity(Intent intent, boolean newStack) {
-        Log.i("activity ");
+        Log.i("toActivity ");
         startActivity(intent);
     }
 
     @Override
     public void toFragment(Class<? extends Fragment> fragmentClass, Bundle bundle, boolean newStack) {
-        Log.i("fragment ");
+        Log.i("toFragment ");
         if(newStack){
             Intent intent = new Intent(this, DynamicActivity.class);
             intent.putExtra("class", fragmentClass.getName());

@@ -111,36 +111,36 @@ class RouteServiceImpl implements RouteService {
     @Override
     public void handleIntent(Context context,Intent intent) {
         Uri uri = intent.getData();
-        Log.i("handleIntent uri="+uri+",host="+uri.getHost()+",path="+uri.getPath());
+        Log.i(TAG, "handleIntent uri="+uri+",host="+uri.getHost()+",path="+uri.getPath());
         Bundle bundle=new Bundle();
         for (String key : uri.getQueryParameterNames()) {
             bundle.putString(key,uri.getQueryParameter(key));
         }
-        final Class clazz = getClassByPath(uri.getPath().replaceFirst("/",""));
+        this.handleNavigation(uri.getPath().replaceFirst("/",""),
+                bundle,
+                context,
+                uri.getBooleanQueryParameter("newStack",false));
+    }
+    public void handleNavigation(String path,Bundle bundle,Context context, boolean newStack) {
+        final Class clazz = mRouteMap.get(path);
         if (clazz != null) {
-            this.handleNavigation(clazz, bundle, context,uri.getBooleanQueryParameter("newStack",true));
+            if (clazz.getSuperclass() == Activity.class) {
+                this.mOnNavigation.toActivity(navigationActivity(clazz, bundle,context),newStack);
+            } else if (clazz.getSuperclass() == Fragment.class) {
+                this.mOnNavigation.toFragment(clazz, bundle,newStack);
+            } else {
+                Log.e(TAG, path+" not navigation");
+                this.mOnNavigation.notFound(path);
+            }
         }else{
-            Log.e(TAG, uri.getPath()+" not navigation");
+            Log.e(TAG, path+" not register");
+            this.mOnNavigation.notFound(path);
         }
     }
 
     @Override
     public void registerNavigation(OnNavigation onNavigation) {
         this.mOnNavigation = onNavigation;
-    }
-
-    Class getClassByPath(String path) {
-        return mRouteMap.get(path);
-    }
-
-    void handleNavigation(Class clazz, Bundle bundle, Context context, boolean newStack) {
-        if (clazz.getSuperclass() == Activity.class) {
-            this.mOnNavigation.toActivity(navigationActivity(clazz, bundle, context),newStack);
-        } else if (clazz.getSuperclass() == Fragment.class) {
-            this.mOnNavigation.toFragment(clazz, bundle,newStack);
-        } else {
-            Log.e(TAG, " not navigation");
-        }
     }
 
     Intent navigationActivity(Class clazz, Bundle bundle, Context context) {

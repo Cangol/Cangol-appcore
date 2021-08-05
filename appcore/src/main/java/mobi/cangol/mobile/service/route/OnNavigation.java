@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
  */
 public interface OnNavigation {
 
+    void notFound(String path);
+
     void toActivity(Intent intent,boolean newStack);
 
     void toFragment(Class<? extends Fragment> fragmentClass, Bundle bundle, boolean newStack);

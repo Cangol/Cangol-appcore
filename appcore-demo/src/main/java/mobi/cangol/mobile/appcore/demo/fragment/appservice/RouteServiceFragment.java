@@ -25,7 +25,6 @@ import mobi.cangol.mobile.stat.StatAgent;
 public class RouteServiceFragment extends Fragment {
     private static final String TAG = "RouteServiceFragment";
     private RouteService routeService;
-    private TextView textView1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +45,10 @@ public class RouteServiceFragment extends Fragment {
     }
 
     private void initViews() {
-        textView1 = this.getView().findViewById(R.id.textView1);
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                routeService.build("lib")
+                routeService.build("lib/test")
                         .putString("key","hello "+new Random().nextInt(100))
                         .navigation(getContext());
             }
@@ -58,7 +56,7 @@ public class RouteServiceFragment extends Fragment {
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                routeService.build("lib")
+                routeService.build("lib/test")
                         .putString("key","newStack "+new Random().nextInt(100))
                         .navigation(getContext(),true);
             }
@@ -68,7 +66,7 @@ public class RouteServiceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("app://main/lib?key=actionView "+new Random().nextInt(100)));
+                intent.setData(Uri.parse("app://main/lib/?key=actionView "+new Random().nextInt(100)));
                 startActivity(intent);
             }
         });
