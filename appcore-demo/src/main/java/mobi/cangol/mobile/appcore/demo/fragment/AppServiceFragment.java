@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -12,17 +12,19 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobi.cangol.mobile.appcore.demo.appservice.AnalyticsServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.CacheManagerFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.ConfigServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.CrashServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.DownloadManagerFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.LocationServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.OberserverManagerFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.RouteServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.SessionServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.StatusServiceFragment;
-import mobi.cangol.mobile.appcore.demo.appservice.UpgradeServiceFragment;
+import mobi.cangol.mobile.appcore.demo.activity.DynamicActivity;
+import mobi.cangol.mobile.appcore.demo.activity.MainActivity;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.AnalyticsServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.CacheManagerFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.ConfigServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.CrashServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.DownloadManagerFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.LocationServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.OberserverManagerFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.RouteServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.SessionServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.StatusServiceFragment;
+import mobi.cangol.mobile.appcore.demo.fragment.appservice.UpgradeServiceFragment;
 import mobi.cangol.mobile.stat.StatAgent;
 
 /**

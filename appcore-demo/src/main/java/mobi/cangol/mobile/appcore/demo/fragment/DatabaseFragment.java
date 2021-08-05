@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.db.CoreSQLiteOpenHelper;
 import mobi.cangol.mobile.db.Dao;
 import mobi.cangol.mobile.db.DatabaseField;

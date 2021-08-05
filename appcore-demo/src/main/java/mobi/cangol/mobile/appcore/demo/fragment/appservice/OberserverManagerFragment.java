@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package mobi.cangol.mobile.appcore.demo.appservice;
+package mobi.cangol.mobile.appcore.demo.fragment.appservice;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;

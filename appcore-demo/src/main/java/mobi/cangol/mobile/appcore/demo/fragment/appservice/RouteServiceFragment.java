@@ -1,32 +1,42 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment.appservice;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import java.util.Random;
+
+import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.appcore.demo.R;
+import mobi.cangol.mobile.service.AppService;
+import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
-import mobi.cangol.mobile.utils.TimeUtils;
 
 /**
  * Created by weixuewu on 16/4/30.
  */
-public class StatFragment extends Fragment {
+public class RouteServiceFragment extends Fragment {
+    private static final String TAG = "RouteServiceFragment";
+    private RouteService routeService;
+    private TextView textView1;
 
-    private static final String TAG="StatFragment";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatAgent.getInstance().setDebug(true);
-        //StatAgent.getInstance().setStatServerURL("http://192.168.57.171/");
+        routeService = ((CoreApplication) this.getActivity().getApplicationContext()).getAppService(AppService.ROUTE_SERVICE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_stat, container, false);
+        View v = inflater.inflate(R.layout.fragment_service_route, container, false);
+        return v;
     }
 
     @Override
@@ -34,31 +44,35 @@ public class StatFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initViews();
     }
+
     private void initViews() {
+        textView1 = this.getView().findViewById(R.id.textView1);
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatAgent.getInstance().send(StatAgent.Builder.createAppView(TAG));
+                routeService.build("lib")
+                        .putString("key","hello "+new Random().nextInt(100))
+                        .navigation(getContext());
             }
         });
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatAgent.getInstance().send(StatAgent.Builder.createException("test", "1", "test", TimeUtils.getCurrentTime(), "1"));
+                routeService.build("lib")
+                        .putString("key","newStack "+new Random().nextInt(100))
+                        .navigation(getContext(),true);
             }
         });
+
         getView().findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatAgent.getInstance().send(StatAgent.Builder.createEvent("test", TAG, "test", null, null));
+                Intent intent=new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("app://main/lib?key=actionView "+new Random().nextInt(100)));
+                startActivity(intent);
             }
         });
-        getView().findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StatAgent.getInstance().send(StatAgent.Builder.createTiming(TAG, 1000L));
-            }
-        });
+
     }
 
     @Override

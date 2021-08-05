@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -21,6 +21,7 @@ import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Map;
 
+import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.parser.Element;
 import mobi.cangol.mobile.parser.JsonUtils;

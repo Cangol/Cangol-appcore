@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -17,6 +17,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 
+import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.security.AESUtils;
 import mobi.cangol.mobile.security.Base64;

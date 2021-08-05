@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.http.AsyncHttpClient;
 import mobi.cangol.mobile.http.JsonHttpResponseHandler;
 import mobi.cangol.mobile.http.RequestParams;

@@ -1,4 +1,4 @@
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.activity;
 
 
 import android.content.Intent;
@@ -13,10 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import mobi.cangol.mobile.CoreApplication;
+import mobi.cangol.mobile.appcore.demo.fragment.MainFragment;
+import mobi.cangol.mobile.appcore.demo.R;
 import mobi.cangol.mobile.logging.Log;
 import mobi.cangol.mobile.service.AppService;
 import mobi.cangol.mobile.service.route.OnNavigation;
-import mobi.cangol.mobile.service.route.RouteBuilder;
 import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
 import mobi.cangol.mobile.utils.DeviceInfo;

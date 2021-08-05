@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package mobi.cangol.mobile.appcore.demo;
+package mobi.cangol.mobile.appcore.demo.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +29,8 @@ import androidx.fragment.app.ListFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobi.cangol.mobile.appcore.demo.R;
+import mobi.cangol.mobile.appcore.demo.activity.MainActivity;
 import mobi.cangol.mobile.stat.StatAgent;
 
 /**

@@ -31,17 +31,19 @@ public interface RouteService extends AppService {
     void register(String path, Class clazz);
 
     /**
+     * 解除注册
      * @param path
      */
     void unregister(String path);
 
     /**
+     * 注册导航器（只能注册一个），建议放在MainActivity中
      * @param onNavigation
      */
     void registerNavigation(OnNavigation onNavigation);
 
     /**
-     * 构造器
+     * 构造器路由器
      *
      * @param path
      * @return
@@ -50,7 +52,8 @@ public interface RouteService extends AppService {
 
     /**
      * 处理activity 的intent
+     * @param context
      * @param intent
      */
-    void  handleIntent(Context context, Intent intent);
+    void   handleIntent(Context context, Intent intent);
 }
