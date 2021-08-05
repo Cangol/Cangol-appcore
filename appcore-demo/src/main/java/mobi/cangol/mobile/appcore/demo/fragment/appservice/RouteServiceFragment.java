@@ -45,6 +45,14 @@ public class RouteServiceFragment extends Fragment {
     }
 
     private void initViews() {
+        getView().findViewById(R.id.button0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                routeService.build("lib/test1")
+                        .putString("key","hello "+new Random().nextInt(100))
+                        .navigation(getContext());
+            }
+        });
         getView().findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +61,7 @@ public class RouteServiceFragment extends Fragment {
                         .navigation(getContext());
             }
         });
+
         getView().findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +75,7 @@ public class RouteServiceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("app://main/lib/?key=actionView "+new Random().nextInt(100)));
+                intent.setData(Uri.parse("app://main/lib/test?key=actionView "+new Random().nextInt(100)));
                 startActivity(intent);
             }
         });
