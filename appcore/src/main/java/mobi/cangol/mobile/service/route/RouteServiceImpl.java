@@ -111,15 +111,19 @@ class RouteServiceImpl implements RouteService {
     @Override
     public void handleIntent(Context context,Intent intent) {
         Uri uri = intent.getData();
-        Log.i(TAG, "handleIntent uri="+uri+",host="+uri.getHost()+",path="+uri.getPath());
-        Bundle bundle=new Bundle();
-        for (String key : uri.getQueryParameterNames()) {
-            bundle.putString(key,uri.getQueryParameter(key));
+        if(uri!=null){
+            Log.i(TAG, "handleIntent uri="+uri+",host="+uri.getHost()+",path="+uri.getPath());
+            Bundle bundle=new Bundle();
+            for (String key : uri.getQueryParameterNames()) {
+                bundle.putString(key,uri.getQueryParameter(key));
+            }
+            this.handleNavigation(uri.getPath().replaceFirst("/",""),
+                    bundle,
+                    context,
+                    uri.getBooleanQueryParameter("newStack",false),0,-1);
+        } else {
+            Log.i(TAG, "intent is not handle");
         }
-        this.handleNavigation(uri.getPath().replaceFirst("/",""),
-                bundle,
-                context,
-                uri.getBooleanQueryParameter("newStack",false),0,-1);
     }
 
     @Override
