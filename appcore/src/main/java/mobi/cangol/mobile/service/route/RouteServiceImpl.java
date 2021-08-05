@@ -74,6 +74,16 @@ class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public void unregisterByAnnotation(Class clazz) {
+        if (clazz.isAnnotationPresent(Route.class)) {
+            final Route route = (Route) clazz.getAnnotation(Route.class);
+            unregister(route.path());
+        } else {
+            throw new IllegalStateException(clazz + " is not Annotation Route");
+        }
+    }
+
+    @Override
     public void register(String path, Class clazz) {
         if (!mRouteMap.containsKey(path)) {
             if(mDebug)Log.i(TAG, "registerRoute " + path + "--->" + clazz.getName());

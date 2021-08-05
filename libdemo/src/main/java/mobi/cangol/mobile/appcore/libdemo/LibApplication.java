@@ -19,7 +19,11 @@ public class LibApplication extends ModuleApplication {
     }
 
     private void registerRoute() {
-        RouteService routeService= (RouteService) this.getAppService(AppService.ROUTE_SERVICE);
-        routeService.register("lib",LibTestFragment.class);
+        RouteService routeService=  this.getAppService(AppService.ROUTE_SERVICE);
+        routeService.registerByAnnotation(LibTestFragment.class);
+    }
+    public void onExit() {
+        RouteService routeService= this.getAppService(AppService.ROUTE_SERVICE);
+        routeService.unregisterByAnnotation(LibTestFragment.class);
     }
 }

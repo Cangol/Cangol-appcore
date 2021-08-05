@@ -17,6 +17,12 @@ public interface RouteService extends AppService {
     void registerByAnnotation(Class clazz);
 
     /**
+     * 解除注册 （注解）
+     *
+     * @param clazz
+     */
+    void unregisterByAnnotation(Class clazz);
+    /**
      * 注册 （非注解）
      *
      * @param path
