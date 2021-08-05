@@ -77,11 +77,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
         FragmentManager fm = this.getSupportFragmentManager();
         if(fm.getBackStackEntryCount()>1){
             fm.popBackStack();
-            return true;
         }else{
             super.onBackPressed();
-            return true;
         }
+        return true;
     }
     @Override
     public void onBackPressed() {
@@ -113,13 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
 
     @Override
     public void notFound(String path) {
-        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void toActivity(Intent intent, boolean newStack) {
-        Log.i("toActivity ");
-        startActivity(intent);
+        Toast.makeText(this, path+" not found!", Toast.LENGTH_SHORT).show();
     }
 
     @Override

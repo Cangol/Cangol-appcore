@@ -130,7 +130,7 @@ class RouteServiceImpl implements RouteService {
     public void handleNavigation(String path, Bundle bundle, Context context, boolean newStack, int flags, int requestCode) {
         final Class clazz = mRouteMap.get(path);
         if (clazz != null) {
-            if (clazz.getSuperclass() == Activity.class) {
+            if (Activity.class.isAssignableFrom(clazz)) {
                 final Intent intent = new Intent(context, clazz);
                 intent.putExtras(bundle);
                 if(flags>0)intent.setFlags(flags);
@@ -139,7 +139,7 @@ class RouteServiceImpl implements RouteService {
                 }else{
                     context.startActivity(intent);
                 }
-            } else if (clazz.getSuperclass() == Fragment.class) {
+            } else if (Fragment.class.isAssignableFrom(clazz)) {
                 this.mOnNavigation.toFragment(clazz, bundle,newStack);
             } else {
                 Log.e(TAG, path+" not navigation");
