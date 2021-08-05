@@ -122,7 +122,7 @@ class RouteServiceImpl implements RouteService {
                     context,
                     uri.getBooleanQueryParameter("newStack",false),0,-1);
         } else {
-            Log.i(TAG, "intent is not handle");
+            Log.i(TAG, "intent.getData()==null isn't handle");
         }
     }
 
