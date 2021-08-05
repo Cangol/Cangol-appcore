@@ -53,12 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
     protected void handleIntent(Intent intent) {
         Uri data = intent.getData();
         if(data!=null){
-            Log.i("data="+data+",host="+data.getHost()+",path="+data.getPath());
-            RouteBuilder builder=mRouteService.build(data.getPath().replaceFirst("/",""));
-            for (String key : data.getQueryParameterNames()) {
-                builder.putString(key,data.getQueryParameter(key));
-            }
-            builder.navigation(this,data.getBooleanQueryParameter("newStack",true));
+            mRouteService.handleIntent(this,intent);
         }
 
     }

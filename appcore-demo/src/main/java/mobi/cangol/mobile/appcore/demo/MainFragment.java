@@ -17,26 +17,18 @@
 
 package mobi.cangol.mobile.appcore.demo;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import mobi.cangol.mobile.CoreApplication;
-import mobi.cangol.mobile.appcore.libdemo.LibTestFragment;
-import mobi.cangol.mobile.service.AppService;
-import mobi.cangol.mobile.service.route.RouteService;
 import mobi.cangol.mobile.stat.StatAgent;
 
 /**
@@ -44,7 +36,6 @@ import mobi.cangol.mobile.stat.StatAgent;
  */
 public class MainFragment extends ListFragment {
     private static final String TAG="MainFragment";
-    private  RouteService mRouteService;
     private static List<Class<? extends Fragment>> fragments=new ArrayList<Class<? extends Fragment>>();
     static {
         fragments.add(AppServiceFragment.class);
@@ -56,15 +47,12 @@ public class MainFragment extends ListFragment {
         fragments.add(SoapFragment.class);
         fragments.add(UtilsFragment.class);
         fragments.add(StatFragment.class);
-        fragments.add(LibTestFragment.class);
-        fragments.add(LibTestFragment.class);
-        fragments.add(LibTestFragment.class);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRouteService= (RouteService) ((CoreApplication)getActivity().getApplication()).getAppService(AppService.ROUTE_SERVICE);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -78,24 +66,10 @@ public class MainFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if(!getListAdapter().getItem(position).equals("LibTest")){
-            getActivity().setTitle((String)getListAdapter().getItem(position));
-            ((MainActivity)getActivity()).toFragment(fragments.get(position),new Bundle(),false);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-        }else  if(position==getListAdapter().getCount()-1){
-            mRouteService.build("lib")
-                    .putString("key","hello "+new Random().nextInt(100))
-                    .navigation(this.getContext());
-        }else  if(position==getListAdapter().getCount()-2){
-            mRouteService.build("lib")
-                    .putString("key","newStack "+new Random().nextInt(100))
-                    .navigation(this.getContext(),true);
-        }else  if(position==getListAdapter().getCount()-3){
-            Intent intent=new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("app://main/lib?key=actionView "+new Random().nextInt(100)));
-            startActivity(intent);
+        getActivity().setTitle((String)getListAdapter().getItem(position));
+        ((MainActivity)getActivity()).toFragment(fragments.get(position),new Bundle(),false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
     @Override

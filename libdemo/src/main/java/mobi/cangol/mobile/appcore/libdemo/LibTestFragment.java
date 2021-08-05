@@ -39,6 +39,7 @@ public class LibTestFragment extends Fragment {
     }
 
     private void initViews() {
+        getActivity().setTitle("lib");
         textView1 = this.getView().findViewById(R.id.textView1);
         button1 = this.getView().findViewById(R.id.button1);
         button1.setText(""+key);

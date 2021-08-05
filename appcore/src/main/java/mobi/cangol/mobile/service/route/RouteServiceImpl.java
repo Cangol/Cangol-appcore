@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -98,6 +99,22 @@ class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public void handleIntent(Context context,Intent intent) {
+        Uri uri = intent.getData();
+        Log.i("handleIntent uri="+uri+",host="+uri.getHost()+",path="+uri.getPath());
+        Bundle bundle=new Bundle();
+        for (String key : uri.getQueryParameterNames()) {
+            bundle.putString(key,uri.getQueryParameter(key));
+        }
+        final Class clazz = getClassByPath(uri.getPath().replaceFirst("/",""));
+        if (clazz != null) {
+            this.handleNavigation(clazz, bundle, context,uri.getBooleanQueryParameter("newStack",true));
+        }else{
+            Log.e(TAG, uri.getPath()+" not navigation");
+        }
+    }
+
+    @Override
     public void registerNavigation(OnNavigation onNavigation) {
         this.mOnNavigation = onNavigation;
     }
@@ -112,7 +129,7 @@ class RouteServiceImpl implements RouteService {
         } else if (clazz.getSuperclass() == Fragment.class) {
             this.mOnNavigation.toFragment(clazz, bundle,newStack);
         } else {
-            Log.i(TAG, " not navigation");
+            Log.e(TAG, " not navigation");
         }
     }
 

@@ -1,5 +1,8 @@
 package mobi.cangol.mobile.service.route;
 
+import android.content.Context;
+import android.content.Intent;
+
 import mobi.cangol.mobile.service.AppService;
 
 /**
@@ -38,4 +41,10 @@ public interface RouteService extends AppService {
      * @return
      */
     RouteBuilder build(String path);
+
+    /**
+     * 处理activity 的intent
+     * @param intent
+     */
+    void  handleIntent(Context context, Intent intent);
 }
