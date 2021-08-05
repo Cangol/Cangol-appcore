@@ -14,16 +14,15 @@ public class LibApplication extends ModuleApplication {
     public void onCreate() {
         super.onCreate();
         Log.i("onCreate");
-        getApplication().getSession().put("lib","LibApplication");
         this.registerRoute();
     }
 
     private void registerRoute() {
         RouteService routeService=  this.getAppService(AppService.ROUTE_SERVICE);
-        routeService.registerByAnnotation(LibTestFragment.class);
+        routeService.registerByAnnotation(TestFragment.class);
     }
     public void onExit() {
         RouteService routeService= this.getAppService(AppService.ROUTE_SERVICE);
-        routeService.unregisterByAnnotation(LibTestFragment.class);
+        routeService.unregisterByAnnotation(TestFragment.class);
     }
 }

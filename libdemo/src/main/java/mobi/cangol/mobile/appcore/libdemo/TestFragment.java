@@ -14,8 +14,8 @@ import mobi.cangol.mobile.service.route.Route;
 /**
  * Created by weixuewu on 16/4/30.
  */
-@Route(path = "lib")
-public class LibTestFragment extends Fragment {
+@Route(path = "lib/test")
+public class TestFragment extends Fragment {
     private static final String TAG = "LibTestFragment";
     private TextView textView1;
     private Button button1;
@@ -39,7 +39,7 @@ public class LibTestFragment extends Fragment {
     }
 
     private void initViews() {
-        getActivity().setTitle("lib");
+        getActivity().setTitle(TestFragment.class.getSimpleName().replace("Fragment",""));
         textView1 = this.getView().findViewById(R.id.textView1);
         button1 = this.getView().findViewById(R.id.button1);
         button1.setText(""+key);
