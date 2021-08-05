@@ -50,9 +50,16 @@ public class RouteBuilder {
     }
 
     public void navigation(Context context,boolean newStack) {
-        this.routeService.handleNavigation(getPath(),getBundle(),context,newStack);
+        this.routeService.handleNavigation(getPath(),getBundle(),context,newStack,0,-1);
     }
 
+    public void navigation(Context context,int flag,int requestCode) {
+        this.routeService.handleNavigation(getPath(),getBundle(),context,false,flag,requestCode);
+    }
+
+    public void navigation(Context context,boolean newStack,int flag,int requestCode) {
+        this.routeService.handleNavigation(getPath(),getBundle(),context,newStack,flag,requestCode);
+    }
     public RouteBuilder putString(String key, String value) {
         this.bundle.putString(key, value);
         return this;

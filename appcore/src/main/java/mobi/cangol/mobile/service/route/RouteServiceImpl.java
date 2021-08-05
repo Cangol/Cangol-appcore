@@ -119,13 +119,26 @@ class RouteServiceImpl implements RouteService {
         this.handleNavigation(uri.getPath().replaceFirst("/",""),
                 bundle,
                 context,
-                uri.getBooleanQueryParameter("newStack",false));
+                uri.getBooleanQueryParameter("newStack",false),0,-1);
     }
-    public void handleNavigation(String path,Bundle bundle,Context context, boolean newStack) {
+
+    @Override
+    public void registerNavigation(OnNavigation onNavigation) {
+        this.mOnNavigation = onNavigation;
+    }
+
+    public void handleNavigation(String path, Bundle bundle, Context context, boolean newStack, int flags, int requestCode) {
         final Class clazz = mRouteMap.get(path);
         if (clazz != null) {
             if (clazz.getSuperclass() == Activity.class) {
-                this.mOnNavigation.toActivity(navigationActivity(clazz, bundle,context),newStack);
+                final Intent intent = new Intent(context, clazz);
+                intent.putExtras(bundle);
+                if(flags>0)intent.setFlags(flags);
+                if(context instanceof Activity){
+                    ((Activity)context).startActivityForResult(intent,requestCode);
+                }else{
+                    context.startActivity(intent);
+                }
             } else if (clazz.getSuperclass() == Fragment.class) {
                 this.mOnNavigation.toFragment(clazz, bundle,newStack);
             } else {
@@ -137,16 +150,4 @@ class RouteServiceImpl implements RouteService {
             this.mOnNavigation.notFound(path);
         }
     }
-
-    @Override
-    public void registerNavigation(OnNavigation onNavigation) {
-        this.mOnNavigation = onNavigation;
-    }
-
-    Intent navigationActivity(Class clazz, Bundle bundle, Context context) {
-        final Intent intent = new Intent(context, clazz);
-        intent.putExtras(bundle);
-        return intent;
-    }
-
 }
