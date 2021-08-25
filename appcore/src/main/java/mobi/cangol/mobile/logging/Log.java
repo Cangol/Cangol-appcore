@@ -33,7 +33,9 @@ public class Log {
         final String tag = cls.getSimpleName();
         return (tag.length() > 50) ? tag.substring(0, 50) : tag;
     }
-
+    public static String getStackTraceString(Throwable tr) {
+        return android.util.Log.getStackTraceString(tr);
+    }
     /**
      * 设置类对象TAG
      *
