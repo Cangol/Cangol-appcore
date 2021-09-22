@@ -26,7 +26,7 @@ public class MobileApplication extends CoreApplication {
 
     @Override
     public void init() {
-        if (DeviceInfo.isAppProcess(this)) {
+        if (DeviceInfo.isAppProcessByFile(this)) {
             StatAgent.initInstance(this);
         }
     }

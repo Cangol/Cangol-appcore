@@ -17,6 +17,7 @@ package mobi.cangol.mobile.utils;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -40,6 +41,8 @@ import android.view.WindowManager;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -887,7 +890,6 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isForegroundApplication(String packageName, Context context) {
-        boolean result = false;
         final ActivityManager am = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         final List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
@@ -897,12 +899,15 @@ public final class DeviceInfo {
                     final int status = runningAppProcessInfo.importance;
                     if (status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
                             || status == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                        result = true;
+                        return true;
                     }
                 }
             }
+            KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+            // App is foreground, but screen is locked, so show notification
+            return km.inKeyguardRestrictedInputMode();
         }
-        return result;
+        return false;
     }
 
     /**
@@ -955,9 +960,30 @@ public final class DeviceInfo {
      * @return
      */
     public static boolean isAppProcess(Context context) {
-        return context.getApplicationInfo().packageName.equals(getCurProcessName(context.getApplicationContext()));
+        return context.getApplicationInfo().packageName.equals(getCurProcessName(context));
+    }
+    /**
+     * 是否是app当前进程
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isAppProcessByFile(Context context) {
+        return context.getApplicationInfo().packageName.equals(getCurProcessNameByFile());
     }
 
+    public static String getCurProcessNameByFile() {
+        try {
+            File file = new File("/proc/" + android.os.Process.myPid() + "/cmdline");
+            BufferedReader mBufferedReader = new BufferedReader(new FileReader(file));
+            String processName = mBufferedReader.readLine().trim();
+            mBufferedReader.close();
+            return processName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "这里写你的App的进程名"; //TODO 有可能获取失败，需要写默认的进程名
+        }
+    }
     /**
      * 检测是否具有底部导航栏
      *

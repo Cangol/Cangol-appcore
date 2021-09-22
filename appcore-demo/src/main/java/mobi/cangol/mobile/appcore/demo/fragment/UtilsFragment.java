@@ -87,7 +87,7 @@ public class UtilsFragment extends Fragment {
                 sb.append("\nNetworkClassName="+DeviceInfo.getNetworkClassName(getContext()));
                 sb.append("\nWifiRssiString="+DeviceInfo.getWifiRssiString(getContext()));
                 sb.append("\nWifiRssi="+DeviceInfo.getWifiRssi(getContext()));
-
+                sb.append("\nisAppProcessByFile="+DeviceInfo.isAppProcessByFile(getContext()));
                 sb.append("\nisAppProcess="+DeviceInfo.isAppProcess(getContext()));
                 sb.append("\nisProxy="+DeviceInfo.isProxy(getContext()));
 
