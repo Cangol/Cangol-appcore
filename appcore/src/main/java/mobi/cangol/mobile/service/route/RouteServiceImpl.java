@@ -64,9 +64,9 @@ class RouteServiceImpl implements RouteService {
 
 
     @Override
-    public void registerByAnnotation(Class clazz) {
+    public void registerByAnnotation(Class<?> clazz) {
         if (clazz.isAnnotationPresent(Route.class)) {
-            final Route route = (Route) clazz.getAnnotation(Route.class);
+            final Route route = clazz.getAnnotation(Route.class);
             register(route.path(), clazz);
         } else {
             throw new IllegalStateException(clazz + " is not Annotation Route");
@@ -74,9 +74,9 @@ class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public void unregisterByAnnotation(Class clazz) {
+    public void unregisterByAnnotation(Class<?> clazz) {
         if (clazz.isAnnotationPresent(Route.class)) {
-            final Route route = (Route) clazz.getAnnotation(Route.class);
+            final Route route = clazz.getAnnotation(Route.class);
             unregister(route.path());
         } else {
             throw new IllegalStateException(clazz + " is not Annotation Route");
@@ -84,7 +84,7 @@ class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public void register(String path, Class clazz) {
+    public void register(String path, Class<?> clazz) {
         if (!mRouteMap.containsKey(path)) {
             if(mDebug)Log.i(TAG, "registerRoute " + path + "--->" + clazz.getName());
             mRouteMap.put(path, clazz);
@@ -132,7 +132,7 @@ class RouteServiceImpl implements RouteService {
     }
 
     public void handleNavigation(String path, Bundle bundle, Context context, boolean newStack, int flags, int requestCode) {
-        final Class clazz = mRouteMap.get(path);
+        final Class<?> clazz = mRouteMap.get(path);
         if (clazz != null) {
             if (Activity.class.isAssignableFrom(clazz)) {
                 final Intent intent = new Intent(context, clazz);
@@ -144,7 +144,7 @@ class RouteServiceImpl implements RouteService {
                     context.startActivity(intent);
                 }
             } else if (Fragment.class.isAssignableFrom(clazz)) {
-                this.mOnNavigation.toFragment(clazz, bundle,newStack);
+                this.mOnNavigation.toFragment((Class<? extends Fragment>) clazz, bundle,newStack);
             } else {
                 Log.e(TAG, path+" not navigation");
                 this.mOnNavigation.notFound(path);

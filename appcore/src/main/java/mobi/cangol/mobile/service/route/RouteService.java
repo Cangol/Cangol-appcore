@@ -14,21 +14,21 @@ public interface RouteService extends AppService {
      *
      * @param clazz
      */
-    void registerByAnnotation(Class clazz);
+    void registerByAnnotation(Class<?> clazz);
 
     /**
      * 解除注册 （注解）
      *
      * @param clazz
      */
-    void unregisterByAnnotation(Class clazz);
+    void unregisterByAnnotation(Class<?> clazz);
     /**
      * 注册 （非注解）
      *
      * @param path
      * @param clazz
      */
-    void register(String path, Class clazz);
+    void register(String path, Class<?> clazz);
 
     /**
      * 解除注册
