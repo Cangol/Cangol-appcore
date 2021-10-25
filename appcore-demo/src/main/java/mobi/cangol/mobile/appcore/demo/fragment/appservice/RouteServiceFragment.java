@@ -75,11 +75,18 @@ public class RouteServiceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("app://main/lib/test?key=actionView "+new Random().nextInt(100)));
+                intent.setData(Uri.parse("appdemo://app/test?key=actionView "+new Random().nextInt(100)));
                 startActivity(intent);
             }
         });
-
+        getView().findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("appdemo://lib/test?key=actionView "+new Random().nextInt(100)));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -21,6 +21,7 @@ public class LibApplication extends ModuleApplication {
         RouteService routeService=  this.getAppService(AppService.ROUTE_SERVICE);
         routeService.registerByAnnotation(TestFragment.class);
     }
+    @Override
     public void onExit() {
         RouteService routeService= this.getAppService(AppService.ROUTE_SERVICE);
         routeService.unregisterByAnnotation(TestFragment.class);

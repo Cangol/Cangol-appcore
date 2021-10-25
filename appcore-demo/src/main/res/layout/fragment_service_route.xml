@@ -24,6 +24,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACTION_VIEW"
+        android:text="APP ACTION_VIEW"
         android:id="@+id/button3" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lib ACTION_VIEW"
+        android:id="@+id/button4" />
 </LinearLayout>

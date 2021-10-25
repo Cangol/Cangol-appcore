@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigation {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ((CoreApplication)getApplication()).exit();
+        ((CoreApplication)getApplication()).onExit();
     }
 
     @Override

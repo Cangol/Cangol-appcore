@@ -117,7 +117,7 @@ class RouteServiceImpl implements RouteService {
             for (String key : uri.getQueryParameterNames()) {
                 bundle.putString(key,uri.getQueryParameter(key));
             }
-            this.handleNavigation(uri.getPath().replaceFirst("/",""),
+            this.handleNavigation(uri.getHost()+uri.getPath(),
                     bundle,
                     context,
                     uri.getBooleanQueryParameter("newStack",false),0,-1);
