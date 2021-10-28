@@ -15,6 +15,8 @@
  */
 package mobi.cangol.mobile.utils;
 
+import android.text.TextUtils;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -64,25 +66,29 @@ public class UrlUtils {
      * @return Map
      */
     public static Map<String, String> getParams(String url) {
-
-        String query = "";
-        try {
-            query = new URL(url).getQuery();
-        } catch (MalformedURLException e) {
-            query = "";
-        }
-
         final Map<String, String> queries = new HashMap<>();
-        if (query == null) {
-            return queries;
-        }
-
-        for (final String entry : query.split("&")) {
-            final String[] keyvalue = entry.split("=");
-            if (keyvalue.length != 2) {
-                continue;
+        if(!TextUtils.isEmpty(url)&&url.contains("?")){
+            String query = "";
+            try {
+                query = new URL(url).getQuery();
+            } catch (MalformedURLException e) {
+                query ="";
             }
-            queries.put(keyvalue[0], keyvalue[1]);
+
+            if (query == null) {
+                return queries;
+            }else
+                query = url.substring(url.indexOf("?")+1);
+
+            for (final String entry : query.split("&")) {
+                final String[] keyValue = entry.split("=");
+                if (keyValue.length != 2) {
+                    continue;
+                }
+                queries.put(keyValue[0], keyValue[1]);
+            }
+        }else{
+            return queries;
         }
         return queries;
     }
