@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'im.fir.plugin.gradle'
+fir {
+    apiToken 'c5cddea79fbc9176a98e216c6f154022'   //必填 上传 fir.im apk 字段，否则无法上传 APP 到 fir.im
+    changeLog ''
+}
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
